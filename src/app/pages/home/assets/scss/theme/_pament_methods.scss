@@ -1,0 +1,28 @@
+.payment-methods{
+  padding:25px;
+  img{
+    width:50px;
+  }
+}
+.add-payment-method{
+  margin: 0 0 30px 50px;
+  color:white;
+  padding:10px 20px;
+  font-weight: 500;
+  display: inline-block;
+}
+.payment-method-form{
+  .fs-btn{
+    margin: 10px auto;
+  }
+}
+@media (min-width: 768px){
+  .payment-method-form{
+    width: 559px;
+    max-width: 559px;  
+  }
+}
+@media (max-width: 767px){
+  .payment-method-form{
+  }
+}

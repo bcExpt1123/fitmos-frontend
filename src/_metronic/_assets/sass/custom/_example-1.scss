@@ -1,0 +1,246 @@
+//
+// Custom Example 1 Style
+// Here you can put your custom sass code, use global SASS mixings and variables to override the theme or add new styles according to your requirements.
+// Most of the changes can be achieved via global or layout level sass variable changes.
+//
+
+.my-custom-style {
+  padding: 1rem 0.5rem;
+  color: kt-brand-color();
+
+  .my-custom-element {
+    margin-left: 1rem;
+  }
+}
+
+@include kt-tablet-and-mobile {
+  .my-custom-style {
+    padding: 0.5rem 0.25rem;
+
+    .my-custom-element {
+      margin-left: 0.5rem;
+    }
+  }
+}
+.year-calendar {
+  padding: 10px;
+}
+table.calendar {
+  margin: 5px auto;
+  border-collapse: collapse;
+  thead {
+    background-color: #5a5a5a;
+    color: white;
+    margin-bottom: 3px;
+    border-bottom: 2px solid white;
+    th {
+      font-weight: normal;
+      padding: 10px 3px;
+      &.bolder {
+        font-weight: bold;
+      }
+    }
+  }
+  tbody {
+    font-size: 1em;
+  }
+  td {
+    text-align: center;
+    padding: 10px;
+    cursor: pointer;
+    border: 1px solid rgba(185, 185, 185, 0.13);
+    background-color: white;
+    min-width: 15px;
+    &.prev-month,
+    &.next-month {
+      color: transparent;
+      cursor: default;
+      pointer-events: none;
+      background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAABZJREFUCB1jYEADmzdv/o8iRA0BoIEAKngPeSAlnXcAAAAASUVORK5CYII=");
+    }
+    &.week-separator {
+      pointer-events: none;
+      padding: 0;
+      width: 8px;
+      min-width: 0;
+      background: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAAXNSR0IArs4c6QAAABZJREFUCB1jYEADmzdv/o8iRA0BoIEAKngPeSAlnXcAAAAASUVORK5CYII=");
+    }
+    /* Single selected day */
+    &.selected {
+      background-color: orangered;
+      color: white;
+      font-weight: bold;
+    }
+
+    /* Selected range */
+    &.range {
+      background-color: rgba(255, 69, 0, 0.7);
+      font-weight: bold;
+      color: white;
+    }
+
+    &.range-left {
+      border-top-left-radius: 15px;
+      border-bottom-left-radius: 15px;
+      overflow: hidden;
+      background: orangered;
+    }
+
+    &.range-right {
+      border-top-right-radius: 15px;
+      border-bottom-right-radius: 15px;
+      overflow: hidden;
+      background: orangered;
+    }
+    &.month-name {
+      font-weight: bold;
+      text-align: left;
+      cursor: default;
+      border-left: none;
+    }
+    &.past {
+      background-color: rgba(159, 220, 249, 0.32);
+    }
+    &.active {
+      background-color: rgba(145, 212, 110, 0.32);
+    }
+    &.weekend {
+      font-style: italic;
+      font-weight: bold;
+    }
+    &.full {
+      background-color: rgba(246, 151, 60, 0.32);
+    }
+
+    &.past.range,
+    &.past.selected {
+      background-color: rgba(159, 220, 249, 1);
+      font-weight: bold;
+    }
+    &.active.range,
+    &.active.selected {
+      background-color: rgba(145, 212, 110, 1);
+      font-weight: bold;
+    }
+    &.full.range,
+    &.full.selected {
+      background-color: rgba(246, 151, 60, 1);
+    }
+  }
+  tr:last-child td {
+    border-bottom: none;
+  }
+}
+div.calendar-controls {
+  margin: 5px auto;
+  display: table;
+  font-size: 25px;
+  line-height: 35px;
+  div {
+    display: inline;
+  }
+
+  .current-year {
+    margin: 0 30px;
+  }
+
+  .control {
+    font-weight: bolder;
+    color: #323232;
+    font-size: 0.8em;
+    cursor: pointer;
+  }
+
+  .today {
+    position: absolute;
+    right: 15px;
+    line-height: 35px;
+    font-size: 0.6em;
+    text-transform: uppercase;
+  }
+}
+.ck-editor__editable_inline {
+  height: 400px;
+  min-height: 400px;
+}
+.admin-upload-image {
+  position: relative;
+  > label {
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+    background-color: rgba(22, 22, 22, 0.5);
+    width: 200px;
+    transition: opacity 0.25s;
+    margin-bottom: 0;
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+.auth-form.admin_user_profile {
+  .form-label {
+    background-color: white;
+    font-weight: 400;
+  }
+  .form-control {
+    background-color: transparent;
+    input {
+      color: #333333;
+    }
+  }
+}
+#customer-form {
+  .MuiTableCell-root {
+    font-size: inherit;
+  }
+}
+.btn-primary.MuiButton-root {
+  padding: 6px 16px;
+}
+.weekly-editor {
+  .blog {
+    background-color: #f3f3f3;
+    > div {
+      cursor: auto;
+    }
+  }
+}
+.btn.normal {
+  margin: auto;
+}
+td span.btn {
+  padding: 0.65rem 1rem;
+}
+.kt-aside__brand-logo{
+  img{
+    width: 160px;
+  }
+}
+@media print{
+  .MuiPaper-elevation1 {
+    box-shadow: none !important;
+  }  
+}
+.fite-submenu{
+  margin-left: 0;
+  .kt-menu__nav{
+    .nav-link{
+      color:#646c9a;
+      opacity: 0.7;
+      padding: 0.5rem;
+      &.active{
+        font-weight: 500;
+        opacity: 1;
+        border-bottom: 2px solid #0abb87;
+      }
+    }
+  }
+}

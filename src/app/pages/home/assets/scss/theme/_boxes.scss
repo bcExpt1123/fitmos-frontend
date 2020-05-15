@@ -1,0 +1,133 @@
+.step-boxes-container {
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background: white;
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.9);
+  .step-boxes {
+    z-index: 1;
+    .card:first-child {
+      .panel-item {
+        background-color: #3d3d3d;
+      }
+      .border-line-container {
+        position: relative;
+        z-index: 20;
+        .border-line {
+          position: absolute;
+          bottom: 0;
+          border-bottom: solid 20px #156376;
+          border-left: solid 20px #156376;
+          width: 233px;
+          height: 89px;
+          margin-left: -10px;
+          margin-bottom: -10px;
+        }
+      }
+    }
+    .card:eq(1) {
+      background-color: #333333;
+    }
+    .card:last-child {
+      .panel-item {
+        background-color: #2e2e2e;
+      }
+    }
+  }
+  .background-container {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    .background {
+      background-image: url("../../img/step-boxes.png");
+      background-position: 50% 50%;
+      background-size: cover;
+      background-repeat: no-repeat;
+      height: 215px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+  }
+
+  h3 {
+    text-align: center;
+    color: #ffffff;
+  }
+  .mbr-section-subtitle {
+    color: #767676;
+    font-weight: 300;
+  }
+  .mbr-content-text {
+    color: #ffffff;
+  }
+  .panel-item {
+    background: #333333;
+    padding: 50px 33px;
+    .card-img {
+      .box-button {
+        border-radius: 35px;
+        background: linear-gradient(90deg, #028fb4, #bfd734);
+        border: 0;
+        width: 70px;
+        height: 70px;
+        margin-left: auto;
+        margin-right: auto;
+        img {
+          height: 70px;
+          width: 70px;
+        }
+      }
+    }
+    .card-text {
+      h4 {
+        font-size: 1.7rem;
+        color: white;
+      }
+      p {
+        font-size: 1.3rem;
+      }
+    }
+  }
+  .card {
+    word-wrap: break-word;
+  }
+  .mbr-iconfont {
+    font-size: 80px;
+    color: #149dcc;
+  }
+}
+@media (max-width: 767px) {
+  .step-boxes-container {
+    min-height: 40vh;
+    background-color: $basic-text-color;
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .mbr-section-btn {
+      text-align: center;
+    }
+    .step-boxes {
+      z-index: 1;
+      .card:first-child {
+        .panel-item {
+          background-color: transparent;
+        }
+        .border-line-container {
+          display: none;
+        }
+      }
+      .card:eq(1) {
+        background-color: transparent;
+      }
+      .card:last-child {
+        .panel-item {
+          background-color: transparent;
+        }
+      }
+    }
+  }
+}

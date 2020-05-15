@@ -1,0 +1,215 @@
+.top-line-green {
+  border-top: solid 3px #156376;
+  display: inline-block;
+}
+.testimonial {
+  padding-top: 90px;
+  padding-bottom: 90px;
+  background-color: white;
+  .mbr-section-btn > * {
+    margin: 0;
+  }
+  h4 {
+    font-weight: 500;
+  }
+  p {
+    color: #333333;
+  }
+  .aside-content {
+    -webkit-flex-basis: 100%;
+    flex-basis: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .mbr-title {
+      font-size: $bg-title-size;
+      font-weight: 700;
+      line-height: 1.2;
+      .top-line-green {
+        padding-top: 10px;
+      }
+    }
+    .address {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #156376;
+    }
+    .mbr-section-text {
+      padding-top: 20px;
+      .description {
+        font-size: 1.75rem;
+        width: 75%;
+        font-weight: 400;
+      }
+      .bottom-line-black {
+        width: 65px;
+        border-bottom: solid 3px #333333;
+      }
+      .name {
+        text-transform: uppercase;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+    }
+  }
+  .block-content {
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    word-break: break-word;
+  }
+  .media {
+    margin: initial;
+    align-items: center;
+    -webkit-align-items: center;
+  }
+  .mbr-figure {
+    align-self: flex-start;
+    -webkit-align-self: flex-start;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+    .border-line-container {
+      position: relative;
+      z-index: 20;
+      .border-line {
+        position: absolute;
+        bottom: 0;
+        border-bottom: solid 20px #156376;
+        border-left: solid 20px #156376;
+        width: 90px;
+        height: 134px;
+        margin-left: -10px;
+        margin-bottom: -10px;
+      }
+    }
+  }
+  .card-img {
+    padding-right: 2rem;
+    width: auto;
+  }
+  .card-img span {
+    font-size: 72px;
+    color: #707070;
+  }
+  .cost {
+    text-decoration: line-through;
+    color: #767676;
+  }
+  .slick-prev {
+    left: 0;
+    font: normal normal normal 16px/1 "LineAwesome";
+    font-weight: 600;
+    &:before {
+      color: #156376;
+      font-family: unset;
+      font-size: 50px;
+      content: "\f111";
+    }
+  }
+  .slick-next {
+    right: 24px;
+    font: normal normal normal 16px/1 "LineAwesome";
+    font-weight: 600;
+    &:before {
+      color: #156376;
+      font-size: 50px;
+      content: "\f112";
+      font-family: unset;
+    }
+  }
+  .slick-list {
+    margin-left: auto;
+    margin-right: auto;
+    width: 83.33333%;
+  }
+}
+@media (min-width: 992px) {
+  .testimonial {
+    .mbr-figure {
+      padding-right: 0;
+      padding-left: 0;
+      width: 351px;
+      img {
+        width: 350px;
+        height: 433px;
+        border-radius: 7px;
+      }
+    }
+    .media-container-row {
+      flex-direction: row-reverse;
+      -webkit-flex-direction: row-reverse;
+      display: flex !important;
+    }
+  }
+}
+@media (max-width: 991px) {
+  .testimonial {
+    padding-top: 0;
+    padding-bottom: 0;
+    .mbr-figure {
+      width: 46% !important;
+      margin: 2rem auto 1.5rem auto;
+      .border-line-container {
+        position: relative;
+        z-index: 20;
+        .border-line {
+          position: absolute;
+          bottom: 0;
+          border-bottom: solid 5px #156376;
+          border-left: solid 5px #156376;
+          width: 37px;
+          height: 56px;
+          margin-left: -2.5px;
+          margin-bottom: -2.5px;
+        }
+      }
+    }
+    .aside-content {
+      .mbr-title {
+        font-size: 1.5rem;
+        .top-line-green {
+          padding-top: 10px;
+          border-top: solid 2px #156376;
+        }
+        .top-line-green-md {
+          padding-top: 10px;
+          border-top: solid 2px #156376;
+          display: inline-block;
+        }
+      }
+      .address {
+        font-size: 1rem;
+        font-weight: 500;
+      }
+      .mbr-section-text {
+        padding-top: 20px;
+        .description {
+          font-size: 1rem;
+          width: 100%;
+        }
+        .bottom-line-black {
+          border-bottom: 0;
+        }
+        .name {
+          text-transform: uppercase;
+          font-size: 1rem;
+          font-weight: 500;
+        }
+      }
+    }
+    .slick-prev {
+      left: 0;
+      top: 30%;
+      &:before {
+        font-size: 20px;
+      }
+    }
+    .slick-next {
+      right: 0px;
+      top: 30%;
+      &:before {
+        font-size: 20px;
+      }
+    }
+  }
+}

@@ -1,0 +1,105 @@
+.section-guide {
+  padding-top: 90px;
+  padding-bottom: 90px;
+  background-color: #ffffff;
+  h2 {
+    font-size: $bg-title-size;
+    text-align: left;
+    color: #156376;
+    font-weight: 700;
+    padding-top: 1rem;
+    padding-bottom: 30px;
+  }
+  .row {
+    padding: 65px 0 97px 0;
+    .bottom-line {
+      width: 65px;
+      border-bottom: solid 3px #333333;
+    }
+  }
+  ul.mbr-section-text {
+    margin-left: -14px;
+    li {
+      font-size: 2rem;
+      color: #333333;
+      font-weight: 500;
+      padding-bottom: 5px;
+    }
+  }
+  .background-container {
+    position: absolute;
+    top: 0px;
+    left: 45%;
+    width: 55%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    .background {
+      background-image: url('/media/phone/iphone2.png');
+      background-position: right bottom;
+      background-size: contain;
+      background-repeat: no-repeat;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      -webkit-transition: background-image 0.2s ease-in-out;
+      transition: background-image 0.8s ease-in-out;
+    }
+    .iphone1{
+      background-image: url('/media/phone/iphone1.png');
+    }
+    .iphone2{
+      background-image: url('/media/phone/iphone2.png');
+    }
+    .iphone3{
+      background-image: url('/media/phone/iphone3.png');
+    }
+  }
+}
+@media (min-width: 992px) {
+  .section-guide {
+  }
+}
+@media (max-width: 767px) {
+  .section-guide {
+    padding-top: 0;
+    padding-bottom: 0;
+    h2 {
+      font-size: 1.5rem;
+      text-align: center;
+      padding-bottom: 0;
+      .top-line {
+        padding-top: 12px;
+        border-top: solid 2px #333333;
+      }
+    }
+    .row {
+      padding: 23px 0 0;
+      height: auto;
+      .bottom-line {
+        border-bottom: 0;
+      }
+    }
+    ul.mbr-section-text {
+      margin-left: 10%;
+      li {
+        font-size: 1.5rem;
+      }
+    }
+    .background-container {
+      position: relative;
+      left: 0%;
+      width: 100%;
+      .background {
+        background-position: right bottom;
+        background-size: contain;
+        background-repeat: no-repeat;
+        height: 400px;
+        overflow: hidden;
+        pointer-events: none;
+        -webkit-transition: background-image 0.2s ease-in-out;
+        transition: background-image 0.8s ease-in-out;  
+      }
+    }
+  }
+}

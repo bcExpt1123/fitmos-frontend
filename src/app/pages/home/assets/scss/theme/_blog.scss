@@ -1,0 +1,186 @@
+.blog-page{
+  background-color: #333333;
+  .widget{
+    width: 100%;
+    max-width: 540px;
+    text-align: center;    
+    margin:0px auto;  
+    header{
+      text-align: left;  
+      color:white;
+      .blog-login{
+        font-size: 1.75rem;
+        text-align: left;
+      }
+      h1.title{
+        font-size: 32px;
+      }
+    }
+    .auth-form{
+      .form-control{
+        display: flex;
+        align-items: flex-end;
+        margin-bottom: 8px;
+        border-style: none;
+        background-color: transparent;      
+      }
+    }
+  }
+}
+section.blog{
+  background-color: #E4E4E4;
+  .container{
+    article{
+      .content{
+        background-color: white;
+        margin: 30px 6px;
+        border-radius: 7px;
+        .image{
+          height:222px;
+          .background-container {
+            height: 100%;
+            overflow: hidden;
+            pointer-events: none;
+            .background {
+              background-position: 50% 50%;
+              background-size: cover;
+              background-repeat: no-repeat;
+              border-top-left-radius: 7px;
+              border-top-right-radius: 7px;
+              height: 222px;
+              overflow: hidden;
+              pointer-events: none;
+              .category{
+                background-color: #156376;
+                font-size: 12px;
+                color:white;
+                display: inline-block;
+                padding: 5px;
+                margin: 10px 30px;
+                border-radius: 7px;
+              }
+              .post-title{
+                margin: 140px 0 0 20px;
+                font-size: 17px;
+                color:white;
+              }
+            }
+          }      
+        }
+        .body{
+          margin:25px 10px;
+          padding-bottom: 25px;
+          .summury{
+            font-size: 12px;
+            font-weight: 400;
+            height:86px;
+            display: block;/* or inline-block */
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+            overflow: hidden;
+          }
+          .publish_date{
+            margin-top:20px;
+            opacity: 0.5;
+            font-size: 12px;
+            font-weight: 400;
+          }
+          button{
+            display: block;
+            margin-left: auto;
+            margin-right: 0;
+            border-radius: 7px;
+            padding:5px 18px;
+            background-color: transparent;
+            border: solid 0.5px rgba(51,51,51,0.5);
+            a{
+              color: #333333;
+            }
+          }
+        }
+      }
+    }
+    .pagination-wrapper{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 270px;
+    }
+  }
+}
+.post{
+  h1.category,h2.title{
+    margin:auto;
+  }
+  h1.category{
+    font-size: 50px;
+  }
+  h2.title{
+    font-size: 30px;
+  }
+  .row{
+    flex-direction: column;
+  }
+  img{
+    width: 100%;
+  }
+  .published-date{
+    width: 100%;
+    margin-left: 0;
+    margin-right: auto;
+    opacity: 0.5;
+    font-weight: 400;
+  }
+}
+.blog-form{
+  width:350px;
+  margin:0px auto;
+  .form-group{
+    label{
+      width:100px;
+      display: inline-block;
+      font-size: 17px;
+      font-weight: 500;
+      color:white;
+    }
+    .form-control{
+      width:250px;
+      display: inline-block;
+      border-style: none;
+      background-color: transparent;
+      input{
+        background-color: white!important;
+        height: 40px;
+        font-size: 16px;
+        color: #333333!important;
+        outline: auto;
+        border: 1px;        
+        border-radius: 7px;
+        width: 100%;
+        padding: 5px;
+      }
+      input:-internal-autofill-selected{
+        color: #333333!important;
+      }
+    }
+    .form-group-errors{
+      margin-top: 10px;
+      margin-left: 250px;      
+      top:auto;
+      right: auto;
+    }
+  } 
+  .fs-btn{
+    width:200px;
+  }
+}
+@media (max-width:480px){
+  .blog-page header{
+    .blog-login{
+      font-size: 1rem;
+    }
+    h1.title{
+      font-size: 24px;
+    }
+  }
+}

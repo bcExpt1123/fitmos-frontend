@@ -1,0 +1,252 @@
+.section-subscription {
+  justify-content: center;
+  padding-top: 80px;
+  padding-bottom: 80px;
+  background-image: url("../../img/subscription-banner.png");
+  background-position: center top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+  overflow: hidden;
+  .container {
+    z-index: 1;
+    .membership {
+      background-color: white;
+      border-radius: 7px;
+      text-align: center;
+      padding: 16px 0;
+      cursor: pointer;
+      &.active {
+        background-color: #156376!important;
+        color: white;
+        cursor: auto;
+      }
+      h2 {
+        font-size: 30px;
+        font-style: italic;
+      }
+      &:hover{
+        background-color: #c8dc50;
+      }
+    }
+    .free-plan .fs-btn {
+      font-size: 1.75rem;
+    }
+    .plan-card {
+      background-color: white;
+      text-align: center;
+      padding: 30px;
+      position: relative;
+      border-radius: 7px;
+      margin: 0 38px;
+      .plan-header {
+        .plan-title {
+          font-size: 2.3rem;
+          font-style: italic;
+          color: #333330;
+          padding-bottom: 23px;
+          font-weight: 500;
+        }
+      }
+      .plan-body {
+        .plan-list {
+          font-size: 1.75rem;
+          font-weight: 400;
+          color: #333333;
+          line-height: 2.3;
+        }
+      }
+      .plan-footer {
+        .plan-price {
+          color: #156376;
+          margin-bottom: 20px;
+          .price-value,
+          .price-figure {
+            font-size: 3.1rem;
+            font-weight: 700;
+          }
+          .price-term {
+            font-size: 2.3rem;
+            font-weight: 500;
+          }
+          &.discount{
+            color: #333333;
+            .price-value,
+            .price-figure{
+              font-size: 2.4rem;
+            }
+            .price-term {
+              font-size: 1.5rem;
+              font-weight: 400;
+            }
+          }
+        }
+        .plan-subtitle{
+          color:#156376;
+          font-size: 2.3rem;
+          margin-top: -20px;
+          font-weight: 500;
+          &.yellow{
+            color: #c8dc50;
+            font-size: 1.75rem;
+          }
+        }
+        .helper {
+          font-size: 0.92rem;
+          font-style: italic;
+          font-weight: 500;
+          margin-bottom: 20px;
+        }
+        .plan-btn .fs-btn {
+          font-size: 1.75rem;
+          font-weight: 500;
+          padding-left: 75px;
+          padding-right: 75px;
+        }
+      }
+      .border-line-container {
+        position: absolute;
+        top: 0px;
+        right: 0%;
+        .border-line {
+          border-top: solid 20px #c8dc50;
+          border-right: solid 20px #c8dc50;
+          float: right;
+          width: 103px;
+          height: 163px;
+          margin-top: -10px;
+          margin-right: -10px;
+        }
+      }
+    }
+    .text-label {
+      margin-top: 108px;
+      .title {
+        color: $green-yellow-color;
+        font-size: $bg-title-size;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .sub-title {
+        color: white;
+        font-size: $bg-title-size;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+      .description {
+        color: white;
+        font-size: 1.75rem;
+        line-height: 1.2;
+      }
+    }
+  }
+  .background-container {
+    position: absolute;
+    top: 0px;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    .background {
+    }
+  }
+}
+.free-plan{
+  .btn{
+    font-size:17px;
+  }
+  .modal-header{
+    border-bottom: 0;
+  }
+  .btn-free-plan-button{
+    background-color: $blug-button-color;
+    color:white;
+  }
+}
+@media (max-width: 767px) {
+  .section-subscription {
+    padding-top: 80px;
+    padding-bottom: 40px;
+    min-height: 584px;
+    .container {
+      height: auto;
+      .membership {
+        border-radius: 3px;
+        padding: 6px 0;
+        margin: 20px 0;
+        h2 {
+          font-size: 1.3rem;
+        }
+        h5 {
+          font-size: 0.8rem;
+          height: 13px;
+        }
+      }
+      .media-container-row {
+        flex-direction: column-reverse;
+        .free-plan .fs-btn {
+          font-size: 1.25rem !important;
+        }
+        .plan-card {
+          padding: 20px;
+          .plan-header {
+            .plan-title {
+              font-size: 1.5rem;
+              padding-bottom: 5px;
+            }
+          }
+          .plan-body {
+            .plan-list {
+              font-size: 1rem;
+              line-height: 2.3;
+            }
+          }
+          .plan-footer {
+            .plan-price {
+              margin-bottom: 12px;
+              .price-value,
+              .price-figure {
+                font-size: 1.65rem;
+              }
+              .price-term {
+                font-size: 1rem;
+              }
+            }
+            .helper {
+              font-size: 0.81rem;
+              margin-bottom: 10px;
+            }
+            .plan-btn .fs-btn {
+              font-size: 1.25rem !important;
+              font-weight: 500;
+              padding: 7px 36px;
+              margin: 0;
+            }
+          }
+          .border-line-container {
+            .border-line {
+              border-top: solid 15px #c8dc50;
+              border-right: solid 15px #c8dc50;
+              float: right;
+              width: 56px;
+              height: 94px;
+              margin-top: -7.5px;
+              margin-right: -7.5px;
+            }
+          }
+        }
+        .text-label {
+          margin-top: 8px;
+          text-align: center;
+          .title,
+          .sub-title {
+            font-size: 1.5rem;
+            padding-left: 5px;
+            display: inline-block;
+          }
+        }
+      }
+    }
+  }
+}

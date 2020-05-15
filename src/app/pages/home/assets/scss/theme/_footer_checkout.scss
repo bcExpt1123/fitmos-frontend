@@ -1,0 +1,53 @@
+.footer-checkout{
+  background-color:#232323;
+  div{
+    display: flex;
+    ul{
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      margin:0 0 0 auto;
+      li{
+        padding: 20px 0px 20px 5px;
+        color:white;
+        font-size: 17px;
+        font-weight: 400;
+        a{
+          color:white;
+        }
+      }
+    }
+    span {
+      margin:auto 0 auto auto;
+      img{
+        width: 150px;
+      }
+    }
+  }
+}
+@media (max-width: 767px) {
+  .footer-checkout{
+    div{
+      display: block;
+      ul{
+        display: block;
+        text-align: center;
+        margin: 0;
+        padding: 10px 0;
+        li{
+          display: inline;
+          font-size:12px;
+        }
+      }
+      span{
+        display: block;
+        width: 100px;
+        margin:auto;
+        img{
+          width: 100px;
+          padding-bottom: 5px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,24 @@
+.avatar {
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+  .avatar-clip,
+  img {
+    display: block;
+    height: inherit;
+    width: inherit;
+  }
+}
+.xs {
+  width: 30px;
+  height: 30px;
+  .avatar-clip {
+    img {
+      border-radius: 20px;
+    }
+  }
+}
+.xl {
+  width: 160px;
+  height: 160px;
+}

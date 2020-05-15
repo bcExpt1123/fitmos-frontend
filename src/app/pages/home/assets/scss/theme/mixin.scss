@@ -1,0 +1,23 @@
+$green-yellow-color: #c8dc50;
+$bg-title-size: 3.85rem;
+$basic-text-color: #333333;
+$normal-font-size: 1.3077rem;
+$blug-button-color:#028fb4;
+@mixin back-button{
+  background-color: transparent;
+  height: 48px;
+  padding: 0 16px;
+  color: #fff;
+  transition: opacity 0.15s;
+  border: 0;
+  top: 0;
+  left: 0;
+  position: relative;
+  .arrow-left {
+    height: 1.5em !important;
+  }
+}
+@mixin mobile-back-button{
+  position: relative;
+  left: 0;
+}

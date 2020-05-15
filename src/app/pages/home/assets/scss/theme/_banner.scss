@@ -1,0 +1,59 @@
+#SectionBanner {
+  display: flex;
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  align-items: center;
+  -webkit-align-items: center;
+  min-height: 72vh;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  h1 {
+    font-size: $bg-title-size;
+    text-align: left;
+    font-style: italic;
+    .subtitle {
+      color: #bfd734;
+    }
+  }
+  .mbr-text,
+  .mbr-section-btn {
+    text-align: left;
+  }
+  .fs-btn {
+    font-size: 1.75rem;
+    padding: 14px 72px;
+  }
+  [id^="jarallax-container"] {
+    :after {
+      content: "\A";
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.7);
+      opacity: 0.6;
+      transition: all 0.5s;
+      -webkit-transition: all 0.5s;
+    }
+  }
+}
+@media (max-width: 767px) {
+  #SectionBanner {
+    min-height: 100vh;
+    .fs-btn {
+      font-size: 1.25rem !important;
+      padding: 7px 36px;
+    }
+    h1 {
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .mbr-section-btn {
+      text-align: center;
+      margin-top: 40px;
+    }
+  }
+}

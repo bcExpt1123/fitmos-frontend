@@ -1,0 +1,85 @@
+@import "./mixin.scss";
+@import "./_navbar.scss";
+@import "./_banner.scss";
+@import "./_boxes.scss";
+@import "./_guide.scss";
+@import "./_pricing.scss";
+@import "./_subscription.scss";
+@import "./_testimonial.scss";
+@import "./_community.scss";
+@import "./contact_us";
+@import "./_customer_dashboard";
+@import "./_settings.profile.scss";
+@import "./_footer.scss";
+@import "./_checkout.scss";
+@import "./_blog.scss";
+@import "./pament_methods";
+@import "./_footer_checkout.scss";
+.fs-btn {
+  border-radius: 7px;
+  background: linear-gradient(90deg, #028fb4, #bfd734);
+  border: 0;
+  &:hover {
+    background: linear-gradient(90deg, #187688, #97c84f);
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+.header-title {
+  font-size: $bg-title-size;
+  font-weight: 700;
+}
+body {
+  color: #333333;
+  p,
+  span.normal {
+    font-size: 1.3077rem;
+    font-weight: 400;
+  }
+}
+h3 {
+  font-size: 1.77rem;
+}
+.section-notification {
+  background: linear-gradient(90deg, #028fb4, #bfd734);
+  font-size: 17px;
+  font-weight: 500;
+  color: white;
+  text-align: center;
+  padding: 4px;
+  cursor: pointer;
+}
+@media (max-width: 767px) {
+  .header-title {
+    font-size: 18px;
+  }
+  .section-notification {
+    font-size: 12px;
+  }
+}
+.page{
+  p,li{
+    text-align: justify;
+  }
+  strong{
+    font-weight: 500;
+  }
+}
+.section-faq{
+  .faq{
+    p{
+      text-align: justify;
+    }
+  }
+}
+.loading{
+  .kt-splash-screen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }  
+  padding-bottom: 100px;
+}
+.Modal-Portal .datepicker .datepicker-navbar-btn{
+  float: none;
+}

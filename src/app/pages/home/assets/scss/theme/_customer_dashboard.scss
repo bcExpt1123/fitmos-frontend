@@ -1,0 +1,453 @@
+.c-dashboard {
+  color: #333333;
+  .card {
+    margin: 15px 0;
+    background-color: white;
+    .card-header {
+      height: 50px;
+      background-color: #7d7d7d;
+      color: #e4e4e4;
+      padding: 17px 25px;
+      &.workout-checked{
+        background-color: #bfd734;
+        color: #333333;
+      }
+      .card-title {
+        font-size: 17px;
+        float: left;
+        color: inherit;
+        padding: initial;
+      }
+      button.card-subtitle{
+        margin-top: -7px;
+        border-radius: .45rem;
+        border:0;
+        background-color: #028fb4;
+        &:hover{
+          background-color: #02b4e2;
+        }
+        &:active{
+          background-color: #0382a2;
+        }
+        &.checked{
+          background-color: #bfd734;
+          color:#333333;
+        }
+      }
+      .card-subtitle {
+        font-size: 17px;
+        float: right;
+        margin-top: 0px;
+      }
+    }
+    .card-body {
+      padding: 25px;
+      &.workout-content{
+        h1{
+          font-size: 2rem;
+        }
+        h2{
+          font-size: 1.5rem;
+        }
+        div p{
+          font-size:20px;
+        }
+      }
+      .progress {
+        .progress-bar{
+          background: linear-gradient(90deg, #028fb4, #bfd734);
+        }
+      }
+    }
+  }
+  .email {
+    .card-title {
+      font-size: 23px;
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .card-subtitle {
+      font-size: 17px;
+    }
+    .card-text {
+      
+    }
+    .fs-btn {
+      margin-bottom: 30px;
+    }
+    .auth-form {
+      .form-control {
+        background-color: white;
+        input {
+          color: #333333;
+        }
+      }
+      .description {
+        font-size: 12px;
+        opacity: 0.5;
+        margin-top: -12px;
+        margin-bottom: 12px;
+      }
+      .react-tel-input{
+        .form-control{
+          width: 100%;
+        }
+        .form-control,.flag-dropdown{
+          border-color: #b3d139;
+        }
+        & ~ .description{
+          margin-top: 3px;
+        }
+      } 
+    }
+  }
+  .profile {
+    .card-img {
+      float: left;
+      width: 100px;
+      height: 148px;
+      border-radius: 7px;
+    }
+    .info {
+      margin-left: 135px;
+      font-weight: 500;
+    }
+  }
+  .sub-body {
+    border-radius: 7px;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 7px;
+    padding: 13px;
+    height: 120px;
+    .sub-head {
+      opacity: 0.5;
+    }
+    .card-title {
+      margin-bottom: 0px;
+      font-size: 17px;
+    }
+    .fs-btn {
+      padding: 6px 8px;
+    }
+    .btn-alink {
+      padding: 0;
+      margin: 8px 4px 8px 0;
+    }
+    div {
+      font-size: 12px;
+    }
+  }
+  .benchmarks {
+    .card-body {
+      padding: 5px 25px;
+      .content {
+        border-radius: 7px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 150px;
+        margin: 14px 5px;
+        position: relative;
+        .background {
+          border-radius: 7px;
+          justify-content: center;
+          align-items: center;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          flex-direction: column;
+          color: #fff;
+          background-color: rgba(22, 22, 22, 0.5);
+          .title {
+            padding-top: 10px;
+            padding-left: 20px;
+            font-size: 15px;
+            color: #e4e4e4;
+            font-weight: 500;
+          }
+          .repetition {
+            padding-top: 33px;
+            text-align: center;
+            font-size: 17px;
+            color: white;
+            font-weight: 500;
+          }
+          .transparent-btn {
+            background-color: transparent;
+            color: #e4e4e4;
+            border: none;
+            margin-top: -19px;
+          }
+        }
+      }
+    }
+  }
+  .condition {
+    .kt-widget26__chart {
+      width: auto !important;
+      height: auto !important;
+    }
+  }
+  .workout-content {
+    div {
+      font-size: 12px;
+      font-weight: 500;
+      br {
+        display: none;
+      }
+    }
+  }
+  .btn-renewal{
+    background-color: #2090fb !important;
+    border-color: #2090fb !important;
+    color: #ffffff !important;
+    border-radius: 7px;   
+    padding:4px 18px; 
+  }
+  h5.service{
+    font-size: 17px;
+    display: inline-block;
+    margin-top: 11px;
+  }
+  .read-more{
+    display: block;
+    margin-top: 10px;
+    color: #2090fb;
+    font-weight: 500;
+  }
+  .post-title{
+    color:#333333;
+  }
+}
+.btn-alink {
+  color: #2090fb;
+}
+.dashborad-backgorund {
+  background-color: #e4e4e4;
+}
+.modal-content {
+  .btn-edit {
+    background-color: #2090fb;
+    color: white;
+    margin: 0;
+    font-size: 17px;
+    padding: 0.8rem 3rem;
+    &:focus {
+      background-color: #2090fb;
+    }
+    &:hover {
+      background-color: #0069d9;
+    }
+  }
+  .auth-form {
+    .form-label {
+      background-color: white;
+      color: #999999;
+      font-weight: 400;
+    }
+    .form-control {
+      background-color: white;
+      input {
+        color: #333333;
+      }
+    }
+  }
+}
+.modal-dialog {
+  .modal-content {
+    .modal-header {
+      .modal-title {
+        font-size: 23px;
+      }
+    }
+    .modal-body{
+      font-size: 17px;
+    }
+  }
+}
+.next-level {
+  .modal-dialog {
+    max-width: 700px;
+    .modal-content {
+      background-image1: url("../../img/level-background.png");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-color: #333333;
+      width: 700px;
+      border: 0;
+      .modal-header {
+        padding: 1.25rem;
+        border-bottom: 1px solid rgba(228, 228, 228, 0.5);
+      }
+      .modal-body {
+        text-align: center;
+        .header {
+          font-size: 23px;
+        }
+        .level {
+          font-weight: 500;
+          color: #b3d139;
+        }
+        .content {
+          font-size: 17px;
+          width: 80%;
+          margin: 0 auto;
+          text-align: left;
+          white-space: pre-wrap;
+          .summury{
+            color: #b3d139;
+            a,div{
+              font-weight: 500;
+              color: #b3d139;
+              background-color: transparent;
+              border: 0;
+            }
+          }
+        }
+        .actions{
+          .arrow-decrease,.arrow-increase{
+            position: absolute;
+            display: block;
+            width: .8rem;
+            height: .4rem;
+            &:before{
+              position: absolute;
+              content: "";
+              border-color: transparent;
+              border-style: solid;                            
+              border-width: 17px 1.4rem 1.4rem;
+            }            
+          }
+          .btn-level-decrease{
+            margin-left: 20px;
+            float: left;
+            .arrow-decrease{
+              &:before{
+                border-right-color: #b3d139!important;
+                margin-left: -41px;
+              }
+            }
+          }
+          .btn-level-increase{
+            margin-right: 20px;
+            float: right;
+            .arrow-increase{
+              right: 31px;
+              &:before{
+                border-left-color: #b3d139!important;
+              }
+            }
+          }
+          .btn-level-increase,.btn-level-decrease{
+            button{
+              color:white;
+              padding: 5px 10px ;
+              font-size: 17px;
+              font-weight: 500;
+              background-color: #b3d139;
+              border: 0;
+              &:hover{
+                color:white;
+              }
+            }
+          }  
+        }
+      }
+    }
+  }
+}
+.edit-benchbark {
+  .modal-header {
+    .sub-title {
+      margin-left: auto;
+      font-size: 17px;
+    }
+    .close {
+      margin-left: 2rem;
+    }
+  }
+}
+.email-whatsapp {
+  input[type="checkbox"] {
+    margin-top: 14px;
+    margin-right: 5px;
+  }
+  label[for="active_whatsapp"],
+  label[for="active_email"] {
+    font-size: 17px;
+    font-weight: 500;
+  }
+}
+@media (max-width: 380px) {
+  .c-dashboard {
+    .workout {
+      .card-header {
+        .card-subtitle {
+          font-size: 12px;
+          margin-top: 3px;
+        }
+      }
+    }
+  }
+}
+@media (max-width: 1024px) {
+  .modal-video-close-btn{
+    right:24px;
+  }
+  .next-level {
+    .modal-dialog {
+      .modal-content {
+        .modal-body {
+          .actions{
+            .btn-level-decrease{
+              .arrow-decrease{
+                &:before{
+                  margin-left: -38px;
+                }
+              }
+            }
+            .btn-level-increase{
+              .arrow-increase{
+                right: 30px;
+              }
+            }  
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 480px) {
+  .next-level {
+    .modal-dialog {
+      .modal-content {
+        .modal-body {
+          .actions{
+            .arrow-decrease,.arrow-increase{
+              &:before{
+                border-width: 18px 1.4rem 1.4rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .c-dashboard{
+    .benchmarks .card-body .content .background{
+      .title{
+        font-size: 12px;
+      }
+      .repetition{
+        font-size: 15px;
+      }
+      .transparent-btn{
+        display: none;
+      }
+    }
+  }
+}

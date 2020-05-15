@@ -1,0 +1,126 @@
+.subscriptions,.invoices{
+  thead{
+    background-color: rgba(44,44,44,0.7);
+    th{
+      padding-left: 25px;
+      font-size: 17px;
+      color:white;
+      height: 100px;
+      vertical-align: middle;
+      &:first-child{
+        border-top-left-radius: 7px;
+      }
+      &:last-child{
+        border-top-right-radius: 7px;
+      }
+    }
+  }
+  tbody{
+    background-color: white;
+    tr:last-child{
+      td:first-child{
+        border-bottom-left-radius: 7px;
+      }
+      td:last-child{
+        border-bottom-right-radius: 7px;
+      }
+    }
+    td{
+      padding: 25px;
+      font-weight: 400;
+      font-size:17px;
+      .btn-cancel{
+        padding:0;
+        margin: 0;
+        font-weight: 400;
+        &.btn{
+          font-size:17px!important;
+        }
+      }
+      .renew{
+        color: #333333;
+      }
+      button.renew{
+        border: 0;
+        background-color: transparent;
+      }
+    }
+    .blue{
+      color:#2090fb;
+    }
+    .green{
+      color:#2da944;
+    }
+    .red{
+      color:#c32121;
+    }
+  }
+}
+.btn-subscription{
+  border: 1px solid #333333;
+  font-size: 14px;
+  font-weight: 400;
+}
+.btn-subscription-renewal{
+  background-color: #2090fb;
+  border-color: #2090fb;
+  color:white!important;
+  font-size: 14px;
+  font-weight: 400;
+}
+.btn-subscription-renewal:hover, .btn-subscription-renewal:focus, .btn-subscription-renewal.focus, .btn-subscription-renewal.active{
+  background-color: #1671c7;
+  border-color: #1671c7;
+}
+.renewal-subscription{
+  max-width:560px;
+  select{
+    font-size: 17px;
+  }
+}
+.subscriptions.modal{
+  .modal-content{
+    .modal-header{
+      padding:25px;
+      .modal-title{
+        color:#575962;
+        font-size: 23px;      
+      }
+    }
+    .modal-body{
+      h3{
+        font-size: 17px;
+      }
+      padding: 30px 60px 20px 60px;
+      color:#575962;
+      font-weight: 400;
+      .form-check{
+        label{
+          font-size: 12px;
+          color:#333333;
+          padding-bottom: 10px;
+        }
+      }
+      label[for*=reason]{
+        font-size: 17px;
+        color:#333333;
+      }
+    }    
+  }
+}
+.modal-footer{
+  border-top: 0;
+}
+@media(max-width:767px){
+  .subscriptions {
+    tbody td{
+      padding:15px;
+    }
+    .actions{
+      width:205px;
+    }
+    .btn-subscription,.btn-subscription-renewal{
+      font-size: 12px!important;
+    }
+  }
+}
