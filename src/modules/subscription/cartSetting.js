@@ -117,6 +117,7 @@ const saveCartSetting = cartSetting => {
   formData.append("unit", cartSetting.item.unit);
   formData.append("new_coupon_id", cartSetting.item.new_coupon_id);
   formData.append("renewal_coupon_id", cartSetting.item.renewal_coupon_id);
+  formData.append("new_second_mail", cartSetting.item.new_second_mail);
   return http({ path: `setting/updateCart`, method: "POST", data: formData }).then(
     res => res.data
   );

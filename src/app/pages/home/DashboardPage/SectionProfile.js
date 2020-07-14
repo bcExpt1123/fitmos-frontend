@@ -15,7 +15,7 @@ const Profile = ({ currentUser }) => {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   const done = useSelector(({ done }) => done);
-  const now = (done.workoutCount-done.fromWorkout)/(done.toWorkout-done.fromWorkout)*100;
+  const now = (done.workoutCount)/(done.toWorkout)*100;
   return (
     <>
       <Card className="profile">
@@ -37,10 +37,10 @@ const Profile = ({ currentUser }) => {
               )}
             </Card.Title>
             <div className="row">
-              <div className="col-8">
-                <div className="mt-0">Workouts Completados</div>
+              <div className="col-6">
+                <div className="mt-2 pt-1">Workouts</div>
               </div>
-              <div className="col-4" style={{textAlign:'right'}}>
+              <div className="col-6" style={{textAlign:'right'}}>
                 <span>{done.workoutCount}/{done.toWorkout}</span>
                 {done.toWorkoutImage&&(
                   <img src={done.toWorkoutImage} />
@@ -49,7 +49,7 @@ const Profile = ({ currentUser }) => {
               <div className="col-12 mb-4">
                 <ProgressBar now={now} />
               </div>
-              <div className="col-12 col-md-6">
+              <div className="col-6 col-md-6">
                 <div className="mb-0">
                   <span>Pais:&nbsp;&nbsp;</span>
                   {currentUser.customer.country}
@@ -65,7 +65,7 @@ const Profile = ({ currentUser }) => {
                   />
                 </div>
               </div>
-              <div className="col-12 col-md-6">
+              <div className="col-6 col-md-6">
                 <div className="mb-0">
                   <span>Altura:&nbsp;&nbsp;</span>
                   {parseInt(currentUser.customer.current_height)}

@@ -70,9 +70,9 @@ const SectionWorkout = ({}) => {
                 <button onClick={(e)=>{e.stopPropagation();handleClick(item);}} className={classnames("card-subtitle",{checked:item.read})}>{
                   item.blog?(
                     item.read?(
-                      'Listo'
+                      'Completado'
                     ):(
-                      'Listo'
+                      'Completar'
                     )
                   ):(
                     item.read?(

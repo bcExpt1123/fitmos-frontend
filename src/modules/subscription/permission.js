@@ -29,8 +29,6 @@ export const actionTypes = {
   PERMISSION_SAVE_ROLE:"PERMISSION_SAVE_ROLE",
 };
 
-export const selectors = {};
-
 const initialState = {
   roles: [],
   permissions:[],
@@ -45,7 +43,7 @@ const initialState = {
 export const reducer = persistReducer(
   {
     storage,
-    key: "coupons",
+    key: "permissions",
     whitelist: []
   },
   (state = initialState, action) => {

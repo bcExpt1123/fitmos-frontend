@@ -117,7 +117,7 @@ const CheckoutPage = ({
     currentSubscriptionsAmountCents: undefined,
     bundlePrices: { total: serviceItem[activePlan] * 100 }
   };
-  if (enteredVoucher) {
+  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal == '1')) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
     if(enteredVoucher.form == '%')pricing.discountedPrices.total = (pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100;

@@ -1,15 +1,10 @@
 import React from "react";
 import classnames from "classnames";
 import DatePicker from 'react-mobile-datepicker';
-
+import {isMobile,isIOS,isSafari} from '../../../../../_metronic/utils/utils';
 
 //import trackVirtualPageImpression from '../../../../../lib/trackVirtualPageImpression';
 
-const isMobile = ()=>{
-  const ua = window.navigator.userAgent;
-  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)) return true;
-  return false;
-}
 const getDate = ({ ago, start = false, end = false }) => {
   const date = new Date();
   if (start) {
@@ -358,22 +353,42 @@ class StepInfo extends React.Component {
               labelName={"Fecha de nacimiento"}
             >
               {isMobile()?(
-                <>
+                isIOS()?(
                   <input
-                    ref={this.inputRefs.birthday}
-                    className={"form-input"}
-                    id="birthday"
-                    type="date"
-                    required
-                    min={birthdayRange.min}
-                    max={birthdayRange.max}
-                    pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
-                    placeholder="yyyy-mm-dd"
-                    name="birthday"
-                    value={this.state.birthday}
-                    onFocus={this.handleOpenDatePicker}
-                    onChange={this.handleChange}
-                  />
+                  ref={this.inputRefs.birthday}
+                  className={"form-input"}
+                  id="birthday"
+                  type="date"
+                  required
+                  min={birthdayRange.min}
+                  max={birthdayRange.max}
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                  placeholder="yyyy-mm-dd"
+                  name="birthday"
+                  value={this.state.birthday}
+                  onChange={this.handleChange}
+                  onFocus={this.handleFocus}
+                  onBlur={this.handleBlur}
+                />
+                ):(
+                  <>
+                  {!this.state.isOpen&&
+                    <input
+                      ref={this.inputRefs.birthday}
+                      className={"form-input"}
+                      id="birthday"
+                      type="date"
+                      required
+                      min={birthdayRange.min}
+                      max={birthdayRange.max}
+                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                      placeholder="yyyy-mm-dd"
+                      name="birthday"
+                      value={this.state.birthday}
+                      onFocus={this.handleOpenDatePicker}
+                      onChange={this.handleChange}
+                    />
+                  }
                   <DatePicker
                     value={this.state.time}
                     isOpen={this.state.isOpen}
@@ -382,23 +397,43 @@ class StepInfo extends React.Component {
                     onSelect={this.handleSelect}
                     onCancel={this.handleCancel} />
                 </>
+                )
               ):(
-                <input
-                ref={this.inputRefs.birthday}
-                className={"form-input"}
-                id="birthday"
-                type="date"
-                required
-                min={birthdayRange.min}
-                max={birthdayRange.max}
-                pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
-                placeholder="yyyy-mm-dd"
-                name="birthday"
-                value={this.state.birthday}
-                onChange={this.handleChange}
-                onFocus={this.handleFocus}
-                onBlur={this.handleBlur}
-              />
+                isSafari()?(
+                  <input
+                  ref={this.inputRefs.birthday}
+                  className={"form-input"}
+                  id="birthday"
+                  type="text"
+                  required
+                  min={birthdayRange.min}
+                  max={birthdayRange.max}
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                  placeholder="yyyy-mm-dd"
+                  name="birthday"
+                  value={this.state.birthday}
+                  onChange={this.handleChange}
+                  onFocus={this.handleFocus}
+                  onBlur={this.handleBlur}
+                />  
+                ):(
+                  <input
+                  ref={this.inputRefs.birthday}
+                  className={"form-input"}
+                  id="birthday"
+                  type="date"
+                  required
+                  min={birthdayRange.min}
+                  max={birthdayRange.max}
+                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                  placeholder="yyyy-mm-dd"
+                  name="birthday"
+                  value={this.state.birthday}
+                  onChange={this.handleChange}
+                  onFocus={this.handleFocus}
+                  onBlur={this.handleBlur}
+                />  
+                )
               )}
             </FormGroup>
 

@@ -117,3 +117,22 @@ export function roundToMoney(number) {
   let stringNumber = number.toFixed(2);
   return stringNumber.replace(".", ",");
 }
+export function isMobile(){
+  const ua = window.navigator.userAgent;
+  if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i.test(ua)) return true;
+  return false;  
+}
+export function isIOS(){
+  return !!window.navigator.platform && /iPad|iPhone|iPod/.test(window.navigator.platform);
+}
+export function isSafari(){
+  var ua = navigator.userAgent.toLowerCase(); 
+  if (ua.indexOf('safari') != -1) { 
+    if (ua.indexOf('chrome') > -1) {
+      return false
+    } else {
+      return true;
+    }
+  }  
+  return false;
+}

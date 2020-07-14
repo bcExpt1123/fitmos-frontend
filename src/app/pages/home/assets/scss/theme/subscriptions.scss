@@ -113,11 +113,34 @@
 }
 @media(max-width:767px){
   .subscriptions {
+    thead{
+      background-color: rgba(44,44,44,0.7);
+      th{
+        padding-left: 15px;
+        font-size: 17px;
+        color:white;
+        height: 100px;
+        vertical-align: middle;
+        height: 60px;
+        border:0;
+      }
+      tr:last-child{
+        th:first-child{
+          border-top-left-radius: 0px;
+          border-bottom-left-radius: 7px;
+        }
+        th:last-child{
+          border-top-right-radius: 0px;
+          border-bottom-right-radius: 7px;
+        }  
+      }
+
+    }  
     tbody td{
       padding:15px;
     }
     .actions{
-      width:205px;
+      width:auto;
     }
     .btn-subscription,.btn-subscription-renewal{
       font-size: 12px!important;

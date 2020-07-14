@@ -131,8 +131,8 @@
   "SettingsForm.Profile.Error.LastName.required":"necesario",
   "SettingsForm.Profile.success_update_settings":"Actualizó con éxito su configuración.",
   "SettingsForm.Profile.success_update_email":"Actualización Exitosa.",
-  "SettingsForm.Profile.Value.Female":"Femenino",
-  "SettingsForm.Profile.Value.Male":"Masculino",
+  "SettingsForm.Profile.Value.Female":"F",
+  "SettingsForm.Profile.Value.Male":"M",
   "SettingsForm.Error.Settings":"Error",
   "SettingsForm.Error.Email":"Error de correo electrónico",
   "PreferencesPage.Error.Api.error":"Error",
@@ -160,5 +160,5 @@
   "SubscriptionForm.Error.Name.required":"necesario",
   "BlogPage.Button.Facebook":"Accede con Facebook",
   "BlogPage.Button.Google":"Accede con Google",
-  "Subscription.Renewal.Success":"Su renovación exitosa."
+  "Subscription.Renewal.Success":"Frecuencia de suscripción actualizada."
 }

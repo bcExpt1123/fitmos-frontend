@@ -16,6 +16,7 @@ import "../../assets/scss/theme/mbr-additional.css";
 import "../../assets/scss/dropdown/style.css";
 import "../../assets/scss/theme/common.scss";
 import "../../assets/scss/theme/subscriptions.scss";
+import {isMobile} from '../../../../../_metronic/utils/utils';
 const SubscriptionsPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
@@ -144,42 +145,86 @@ const SubscriptionsPage = () => {
   }
   return  (<>
     <div className='container mt-5 mb-5'>
-      <Table responsive className='subscriptions'>
-        <thead>
-          <tr>
-            <th>Suscripción</th>
-            <th>Inicio</th>
-            <th>Expiración</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentUser&&currentUser.customer.services['1']&&(
+      {isMobile()?(
+        <Table responsive className='subscriptions'>
+          <thead>
             <tr>
-              <td>{currentUser.customer.services['1'].serviceName}</td>
-              <td>{currentUser.customer.services['1'].start_date}</td>
-              <td>{currentUser.customer.services['1'].end_date?(
-                currentUser.customer.services['1'].end_date
-              ):(
-                currentUser.customer.services['1'].expired_date
-              )}</td>
-              <td className={classStatus(currentUser.customer.services['1'])}>
-                {renderStatus(currentUser.customer.services['1'])}
-                <br />
-                <small style={{color:'#333333'}}>{renderHelpText(currentUser.customer.services['1'])}</small>
-              </td>
-              <td><div className="actions">{renderAction(currentUser.customer.services['1'])}</div></td>
+              <th>Suscripción</th>
+              <th>Inicio</th>
+              <th>Expiración</th>
             </tr>
-          )}
-          {[1,2,3,4,5].map((index)=>
-            <tr key={index}>
-              <td colSpan="5">&nbsp;</td>
+            <tr>
+              <th>Estado</th>
+              <th colSpan={2}>Acciones</th>
             </tr>
-          )}
-        </tbody>
-      </Table>
-    </div>
+          </thead>
+          <tbody>
+            {currentUser&&currentUser.customer.services['1']&&(
+              <>
+                <tr>
+                  <td>{currentUser.customer.services['1'].serviceName}</td>
+                  <td>{currentUser.customer.services['1'].start_date}</td>
+                  <td>{currentUser.customer.services['1'].end_date?(
+                    currentUser.customer.services['1'].end_date
+                  ):(
+                    currentUser.customer.services['1'].expired_date
+                  )}</td>
+                </tr>
+                <tr>
+                  <td className={classStatus(currentUser.customer.services['1'])}>
+                    {renderStatus(currentUser.customer.services['1'])}
+                    <br />
+                    <small style={{color:'#333333'}}>{renderHelpText(currentUser.customer.services['1'])}</small>
+                  </td>
+                  <td colSpan={2}><div className="actions">{renderAction(currentUser.customer.services['1'])}</div></td>
+                </tr>
+              </>
+            )}
+            {[1,2,3,4,5].map((index)=>
+              <tr key={index}>
+                <td colSpan="3">&nbsp;</td>
+              </tr>
+            )}
+          </tbody>
+        </Table>          
+        ):(
+        <Table responsive className='subscriptions'>
+          <thead>
+            <tr>
+              <th>Suscripción</th>
+              <th>Inicio</th>
+              <th>Expiración</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentUser&&currentUser.customer.services['1']&&(
+              <tr>
+                <td>{currentUser.customer.services['1'].serviceName}</td>
+                <td>{currentUser.customer.services['1'].start_date}</td>
+                <td>{currentUser.customer.services['1'].end_date?(
+                  currentUser.customer.services['1'].end_date
+                ):(
+                  currentUser.customer.services['1'].expired_date
+                )}</td>
+                <td className={classStatus(currentUser.customer.services['1'])}>
+                  {renderStatus(currentUser.customer.services['1'])}
+                  <br />
+                  <small style={{color:'#333333'}}>{renderHelpText(currentUser.customer.services['1'])}</small>
+                </td>
+                <td><div className="actions">{renderAction(currentUser.customer.services['1'])}</div></td>
+              </tr>
+            )}
+            {[1,2,3,4,5].map((index)=>
+              <tr key={index}>
+                <td colSpan="5">&nbsp;</td>
+              </tr>
+            )}
+          </tbody>
+        </Table>          
+        )}
+      </div>
     <Modal
       dialogClassName="warning-form"
       show={showPayment}
@@ -196,8 +241,8 @@ const SubscriptionsPage = () => {
         Para reactivar su membresía debe tener un método de pago afiliado.
       </Modal.Body>
       <Modal.Footer>
-          <button className="btn btn-subscription-renewal" onClick={handleShowCredit}  type="button">Ingresar Método de Pago</button>
-        </Modal.Footer>        
+        <button className="btn btn-subscription-renewal" onClick={handleShowCredit}  type="button">Ingresar Método de Pago</button>
+      </Modal.Footer>        
     </Modal>
     <SectionCancelSubscription  handleClose={handleCloseCancel} show={showCancel}  credit={false}/>
     <SectionRenewal handleClose={handleCloseRenewal} show={showRenewal} />

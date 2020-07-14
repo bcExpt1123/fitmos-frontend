@@ -80,6 +80,19 @@ h3 {
   }  
   padding-bottom: 100px;
 }
-.Modal-Portal .datepicker .datepicker-navbar-btn{
-  float: none;
+.Modal-Portal {
+  .datepicker{
+    .datepicker-navbar-btn{
+      float: none;
+    }
+    &.default {
+      .datepicker-header,.datepicker-navbar-btn{
+        color:black;
+      }
+      .datepicker-wheel{
+        border-top-color: black;
+        border-bottom-color: black;
+      }
+    }
+  } 
 }

@@ -2,6 +2,7 @@
   position: relative;
   display: inline-block;
   vertical-align: middle;
+
   .avatar-clip,
   img {
     display: block;
@@ -12,13 +13,17 @@
 .xs {
   width: 30px;
   height: 30px;
+  overflow: hidden;
+  border-radius: 50%;
   .avatar-clip {
     img {
-      border-radius: 20px;
+      width: 100%;
+      height: auto;
+      margin-top: -7px;
     }
   }
 }
 .xl {
-  width: 160px;
+  width: 130px;
   height: 160px;
 }

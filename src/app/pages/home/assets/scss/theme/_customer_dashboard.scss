@@ -105,13 +105,16 @@
   .profile {
     .card-img {
       float: left;
-      width: 100px;
+      width: 120px;
       height: 148px;
       border-radius: 7px;
     }
     .info {
       margin-left: 135px;
       font-weight: 500;
+      .card-title{
+        font-size: 1.2rem;
+      }
     }
   }
   .sub-body {

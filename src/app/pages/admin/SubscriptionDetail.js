@@ -113,7 +113,7 @@ function SubscriptionDetail() {
               </Grid>
             )}
             {subscription.cancelled_reason && (
-              <Grid item xs={3}>
+              <Grid item xs={6}>
                 <label className="font-weight-bold d-block">Cancelled Reason</label>
                 {subscription.cancelled_reason}
               </Grid>

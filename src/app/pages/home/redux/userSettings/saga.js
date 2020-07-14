@@ -11,7 +11,7 @@ import { addAlertMessage } from "../alert/actions";
 //import { setUser } from '../auth/actions';
 //import { logError } from '../../lib/logError';
 import { http } from "../../services/api";
-import { updateProfile, updateAdminProfile, updateEmail } from "./actions";
+import { updateProfile, updateAdminProfile, updateEmail, triggerNotifiable } from "./actions";
 import { authenticate as regenerateAuthAction } from "../auth/actions";
 const flattenErrors = errObj =>
   Object.keys(errObj).reduce(
@@ -235,7 +235,7 @@ export function* onUpdateAdminProfile({
 const updateUserEmail = params => {
   return http({ path: `users/email`, method: "PUT", data: params });
 };
-export function* onUpdateEmail({ payload: { params, resolve, reject } }) {
+function* onUpdateEmail({ payload: { params, resolve, reject } }) {
   let errors = {};
   let success = false;
 
@@ -307,9 +307,19 @@ export function* onUpdateEmail({ payload: { params, resolve, reject } }) {
   // yield put profile udate action
   yield put(regenerateAuthAction());
 }
-
+function triggerNotifiableAction(){
+  return http({ path: `customers/triggerNotifiable`, method: "POST"});
+}
+function* onTriggerNotifiable(){
+  try {
+    yield call(triggerNotifiableAction);
+    yield put(regenerateAuthAction());
+  } catch (error) {
+  } 
+}
 export default function* rootSaga() {
   yield takeLeading(updateProfile, onUpdateProfile);
   yield takeLeading(updateAdminProfile, onUpdateAdminProfile);
   yield takeLeading(updateEmail, onUpdateEmail);
+  yield takeLeading(triggerNotifiable,onTriggerNotifiable);
 }

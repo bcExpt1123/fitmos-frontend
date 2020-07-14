@@ -71,6 +71,13 @@ export const Routes = withRouter(({ history }) => {
       dispatch(validCartId({id,history}));
     }
   }
+  if(window.location.pathname=='/' && window.location.hash=='#unsubscribe'){
+    if(currentUser&&currentUser.customer){
+      history.push('/settings/notifications');
+    }else{
+      reactLocalStorage.set('redirect','/settings/notifications');
+    }
+  }
   const checkout = reactLocalStorage.get('checkout');
   const urls = [
     "/admin",
@@ -121,6 +128,7 @@ export const Routes = withRouter(({ history }) => {
     "/settings/profile",
     "/settings/payments",
     "/settings/bills",
+    "/settings/notifications",
     "/news",
     "/news/:id",
     "/ayuda",
