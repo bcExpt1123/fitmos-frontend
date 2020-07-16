@@ -229,7 +229,7 @@ function* changeItem({ id }) {
   }
 }
 const saveService = service => {
-  const formData = new FormData();
+  let formData = new FormData();
   if (service.uploadImage) {
     const files = Array.from(service.uploadImage);
     files.forEach((file, i) => {

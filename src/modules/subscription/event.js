@@ -363,6 +363,7 @@ function* changeItem({ id }) {
       return event.id == id;
     });
     if (filterEvents.length > 0) {
+      filterEvents[0].immediate = false;
       yield put({ type: actionTypes.EVENT_SET_ITEM, item: filterEvents[0] });
       yield put({ type: actionTypes.EVENT_UPLOAD_IMAGE, image: null });
       return;
@@ -386,6 +387,7 @@ const saveEvent = event => {
   formData.append("title", event.item.title);
   formData.append("description", event.item.description);
   formData.append("category_id", event.item.category_id);
+  formData.append("post_date", event.item.date + ' ' + event.item.datetime+':00');
   if (event.uploadImage) {
     const files = Array.from(event.uploadImage);
     files.forEach((file, i) => {
@@ -454,7 +456,10 @@ function* newItemFetch(){
     description: "",
     status: "",
     uploadImage: "",
-    category_id: null
+    category_id: null,
+    immediate:true,
+    date:"",
+    datetime:"" 
   };
   yield put({ type: actionTypes.EVENT_SET_ITEM, item });
 }

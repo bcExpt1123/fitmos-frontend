@@ -34,7 +34,7 @@ const Home = ({ auth,history }) => {
           <title>Mi tablero -Fitemos </title>
           <meta
             name="description"
-            content="Entrenamientos intensivos y planes de entrenamiento individual en Fitemos."
+            content="Entrenamientos Funcionales 100% Personalizados, Orientado a tus Objetivos, Guiados por Experto. Realízala en tu hogar o gimnasio preferido, en el momento que gustes."
           />
         </MetaTags>
         <NotificationSection />
@@ -48,12 +48,12 @@ const Home = ({ auth,history }) => {
       <>
         <MetaTags>
           <title>
-            Entrenamientos intensivos y planes de entrenamiento individuales.
+            Workout Intensos y Personalizados a tus objetivos.
             -Fitemos{" "}
           </title>
           <meta
             name="description"
-            content="Entrenamientos intensivos y planes de entrenamiento individual en Fitemos."
+            content="Entrenamientos Funcionales 100% Personalizados, Orientado a tus Objetivos, Guiados por Experto. Realízala en tu hogar o gimnasio preferido, en el momento que gustes."
           />
         </MetaTags>
         <SectionBanner />

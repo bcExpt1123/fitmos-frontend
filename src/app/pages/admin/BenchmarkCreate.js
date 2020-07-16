@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import {
   $setNewItem,
@@ -10,34 +9,15 @@ import {
   $changeItem,
   $updateItemImage
 } from "../../../modules/subscription/benchmark";
-import { validateEmail } from "../../../modules/validate.js";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
 import Grid from "@material-ui/core/Grid";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import IconButton from "@material-ui/core/IconButton";
-
-const useStyles = () => {
-  return makeStyles(theme => ({
-    root: {
-      display: "block",
-      flexWrap: "wrap"
-    },
-    textField: {
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2)
-    },
-    margin: {
-      margin: theme.spacing(1)
-    }
-  }));
-};
+import Checkbox from '@material-ui/core/Checkbox';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
 
 class Main extends Component {
   //function Main({item,isloading})
@@ -46,8 +26,9 @@ class Main extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleOnSubmit = this.handleOnSubmit.bind(this);
     this.handleCapture = this.handleCapture.bind(this);
+    this.handleChangeImmediate = this.handleChangeImmediate.bind(this);
     this.classes = this.useStyles();
-    this.state = { file: "" };
+    this.state = { file: ""};
   }
   handleOnSubmit = e => {
     e.preventDefault();
@@ -67,6 +48,24 @@ class Main extends Component {
     return benchmark => {
       this.props.$updateItemValue(name, benchmark.target.value);
     };
+  }
+  handleChangeImmediate(e) {
+    if(this.props.item.immediate){
+      this.props.$updateItemValue('immediate', false);
+      const today =  new Date();
+      let month = today.getMonth()+1;
+      if(month<10)month = '0'+month;
+      let day = today.getDate();
+      if(day<10)day = '0'+day;
+      this.props.$updateItemValue('date', today.getFullYear()+'-'+month+'-'+day);
+      let hour = today.getHours();
+      if(hour<10)hour = '0'+hour;
+      let minute = today.getMinutes();
+      if(minute<10)minute = '0'+minute;
+      this.props.$updateItemValue('datetime', hour+':'+minute);
+    }else{
+      this.props.$updateItemValue('immediate', true);
+    }
   }
   useStyles() {
     return makeStyles(theme => ({
@@ -94,7 +93,7 @@ class Main extends Component {
             autoComplete="off"
           >
             <Grid container spacing={3}>
-              <Grid item xs={8}>
+              <Grid item xs={5}>
                 <TextField
                   required
                   id="title"
@@ -107,7 +106,7 @@ class Main extends Component {
                   margin="normal"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   required
                   id="time"
@@ -117,6 +116,43 @@ class Main extends Component {
                   onChange={this.handleChange("time")}
                   margin="normal"
                 />
+              </Grid>
+              <Grid item xs={4} className="mt-3">
+                <FormControlLabel
+                  control={
+                    <Checkbox checked={this.props.item.immediate} onChange={this.handleChangeImmediate} value="true" />
+                  }
+                  label="Immediately"
+                />
+                {this.props.item.immediate===false&&(
+                  <>
+                    <TextField
+                      id="publish-date"
+                      label="Published date"
+                      type="date"
+                      value={this.props.item.date}
+                      className={this.classes.textField}
+                      onChange={this.handleChange("date")}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    />
+                    <TextField
+                      id="publish-time"
+                      label=" "
+                      type="time"
+                      value={this.props.item.datetime}
+                      className={this.classes.textField}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      onChange={this.handleChange("datetime")}
+                      inputProps={{
+                        step: 300, // 5 min
+                      }}
+                    />    
+                  </>              
+                )}
               </Grid>
               <Grid item xs={8}>
                 <TextField

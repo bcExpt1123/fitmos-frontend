@@ -185,7 +185,7 @@ export function $changeItem(id) {
   return { type: actionTypes.BENCHMARK_CHANGE_ITEM, id: id };
 }
 export function $setNewItem() {
-  const item = { id: null, title: "", description: "", time: "", image: "" };
+  const item = { id: null, title: "", description: "", time: "", image: "",immediate:true,date:"",datetime:"" };
   return { type: actionTypes.BENCHMARK_SET_ITEM, item };
 }
 export function $saveItem(history) {
@@ -335,6 +335,7 @@ function* changeItem({ id }) {
       return benchmark.id == id;
     });
     if (filterBenchmarks.length > 0) {
+      filterBenchmarks[0].immediate = false;
       yield put({
         type: actionTypes.BENCHMARK_SET_ITEM,
         item: filterBenchmarks[0]
@@ -364,6 +365,7 @@ const saveBenchmark = benchmark => {
   formData.append("title", benchmark.item.title);
   formData.append("description", benchmark.item.description);
   formData.append("time", benchmark.item.time);
+  formData.append("post_date", benchmark.item.date + ' ' + benchmark.item.datetime+':00');
   if (benchmark.uploadImage) {
     const files = Array.from(benchmark.uploadImage);
     files.forEach((file, i) => {
