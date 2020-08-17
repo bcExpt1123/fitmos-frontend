@@ -10,6 +10,7 @@ import {
   setSurvey,
   startProfileImageUploading,
   endProfileImageUploading,
+  setShopMenu,
 } from "./actions";
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   survey:null,
   tagLine:null,
   isProfileImageLoading:false,
+  shopMenu:null,
 };
 const reducer = persistReducer(
   {
@@ -72,6 +74,10 @@ const reducer = persistReducer(
       [endProfileImageUploading]:(state) =>({
         ...state,
         isProfileImageLoading:false,
+      }),
+      [setShopMenu]:(state,{ payload:{shopMenu}})=>({
+        ...state,
+        shopMenu
       }),
     },
     initialState

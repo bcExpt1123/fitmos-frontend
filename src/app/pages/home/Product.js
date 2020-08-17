@@ -20,7 +20,7 @@ const ProductPage = ({match}) => {
     </MetaTags>
     <ThreeColumn>
       {product&&product.company&&(
-        <PageHeader title={`Shop`} breadcrumb={[{name:"Shop",url:"/shop",arrow:true},{name:product.company.name,url:`/companies/${product.company_id}`,arrow:false}]}/>
+        <PageHeader title={`Shop`} breadcrumb={[{name:"Shop",url:"/shop",arrow:true},{name:product.company.name,url:`/shop/companies/${product.company_id}`,arrow:false}]}/>
       )}
       <Product match={match}/>
     </ThreeColumn>

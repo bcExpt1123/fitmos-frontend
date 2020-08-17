@@ -7,7 +7,7 @@ import { http } from "../../app/pages/home/services/api";
 import { INDEX_PAGE_SIZE_DEFAULT, INDEX_PAGE_SIZE_OPTIONS } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut, deleteAuthData } from "../../app/pages/home/redux/auth/actions";
-import { setWorkout } from "../../app/pages/home/redux/done/actions";
+import { setShopMenu } from "../../app/pages/home/redux/done/actions";
 export const actionTypes = {
   COMPANY_INDEX_REQUEST: "COMPANY_INDEX_REQUEST",
   COUNTRY_INDEX_REQUEST: "COUNTRY_INDEX_REQUEST",
@@ -541,6 +541,11 @@ function* fetchFrontCompany(){
       frontData: result.data,
       frontMeta: { total: result.total, pageTotal: result.last_page }
     });
+    if(result.total>0){
+      yield put(setShopMenu({shopMenu:true}));
+    }else{
+      yield put(setShopMenu({shopMenu:false}));
+    }
   } catch (e) {
     yield put({ type: actionTypes.COMPANY_INDEX_FAILURE, error: e.message });
   }

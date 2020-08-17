@@ -14,6 +14,7 @@ export const {
   submitSurvey,
   startProfileImageUploading,
   endProfileImageUploading,
+  setShopMenu,
 } = createActions(
   "DONE_WORKOUT",
   "SET_WORKOUT",
@@ -28,5 +29,6 @@ export const {
   "SUBMIT_SURVEY",
   "START_PROFILE_IMAGE_UPLOADING",
   "END_PROFILE_IMAGE_UPLOADING",
+  "SET_SHOP_MENU",
   { prefix: "DONE" }
 );

@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react';
 import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
 import classnames from "classnames";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { withRouter } from "react-router";
@@ -10,7 +10,7 @@ import { withRouter } from "react-router";
 import { toAbsoluteUrl,isMobile } from "../../../../_metronic/utils/utils";
 import NotificationSection from "../sections/NotificationSection";
 import { logOut as logOutAction } from "../redux/auth/actions";
-import { MailruIcon } from 'react-share';
+import { $fetchFrontIndex } from "../../../../modules/subscription/company";
 
 
 const SideBar = ({history}) => {
@@ -18,12 +18,16 @@ const SideBar = ({history}) => {
   const [subContain, setSubContain] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showForm,setShowForm] = useState(false);
+  const shopMenu = useSelector(({done})=>done.shopMenu);
   useEffect(()=>{
     const paths = ["/perfil","/profile","/ayuda"];
     if( paths.includes(window.location.pathname)){
       console.log("contain");
       setSubmenu(false);
       setSubContain(true);
+    }
+    if(shopMenu === null){
+      dispatch($fetchFrontIndex());
     }
   },[]);
   const expandSubmenu = ()=>{
@@ -114,18 +118,20 @@ const SideBar = ({history}) => {
               <i className="menu-arrow" />
             </NavLink>
           </li>
-          <li>
-            <NavLink className="menu-link menu-toggle" to="/shop" activeClassName="active">
-              <span className="svg-icon menu-icon">
-                <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/shop.svg")} />
-              </span>
-              <span className="svg-icon-active menu-icon">
-                <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/shop-active.svg")} />
-              </span>
-              <span className="menu-text">Shop</span>
-              <i className="menu-arrow" />
-            </NavLink>
-          </li>
+          {shopMenu&&(
+            <li>
+              <NavLink className="menu-link menu-toggle" to="/shop" activeClassName="active">
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/shop.svg")} />
+                </span>
+                <span className="svg-icon-active menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/shop-active.svg")} />
+                </span>
+                <span className="menu-text">Shop</span>
+                <i className="menu-arrow" />
+              </NavLink>
+            </li>
+          )}
           <li>
             <NavLink className="menu-link menu-toggle" to="/partners" activeClassName="active">
               <span className="svg-icon menu-icon">

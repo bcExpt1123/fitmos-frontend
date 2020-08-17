@@ -3,7 +3,7 @@ import { persistReducer } from "redux-persist";
 import {put,call,takeLatest,takeLeading,select,delay} from "redux-saga/effects";
 import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
-import { http } from "../../app/pages/home/services/api";
+import { http, fileDownload } from "../../app/pages/home/services/api";
 import {INDEX_PAGE_SIZE_DEFAULT,INDEX_PAGE_SIZE_OPTIONS } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
 import {logOut} from "../../app/pages/home/redux/auth/actions";
@@ -42,6 +42,7 @@ export const actionTypes = {
     PRODUCT_FRONT_INDEX_SUCCESS:"PRODUCT_FRONT_INDEX_SUCCESS",
     PRODUCT_FRONT_PAGE_CHANGED:"PRODUCT_FRONT_PAGE_CHANGED",
     PRODUCT_FRONT_SHOW:"PRODUCT_FRONT_SHOW",
+    PRODUCT_GENERATE_VOUCHER:"PRODUCT_GENERATE_VOUCHER",
   };
   export const selectors = {};
   
@@ -226,7 +227,7 @@ export const actionTypes = {
     return { type: actionTypes.PRODUCT_FRONT_PAGE_CHANGED, page: page };
   }
   export const $showFrontProduct = (id) => ({ type: actionTypes.PRODUCT_FRONT_SHOW,id });
-  
+  export const $generateVoucher = ()=>({type:actionTypes.PRODUCT_GENERATE_VOUCHER})
 	const productsRequest = (meta, searchCondition,item) =>
   http({
     path: `products?${serializeQuery({
@@ -526,6 +527,28 @@ function* showFrontProduct({id}){
     });    
   }
 }
+function download(path){
+  fileDownload({path}).then((response)=>{
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'voucher.pdf'); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+  });
+}
+function* generateVoucher(){
+  const product = yield select(({product}) => product.item);
+  const path = `products/${product.id}/download`;
+  //yield put({type:actionTypes.CUSTOMER_EXPORT_START});
+  try{
+    yield call(download,path);
+    //yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }catch(e){
+    console.log(e)
+    //yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }
+}
 
 export function* saga() {
   yield takeLatest(actionTypes.PRODUCT_INDEX_REQUEST, fetchProducts);
@@ -540,4 +563,5 @@ export function* saga() {
   yield takeLeading(actionTypes.PRODUCT_FRONT_INDEX_REQUEST, fetchFrontProducts);
   yield takeLeading(actionTypes.PRODUCT_FRONT_PAGE_CHANGED, changeFrontPage);
   yield takeLeading(actionTypes.PRODUCT_FRONT_SHOW, showFrontProduct);
+  yield takeLeading(actionTypes.PRODUCT_GENERATE_VOUCHER,generateVoucher);
 }

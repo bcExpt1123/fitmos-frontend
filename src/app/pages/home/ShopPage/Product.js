@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import SectionProduct from "./SectionProduct";
-import { $showFrontProduct } from "../../../../modules/subscription/product";
+import { $showFrontProduct, $generateVoucher } from "../../../../modules/subscription/product";
 
 
 const Product = ({match}) => {
@@ -17,6 +17,9 @@ const Product = ({match}) => {
     if(product.item.gallery)setImage(product.item.gallery[0]);
   }, [product.item]);
   const products = product.frontData;
+  const handleClick = ()=>{
+    dispatch($generateVoucher());
+  }
   return (
     <section className="product" id="company">
       {product&&image&&(
@@ -51,13 +54,13 @@ const Product = ({match}) => {
                     <label>Usage</label>&nbsp;&nbsp;<span>{product.item.voucher_type}</span>
                   </span>
               </div>
-              <button className="btn btn-primary mt-3">Print Voucher</button>
+              <button className="btn btn-primary mt-3" onClick={handleClick}>Print Voucher</button>
             </div>
           </div>
           <div className="row">
             <div className="gallery col-12 col-md-3 mt-2">
               {product.item.gallery&&product.item.gallery.map( image=>
-                <div>
+                <div key={image.id}>
                   <img src={image.thumbnail} key={image.id} onClick={()=>setImage(image)}/>
                 </div>
               )}

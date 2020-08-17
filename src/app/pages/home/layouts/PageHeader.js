@@ -10,7 +10,7 @@ const PageHeader = ({title,tagLine, breadcrumb})=>{
         breadcrumb.map((item, index)=>
           <NavLink
             title={item.name}
-            to={`/shop/companies/${item.id}`}
+            to={item.url}
             key={index}
           >
             {item.name} 
