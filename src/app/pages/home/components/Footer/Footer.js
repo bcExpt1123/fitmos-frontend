@@ -78,19 +78,19 @@ function Footer({ locale, checkout }) {
                     <a href="https://www.instagram.com/fitemoslatam/" target='_blank'>
                       <img src={require("../../assets/social/instagram.png")} />
                       &nbsp;&nbsp;Instagram
-                  </a>
+                    </a>
                   </li>
                   <li>
                     <a href="https://www.facebook.com/fitemoslatam" target='_blank'>
                       <img src={require("../../assets/social/facebook.png")} />
                       &nbsp;&nbsp;Facebook
-                  </a>
+                    </a>
                   </li>
                   <li>
                     <a href="https://www.youtube.com/channel/UCI_YlVV3NhzHr2HoYp0LcVw" target='_blank'>
                       <img src={require("../../assets/social/youtube.png")} />
                       &nbsp;&nbsp;Youtube
-                  </a>
+                    </a>
                   </li>
                 </ul>
               </div>

@@ -2,16 +2,6 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
-import {
-  $datePicked,
-  $prevWeek,
-  $nextWeek,
-  $fetchWeeklyCms,
-  $openCell,
-  $openPreviewCell,
-  $updateItemValue,
-  $submitContent
-} from "../../../modules/subscription/cms";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableHead from "@material-ui/core/TableHead";
@@ -20,19 +10,24 @@ import TableCell from "@material-ui/core/TableCell";
 import TableRow from "@material-ui/core/TableRow";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
 import classnames from "classnames";
 import IconButton from "@material-ui/core/IconButton";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import { Markup } from "interweave";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {
+  $datePicked,
+  $prevWeek,
+  $nextWeek,
+  $fetchWeeklyCms,
+  $openCell,
+  $openPreviewCell,
+  $updateItemValue,
+  $submitContent,
+  $updateImage
+} from "../../../modules/subscription/cms";
+import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
+import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
+import WorkoutNoteEditDialog from "./dialog/WorkoutNoteEditDialog";
+import WorkoutPreviewDialog from "./dialog/WorkoutPreviewDialog";
 
 const useStyles = makeStyles(theme => ({
   border: {
@@ -68,8 +63,15 @@ function Main({
   editorDate,
   column,
   content,
+  note,
+  image,
+  timerType,
+  work,
+  round,
+  rest,
   $updateItemValue,
   $submitContent,
+  $updateImage,
   $openPreviewCell,
   previewContent
 }) {
@@ -120,14 +122,21 @@ function Main({
     "activo",
     "blog"
   ];
-  const [open, setOpen] = React.useState(false);
+  const [openFirst, setOpenFirst] = React.useState(false);
+  const [openBlock, setOpenBlock] = React.useState(false);
+  const [openBlog, setOpenBlog] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
   const handleClickOpen = (day, column) => {
     if (activateWorkout(day, column)) {
-      setOpen(true);
+      if(column == 'comentario'){
+        setOpenFirst(true);
+      }else if(column == 'blog'){
+        setOpenBlog(true);
+      }else{
+        setOpenBlock(true);
+      }
       let cellDate = new Date(pickedDate.getTime());
       const weekDay = cellDate.getDay();
-      console.log(weekDay);
       let date = cellDate.getDate() - cellDate.getDay() + day+1;
       if(weekDay == 0){
         date = cellDate.getDate() - cellDate.getDay() + day-6;
@@ -174,17 +183,36 @@ function Main({
     return true;
   };
   const handleClose = () => {
-    setOpen(false);
+    setOpenFirst(false);
+    setOpenBlock(false);
+    setOpenBlog(false);
   };
   const handleClosePreview = () => {
     setOpenPreview(false);
   };
   const handleSave = () => {
-    setOpen(false);
+    setOpenFirst(false);
+    setOpenBlock(false);
+    setOpenBlog(false);
     $submitContent();
   };
   const handleChange = event => {
-    $updateItemValue(event.target.value);
+    $updateItemValue('content',event.target.value);
+  };
+  const handleNoteChange = event => {
+    $updateItemValue('note',event.target.value);
+  };
+  const handleTimerTypeChange = event => {
+    $updateItemValue('timerType',event.target.value);
+  };
+  const handleTimerWorkChange = event => {
+    $updateItemValue('timerWork',event.target.value);
+  };
+  const handleTimerRoundChange = event => {
+    $updateItemValue('timerRound',event.target.value);
+  };
+  const handleTimerRestChange = event => {
+    $updateItemValue('timerRest',event.target.value);
   };
   return (
     <Paper className={classes.root}>
@@ -317,79 +345,53 @@ function Main({
           </TableBody>
         </Table>
       </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-workout-edit-title"
-        fullWidth={true}
-        maxWidth="lg"
-      >
-        <DialogTitle id="form-dialog-workout-edit-title">
-          {editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}{" "}
-          {column && columnLabels[column]}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please write down workout content.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label=""
-            type="email"
-            multiline={true}
-            rows={26}
-            rowsMax={28}
-            value={content}
-            onChange={handleChange}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={openPreview}
-        onClose={handleClosePreview}
-        aria-labelledby="form-dialog-workout-preview-title"
-        fullWidth={true}
-        maxWidth="lg"
-      >
-        <DialogTitle id="form-dialog-workout-preview-title">
-          {editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}{" "}
-          {column && columnLabels[column]}
-        </DialogTitle>
-        <DialogContent>
-          <Row>
-            <Col sm={6}>
-              <h4>Email Preview</h4>
-              <div style={{ whiteSpace: "pre-wrap" }}>
-                {previewContent.content && (
-                  <Markup content={previewContent.content[0]} />
-                )}
-              </div>
-            </Col>
-            <Col sm={6}>
-              <h4>Whatsapp Preview</h4>
-              <div style={{ whiteSpace: "pre-wrap" }}>
-                {previewContent.whatsapp && previewContent.whatsapp[0]}
-              </div>
-            </Col>
-          </Row>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClosePreview} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <WorkoutImageEditDialog 
+        open={openFirst} 
+        handleClose={handleClose} 
+        title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
+        subTitle={column && columnLabels[column]} 
+        content={content}
+        image={image}
+        updateImage={$updateImage}
+        handleChange={handleChange}
+        handleSave={handleSave}
+      />
+      <WorkoutEditDialog 
+        open={openBlog} 
+        handleClose={handleClose} 
+        title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
+        subTitle={column && columnLabels[column]} 
+        content={content}
+        handleChange={handleChange}
+        handleSave={handleSave}
+      />
+      <WorkoutNoteEditDialog 
+        open={openBlock} 
+        handleClose={handleClose} 
+        title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
+        subTitle={column && columnLabels[column]} 
+        content={content}
+        note={note}
+        timerType={timerType}
+        work={work}
+        round={round}
+        rest={rest}
+        handleChange={handleChange}
+        handleNoteChange={handleNoteChange}
+        handleTimerTypeChange={handleTimerTypeChange}
+        handleTimerWorkChange={handleTimerWorkChange}
+        handleTimerRoundChange={handleTimerRoundChange}
+        handleTimerRestChange={handleTimerRestChange}
+        handleSave={handleSave}
+      />
+      <WorkoutPreviewDialog
+        open={openPreview} 
+        handleClose={handleClosePreview} 
+        title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
+        subTitle={column && columnLabels[column]} 
+        content={previewContent.content}
+        whatsapp={previewContent.whatsapp}
+      />
     </Paper>
   );
 }
@@ -398,7 +400,13 @@ const mapStateToProps = state => ({
   data: state.cms.data,
   editorDate: state.cms.editorDate,
   column: state.cms.column,
+  image:state.cms.image,
   content: state.cms.content,
+  note: state.cms.note,
+  timerType:state.cms.timerType,
+  work:state.cms.timerWork,
+  round:state.cms.timerRound,
+  rest:state.cms.timerRest,
   previewContent: state.cms.previewContent
 });
 const mapDispatchToProps = {
@@ -406,7 +414,8 @@ const mapDispatchToProps = {
   $openCell,
   $openPreviewCell,
   $updateItemValue,
-  $submitContent
+  $submitContent,
+  $updateImage,
 };
 const WeeklyEditor = injectIntl(
   connect(mapStateToProps, mapDispatchToProps)(Main)

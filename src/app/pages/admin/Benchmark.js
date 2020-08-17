@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,useEffect } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
@@ -64,36 +64,37 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" ,width:"150"},
   { id: "action", numeric: false, disablePadding: false, label: "Actions" ,width:"100"}
 ];
-function Main({
-  benchmarks,
-  meta,
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-}) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
-  const rowsPerPage = meta.pageSize;
+  const dispatch=useDispatch();
+  const benchmark = useSelector(({ benchmark }) => benchmark);
+  useEffect(() => {
+    dispatch($fetchIndex())
+  }, []);
+  const benchmarks = benchmark.data;
+  const meta = benchmark.meta;
+  const page = benchmark.meta.page - 1;
+  const rowsPerPage = benchmark.meta.pageSize;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
-  const handleChangePage = (benchmark, newPage) => {
-    $page(newPage + 1);
+  const handleChangePage = (event, newPage) => {
+    dispatch($page(newPage + 1));
   };
 
-  const handleChangeRowsPerPage = benchmark => {
-    $pageSize(parseInt(benchmark.target.value, 10));
+  const handleChangeRowsPerPage = event => {
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
-  const actionDisable = id => benchmark => {
-    $disable(id);
+  const actionDisable = id => event => {
+    console.log(1111);
+    dispatch($disable(id));
   };
-  const actionRestore = id => benchmark => {
-    $restore(id);
+  const actionRestore = id => event => {
+    dispatch($restore(id));
   };
-  const actionDelete = id => benchmark => {
-    if (window.confirm("Are you sure to delete this item?")) $delete(id);
+  const actionDelete = id => event => {
+    console.log(333);
+    if (window.confirm("Are you sure to delete this item?")) dispatch($delete(id));
   };
   return (
     <>
@@ -215,43 +216,13 @@ function Main({
     </>
   );
 }
-const mapStateToProps = state => ({
-  benchmarks: state.benchmark.data,
-  meta: state.benchmark.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-};
-const BenchmarkConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class BenchmarkWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <BenchmarkConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Benchmarks = injectIntl(
-  connect(null, mapDispatchToProps1)(BenchmarkWrapper)
-);
-function Sub({ searchCondition, $changeConditionValue }) {
+const Benchmarks = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ benchmark }) => benchmark.searchCondition);
   const handleChange = name => benchmark => {
-    $changeConditionValue(name, benchmark.target.value);
+    dispatch($changeConditionValue(name, benchmark.target.value));
   };
   return (
     <>
@@ -293,13 +264,5 @@ function Sub({ searchCondition, $changeConditionValue }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.benchmark.searchCondition
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue
-};
-const SubHeaderBenchmarks = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+const SubHeaderBenchmarks = injectIntl(Sub);
 export { Benchmarks, SubHeaderBenchmarks };

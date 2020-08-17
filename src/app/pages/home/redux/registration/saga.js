@@ -337,7 +337,9 @@ function* onRegisterWithFacebook({ payload }) {
   }
 
   let response;
-  const couponCode = reactLocalStorage.get('publicCoupon');
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
   //const locale = yield select((store) => store.i18n.lang);
   //const gender = getGenderFromAthleteProfile();
   try {
@@ -438,7 +440,9 @@ function* onRegisterWithGoogle({ payload }) {
   } catch (error) {
     return { error: getGoogleErrorMessage(error) };
   }
-  const couponCode = reactLocalStorage.get('publicCoupon');
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
   let response;
   try {
     response = yield call(googleRequest, {
@@ -502,7 +506,9 @@ function* onRegister({ type, payload }) {
   const { provider, requestFunction, trackingProvider } = registrationTypes[
     type
   ];
-  const couponCode = reactLocalStorage.get('publicCoupon');
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
   payload.couponCode = couponCode;
   try {
     const result = yield call(requestFunction, { payload });

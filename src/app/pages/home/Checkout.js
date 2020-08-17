@@ -67,11 +67,12 @@ const CheckoutPage = ({
     reactLocalStorage.set('checkout', true);
     dispatch(inside({activePlan}));
     checkVoucher();
+    dispatch(checkPaymentMode());
     return () => {
       dispatch(outside());
     };
   },[]);
-  checkPaymentMode();
+  
 
   // Voucher entered manually by user via voucher form, or from query params,
   if (activePlan === null) {
@@ -81,6 +82,7 @@ const CheckoutPage = ({
 
   const service = "workout";
   let checkoutType = 1;
+  if(activePlan)checkoutType = 2;
   const vouchers = {
     workout: {
       "3-months": ""
@@ -95,8 +97,8 @@ const CheckoutPage = ({
   const selectedProduct = {
     id: "1",
     platform: "web",
-    amount_cents: 209850,
-    recurring_amount_cents: 209850,
+    //amount_cents: 209850,
+    //recurring_amount_cents: 209850,
     currency: "USD",
     currency_exponent: 2,
     interval: activePlan,
@@ -120,7 +122,7 @@ const CheckoutPage = ({
   if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal == '1')) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(enteredVoucher.form == '%')pricing.discountedPrices.total = (pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100;
+    if(enteredVoucher.form == '%')pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
     else {
       pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
       if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;

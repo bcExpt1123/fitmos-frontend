@@ -1,0 +1,45 @@
+.invite{
+  background-color:white;
+  border-radius:10px;
+  padding:40px 80px;
+  &>h3{
+    font-size:24px;
+  }
+  ul{
+    li{
+      font-size:16px;
+      font-weight:500;
+      padding-bottom:25px;
+      color: #000000;
+    }
+  }
+  #dropdown-invitation{
+    position:relative;
+    display:block;
+    background-color:#1A7998!important;
+    padding:12px;
+    border-radius: 3px;
+    font-size:16px;
+    color:white;
+    width:206px;
+    margin-left:auto;
+    margin-right:auto;
+    &.btn.dropdown-toggle:after{
+      display:none;
+    }
+  }
+  .dropdown-item{
+    button{
+      padding-left:10px!important;
+    }
+    &:active{
+      background-color:transparent;
+    }
+  }
+}
+@media (max-width: 991px) {
+  .invite{
+    border-radius:5px;
+    padding:10px 20px;
+  }
+}

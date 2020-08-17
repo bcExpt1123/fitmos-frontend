@@ -29,15 +29,17 @@ import { Medals } from "./Medals";
 import { MedalCreate } from "./MedalCreate";
 import { CartSettings } from "./SettingsPage/SectionCartSettings";
 import { Permissions } from "./SettingsPage/SectionPermissions";
+import { Referral } from "./SettingsPage/SectionReferral";
+import { TagLine } from "./SettingsPage/SectionTagLine";
 import { UserProfile } from "./UserProfile";
+import {Survey}  from "./Survey";
+import { SurveyCreate } from "./SurveyCreate";
+import {Products}  from "./Products";
+import {ViewImages}  from "./ViewImages";
+import {Companies}  from "./Companies";
+import { CompanyCreate } from "./CompanyCreate";
+import { ProductCreate } from "./ProductCreate";
 import { LayoutSplashScreen } from "../../../_metronic";
-
-const GoogleMaterialPage = lazy(() =>
-  import("../home/google-material/GoogleMaterialPage")
-);
-const ReactBootstrapPage = lazy(() =>
-  import("../home/react-bootstrap/ReactBootstrapPage")
-);
 
 export default function AdminPage() {
   // useEffect(() => {
@@ -102,7 +104,20 @@ export default function AdminPage() {
         <Route exact path="/admin/medals/:id" component={MedalCreate} />
         <Route exact path="/admin/settings/cart" component={CartSettings} />
         <Route exact path="/admin/settings/permissions" component={Permissions} />
+        <Route exact path="/admin/settings/referral" component={Referral} />
+        <Route exact path="/admin/settings/tag-line" component={TagLine} />
         <Route exact path="/admin/profile" component={UserProfile} />
+        <Route exact path="/admin/survey" component={Survey} />
+        <Route exact path="/admin/survey/:id" component={SurveyCreate} />
+        <Route exact path="/admin/survey/create" component={SurveyCreate}/>
+        <Route exact path="/admin/Companies" component={Companies} />
+        <Route exact path="/admin/companies/create" component={CompanyCreate} />
+        <Route exact path="/admin/companies/:id" component={CompanyCreate} />
+        <Route exact path="/admin/companies/:id/products" component={Products} />
+        <Route exact path="/admin/companies/:id/products/create" component={ProductCreate} />
+        <Route exact path="/admin/companies/:id/products/:id" component={ProductCreate} />
+        <Route exact path="/admin/companies/:id/products/:id" component={ProductCreate} />
+        <Route exact path="/admin/companies/:id/products/viewImages/:id" component={ViewImages} />
       </Switch>
     </Suspense>
   );

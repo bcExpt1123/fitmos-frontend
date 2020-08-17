@@ -5,12 +5,12 @@ import { useDispatch,useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import Modal from "react-bootstrap/Modal";
 
-import NavBar from "../../components/NavBar";
-import Footer from "../../components/Footer";
-import SectionCancelSubscription from "../../SectionCancelSubscription";
+import SectionCancelSubscription from "../../sections/SectionCancelSubscription";
 import SectionRenewal from "../../DashboardPage/SectionRenewal";
 import SectionCreditCard from "./SectionCreditCard";
+import SectionCancelledConfirm from "./SectionCancelledConfirm";
 import { $fetchIndex } from "../../../../../modules/subscription/tocken";
+import { $cancelActionCompleted } from "../../../../../modules/subscription/subscription";
 import "../../assets/scss/theme/style.scss";
 import "../../assets/scss/theme/mbr-additional.css";
 import "../../assets/scss/dropdown/style.css";
@@ -24,6 +24,7 @@ const SubscriptionsPage = () => {
   }, []);
   const items = useSelector(({ tocken }) => tocken.items);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
+  const cancelledCompleted = useSelector(({ subscription }) => subscription.cancelled.completed);
   const [showCancel, setShowCancel] = useState(false);
   const [showRenewal, setShowRenewal] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -44,6 +45,9 @@ const SubscriptionsPage = () => {
   }
   const handleCloseCredit = ()=>setShowCredit(false);
   const handleCloseRenewal = () => setShowRenewal(false);
+  const handleCloseCancelledConfirm = ()=>{
+    dispatch($cancelActionCompleted());
+  }
   const renderStatus = (subscription)=>{
     let status = '';
     switch(subscription.status){
@@ -247,6 +251,7 @@ const SubscriptionsPage = () => {
     <SectionCancelSubscription  handleClose={handleCloseCancel} show={showCancel}  credit={false}/>
     <SectionRenewal handleClose={handleCloseRenewal} show={showRenewal} />
     <SectionCreditCard handleClose={handleCloseCredit} show={showCredit} />
+    <SectionCancelledConfirm  handleClose={handleCloseCancelledConfirm} show={cancelledCompleted}/>
   </>)
 };
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import { http } from "../services/api";
+import { currentWorkoutPlan } from "../services/convert";
 import { reactivateSubscription } from "../../home/redux/checkout/actions";
 
 const SectionRenewal = ({show,handleClose}) => {
@@ -36,8 +36,8 @@ const SectionRenewal = ({show,handleClose}) => {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Membresía actual: &nbsp;{currentUser.customer.currentWorkoutPlanPeriod}</p>
-        <p>Próxima renovación:&nbsp;{currentUser.customer.renewalOptions&&currentUser.customer.renewalOptions.text[nextWorkoutPlan]}</p>
+        <p>Membresía actual: &nbsp;{currentWorkoutPlan(currentUser.customer.currentWorkoutPlan)}</p>
+        <p>Próxima renovación:&nbsp;{currentUser.customer.renewalOptions&&currentUser.customer.renewalOptions.nextDate[nextWorkoutPlan]}</p>
         <p>Editar próxima suscripción:</p>
         <Form>
           <Form.Group>

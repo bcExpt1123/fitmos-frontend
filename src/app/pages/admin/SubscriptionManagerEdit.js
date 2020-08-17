@@ -131,7 +131,18 @@ class Main extends Component {
                           margin="normal"
                         />
                       </Grid>
-                      <Grid item sm={8}>
+                      <Grid item sm={4}>
+                        <TextField
+                          id="free-duration"
+                          label="Free duration"
+                          className={this.classes.textField}
+                          type="number"
+                          value={this.props.item.free_duration}
+                          onChange={this.handleChange("free_duration")}
+                          margin="normal"
+                        />
+                      </Grid>
+                      <Grid item sm={4}>
                       </Grid>
                       <Grid item sm={4}>
                         <FormControl className={this.classes.formControl}>

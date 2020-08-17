@@ -365,7 +365,12 @@ const saveBenchmark = benchmark => {
   formData.append("title", benchmark.item.title);
   formData.append("description", benchmark.item.description);
   formData.append("time", benchmark.item.time);
-  formData.append("post_date", benchmark.item.date + ' ' + benchmark.item.datetime+':00');
+  if(benchmark.item.immediate){
+    formData.append("post_date","true");
+  }
+  else{
+    formData.append("post_date", benchmark.item.date + ' ' + benchmark.item.datetime+':00');
+  }
   if (benchmark.uploadImage) {
     const files = Array.from(benchmark.uploadImage);
     files.forEach((file, i) => {
@@ -542,8 +547,5 @@ export function* saga() {
   yield takeLatest(actionTypes.BENCHMARK_SAVE_ITEM, saveItem);
   yield takeLatest(actionTypes.BENCHMARK_FIND_PUBLISHED, findPublished);
   yield takeLeading(actionTypes.BENCHMARK_RESET_PUBLISHED,resetPublished);
-  yield takeLatest(
-    actionTypes.BENCHMARK_UPDATE_RESULT_ACTION,
-    updatePublishedResult
-  );
+  yield takeLatest(actionTypes.BENCHMARK_UPDATE_RESULT_ACTION,updatePublishedResult);
 }

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import addMonths from "date-fns/addMonths";
+import { useSelector } from "react-redux";
 
 import { INSTALLMENTS_INTEREST_RATE } from "../../services/product";
 import Card from "../../components/Card";
@@ -17,11 +18,11 @@ const styles = {};
 const ChargingInfo = ({
   activeVoucher,
   service,
-  checkoutKind,
   currency,
   prices,
   selectedProduct
 }) => {
+  const checkoutKind = useSelector(({checkout})=>checkout.checkoutKind);
   switch (checkoutKind) {
     case CHECKOUT_KIND.PROLONG:
     case CHECKOUT_KIND.ACTIVATE:
@@ -57,7 +58,6 @@ const ChargingInfo = ({
 const Cart = ({
   activeVoucher,
   service,
-  checkoutKind,
   pricing,
   selectedProduct,
   intl
@@ -74,12 +74,18 @@ const Cart = ({
     recurring: pricing.recurringPrices.total,
     different: pricing.discountedPrices.total - pricing.initialPrices.total
   };
-
+  const checkoutKind = useSelector(({checkout})=>checkout.checkoutKind);
+  const serviceItem = useSelector(({service})=>service.item);
   return (
     <section className={"cart"} data-cy="cart section">
       <h2 className="checkout-page-title display-3 d-block d-md-none pt-3">Checkout</h2>
       <Card padding="xs" noMarginBottom>
-        <h3>Detalle de compra</h3>
+        {checkoutKind==CHECKOUT_KIND.ACTIVATE_WITH_TRIAL?(
+          <h3>Free Trial</h3>
+        ):(
+          <h3>Detalle de compra</h3>
+        )}
+        
         <div className={"product"}>
           <div className={"product-details"}>
             <h5>PLAN FITEMOS</h5>
@@ -95,11 +101,22 @@ const Cart = ({
             </p>
           </div>
 
-          {checkoutKind !== CHECKOUT_KIND.UPGRADE && (
+          {checkoutKind === CHECKOUT_KIND.ACTIVATE && (
             <div className={"product-price"} data-cy="cart product price">
               <p>
                 <FormattedPrice
                   price={prices.initial}
+                  currency={currency}
+                  locale="en"
+                />
+              </p>
+            </div>
+          )}
+          {checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
+            <div className={"product-price"} data-cy="cart product price">
+              <p>
+                <FormattedPrice
+                  price={0}
                   currency={currency}
                   locale="en"
                 />
@@ -145,6 +162,18 @@ const Cart = ({
           </p>      
         </>
       )}
+      {checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
+        <p>
+          Prueba gratis por {serviceItem.free_duration} días. Podrá cancelar en cualquier momento sin compromiso.
+          Al concluir el período de prueba se renovará por &nbsp; 
+          <FormattedPrice
+              price={pricing.discountedPrices.total}
+              currency={currency}
+              locale="en"
+          />.
+        </p>      
+      )}
+
         {checkoutKind === CHECKOUT_KIND.UPGRADE &&
           typeof pricing.refundAmountCents === "number" && (
             <div className={"refundDetails"} data-cy="upsell cart prices">
@@ -296,18 +325,34 @@ const Cart = ({
           )}
         </>
       ) : (
-        <Card padding="xs" noMarginBottom>
-          <div className={"total-price"} data-cy="cart total">
-            <span>TOTAL</span>
-            <span>
-              <FormattedPrice
-                price={prices.discounted}
-                currency={currency}
-                locale="en"
-              />
-            </span>
-          </div>
-        </Card>
+        checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL ?(
+          <Card padding="xs" noMarginBottom>
+            <div className={"total-price"} data-cy="cart total">
+              <span>TOTAL</span>
+              <span>
+                <FormattedPrice
+                  price={0}
+                  currency={currency}
+                  locale="en"
+                />
+              </span>
+            </div>
+          </Card>
+        )
+        :(
+          <Card padding="xs" noMarginBottom>
+            <div className={"total-price"} data-cy="cart total">
+              <span>TOTAL</span>
+              <span>
+                <FormattedPrice
+                  price={prices.discounted}
+                  currency={currency}
+                  locale="en"
+                />
+              </span>
+            </div>
+          </Card>
+        )
       )}
     </section>
   );

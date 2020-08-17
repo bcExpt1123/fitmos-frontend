@@ -82,6 +82,7 @@
           }
         }
         .plan-subtitle{
+          display:none;
           color:#156376;
           font-size: 2.3rem;
           margin-top: -20px;
@@ -97,11 +98,19 @@
           font-weight: 500;
           margin-bottom: 20px;
         }
-        .plan-btn .fs-btn {
-          font-size: 1.75rem;
-          font-weight: 500;
-          padding-left: 75px;
-          padding-right: 75px;
+        .plan-btn {
+          .fs-btn {
+            font-weight: 500;
+            padding-left: 75px;
+            padding-right: 75px;
+          }
+          a{
+            color:#156376;
+            padding-left:0px;
+            padding-right:0px;
+            margin-left:0!important;
+            margin-right:0!important;
+          }
         }
       }
       .border-line-container {
@@ -218,7 +227,7 @@
               margin-bottom: 10px;
             }
             .plan-btn .fs-btn {
-              font-size: 1.25rem !important;
+              font-size: 0.75rem !important;
               font-weight: 500;
               padding: 7px 36px;
               margin: 0;

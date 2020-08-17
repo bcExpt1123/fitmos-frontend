@@ -1,26 +1,28 @@
 import React, {useEffect} from "react";
+import { useSelector } from "react-redux";
 
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-
-//import SectionContactUs from "./SectionContactUs";
-import SectionAsk from "./SectionAsk";
-import SectionFaq from "./SectionFaq";
+import OneColumn from "./layouts/One";
+import TwoColumn from "./layouts/Two";
+import SectionAsk from "./sections/SectionAsk";
+import SectionFaq from "./sections/SectionFaq";
 
 const AyudaPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   },[]);
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   return(
-    <>
-      <NavBar />
-
-      <SectionFaq />
-
-      <SectionAsk />
-
-      <Footer />
-    </>
+    currentUser?(
+      <TwoColumn>
+        <SectionFaq />
+        <SectionAsk />
+      </TwoColumn>
+    ):(
+      <OneColumn>
+        <SectionFaq />
+        <SectionAsk />
+      </OneColumn>
+    )
   );
 }
 

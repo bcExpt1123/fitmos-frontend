@@ -1,0 +1,12 @@
+@media (max-width: 1024px) {
+  .perfil-page{
+    #rightbar{
+      display: block;
+      width:auto;
+      position: relative;
+      padding: 10px;
+      z-index: 0;
+      @import "_shared_profile";
+    }
+  }
+}

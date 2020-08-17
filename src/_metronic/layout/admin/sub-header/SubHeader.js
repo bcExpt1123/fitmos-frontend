@@ -38,6 +38,15 @@ import { SubHeaderMedalCreate } from "../../../../app/pages/admin/MedalCreate";
 import { SubHeaderUserCreate } from "../../../../app/pages/admin/UserCreate";
 import { SubHeaderPermissions } from "../../../../app/pages/admin/SettingsPage/SectionPermissions";
 import { SubHeaderCartSettings } from "../../../../app/pages/admin/SettingsPage/SectionCartSettings";
+import { SubHeaderReferralSettings } from "../../../../app/pages/admin/SettingsPage/SectionReferral";
+import { SubHeaderTagLineSettings } from "../../../../app/pages/admin/SettingsPage/SectionTagLine";
+import { SubHeaderSurvey } from "../../../../app/pages/admin/Survey";
+import { SubHeaderSurveyCreate } from "../../../../app/pages/admin/SurveyCreate";
+import { SubHeaderCompanies } from "../../../../app/pages/admin/Companies";
+import { SubHeaderCompanyCreate } from "../../../../app/pages/admin/CompanyCreate";
+import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
+import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
+import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
 
 // import BreadCrumbs from "./components/BreadCrumbs";
 
@@ -201,8 +210,68 @@ class SubHeader extends React.Component {
             />
             <Route
               exact
+              path="/admin/settings/referral"
+              component={SubHeaderReferralSettings}
+            />
+            <Route
+              exact
+              path="/admin/settings/tag-line"
+              component={SubHeaderTagLineSettings}
+            />
+            <Route
+              exact
               path="/admin/profile"
               component={SubHeaderUserProfile}
+            />
+            <Route
+              exact
+              path="/admin/survey"
+              component={SubHeaderSurvey}
+            />
+            <Route
+              exact
+              path="/admin/survey/create"
+              component={SubHeaderSurveyCreate}
+            />
+            <Route
+              exact
+              path="/admin/survey/:id"
+              component={SubHeaderSurveyCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies"
+              component={SubHeaderCompanies}
+            />
+            <Route
+              exact
+              path="/admin/companies/create"
+              component={SubHeaderCompanyCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id"
+              component={SubHeaderCompanyCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products"
+              component={SubHeaderProducts}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/create"
+              component={SubHeaderProductCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/:id"
+              component={SubHeaderProductCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/viewImages/:id"
+              component={SubHeaderViewImages}
             />
           </Switch>
         </div>

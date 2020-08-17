@@ -7,7 +7,8 @@ import { CHECKOUT_KIND } from "../../constants/checkout-kind";
 import { productBrand } from "../../../../../lib/productBrand";
 
 const getCheckoutKind = (checkoutType, activeVoucher) => {
-  return CHECKOUT_KIND.ACTIVATE;
+  if(checkoutType == 1)return CHECKOUT_KIND.ACTIVATE;
+  if(checkoutType == 2)return CHECKOUT_KIND.ACTIVATE_WITH_TRIAL;
 };
 
 const StepPayment = ({
@@ -22,10 +23,6 @@ const StepPayment = ({
   onEnteredVoucherChange,
   resetActiveVoucher
 }) => {
-  const checkoutKind = getCheckoutKind(
-    checkoutType,
-    vouchers[productBrand(selectedProduct)][selectedProduct.interval]
-  );
   const currency = {
     code: selectedProduct.currency,
     exponent: selectedProduct.currency_exponent
@@ -49,7 +46,6 @@ const StepPayment = ({
               <h2 className="checkout-page-title display-3 d-none d-md-block">Checkout</h2>
               <PaymentForm
                 service={service}
-                checkoutKind={checkoutKind}
                 currency={currency}
                 pricing={pricing}
                 selectedProduct={selectedProduct}
@@ -62,7 +58,6 @@ const StepPayment = ({
           <aside className={"col-12 col-md-4"}>
             <Sidebar
               service={service}
-              checkoutKind={checkoutKind}
               pricing={pricing}
               selectedProduct={selectedProduct}
               activeVoucher={enteredVoucher}

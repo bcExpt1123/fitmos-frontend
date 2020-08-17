@@ -10,7 +10,8 @@ import {
   setChangePlan,
   clearChangePlan,
   setPayPalPlanId,
-  setKeyValue
+  setKeyValue,
+  setCheckoutKind
 } from "./actions";
 
 const initialState = {
@@ -18,6 +19,7 @@ const initialState = {
   idempotencyKey: undefined,
   paymentTestMode: null,
   changePlan: true,
+  checkoutKind:null,
   selectedPaymentProvider: null,
   stripe: {
     intent: undefined,
@@ -83,6 +85,12 @@ export default handleActions(
       return {
         ...state,
         changePlan: true
+      };
+    },
+    [setCheckoutKind]: (state, {payload}) => {
+      return {
+        ...state,
+        checkoutKind: payload.checkoutKind
       };
     },
     [clearChangePlan]: state => {

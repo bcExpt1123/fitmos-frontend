@@ -24,7 +24,9 @@ export const actionTypes = {
   CMS_SET_CONTENT: "CMS_SET_CONTENT",
   CMS_SAVE_CONTENT: "CMS_SAVE_CONTENT",
   CMS_TAKE_CONTENT: "CMS_TAKE_CONTENT",
-  CMS_SET_VALUE: "CMS_SET_VALUE"
+  CMS_SET_VALUE: "CMS_SET_VALUE",
+  CMS_TAKE_VALUE: "CMS_TAKE_VALUE",
+  CMS_UPLOAD_IMAGE: "CMS_UPLOAD_IMAGE"
 };
 
 const d = new Date();
@@ -39,6 +41,12 @@ const initialState = {
   editorDate: null,
   column: null,
   content: "",
+  image:"",
+  uploadImage:null,
+  timerType:"",
+  timerRound:"",
+  timerWork:"",
+  timerRest:"",
   previewContent: ""
 };
 
@@ -66,15 +74,45 @@ export const reducer = persistReducer(
       case actionTypes.CMS_OPEN_DATE:
         const clonedData = Object.assign({}, state.data);
         let content = null;
+        let image = null;
+        let note = null;
+        let timerType = "";
+        let timerWork = "";
+        let timerRound = "";
+        let timerRest = "";
         /*if (clonedData[action.day])
           content = clonedData[action.day][action.column];*/
         if (clonedData[action.column])
           content = clonedData[action.column][action.day];
+        switch(action.column){
+          case "comentario":
+            image = clonedData['image_path'][action.day];
+            break;
+          case "blog":
+            break;
+          default:
+            note = clonedData[action.column+'_note'][action.day];
+            if(note == null)note = "";
+            timerType = clonedData[action.column+'_timer_type'][action.day];
+            if(timerType == null)timerType = "";
+            timerWork = clonedData[action.column+'_timer_work'][action.day];
+            if(timerWork == null)timerWork = "";
+            timerRest = clonedData[action.column+'_timer_rest'][action.day];
+            if(timerRest == null)timerRest = "";
+            timerRound = clonedData[action.column+'_timer_round'][action.day];
+            if(timerRound == null)timerRound = "";
+          }  
         return {
           ...state,
           editorDate: action.editorDate,
           column: action.column,
-          content
+          content,
+          image,
+          note,
+          timerType,
+          timerWork,
+          timerRest,
+          timerRound
         };
       case actionTypes.CMS_SET_CONTENT:
         return { ...state, content: action.content };
@@ -84,8 +122,21 @@ export const reducer = persistReducer(
         if(weekDay==0)clonedData1[state.column][weekDay+6] = action.content;
         else clonedData1[state.column][weekDay-1] = action.content;
         return { ...state, data: clonedData1 };
+      case actionTypes.CMS_TAKE_VALUE:
+        const clonedData2 = Object.assign({}, state.data);
+        const weekDay1 = state.editorDate.getDay();
+        if(action.name == 'image_path'){
+          if(weekDay1==0)clonedData2[action.name][weekDay1+6] = action.value;
+          else clonedData2[action.name][weekDay1-1] = action.value;
+        }else{
+          if(weekDay1==0)clonedData2[state.column+'_'+action.name][weekDay1+6] = action.value;
+          else clonedData2[state.column+'_'+action.name][weekDay1-1] = action.value;
+        }
+        return { ...state, data: clonedData2 };
       case actionTypes.CMS_SET_VALUE:
         return { ...state, [action.key]: action.value };
+      case actionTypes.CMS_UPLOAD_IMAGE:
+        return { ...state, uploadImage: action.image };
       default:
         return state;
     }
@@ -121,11 +172,14 @@ export function $openCell(editorDate, column, day) {
 export function $openPreviewCell(editorDate, column, day) {
   return { type: actionTypes.CMS_PREVIEW_DATE, editorDate, column, day };
 }
-export function $updateItemValue(content) {
-  return { type: actionTypes.CMS_SET_CONTENT, content };
+export function $updateItemValue(key, value) {
+  return { type: actionTypes.CMS_SET_VALUE,key, value };
 }
 export function $submitContent() {
   return { type: actionTypes.CMS_SAVE_CONTENT };
+}
+export function $updateImage(image){
+  return { type: actionTypes.CMS_UPLOAD_IMAGE, image };
 }
 function* redirectEditor({ pickedDate, history }) {
   yield put({ type: actionTypes.CMS_DATE_CHANGED, pickedDate });
@@ -282,11 +336,22 @@ function* fetchNextWeekly() {
     }
   }
 }
-const saveWorkout = (date, column, content) => {
+const saveWorkout = (date, column, content,note,timerType,work,round,rest,uploadImage) => {
   const formData = new FormData();
   formData.append("date", date.toLocaleDateString("en", options));
   formData.append("column", column);
   formData.append("content", content);
+  if ( note )formData.append("note", note);
+  if ( timerType )formData.append("timer_type", timerType);
+  if ( work )formData.append("timer_work", work);
+  if ( round )formData.append("timer_round", round);
+  if ( rest )formData.append("timer_rest", rest);
+  if ( uploadImage ) {
+    const files = Array.from(uploadImage);
+    files.forEach((file, i) => {
+      formData.append("image", file);
+    });
+  }
   return http({
     path: `services/workout`,
     method: "POST",
@@ -300,7 +365,13 @@ function* saveContent() {
       saveWorkout,
       cms.editorDate,
       cms.column,
-      cms.content
+      cms.content,
+      cms.note,
+      cms.timerType,
+      cms.timerWork,
+      cms.timerRound,
+      cms.timerRest,
+      cms.uploadImage
     );
     if (result.id) {
       try {
@@ -308,7 +379,51 @@ function* saveContent() {
           type: actionTypes.CMS_TAKE_CONTENT,
           content: result[cms.column]
         });
-      } catch (e) {
+        if(result[cms.column+'_note']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'note',
+            value: result[cms.column+'_note']
+          });
+        }
+        if(result[cms.column+'_timer_type']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'timer_type',
+            value: result[cms.column+'_timer_type']
+          });
+        }
+        if(result[cms.column+'_timer_work']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'timer_work',
+            value: result[cms.column+'_timer_work']
+          });
+        }
+        if(result[cms.column+'_timer_round']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'timer_round',
+            value: result[cms.column+'_timer_round']
+          });
+        }
+        if(result[cms.column+'_timer_rest']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'timer_rest',
+            value: result[cms.column+'_timer_rest']
+          });
+        }
+        if(result['image_path']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'image_path',
+            value: result['image_path']
+          });
+        }
+      } 
+      catch (e) {
+        console.log(e);
         if (e.response.status == 401) {
           yield put(logOut());
         } else {

@@ -9,6 +9,7 @@ const styles = {
   xl: "xl",
   lg: "lg",
   md: "md",
+  xm: "xm",
   xs: "xs"
 };
 const pictureSrc = ({ pictureUrls, size }) => {
@@ -55,7 +56,7 @@ Avatar.propTypes = {
     medium: PropTypes.string,
     small: PropTypes.string
   }).isRequired,
-  size: PropTypes.oneOf(["xl", "lg", "md", "sm", "xs"])
+  size: PropTypes.oneOf(["xl", "lg", "md", "sm", "xs","xm"])
 };
 
 export default Avatar;

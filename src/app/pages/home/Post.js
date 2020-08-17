@@ -1,13 +1,14 @@
 import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
+
 import { $changeItem } from "../../../modules/subscription/event";
-
-import NavBar from "./components/NavBar";
-import Footer from "./components/Footer";
-
-import SectionPost from "./SectionPost";
+import OneColumn from "./layouts/One";
+import ThreeColumn from "./layouts/Three";
+import PageHeader from "./layouts/PageHeader";
+import SectionPost from "./sections/SectionPost";
 import Private from "./components/Private";
+import SplashScreen from "../../../app/partials/layout/SplashScreen";
 
 import "./assets/scss/theme/style.scss";
 import "./assets/scss/theme/mbr-additional.css";
@@ -20,8 +21,9 @@ const PostPage = ({match}) => {
     dispatch($changeItem(match.params.id));    
   }, []);
   const post = useSelector(({ event }) => event.item);
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   return (
-    post&&(
+    post?(
       <>
         <MetaTags>
           <title>{post.title} -Fitemos </title>
@@ -30,13 +32,22 @@ const PostPage = ({match}) => {
             content={post.excerpt}
           />
         </MetaTags>
-    
-        <NavBar />
-    
-        <Private section={()=><SectionPost id={match.params.id}/>} />
-    
-        <Footer />
+
+        {currentUser?(
+          <ThreeColumn>
+            <PageHeader title={`Noticias`}/>
+            <Private section={()=><SectionPost id={match.params.id}/>} />
+          </ThreeColumn>
+        ):(
+          <OneColumn>
+            <Private section={()=><SectionPost id={match.params.id}/>} />
+          </OneColumn>
+        )}
       </>
+    ):(
+      <div className="loading" style={{marginTop:"300px"}}>
+        <SplashScreen />
+      </div>
     )
   );
 };

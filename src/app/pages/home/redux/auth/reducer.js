@@ -16,6 +16,8 @@ import {
   takeFreeWorkoutCompleted,
   updateWeight,
   updateCustomerAttribute,
+  regenerateCompleted,
+  updateUserDetails,
 } from "./actions";
 import * as routerHelpers from "../../../../router/RouterHelpers";
 
@@ -25,6 +27,7 @@ const initialState = {
   currentUserId: undefined,
   accessToken: undefined,
   logOuting:false,
+  regenerateCompleted:true,
   expires_at: undefined
 };
 
@@ -77,6 +80,15 @@ export default persistReducer(
             }
           : {})
       }),
+      [updateUserDetails]:(state, { payload }) => ({
+        ...state,
+        ...(payload.user
+          ? {
+              currentUser: payload.user,
+              currentUserId: payload.user.id
+            }
+          : {})
+      }),
       [takeFreeWorkoutCompleted]: state => {
         const currentClonedUser = Object.assign({}, state.currentUser);
         currentClonedUser.has_workout_subscription = true;
@@ -114,6 +126,9 @@ export default persistReducer(
         const currentClonedUser = Object.assign({}, state.currentUser);
         currentClonedUser.customer[payload.attribute] = payload.value;
         return { ...state, currentUser: currentClonedUser };
+      },
+      [regenerateCompleted]:(state,{payload})=>{
+        return {...state,regenerateCompleted:payload.regenerateCompleted}
       }
     },
     initialState

@@ -18,7 +18,9 @@ export const actionTypes = {
   WEEKWORKOUT_SET_CONTENT: "WEEKWORKOUT_SET_CONTENT",
   WEEKWORKOUT_SAVE_CONTENT: "WEEKWORKOUT_SAVE_CONTENT",
   WEEKWORKOUT_TAKE_CONTENT: "WEEKWORKOUT_TAKE_CONTENT",
-  WEEKWORKOUT_SET_VALUE: "WEEKWORKOUT_SET_VALUE"
+  WEEKWORKOUT_SET_VALUE: "WEEKWORKOUT_SET_VALUE",
+  WEEKWORKOUT_TAKE_VALUE: "WEEKWORKOUT_TAKE_VALUE",
+  WEEKWORKOUT_UPLOAD_IMAGE: "WEEKWORKOUT_UPLOAD_IMAGE"
 };
 
 const d = new Date();
@@ -30,6 +32,12 @@ const initialState = {
   column: null,
   day:null,
   content: "",
+  image:"",
+  uploadImage:null,
+  timerType:"",
+  timerRound:"",
+  timerWork:"",
+  timerRest:"",
   previewContent: ""
 };
 
@@ -55,24 +63,63 @@ export const reducer = persistReducer(
       case actionTypes.WEEKWORKOUT_OPEN_CELL:
         const clonedData = Object.assign({}, state.data);
         let content = null;
+        let image = null;
+        let note = "";
+        let timerType = "";
+        let timerWork = "";
+        let timerRound = "";
+        let timerRest = "";
         if (clonedData[action.weekDay] && clonedData[action.weekDay][action.day])
           content = clonedData[action.weekDay][action.day][action.column];
+        switch(action.column){
+          case "comentario":
+            image = clonedData[action.weekDay][action.day]['image_path'];
+            break;
+          case "blog":
+            break;
+          default:
+            note = clonedData[action.weekDay][action.day][action.column+'_note'];
+            if(note == null)note = "";
+            timerType = clonedData[action.weekDay][action.day][action.column+'_timer_type'];
+            if(timerType == null)timerType = "";
+            timerWork = clonedData[action.weekDay][action.day][action.column+'_timer_work'];
+            if(timerWork == null)timerWork = "";
+            timerRest = clonedData[action.weekDay][action.day][action.column+'_timer_rest'];
+            if(timerRest == null)timerRest = "";
+            timerRound = clonedData[action.weekDay][action.day][action.column+'_timer_round'];
+            if(timerRound == null)timerRound = "";
+          }  
         return {
           ...state,
           column: action.column,
           day:action.day,
-          content
+          content,
+          image,
+          note,
+          timerType,
+          timerWork,
+          timerRest,
+          timerRound
         };
       case actionTypes.WEEKWORKOUT_SET_CONTENT:
         return { ...state, content: action.content };
       case actionTypes.WEEKWORKOUT_TAKE_CONTENT:
         let clonedData1 = Object.assign({}, state.data);
-        const weekDay = 1;
         clonedData1[action.weekDay][state.day][state.column] = action.content;
         return { ...state, data: clonedData1 };
+      case actionTypes.WEEKWORKOUT_TAKE_VALUE:
+        const clonedData2 = Object.assign({}, state.data);
+        if(action.name == 'image_path'){
+          clonedData2[action.weekDay][state.day][action.name] = action.value;
+        }else{
+          clonedData2[action.weekDay][state.day][state.column+'_'+action.name] = action.value;
+        }
+        return { ...state, data: clonedData2 };
       case actionTypes.WEEKWORKOUT_SET_VALUE:
         return { ...state, [action.key]: action.value };
-      default:
+      case actionTypes.WEEKWORKOUT_UPLOAD_IMAGE:
+        return { ...state, uploadImage: action.image };
+        default:
         return state;
     }
   }
@@ -80,7 +127,6 @@ export const reducer = persistReducer(
 
 // ACTIONS CREATORS
 export function $fetchRequestCms(history,id) {
-  console.log(id)
   return { type: actionTypes.WEEKWORKOUT_FETCH_REQUEST, history,id };
 }
 export function $changeItem(id, history) {
@@ -92,11 +138,14 @@ export function $openCell(weekDay, column, day) {
 export function $openPreviewCell(weekDay, column, day) {
   return { type: actionTypes.WEEKWORKOUT_PREVIEW_DATE, weekDay, column, day };
 }
-export function $updateItemValue(content) {
-  return { type: actionTypes.WEEKWORKOUT_SET_CONTENT, content };
+export function $updateItemValue(key,value) {
+  return { type: actionTypes.WEEKWORKOUT_SET_VALUE, key, value };
 }
 export function $submitContent(weekDay) {
   return { type: actionTypes.WEEKWORKOUT_SAVE_CONTENT,weekDay };
+}
+export function $updateImage(image){
+  return { type: actionTypes.WEEKWORKOUT_UPLOAD_IMAGE, image };
 }
 function* changeItem({ id, history }) {
   try {
@@ -127,7 +176,6 @@ const weekWorkoutRquest = (id) => {
   }).then(response => response.data);
 };
 function* fetchRequest({ history,id }) {
-  console.log(id)
   yield put({ type: actionTypes.WEEKWORKOUT_LOADING_REQUEST });
   if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
     // dev code
@@ -150,12 +198,23 @@ function* fetchRequest({ history,id }) {
     }
   }
 }
-const saveWorkout = (fromDate,weekDate, column, content) => {
+const saveWorkout = (fromDate,weekDate, column, content,note,timerType,work,round,rest,uploadImage) => {
   const formData = new FormData();
   formData.append("from_date", fromDate);
   formData.append("weekdate", weekDate);
   formData.append("column", column);
   formData.append("content", content);
+  if ( note )formData.append("note", note);
+  if ( timerType )formData.append("timer_type", timerType);
+  if ( work )formData.append("timer_work", work);
+  if ( round )formData.append("timer_round", round);
+  if ( rest )formData.append("timer_rest", rest);
+  if ( uploadImage ) {
+    const files = Array.from(uploadImage);
+    files.forEach((file, i) => {
+      formData.append("image", file);
+    });
+  }
   return http({
     path: `services/pendingworkout`,
     method: "POST",
@@ -170,8 +229,15 @@ function* saveContent({weekDay}) {
       weekDay,
       weekWorkout.day,
       weekWorkout.column,
-      weekWorkout.content
+      weekWorkout.content,
+      weekWorkout.note,
+      weekWorkout.timerType,
+      weekWorkout.timerWork,
+      weekWorkout.timerRound,
+      weekWorkout.timerRest,
+      weekWorkout.uploadImage
     );
+    
     if (result.id) {
       try {
         yield put({
@@ -179,7 +245,56 @@ function* saveContent({weekDay}) {
           weekDay,
           content: result[weekWorkout.column]
         });
+        if(result[weekWorkout.column+'_note']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'note',
+            value: result[weekWorkout.column+'_note']
+          });
+        }
+        if(result[weekWorkout.column+'_timer_type']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'timer_type',
+            value: result[weekWorkout.column+'_timer_type']
+          });
+        }
+        if(result[weekWorkout.column+'_timer_work']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'timer_work',
+            value: result[weekWorkout.column+'_timer_work']
+          });
+        }
+        if(result[weekWorkout.column+'_timer_round']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'timer_round',
+            value: result[weekWorkout.column+'_timer_round']
+          });
+        }
+        if(result[weekWorkout.column+'_timer_rest']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'timer_rest',
+            value: result[weekWorkout.column+'_timer_rest']
+          });
+        }
+        if(result['image_path']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'image_path',
+            value: result['image_path']
+          });
+        }
       } catch (e) {
+        console.log(e)
         if (e.response.status == 401) {
           yield put(logOut());
         } else {

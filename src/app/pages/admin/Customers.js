@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Formik } from "formik";
 import { connect, useDispatch, useSelector } from "react-redux";
@@ -66,23 +66,27 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "action", numeric: false, disablePadding: false, label: "Actions" }
 ];
-function Main({ customers, meta, $page, $pageSize }) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
+  useEffect(() => {
+    dispatch($fetchIndex())
+  }, []);
+  const customer = useSelector(({ customer }) => customer);
+  const page=customer.meta.page-1;
+  const customers= customer.data;
+  const meta=customer.meta;
   const rowsPerPage = meta.pageSize;
-
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
   const dispatch = useDispatch();
   const handleChangePage = (event, newPage) => {
-    $page(newPage + 1);
+    dispatch($page(newPage + 1));
   };
-
   const handleChangeRowsPerPage = event => {
-    $pageSize(parseInt(event.target.value, 10));
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
   const actionDisable = id => event => {
-    dispatch($disable(id));
+    if (window.confirm("Are you sure to disable this item?"))  dispatch($disable(id));
   };
   const actionRestore = id => event => {
     dispatch($restore(id));
@@ -201,45 +205,17 @@ function Main({ customers, meta, $page, $pageSize }) {
     </Paper>
   );
 }
-const mapStateToProps = state => ({
-  customers: state.customer.data,
-  meta: state.customer.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore
-};
-const CustomersConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class CustomersWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <CustomersConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Customers = injectIntl(
-  connect(null, mapDispatchToProps1)(CustomersWrapper)
-);
-function Sub({ searchCondition, $changeConditionValue,exportLoading,$export }) {
+const Customers = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ customer }) => customer.searchCondition);
+  const exportLoading = useSelector(({ customer }) => customer.exportLoading);
   const handleChange = name => event => {
-    $changeConditionValue(name, event.target.value);
+    dispatch($changeConditionValue(name, event.target.value));
   };
   const handleClick = () => {
-    $export(searchCondition);
+    dispatch($export(searchCondition));
   };
   return (
     <>
@@ -303,15 +279,6 @@ function Sub({ searchCondition, $changeConditionValue,exportLoading,$export }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.customer.searchCondition,
-  exportLoading:state.customer.exportLoading
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue,
-  $export
-};
-const SubHeaderCustomers = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+
+const SubHeaderCustomers = injectIntl(Sub);
 export { Customers, SubHeaderCustomers };

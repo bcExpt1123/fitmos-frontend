@@ -22,6 +22,7 @@ export function http({
   method = "GET",
   app,
   path = "/",
+  httpUrl,
   headers = { Accept: "application/json" },
   data,
   params,
@@ -34,7 +35,8 @@ export function http({
     data,
     params
   };
-  config.url = url(app, path);
+  if(path==false)config.url = httpUrl;
+  else config.url = url(app, path);
 
   if (!skipAuthentication) {
     const idToken = authToken || store.getState().auth.accessToken;

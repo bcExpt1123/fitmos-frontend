@@ -206,7 +206,6 @@ class EditWeight extends React.Component {
                       htmlFor="date"
                       label={""}
                       focused={this.state.focused.date}
-                      touched={touched.date}
                       valid={Boolean(values.date && !errors.date)}
                     >
                       <DatePicker

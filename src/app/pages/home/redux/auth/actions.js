@@ -17,6 +17,9 @@ export const {
   takeFreeWorkoutCompleted,
   updateWeight,
   updateCustomerAttribute,
+  regenerateCompleted,
+  findUserDetails,
+  updateUserDetails,
   sessionIn,
   sessionOut,
 } = createActions(
@@ -36,6 +39,9 @@ export const {
   "TAKE_FREE_WORKOUT_COMPLETED",
   "UPDATE_WEIGHT",
   "UPDATE_CUSTOMER_ATTRIBUTE",
+  "REGENERATE_COMPLETED",
+  "FIND_USER_DETAILS",
+  "UPDATE_USER_DETAILS",
   "SESSION_IN",
   "SESSION_OUT",
   { prefix: "AUTH" }

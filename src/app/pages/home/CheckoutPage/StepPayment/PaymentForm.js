@@ -115,7 +115,6 @@ const PaymentForm = ({
   actions,
   service,
   frequency,
-  checkoutKind,
   currency,
   isProcessingPayment,
   pricing,
@@ -126,6 +125,7 @@ const PaymentForm = ({
   paypalInfo,
   history
 }) => {
+  const checkoutKind = useSelector(({checkout})=>checkout.checkoutKind);
   // Set idempotency key, used to prevent submitting the payment form more
   // than once with the same data, when visiting the page. It's required by
   // backend to process the payment request. It's regenerated in saga, whenever
@@ -245,8 +245,8 @@ const PaymentForm = ({
       initialValues={initialValues}
       onSubmit={onSubmit}
       validate={validate}
-      isInitialValid={false}
-      render={({ isValid, errors, touched, values,setFieldValue }) => (
+    >  
+      {({ isValid, errors, touched, values,setFieldValue }) => (
         <Form noValidate>
           <Card noMarginBottom className="payment-card">
             <fieldset
@@ -523,7 +523,7 @@ const PaymentForm = ({
           </Card>
         </Form>
       )}
-    />
+    </Formik>  
   );
 };
 

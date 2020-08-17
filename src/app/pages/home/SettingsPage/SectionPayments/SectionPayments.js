@@ -9,7 +9,7 @@ import Button from "../../components/Button";
 import Spinner from "../../components/Spinner";
 import CreditCardForm from "../../CheckoutPage/StepPayment/CreditCardForm";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
-import SectionCancelSubscription from "../../SectionCancelSubscription";
+import SectionCancelSubscription from "../../sections/SectionCancelSubscription";
 import { $fetchIndex, $changeItem,$saveItem,$showFormAction,$closeFormAction,$delete } from "../../../../../modules/subscription/tocken";
 
 const PAYMENT_INPUTS_ERROR_MESSAGES = {
@@ -93,7 +93,7 @@ const SectionPayments = () => {
   const handleDelete = (id) => {
     if(items.length == 1 && currentUser.has_active_workout_subscription && currentUser.customer.services['1'].end_date==null){
       setShow(true);
-    }else if(window.confirm('Are you sure to delete this credit card?')){
+    }else if(window.confirm('¿Estás segura de eliminar esta tarjeta de crédito?')){
       dispatch($delete(id));
     }
   }

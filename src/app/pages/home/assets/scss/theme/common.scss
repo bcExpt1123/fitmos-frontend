@@ -14,11 +14,25 @@
 @import "./_checkout.scss";
 @import "./_blog.scss";
 @import "./pament_methods";
+@import "./_layout";
+@import "./_workout";
+@import "./_timer";
+@import "./_benchmark";
+@import "./_profile";
+@import "./_perfil";
+@import "./_level";
+@import "./_invite";
+@import "./_partners";
+@import "./_instagram";
+@import "./_shop";
+@import "./_company";
+@import "./_product";
 @import "./_footer_checkout.scss";
 .fs-btn {
   border-radius: 7px;
   background: linear-gradient(90deg, #028fb4, #bfd734);
   border: 0;
+  font-weight: bold;
   &:hover {
     background: linear-gradient(90deg, #187688, #97c84f);
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
@@ -40,6 +54,7 @@ h3 {
   font-size: 1.77rem;
 }
 .section-notification {
+  display: none;
   background: linear-gradient(90deg, #028fb4, #bfd734);
   font-size: 17px;
   font-weight: 500;
@@ -47,6 +62,9 @@ h3 {
   text-align: center;
   padding: 4px;
   cursor: pointer;
+}
+.btn-primary, .btn-primary:active {
+  background-color: #1A7998 !important;
 }
 @media (max-width: 767px) {
   .header-title {

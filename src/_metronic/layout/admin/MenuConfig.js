@@ -100,9 +100,23 @@ export default {
       {
         title: "Settings",
         root: true,
-        icon: "flaticon2-shopping-cart-1",
+        icon: "flaticon2-settings",
         can:["settings"],
         page: "admin/settings/cart"
+      },
+      {
+        title: "Surveys",
+        root: true,
+        icon: "flaticon2-search",
+        can:["survey"],
+        page: "admin/survey"
+      },
+      {
+        title: "Shop",
+        root: true,
+        icon: "flaticon2-shopping-cart-1",
+        can:["shop"],
+        page: "admin/companies"
       },
     ]
   }

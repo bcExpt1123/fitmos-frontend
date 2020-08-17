@@ -1,0 +1,213 @@
+#timer-clock{
+  height: 335px;
+  border-radius: 10px;
+  margin: 20px 0 50px;
+  .buttons{
+    margin-bottom: 20px;
+  }
+  .center{
+    margin-right: auto;
+    margin-left: auto;        
+  }
+  .timer--button-start1 {
+    box-shadow:inset 0px 0px 0px 2px #333333;
+    background:linear-gradient(to bottom, #51ab80 5%, #0f9956 100%);
+    background-color:#51ab80;
+    border-radius:42px;
+    border:2px solid #51ab80;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:12px;
+    font-weight: 600;
+    padding: 20px 12.3px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, #0f9956 5%, #51ab80 100%);
+      background-color:#0f9956;
+    }
+  }
+  .timer--button-pause1 {
+    box-shadow:inset 0px 0px 0px 2px #333333;
+    background:linear-gradient(to bottom, rgba($color: #eb5757, $alpha: 0.5) 5%, rgba($color: #f53b3b, $alpha: 0.5) 100%);
+    background-color:rgba($color: #eb5757, $alpha: 0.5);
+    border-radius:42px;
+    border:2px solid rgba($color: #eb5757, $alpha: 0.5);
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:12px;
+    font-weight: 600;
+    padding: 20px 9.96px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, rgba($color: #f53b3b, $alpha: 0.5) 5%, rgba($color: #eb5757, $alpha: 0.5) 100%);
+      background-color:rgba($color: #f53b3b, $alpha: 0.5);
+    }
+  }
+  .timer--button-resume1 {
+    box-shadow:inset 0px 0px 0px 2px #333333;
+    background:linear-gradient(to bottom, rgba($color: #eb5757, $alpha: 0.5) 5%, rgba($color: #f53b3b, $alpha: 0.5) 100%);
+    background-color:rgba($color: #eb5757, $alpha: 0.5);
+    border-radius:42px;
+    border:2px solid rgba($color: #eb5757, $alpha: 0.5);
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:12px;
+    font-weight: 600;
+    padding: 20px 12.3px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, rgba($color: #f53b3b, $alpha: 0.5) 5%, rgba($color: #eb5757, $alpha: 0.5) 100%);
+      background-color:rgba($color: #f53b3b, $alpha: 0.5);
+    }
+  }
+  .timer--button-restart1 {
+    margin-left:30px;
+    box-shadow:inset 0px 0px 0px 2px #333333;
+    background:linear-gradient(to bottom, #888885 5%, #787865 100%);
+    background-color:#888885;
+    border-radius:42px;
+    border:2px solid #888885;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:12px;
+    font-weight: 600;
+    padding: 20px 5.1px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover {
+      background:linear-gradient(to bottom, #787865 5%, #888885 100%);
+      background-color:#c2c2be;
+    }
+  }
+  >div1{
+    position: relative;
+    .timer--button1{
+      position: absolute;
+      bottom: 16px;
+      &:active{
+        bottom: 15px;
+      }  
+    }
+  }
+  .timer--button{
+    color:white;
+  }
+  .b--white1 {
+    border-color: #fff;
+  }
+  .ba {
+    border-style: solid;
+    border-width: 1px;
+  }  
+  .bw21 {
+    border-width: .25rem;
+  }  
+  .amrap-timer-start-height{
+    height:85px;
+  }
+  .tabata-timer-start-height{
+    height:85px;
+  }
+  .tabata-restart-height{
+    height:106px;
+  }
+  .timer--settingField{
+    font-size:20px;
+  }
+}
+.bg-black{
+  background-color: $basic-text-color;
+  color:#ffffff;
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.flex{
+  display: flex;
+}
+.tc{
+  text-align: center;  
+}
+.items-center {
+  align-items: center;
+}
+.flex-auto {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.justify-center {
+  justify-content: center;
+}
+.timer--settingField{
+  label{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;    
+  }
+}
+.timer--clock{
+  font-weight: 900;
+}
+.restart-modal{
+  .title{
+    font-size:24px;
+    text-align: center;
+  }
+  .restart-yes{
+    background-color: #1A7998!important;
+    border: 1px solid #1A7998;
+    border-radius: 3px;
+    margin-right: auto;
+    width: 69px;
+    font-size: 16px;
+    color:white;
+    padding:11px 0;
+  }
+  .restart-no{
+    border-radius: 3px;
+    border: 1px solid #B9B7B7;
+    margin-left: auto;    
+    width: 69px;
+    font-size: 16px;
+    padding:11px 0;
+  }
+}
+@media screen and (min-width: 1640px){
+  .timer--button-start, .timer--input {
+    width: 10rem !important;
+  }
+}
+@media only screen and (min-width: 769px){
+  .timer--clock {
+    font-size: 132px;
+  }
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 25px;
+  }
+}
+@media only screen and (min-width: 1024px){
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 30px;
+  }
+}
+@media only screen and (max-width: 768px){
+  .timer--clock {
+    font-size: 96px;
+  }
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 20px;
+  }
+  #timer-clock{
+    .timer--settingField{
+      font-size:14px;
+    }
+  }
+}

@@ -14,7 +14,10 @@ import {
   setAuthData,
   sessionIn,
   sessionOut,
+  findUserDetails,
+  updateUserDetails,
 } from "./actions";
+import { endProfileImageUploading } from "../done/actions";
 import {actionTypes} from '../../../../../modules/subscription/benchmark';
 //import { setClaims } from '../claims/actions';
 
@@ -36,6 +39,24 @@ function* onGenerateAuth() {
     yield put(
       signInUser({
         authentication,
+        user
+      })
+    );
+    yield put(authenticationSucceeded());
+    yield put(endProfileImageUploading());
+  } catch (error) {
+    yield put(authenticationFailed());
+  }
+}
+const findDetails = () =>
+  http({ path: `users/me`, method: "POST" }).then(
+    response => response.data
+  );
+function* onFindUserDetails(){
+  try {
+    const { user } = yield call(findDetails());
+    yield put(
+      updateUserDetails({
         user
       })
     );
@@ -120,5 +141,6 @@ export default function* rootSaga() {
     takeLatest(logOut, onLogOut),
     takeLeading(sessionIn,onSessionIn),
     takeLeading(sessionOut,onSessionOut),
+    takeLeading(findUserDetails,onFindUserDetails),
   ]);
 }

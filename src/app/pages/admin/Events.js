@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component,useEffect } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { FormattedMessage, injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
@@ -59,19 +59,26 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "action", numeric: false, disablePadding: false, label: "Actions" }
 ];
-function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
-  const rowsPerPage = meta.pageSize;
-  const dispatch = useDispatch();
+  const dispatch=useDispatch();
+  const event = useSelector(({ event }) => event);
+  const events = event.data;
+  const meta = event.meta;
+  useEffect(() => {
+    dispatch($fetchIndex())
+  }, []);
+
+  const page = event.meta.page - 1;
+  const rowsPerPage = event.meta.pageSize;
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, event.meta.total - page * rowsPerPage);
   const handleChangePage = (event, newPage) => {
-    $page(newPage + 1);
+    dispatch($page(newPage + 1));
   };
 
   const handleChangeRowsPerPage = event => {
-    $pageSize(parseInt(event.target.value, 10));
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
   const actionDisable = id => event => {
     dispatch($disable(id));
@@ -80,7 +87,7 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
     dispatch($restore(id));
   };
   const actionDelete = id => event => {
-    if (window.confirm("Are you sure to delete this item?")) $delete(id);
+    if (window.confirm("Are you sure to delete this item?")) dispatch($delete(id));
   };
   return (
     <>
@@ -208,41 +215,13 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
     </>
   );
 }
-const mapStateToProps = state => ({
-  events: state.event.data,
-  meta: state.event.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-};
-const EventConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class EventWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <EventConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Events = injectIntl(connect(null, mapDispatchToProps1)(EventWrapper));
-function Sub({ searchCondition, $changeConditionValue }) {
+const Events = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ event }) => event.searchCondition);
   const handleChange = name => event => {
-    $changeConditionValue(name, event.target.value);
+    dispatch($changeConditionValue(name, event.target.value));
   };
   return (
     <>
@@ -292,13 +271,5 @@ function Sub({ searchCondition, $changeConditionValue }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.event.searchCondition
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue
-};
-const SubHeaderEvents = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+const SubHeaderEvents = injectIntl(Sub);
 export { Events, SubHeaderEvents };

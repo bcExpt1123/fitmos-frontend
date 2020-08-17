@@ -387,7 +387,12 @@ const saveEvent = event => {
   formData.append("title", event.item.title);
   formData.append("description", event.item.description);
   formData.append("category_id", event.item.category_id);
-  formData.append("post_date", event.item.date + ' ' + event.item.datetime+':00');
+  if(event.item.immediate){
+    formData.append("post_date","true");
+  }
+  else{
+    formData.append("post_date", event.item.date + ' ' + event.item.datetime+':00');
+  }
   if (event.uploadImage) {
     const files = Array.from(event.uploadImage);
     files.forEach((file, i) => {

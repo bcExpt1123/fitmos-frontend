@@ -102,12 +102,12 @@ const EditProfile = ({ updateProfile, currentUser }) => {
     }
     if (images) params.image = images;
     return new Promise((resolve, reject) => {
-      updateProfile({
-        params,
-        resolve,
-        reject
-      });
-    })
+        updateProfile({
+          params,
+          resolve,
+          reject
+        });
+      })
       .then(() => {
         setFieldValue("password", "");
         setFieldValue("confirm_password", "");
@@ -145,7 +145,8 @@ const EditProfile = ({ updateProfile, currentUser }) => {
         }}
         validate={validate(currentUser.password)}
         onSubmit={onSubmit}
-        render={({
+        >
+        {({
           handleSubmit,
           handleChange,
           handleBlur,
@@ -347,7 +348,7 @@ const EditProfile = ({ updateProfile, currentUser }) => {
               </Row>
             </Form>
           )}
-      />
+      </Formik>
     </>
   );
 };

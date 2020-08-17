@@ -19,6 +19,9 @@ import * as tocken from "../../modules/subscription/tocken";
 import * as cartSetting from "../../modules/subscription/cartSetting";
 import * as permission from "../../modules/subscription/permission";
 import * as medal from "../../modules/subscription/medal";
+import * as survey from "../../modules/subscription/survey";
+import * as company from "../../modules/subscription/company";
+import * as product from "../../modules/subscription/product";
 import { metronic } from "../../_metronic";
 import alertReducer from "../pages/home/redux/alert/reducer";
 import authReducer from "../pages/home/redux/auth/reducer";
@@ -99,7 +102,10 @@ export const rootReducer = combineReducers({
   auth: authReducer,
   checkout: checkoutReducer,
   vouchers: vouchersReducer,
-  done: doneReducer
+  done: doneReducer,
+  survey: survey.reducer,
+  company: company.reducer,
+  product: product.reducer,
 });
 
 export function* rootSaga() {
@@ -134,6 +140,9 @@ export function* rootSaga() {
     userSettings(),
     checkout(),
     vouchers(),
-    done()
+    done(),
+    survey.saga(),
+    company.saga(),
+    product.saga(),
   ]);
 }

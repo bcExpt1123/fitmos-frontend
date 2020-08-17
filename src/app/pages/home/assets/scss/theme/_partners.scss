@@ -1,0 +1,47 @@
+.partners{
+  background-color:white;
+  border-radius:10px;
+  padding:40px 80px;
+  &>h3{
+    font-size:24px;
+  }
+  .profile{
+    margin:7px 0;
+    .xd{
+      height:64px;
+      width:64px;
+      overflow: hidden;
+      border-radius: 50%;      
+    }
+    .info{
+      padding-left:13px;
+      display:inline-block;
+      vertical-align:middle;
+      color:#B9B7B7;
+      font-size:14px;
+      .name{
+        font-size:16px;
+        white-space: nowrap;
+        text-overflow: ellipsis;        
+        overflow: hidden; 
+        width:200px;
+        color:$basic-text-color;
+      }
+    }
+  }
+}
+@media (max-width: 991px) {
+  .partners{
+    border-radius:5px;
+    padding:10px 20px;
+    .profile{
+      .xd{
+      }
+      .info{
+        .name{
+          width:220px;
+        }
+      }
+    }
+  }
+}

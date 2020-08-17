@@ -25,7 +25,9 @@ const SettingsPage = ({ section }) => {
   const classes = useStyles();
   const profileLinks = [
     { name: "cart", url: "cart", label: "Abandon Cart Settings" },
-    { name: "permissions", url: "permissions", label: "Roles & Permissions" }
+    { name: "permissions", url: "permissions", label: "Roles & Permissions" },
+    { name: "referral", url: "referral", label: "Referral Discount" },
+    { name: "tagLine", url: "tag-line", label: "Tag Line" }
   ];
   return (
     <>

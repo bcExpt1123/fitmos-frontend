@@ -68,7 +68,8 @@ class LogInForm extends React.Component {
         initialValues={initialValues}
         validate={validate}
         onSubmit={this.onSubmit}
-        render={({ errors, isValid, touched, values }) => (
+      >
+        {({ errors, isValid, touched, values }) => (
           <Form className="auth-form">
             {errorMessage && (
               <div className="formError">
@@ -121,7 +122,7 @@ class LogInForm extends React.Component {
             </Button>
           </Form>
         )}
-      />
+      </Formik>
     );
   }
 }

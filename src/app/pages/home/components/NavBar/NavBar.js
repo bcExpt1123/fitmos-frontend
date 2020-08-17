@@ -117,7 +117,7 @@ class NavBarVariantFull extends React.Component {
               <Navbar.Collapse id="responsive-navbar-nav">
                 {currentUser ? (
                   <>
-                    {currentUser.has_workout_subscription?(
+                    {currentUser.has_workout_subscription && false?(
                       <>
                         <ul
                           className="mr-auto navbar-nav nav-dropdown"

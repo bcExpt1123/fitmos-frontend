@@ -1,8 +1,7 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
 import About from "./About";
 import Home from "./Home";
-import Slick from "./slick";
 import Signup from "./Signup";
 import PasswordResetPage from "../../pages/auth/PasswordResetPage";
 import Login from "../../pages/auth/LogInPage";
@@ -19,6 +18,16 @@ import Terms from "./Pages/Terms";
 import Privacy from "./Pages/Privacy";
 import CookiesPolicy from "./Pages/Cookies";
 import Subscriptions from "./SettingsPage/SectionSubscriptions";
+import Shop from "./Shop";
+import Company from "./Company";
+import Product from "./Product";
+import Partners from "./Partners";
+import Benchmarks from "./Benchmarks";
+import ProfilePage from "./Profile";
+import PerfilPage from "./Perfil";
+import Workout from "./Workout";
+import LevelPage from "./Level";
+import SubscriptionTabs from "./Subscriptions";
 import { LayoutSplashScreen } from "../../../_metronic";
 import * as Cookies from "./services/storage";
 
@@ -31,8 +40,8 @@ export default function HomePage() {
     <Suspense fallback={<LayoutSplashScreen />}>
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route exact path="/workout" component={Workout} />
         <Route exact path="/about" component={About} />
-        <Route exact path="/slick" component={Slick} />
         <Route exact path="/signup" component={Signup} />
         <Route exact path="/pricing" component={Pricing} />
         <Route exact path="/checkout" component={Checkout} />
@@ -53,6 +62,15 @@ export default function HomePage() {
         <Route exact path="/terms_and_condition" component={Terms} />
         <Route exact path="/privacy" component={Privacy} />
         <Route exact path="/cookies" component={CookiesPolicy} />
+        <Route exact path="/shop" component={Shop} />
+        <Route exact path="/shop/companies/:id" component={Company} />
+        <Route exact path="/shop/products/:id" component={Product} />
+        <Route exact path="/partners" component={Partners} />
+        <Route exact path="/benchmarks" component={Benchmarks} />
+        <Route exact path="/profile" component={ProfilePage} />
+        <Route exact path="/perfil" component={PerfilPage} />
+        <Route exact path="/level" component={LevelPage} />
+        <Route exact path="/subscriptions" component={SubscriptionTabs} />
       </Switch>
     </Suspense>
   );

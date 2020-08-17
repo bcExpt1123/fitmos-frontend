@@ -22,6 +22,7 @@ import FrontLayout from "../../_metronic/layout/front/Layout";
 import FrontBannerLayout from "../../_metronic/layout/front/BannerLayout";
 import * as routerHelpers from "../router/RouterHelpers";
 import {validCartId} from "../pages/home/redux/checkout/actions";
+import { setReferralVoucher } from "../pages/home/redux/vouchers/actions";
 
 export const Routes = withRouter(({ history }) => {
   const lastLocation = useLastLocation();
@@ -66,9 +67,14 @@ export const Routes = withRouter(({ history }) => {
       }
     }  
   }else{
-    const id = reactLocalStorage.get('cartId');
-    if( id && currentUser && isAdmin===false){
-      dispatch(validCartId({id,history}));
+    if( currentUser && window.location.pathname=='/signup'){
+      const parsedSearch = qs.parse(window.location.search);
+      if(parsedSearch.referral)dispatch(setReferralVoucher(parsedSearch.referral));
+    }else{
+      const id = reactLocalStorage.get('cartId');
+      if( id && currentUser && isAdmin===false){
+        dispatch(validCartId({id,history}));
+      }
     }
   }
   if(window.location.pathname=='/' && window.location.hash=='#unsubscribe'){
@@ -116,12 +122,33 @@ export const Routes = withRouter(({ history }) => {
     "/admin/medals/:id",
     "/admin/settings/cart",
     "/admin/settings/permissions",
-    "/admin/profile"
+    "/admin/settings/referral",
+    "/admin/settings/tag-line",
+    "/admin/profile",
+    "/admin/survey",
+    "/admin/survey/create",
+    "/admin/survey/:id",
+    "/admin/companies",
+    "/admin/companies/create",
+    "/admin/companies/:id",
+    "/admin/companies/:id/products",
+    "/admin/companies/:id/products/create",
+    "/admin/companies/:id/products/:id",
+    "/admin/companies/:id/products/viewImages/:id",
   ];
   const frontBannerUrls = [
     "/",
+    "/workout",  
     "/home",
-    "/slick",
+    "/shop",//new
+    "/shop/companies/:id",//new
+    "/shop/products/:id",//new
+    "/benchmarks",//new
+    "/partners",//new
+    "/profile",//new
+    "/perfil",//new
+    "/level",//new
+    "/subscriptions",//new
     "/pricing",
     "/checkout",
     "/settings/subscriptions",

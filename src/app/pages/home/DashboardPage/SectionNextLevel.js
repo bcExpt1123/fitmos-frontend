@@ -121,7 +121,6 @@ class NextLevel extends React.Component {
                   <div className="btn-level-increase">
                     <button onClick={this.handleNextLevel}>Prueba Superada</button>
                   </div>
-                  )}
                 </div>
               </Modal.Body>
             </>

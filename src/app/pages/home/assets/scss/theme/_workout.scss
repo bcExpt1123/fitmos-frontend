@@ -1,0 +1,157 @@
+.page-title{
+  .sub-title{
+    float: right;
+    margin-top: -30px;
+    font-size: 16px;
+    color:rgba($color: $basic-text-color, $alpha: 0.5)
+  }
+  margin-bottom: 30px;
+  h2{
+    a{
+      color:$basic-text-color;
+      font-weight: bold;
+    }
+  }
+}
+.tag-line{
+  font-size: 20px;
+  font-weight: 600;
+  color:rgba($color: $basic-text-color, $alpha: 0.5);
+}
+.workout{
+  background-color: #ffffff;
+  border-radius: 10px;
+  .workout-header{
+    padding:18px 60px;
+    border-bottom: 1px solid #DDDDD7;
+    font-size: 16px;
+    span{
+      i{
+        opacity: 0.5;
+      }
+      &.active{
+        i{
+          cursor: pointer;
+          opacity: 1;
+        }
+      }
+      &.workout-date{
+        display: inline-block;
+        padding: 0 20px;
+      }
+    }
+  }
+  .workout-body{
+    padding:10px 0;
+    color:rgba($color: $basic-text-color, $alpha: 0.7);
+    .block{
+      padding:0 60px;
+      .image{
+        height:388px;
+        margin: 10px 0 20px;
+        .background-container{
+          height: 100%;
+          overflow: hidden;
+          pointer-events: none;
+          .background{
+            background-position: 50% 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 10px;
+            height: 388px;
+            overflow: hidden;
+            pointer-events: none;            
+          }          
+        }
+      }
+      button{
+        background-color: #DDDDD7;
+        border-radius: 3px;
+        border: 0;
+      }
+      .nav.nav-tabs{
+        width: calc(100% + 120px);
+        margin-left: -60px;
+        padding-left: calc(50% - 15px);
+        border-bottom: 2px solid #DDDDD7;        
+        .nav-link{
+          font-size:21px;
+          color:#B9B7B7;
+          &.active{
+            margin-bottom: -2px;
+            border-bottom: 2px solid #BED533;
+            color:$basic-text-color;
+            font-weight: 400;
+          }
+        }
+      }
+      .view-notes{
+        width:180px;
+      }
+    }
+    .blog,&>.actions{
+      padding:0 60px;
+    }
+    .actions{
+      display: flex; 
+      justify-content: flex-end;
+      button{
+        border-radius: 3px;
+        box-sizing: border-box;
+        font-size: 16px;
+        margin: 10px;
+        padding: 12px 40px;
+        &.next{
+          border: 1px solid #1A7998;
+          background-color: #1A7998;          
+          color:white;
+          padding: 12px 80px;
+        }
+        &.previous{
+          border: 1px solid #B9B7B7;
+          background-color: #ffffff;                  
+          color:$basic-text-color;
+        }
+      }
+    }
+  }
+}
+.qbligatory-question-modal{
+  .form-check{
+    input[type="radio"]{
+      margin-top:5px;
+    }
+    label{
+      font-size:16px;
+      margin-left:5px;
+      font-weight:500;
+    }
+  }
+}
+.surveys{
+  .questions{
+    max-height: 550px;
+    overflow-y: auto;
+    .form-group {
+      label{
+        vertical-align: text-top;
+      }
+      .rating-error{
+        border: 1px solid #fd397a;
+        border-radius: 0.3rem;        
+      }
+    }
+  }
+}
+@media (max-width: 991px) {
+  .workout{
+    .workout-header{
+      padding:18px 20px;
+    }
+    .workout-body{
+      .block{
+        padding:0 20px;
+      }
+    }
+  }
+}

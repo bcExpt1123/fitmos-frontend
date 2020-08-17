@@ -50,7 +50,7 @@ const mapApiErrors = apiErrorMatcher(
 );
 
 
-function loadNmiRequest(creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken){
+function loadNmiRequest(creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken,checkoutKind){
   return http({
     path: "subscriptions/nmi", // pay with nmi gateway credit card
     method: "POST",
@@ -58,6 +58,7 @@ function loadNmiRequest(creditCard,selectedProduct,activeVoucher,frequency,nmiPa
       nmi:creditCard,
       'nmi-payment-token':nmiPaymentToken,
       service_id:selectedProduct.id,
+      kind:checkoutKind,
       coupon:activeVoucher?activeVoucher.id:null,
       frequency:frequency,
       paymentProvider: "nmi"
@@ -79,8 +80,9 @@ export function* onPayWithNmi({
 }) {
 
   yield put(paymentRequested());
+  const activePlan = yield select(store => store.service.activePlan);
   try {
-    const result = yield call(loadNmiRequest,creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken);
+    const result = yield call(loadNmiRequest,creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken,checkoutKind);
     yield put(paymentSucceeded());
     yield put(
       addAlertMessage({
@@ -96,10 +98,8 @@ export function* onPayWithNmi({
       let currentUser;
       currentUser = yield select(store => store.auth.currentUser);
       while(!currentUser.has_workout_subscription){
-        console.log('yeild wait')
         yield delay(50);
         currentUser = yield select(store => store.auth.currentUser);
-        console.log(currentUser.has_workout_subscription)
       }
     }
     history.push("/");
