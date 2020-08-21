@@ -248,11 +248,11 @@ const LevelPage = () => {
         </div>
         <div className="col-12 col-md-5 row no-glutter">
           <div className="col-6">
-            <div className={classnames("number-level",{active:currentLevel>99})}>Nivel Fisico 5</div>
-            <div className={classnames("number-level",{active:currentLevel>79 && currentLevel<=99})}>Nivel Fisico 4</div>
-            <div className={classnames("number-level",{active:currentLevel>59 && currentLevel<=79})}>Nivel Fisico 3</div>
-            <div className={classnames("number-level",{active:currentLevel>39 && currentLevel<=59})}>Nivel Fisico 2</div>
-            <div className={classnames("number-level",{active:currentLevel>19 && currentLevel<=39})}>Nivel Fisico 1</div>
+            <div className={classnames("number-level",{active:currentLevel>79})}>Nivel Fisico 5</div>
+            <div className={classnames("number-level",{active:currentLevel>59 && currentLevel<=79})}>Nivel Fisico 4</div>
+            <div className={classnames("number-level",{active:currentLevel>39 && currentLevel<=59})}>Nivel Fisico 3</div>
+            <div className={classnames("number-level",{active:currentLevel>19 && currentLevel<=39})}>Nivel Fisico 2</div>
+            <div className={classnames("number-level",{active:currentLevel>0 && currentLevel<=19})}>Nivel Fisico 1</div>
           </div>
           <div className="col-2 container">
             <div className="vertical">

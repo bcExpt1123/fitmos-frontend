@@ -11,6 +11,7 @@ import SectionChangeLevel from "./SectionChangeLevel";
 import SectionChangeGoal from "./SectionChangeGoal";
 import SectionRenewal from "./SectionRenewal";
 import { http } from "../services/api";
+import { currentCustomerWeights } from "../services/convert";
 import { updateCustomerAttribute as updateWeightsAction } from "../redux/auth/actions";
 import { $resetPublished } from "../../../../modules/subscription/benchmark";
 
@@ -180,7 +181,7 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
                 <Col xs={12} md={6}>
                   <div className="sub-body">
                     <div className="sub-head">Entrenando</div>
-                    <Card.Title>{currentUser.customer.weights}</Card.Title>
+                    <Card.Title>{currentCustomerWeights(currentUser.customer.weights)}</Card.Title>
                     <br />
                     <Button
                       variant="alink"

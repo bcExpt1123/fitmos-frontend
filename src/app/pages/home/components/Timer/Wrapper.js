@@ -24,6 +24,7 @@ const TimerWrapper = ({
   subheader,
   round,
   isRunning,
+  setIsRunning,
   isDone,
   handleRestart,
 }) => {
@@ -34,10 +35,12 @@ const TimerWrapper = ({
     e.preventDefault();
     window.timerPaused = !!!window.timerPaused;
     setPause(window.timerPaused);
+    setIsRunning(!window.timerPaused);
   }
   const restartTimer = e => {
     // for disabling selection in mobile
     e.preventDefault();
+    setIsRunning(true);
     setShowRestartDialog(true);    
   }
   const handleCloseRestartDialog = ()=>{

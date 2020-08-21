@@ -362,8 +362,16 @@ function Main({
         title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
         subTitle={column && columnLabels[column]} 
         content={content}
+        timerType={timerType}
+        work={work}
+        round={round}
+        rest={rest}
         handleChange={handleChange}
         handleSave={handleSave}
+        handleTimerTypeChange={handleTimerTypeChange}
+        handleTimerWorkChange={handleTimerWorkChange}
+        handleTimerRoundChange={handleTimerRoundChange}
+        handleTimerRestChange={handleTimerRestChange}
       />
       <WorkoutNoteEditDialog 
         open={openBlock} 

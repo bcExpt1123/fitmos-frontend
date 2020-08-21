@@ -76,6 +76,14 @@ export const reducer = persistReducer(
             image = clonedData[action.weekDay][action.day]['image_path'];
             break;
           case "blog":
+            timerType = clonedData[action.weekDay][action.day][action.column+'_timer_type'];
+            if(timerType == null)timerType = "";
+            timerWork = clonedData[action.weekDay][action.day][action.column+'_timer_work'];
+            if(timerWork == null)timerWork = "";
+            timerRest = clonedData[action.weekDay][action.day][action.column+'_timer_rest'];
+            if(timerRest == null)timerRest = "";
+            timerRound = clonedData[action.weekDay][action.day][action.column+'_timer_round'];
+            if(timerRound == null)timerRound = "";
             break;
           default:
             note = clonedData[action.weekDay][action.day][action.column+'_note'];

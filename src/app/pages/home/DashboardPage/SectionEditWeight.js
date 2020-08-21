@@ -271,7 +271,7 @@ class EditWeight extends React.Component {
                 )
               ) : (
                 <tr>
-                  <td colSpan="4">Sin pesas</td>
+                  <td colSpan="4">Sin mancuernas</td>
                 </tr>
               )}
             </tbody>

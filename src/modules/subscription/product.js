@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {put,call,takeLatest,takeLeading,select,delay} from "redux-saga/effects";
 import { push } from "react-router-redux";
@@ -38,9 +37,11 @@ export const actionTypes = {
     PRODUCT_VIEW_IMAGES:"PRODUCT_VIEW_IMAGES",////////////////
     PRODUCT_DELETE_IMAGE:"PRODUCT_DELETE_IMAGE",
     //frontend
+    PRODUCT_FRONT_INITIAL_INDEX_REQUEST:"PRODUCT_FRONT_INITIAL_INDEX_REQUEST",
     PRODUCT_FRONT_INDEX_REQUEST:"PRODUCT_FRONT_INDEX_REQUEST",
     PRODUCT_FRONT_INDEX_SUCCESS:"PRODUCT_FRONT_INDEX_SUCCESS",
     PRODUCT_FRONT_PAGE_CHANGED:"PRODUCT_FRONT_PAGE_CHANGED",
+    PRODUCT_FRONT_INDEX_META:"PRODUCT_FRONT_INDEX_META",
     PRODUCT_FRONT_SHOW:"PRODUCT_FRONT_SHOW",
     PRODUCT_GENERATE_VOUCHER:"PRODUCT_GENERATE_VOUCHER",
   };
@@ -57,12 +58,13 @@ export const actionTypes = {
     },
     item: {
       image:"",
+      loading:false,
     },
     company:null,
-    frontData:null,
+    frontData:[],
     frontMeta: {
       page: 1,
-      pageSize: 6,
+      pageSize: 9,
       pageTotal: 1,
       total: 0
     },  
@@ -148,7 +150,7 @@ export const actionTypes = {
         case actionTypes.PRODUCT_FRONT_INDEX_SUCCESS:
           return {
             ...state,
-            frontData: action.frontData,
+            frontData: [...state.frontData,...action.frontData],
             frontMeta: { ...state.frontMeta, ...action.frontMeta }
           };
         case actionTypes.PRODUCT_FRONT_INDEX_META:
@@ -192,6 +194,7 @@ export const actionTypes = {
       price_type:"offer",
       codigo:"",
       link:"",
+      loading:false,
     };
     return { type: actionTypes.PRODUCT_SET_ITEM, item };
   }
@@ -222,9 +225,9 @@ export const actionTypes = {
    export function $deleteImage(image) {
     return { type: actionTypes.PRODUCT_DELETE_IMAGE, image };
   }
-  export const $fetchFrontIndex = (companyId) => ({ type: actionTypes.PRODUCT_FRONT_INDEX_REQUEST,companyId });
-  export function $frontPage(page = 1) {
-    return { type: actionTypes.PRODUCT_FRONT_PAGE_CHANGED, page: page };
+  export const $fetchFrontIndex = (companyId) => ({ type: actionTypes.PRODUCT_FRONT_INITIAL_INDEX_REQUEST,companyId });
+  export function $frontPage(companyId) {
+    return { type: actionTypes.PRODUCT_FRONT_PAGE_CHANGED,companyId};
   }
   export const $showFrontProduct = (id) => ({ type: actionTypes.PRODUCT_FRONT_SHOW,id });
   export const $generateVoucher = ()=>({type:actionTypes.PRODUCT_GENERATE_VOUCHER})
@@ -335,12 +338,21 @@ const saveProduct = (product,company) => {
 function* saveItem({ history }) {
   const product = yield select(store => store.product);
   const company = yield select(store => store.company);
-  
+  yield put({
+    type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+    name: "loading",
+    value: true
+  });
   console.log(product)
   yield put({ type: actionTypes.PRODUCT_CHANGE_SAVE_STATUS, status: true });
   try {
     const result = yield call(saveProduct, product,company);
     if (result.product) {
+      yield put({
+        type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+        name: "loading",
+        value: false
+      });
       console.log(company.item.productId)
       alert("Saving success.");
       history.push(`/admin/companies/${company.item.productId}/products`);
@@ -350,6 +362,11 @@ function* saveItem({ history }) {
           type: actionTypes.PRODUCT_SET_ITEM_ERROR,
           name: "name",
           value: result.errors.name
+        });
+        yield put({
+          type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+          name: "loading",
+          value: false
         });
       }
       yield put({
@@ -361,6 +378,12 @@ function* saveItem({ history }) {
     if (e.response.status == 401) {
       yield put(logOut());
     } else {
+      console.log(e);
+      yield put({
+        type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+        name: "loading",
+        value: false
+      });
       yield put({
         type: actionTypes.PRODUCT_INDEX_FAILURE,
         error: e.message
@@ -480,7 +503,28 @@ const productsFrontRequest = (meta,companyId) =>
       pageNumber: meta.page - 1,
     })}`
   }).then(response => response.data);
-
+function* fetchFrontInitialProducts({companyId}){
+  yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"companyId",value:companyId});
+  yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"frontData",value:[]});
+  yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"frontMeta",value:{
+    page: 1,
+    pageSize: 9,
+    pageTotal: 1,
+    total: 0
+  }});
+  try {
+    const product = yield select(store => store.product);
+    const result = yield call(productsFrontRequest, product.frontMeta,companyId);
+    yield put({
+      type: actionTypes.PRODUCT_FRONT_INDEX_SUCCESS,
+      frontData: result.products.data,
+      frontMeta: { total: result.products.total, pageTotal: result.products.last_page }
+    });
+    yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"company",value:result.company});
+  } catch (e) {
+    yield put({ type: actionTypes.PRODUCT_INDEX_FAILURE, error: e.message });
+  }
+}
 function* fetchFrontProducts({companyId}){
   yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"companyId",value:companyId});
   try {
@@ -496,17 +540,18 @@ function* fetchFrontProducts({companyId}){
     yield put({ type: actionTypes.PRODUCT_INDEX_FAILURE, error: e.message });
   }
 }
-function* changeFrontPage({ page }) {
+function* changeFrontPage({companyId}) {
   const frontMeta = yield select(store => store.product.frontMeta);
+  const page = frontMeta.page+1;
   if (page < 0) {
     page = 0;
   }
 
   if (page > frontMeta.pageTotal) {
-    page = frontMeta.pageTotal - 1;
+    yield put({ type: actionTypes.PRODUCT_FRONT_INDEX_META, frontMeta: { page: page+1 } });
+    return;
   }
   yield put({ type: actionTypes.PRODUCT_FRONT_INDEX_META, frontMeta: { page: page } });
-  const companyId = yield select(({product}) => product.companyId);
   yield put({ type: actionTypes.PRODUCT_FRONT_INDEX_REQUEST,companyId });
 }
 const showHomeProduct =(id) =>{
@@ -560,6 +605,7 @@ export function* saga() {
   yield takeLatest(actionTypes.PRODUCT_VIEW_IMAGES, viewImages);
   yield takeLatest(actionTypes.PRODUCT_DELETE_IMAGE,deleteRequest);
   // yield takeLatest(actionTypes.PRODUCT_CHANGE_ITEM, changeItem);
+  yield takeLeading(actionTypes.PRODUCT_FRONT_INITIAL_INDEX_REQUEST, fetchFrontInitialProducts);
   yield takeLeading(actionTypes.PRODUCT_FRONT_INDEX_REQUEST, fetchFrontProducts);
   yield takeLeading(actionTypes.PRODUCT_FRONT_PAGE_CHANGED, changeFrontPage);
   yield takeLeading(actionTypes.PRODUCT_FRONT_SHOW, showFrontProduct);

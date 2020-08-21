@@ -1,4 +1,5 @@
 export const formatMinSec = time => {
+  console.log(time)
   const minutes = String(Math.floor(time / 60))
   const seconds = String(time - minutes * 60)
 

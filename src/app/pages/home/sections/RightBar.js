@@ -31,6 +31,7 @@ const RightBar = () => {
   const dispatch = useDispatch();  
   useEffect(()=>{
     if(total==0){
+      console.log("published")
       dispatch($findPublished());
     }
   },[])    

@@ -10,6 +10,7 @@ import { nextBlock,previousBlock,doneWorkout,initialBlock } from "../../redux/do
 const Block = ({ block,renderLine,setAll })=>{
   const workouts = useSelector(({done})=>done.workouts);
   const step = useSelector(({done})=>done.step);
+  const [isRunning, setIsRunning] = useState(false);
   const renderImage = (url)=>{
     if(url){
       return (
@@ -28,12 +29,18 @@ const Block = ({ block,renderLine,setAll })=>{
   }
   const dispatch = useDispatch();
   const nextStep = ()=>{
+    if(isRunning){
+      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return;
+    }
     dispatch(nextBlock());
   }
   const previousStep = ()=>{
     dispatch(previousBlock());
   }
   const handleComplete = (item)=>{
+    if(isRunning){
+      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return;
+    }
     if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
     dispatch(initialBlock());
   }
@@ -41,7 +48,7 @@ const Block = ({ block,renderLine,setAll })=>{
     <div className="block">
       {renderImage(block.image_path)}
       {block.timer_type&&(
-        <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} />
+        <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} setIsRunning={setIsRunning}/>
       )}
       {
         step==0?(

@@ -128,6 +128,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/survey",
     "/admin/survey/create",
     "/admin/survey/:id",
+    "/admin/survey/:id/view",
     "/admin/companies",
     "/admin/companies/create",
     "/admin/companies/:id",

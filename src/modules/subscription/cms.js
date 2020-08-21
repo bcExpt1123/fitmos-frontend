@@ -89,6 +89,14 @@ export const reducer = persistReducer(
             image = clonedData['image_path'][action.day];
             break;
           case "blog":
+            timerType = clonedData[action.column+'_timer_type'][action.day];
+            if(timerType == null)timerType = "";
+            timerWork = clonedData[action.column+'_timer_work'][action.day];
+            if(timerWork == null)timerWork = "";
+            timerRest = clonedData[action.column+'_timer_rest'][action.day];
+            if(timerRest == null)timerRest = "";
+            timerRound = clonedData[action.column+'_timer_round'][action.day];
+            if(timerRound == null)timerRound = "";
             break;
           default:
             note = clonedData[action.column+'_note'][action.day];

@@ -25,6 +25,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DisableIcon from "@material-ui/icons/Clear";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import PageviewIcon from '@material-ui/icons/Pageview';
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import CustomerOverview from "./CustomerOverview";
 import { CustomerTransactions } from "./CustomerTransactions";
@@ -125,25 +126,29 @@ const Main = () =>{
                     <TableCell align="center">{row.title}</TableCell>
                     <TableCell align="center">{row.from_date}</TableCell>
                     <TableCell align="center">{row.to_date}</TableCell>
-                    <TableCell align="center" style={{ padding: "0" }}>
-                          <IconButton
-                            className={classes.button}
-                            aria-label="Edit"
-                            title="Edit"
-                            color="secondary"
-                          >
-                            <NavLink to={`/admin/survey/${row.id}`}>
-                              <EditIcon />
-                            </NavLink>
-                          </IconButton>
-                          <IconButton
-                            className={classes.button}
-                            aria-label="Disable"
-                            title="Delete"
-                            onClick={actionDelete(row.id)}
-                          >
-                            <DeleteIcon color="error" />
-                          </IconButton>
+                    <TableCell align="center">
+                      <IconButton
+                      title="View Report"
+                      color='primary'>
+                        <NavLink to={`/admin/survey/${row.id}/view`}>
+                          <PageviewIcon color='primary'/>
+                        </NavLink>
+                      </IconButton>
+                      <IconButton
+                        title="Edit"
+                        color="secondary"
+                      >
+                        <NavLink to={`/admin/survey/${row.id}`}>
+                          <EditIcon />
+                        </NavLink>
+                      </IconButton>
+                      <IconButton
+                        className={classes.button}
+                        title="Delete"
+                        onClick={actionDelete(row.id)}
+                      >
+                        <DeleteIcon color="error" />
+                      </IconButton>
                     </TableCell>
                   </TableRow>
                 ))}

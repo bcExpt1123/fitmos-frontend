@@ -16,3 +16,15 @@ export const currentWorkoutPlan = (slug)=>{
   }
   return text;
 }
+export const currentCustomerWeights = (slug)=>{
+  let text;
+  switch(slug){
+    case "sin pesas":
+      text = "Sin mancuernas";
+      break;
+    case "con pesas":
+      text = "Con mancuernas";
+      break;
+  }
+  return text;
+}

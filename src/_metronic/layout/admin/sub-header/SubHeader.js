@@ -47,6 +47,7 @@ import { SubHeaderCompanyCreate } from "../../../../app/pages/admin/CompanyCreat
 import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
 import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
 import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
+import { SubHeaderSurveyReports } from "../../../../app/pages/admin/SurveyReports";
 
 // import BreadCrumbs from "./components/BreadCrumbs";
 
@@ -237,6 +238,11 @@ class SubHeader extends React.Component {
               exact
               path="/admin/survey/:id"
               component={SubHeaderSurveyCreate}
+            />
+            <Route
+              exact
+              path="/admin/survey/:id/view"
+              component={SubHeaderSurveyReports}
             />
             <Route
               exact

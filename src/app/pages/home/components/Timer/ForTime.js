@@ -28,7 +28,7 @@ class ForTime extends Base {
   }
   renderDone() {
     if (!this.isDone()) return
-
+    this.props.setIsRunning(false);
     const { minutes } = this.state
 
     return `${minutes} ${pluralize(minutes, 'minuto', 'minutos')} completados`
@@ -42,7 +42,7 @@ class ForTime extends Base {
     const { minutes } = this.state
 
     this.setItem('minutes', minutes)
-
+    this.props.setIsRunning(true);
     this.setState({
       intervalId: createForTime({ minutes: minutes, cb, cbDelay, cbDone })
     })
@@ -68,7 +68,7 @@ class ForTime extends Base {
       <div className="amrap-timer-start-height">&nbsp;</div>
         <div className="w-100">
           <div className="timer--settingField mb3">
-              <span className="tr">La mayor cantidad</span>
+              <span className="tr">La mayor cantidad&nbsp;</span>
               <span className="mh4">
               de rondas
               </span>
@@ -111,6 +111,7 @@ class ForTime extends Base {
         handleRestart={this.handleStart}
         isRunning={this.isRunning()}
         isDone={this.isDone()}
+        setIsRunning={this.props.setIsRunning}
         subheader={this.renderDone()}
         time={this.renderTime()}
       >

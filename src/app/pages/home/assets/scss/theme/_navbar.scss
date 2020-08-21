@@ -160,8 +160,8 @@
     height: 18px;
     cursor: pointer;
     transition: all 0.2s;
-    top: 1.5rem;
-    right: 1rem;
+    top: 1.2rem;
+    left: 1rem;
   }
   button.navbar-toggler:focus {
     outline: none;
@@ -304,12 +304,21 @@
 }
 @media (max-width: 991px) {
   .fitemos-menu {
+    .menu-logo {
+      margin-left: auto;
+    }
+    .navbar.navbar-short .navbar-brand {
+      min-height: 3.8rem;
+    }  
+    .navbar.navbar-short .navbar-toggler-right {
+      top: 1.2rem;
+    }  
     .opened{
       .menu-logo{
         margin-left: auto;
         .navbar-logo{
           img{
-            height: 5rem!important;
+            height: 4rem!important;
           }
         }
       }
@@ -326,7 +335,7 @@
       flex-direction: column;
     }
     .navbar-dropdown .navbar-logo img {
-      height: 1.5rem !important;
+      height: 2.3rem !important;
     }
     .btn {
       display: flex;

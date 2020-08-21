@@ -10,7 +10,7 @@
     -webkit-transition: all .2s;
     transition: all .2s;
     top: 1.5rem;
-    right: 1rem;
+    left: 2rem;
     border-color:transparent;    
     z-index: 1;
     .hamburger{
@@ -106,15 +106,9 @@
         background-size: cover;
         vertical-align: middle;
         &:first-of-type{
-          height:22px;
-          width:28px;
+          height:35px;
+          width:154px;
           margin-right: 20px;
-          background-image: url("../../img/Fitmose-logo1.png");
-        }
-        &:nth-last-of-type(1){
-          height:31px;
-          width:91px;
-          background-position: right;
           background-image: url("../../img/Fitmose-logo1.png");
         }
       }
@@ -249,6 +243,9 @@
     color: $basic-text-color;
     @import "_shared_profile";
   }
+  .mobile-menu{
+    display: none;
+  }
 }
 @media (max-width: 1024px) {
   .wrapper {
@@ -273,6 +270,24 @@
 }
 @media (max-width: 991px) {
 	.wrapper {
+    .mobile-menu{
+      display: block;
+      .menu-logo {
+        margin: 10px auto 10px auto;
+        width: 150px;
+        a{
+          display: inline-block;
+          background-size: cover;
+          vertical-align: middle;
+          &:nth-last-of-type(1){
+            height:35px;
+            width:151px;
+            background-position: right;
+            background-image: url("/media/logos/black.png");
+          }
+        }
+      }  
+    }
     #show-responive-menu{
       display:block;
     }
@@ -286,17 +301,32 @@
       left: -100%;
       footer{
         margin: 0 20%;
+        bottom: 20px;
       }
     }
     #sidebar.responsive{
       visibility: visible;
       opacity: 1;
       left: 0;
-      transition: opacity 0.3s linear,left 0.3s ease;      
+      transition: opacity 0.3s linear,left 0.3s ease;  
+      .menu-logo{
+        margin-bottom: 20px;
+      }    
       #hide-responive-menu{
         display: block;
         background: inherit;
       }
+      ul{
+        li a{
+          margin: 10px 0 0 0;
+          &[href]{
+            margin: 20px 0;
+          }
+        }
+        ul a{
+          margin-top: 15px!important;
+        }
+      } 
     }
 		#content{
 			padding-left: 0;		

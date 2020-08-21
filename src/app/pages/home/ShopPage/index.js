@@ -1,23 +1,23 @@
 import React,{useState,useEffect} from "react";
-import Pagination from "react-js-pagination";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { $fetchFrontIndex,$frontPage } from "../../../../modules/subscription/company";
+import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
+import Company from "./Company";
 
 
 const Shop = () => {
-  const [activePage, setActivePage] = useState(1);
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch($fetchFrontIndex())
-  }, []);
   const company = useSelector(({ company }) => company);
-  const meta = company.frontMeta;
   const companies = company.frontData;
-  const handlePageChange = (number)=>{
-    setActivePage(number);
-    dispatch($frontPage(number));
+  const meta = company.frontMeta;
+  useEffect(() => {
+    setIsFetching(false);
+  }, [company.frontMeta]);
+  const fetchMoreListItems = ()=>{
+    dispatch($frontPage());
   }
+  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   return (
     <section className="shop" id="shop">
       <div className="row">
@@ -26,7 +26,7 @@ const Shop = () => {
             <div className="content">
               <NavLink
                 aria-label="Company"
-                title={`Read ${company.title}`}
+                title={`Read ${company.name}`}
                 to={`/shop/companies/${company.id}`}
               >
                 <div className="image">
@@ -48,16 +48,7 @@ const Shop = () => {
             </div>
           </article>
         )}
-      </div>
-      <div className="pagination-wrapper">
-        <Pagination
-          activePage={activePage}
-          itemsCountPerPage={meta.pageSize}
-          totalItemsCount={meta.total}
-          itemClass="page-item"
-          linkClass="page-link"
-          onChange={handlePageChange}
-        />
+        {meta&&meta.page<meta.pageTotal&&isFetching && 'Obteniendo más elementos de la lista...'}
       </div>
     </section>
   );

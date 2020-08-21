@@ -16,54 +16,56 @@
     }
   }
   .number-level{
-    font-size: 12px;
+    font-size: 16px;
     text-align: right;
+    line-height: 38px;
     &:first-child{
-      margin-top: 27px;
+      margin-top: 17px;
       &.active{
-        margin-top: 24px;
-        margin-bottom: -6px;
+        margin-top: 18px;
+        margin-bottom: -2px;
       }
     }
     &:nth-child(2){
-      margin-top: 12px;
+      margin-top: 8px;
       &.active{
         margin-top: 9px;
-        margin-bottom: -6px;
+        margin-bottom: -2px;
       }
     }
     &:nth-child(3){
-      margin-top: 12px;
+      margin-top: 9px;
       &.active{
         margin-top: 9px;
-        margin-bottom: -6px;
+        margin-bottom: -1px;
       }
     }
     &:nth-child(4){
-      margin-top: 11px;
+      margin-top: 14px;
       &.active{
-        margin-top: 9px;
-        margin-bottom: -6px;
+        margin-top: 13px;
+        margin-bottom: -2px;
       }
     }
     &:nth-child(5){
-      margin-top: 12px;
+      margin-top: 10px;
       &.active{
-        margin-top: 9px;
+        margin-top: 13px;
         margin-bottom: -6px;
       }
     }
     &.active{
-      font-size: 18px;
+      font-size: 20px;
       color:#51AB80;
       font-weight: bold;
     }
   }
   .number-level-value{
-    font-size: 12px;
+    font-size: 16px;
     margin-left: 3px;
+    line-height: 35px;
     &:first-child{
-      margin-top: 27px;
+      margin-top: 17px;
       &.active{
         margin-top: 24px;
         margin-bottom: -6px;
@@ -84,14 +86,14 @@
       }
     }
     &:nth-child(4){
-      margin-top: 11px;
+      margin-top: 16px;
       &.active{
         margin-top: 9px;
         margin-bottom: -6px;
       }
     }
     &:nth-child(5){
-      margin-top: 12px;
+      margin-top: 13px;
       &.active{
         margin-top: 9px;
         margin-bottom: -6px;
@@ -105,7 +107,7 @@
     .vertical {
       display: inline-block;
       width: 100%;
-      height: 150px;
+      height: 250px;
       -webkit-transform: rotate(-180deg); /* Chrome, Safari, Opera */
     }
     .vertical {
@@ -113,6 +115,7 @@
     }
     .level-bar {
       background-color: #EB5757;
+      transition: 1.2s height;
       //box-shadow: inset 0px 4px 6px rgba(#51AB80,0.6);
     }    
   }

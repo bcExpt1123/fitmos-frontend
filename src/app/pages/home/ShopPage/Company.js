@@ -1,29 +1,35 @@
 import React,{useState,useEffect} from "react";
-import Pagination from "react-js-pagination";
 import { useDispatch, useSelector } from "react-redux";
 
 import SectionProduct from "./SectionProduct";
 import { $fetchFrontIndex, $frontPage } from "../../../../modules/subscription/product";
+import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
 
 
 const Company = ({match}) => {
-  const [activePage, setActivePage] = useState(1);
   const dispatch = useDispatch();
+  const [id, setId] = useState(null);
   useEffect(() => {
-    dispatch($fetchFrontIndex(match.params.id))
+    if(product.companyId != match.params.id){
+      dispatch($fetchFrontIndex(match.params.id));
+    }
+    setId(match.params.id);
   }, []);
   const product = useSelector(({ product }) => product);
   const meta = product.frontMeta;
   const products = product.frontData;
-  const handlePageChange = (number)=>{
-    setActivePage(number);
-    dispatch($frontPage(number));
+  useEffect(() => {
+    setIsFetching(false);
+  }, [product.frontMeta]);
+  const fetchMoreListItems = ()=>{
+    dispatch($frontPage(id));
   }
+  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   return (
     <section className="company" id="company">
       {product&&product.company&&(
         <div className="item row">
-          <div className="image col-12 col-md-3">
+          <div className="image mb-5 col-12 col-md-3">
             <div className="background-container">
               <div className="background" 
                 style={{
@@ -43,7 +49,7 @@ const Company = ({match}) => {
             }</div>
             <div className="mt-2"><label className="font-bold-weight">Dirección:</label>&nbsp;{product.company.address}&nbsp;</div>
             {product.company.website_url&&(
-              <div className="mt-2"><a href="product.company.website_url" target="new">{product.company.website_url}</a></div>
+              <div className="mt-2"><a href={product.company.website_url} target="new">{product.company.website_url}</a></div>
             )}
           </div>
         </div>
@@ -52,16 +58,7 @@ const Company = ({match}) => {
         {products&&products.map((product)=>
           <SectionProduct product={product}  key={product.id} />
         )}
-      </div>
-      <div className="pagination-wrapper">
-        <Pagination
-          activePage={activePage}
-          itemsCountPerPage={meta.pageSize}
-          totalItemsCount={meta.total}
-          itemClass="page-item"
-          linkClass="page-link"
-          onChange={handlePageChange}
-        />
+        {meta&&meta.page<meta.pageTotal&&isFetching && 'Obteniendo más elementos de la lista...'}
       </div>
     </section>
   );

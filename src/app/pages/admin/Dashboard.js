@@ -1,10 +1,11 @@
 import React, { useState,useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
-import { Chart } from "chart.js";
+import { useDispatch } from "react-redux";
 
 import { http } from "../home/services/api";
 import CustomersChart from "./sections/CustomersChart.js";
+import { $exportReport } from "../../../modules/subscription/customer";
 
 const useStyles = makeStyles(theme => ({
 }));
@@ -37,12 +38,16 @@ export default function Dashboard() {
       setData(res.data);
     }
   }  
+  const dispatch = useDispatch();
   const handleSearch = ()=>{
     if(from=="" || to=="" || from>to){
       alert("please choose valid dates");
       return;
     }
     fetchReports();
+  }
+  const handleExport = ()=>{
+    dispatch($exportReport(from,to));
   }
   const changeFromDate = (event)=>{
     setFrom(event.target.value);
@@ -61,6 +66,7 @@ export default function Dashboard() {
           <label htmlFor="to">To&nbsp;&nbsp;</label>
           <input name="to" type="date" value={to} onChange={changeToDate}/>
           <button className="btn btn-primary" onClick={handleSearch}>Filter</button>
+          <button className="btn btn-primary" onClick={handleExport}>Export</button>
         </div>
       </div>
       {data&&

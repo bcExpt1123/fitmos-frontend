@@ -50,6 +50,7 @@ class Base extends Component {
 
   handleStop() {
     if (this.state.intervalId) {
+      //this.props.setIsRunning(false);
       window.clearInterval(this.state.intervalId)
     }
 
@@ -76,6 +77,7 @@ class Base extends Component {
   }
 
   handleReset() {
+    //this.props.setIsRunning(false);
     this.setState({ delay: false, done: false, running: false })
   }
 

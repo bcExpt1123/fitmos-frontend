@@ -27,7 +27,7 @@ class AMRAP extends Base {
   }
   renderDone() {
     const { minutes } = this.state
-
+    this.props.setIsRunning(false);
     return `${this.padClock(minutes)} ${pluralize(
       minutes,
       'minuto',
@@ -43,7 +43,7 @@ class AMRAP extends Base {
     const { minutes } = this.state
 
     this.setItem('minutes', minutes)
-
+    this.props.setIsRunning(true);
     this.setState({
       intervalId: createAMRAP({ minutes, cb, cbDelay, cbDone })
     })
@@ -61,7 +61,7 @@ class AMRAP extends Base {
                 el menor tiempo posible.</span>
           </div>
           <div className="timer--settingField mb3">
-              <span className="tr">Tiempo Límite:</span>
+              <span className="tr">Tiempo Límite:&nbsp;</span>
               <span className="mh4">
                 {formatMinSec(this.state.minutes*60)}
               </span>
@@ -98,6 +98,7 @@ class AMRAP extends Base {
         handleRestart={this.handleStart}
         isRunning={this.isRunning()}
         isDone={this.isDone()}
+        setIsRunning={this.props.setIsRunning}
         subheader={this.isDone() && this.renderDone()}
         time={this.renderTime()}
       >

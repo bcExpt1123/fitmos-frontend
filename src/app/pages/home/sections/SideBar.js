@@ -58,14 +58,20 @@ const SideBar = ({history}) => {
   }
   return (
     <>
-      <button id="show-responive-menu" onClick={showMobileMenu} className={classnames({'d-none':showMenu})}>
-        <div className="hamburger">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
+      <header className="mobile-menu">
+        <button id="show-responive-menu" onClick={showMobileMenu} className={classnames({'d-none':showMenu})}>
+          <div className="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+        <div className="menu-logo">
+          <NavLink className="image-logo" to="/">
+          </NavLink>
         </div>
-      </button>
+      </header>
       <nav id="sidebar" className={classnames({responsive:showMenu })}>
         <button id="hide-responive-menu" onClick={hideMobileMenu}>
           <div className="hamburger">
@@ -77,8 +83,6 @@ const SideBar = ({history}) => {
         </button>
         <div className="menu-logo">
           <NavLink className="image-logo" to="/">
-          </NavLink>
-          <NavLink className="text-logo" to="/">
           </NavLink>
         </div>
         <ul className="list-unstyled components">

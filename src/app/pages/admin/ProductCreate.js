@@ -409,14 +409,25 @@ function Sub({match,history}) {
 
 			<div className="kt-subheader__toolbar">
 				<div className="kt-subheader__wrapper">
+          {product.item.loading?(
 					<Button
-						type="button"
 						className="btn kt-subheader__btn-primary btn-primary"
 						form="product-form"
-						type="submit"
+            type="submit"
+            disabled={product.item.loading}            
 					>
-						Submit &nbsp;
+            Saving... &nbsp;
 					</Button>
+          ):(
+            <Button
+						className="btn kt-subheader__btn-primary btn-primary"
+						form="product-form"
+            type="submit"
+            disabled={product.item.loading}            
+					>
+					  Submit &nbsp;
+					</Button>
+          )}
 					<Button
 						type="button"
 						className="btn kt-subheader__btn-primary btn-primary"

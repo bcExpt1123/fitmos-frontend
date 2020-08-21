@@ -385,7 +385,7 @@ class Subscription extends React.Component {
                             <button
                               className="btn btn-md btn-primary fs-btn"
                               disabled={this.props.loading}
-                              onClick={()=>this.setState({showForm:true})}
+                              onClick={this.handleFreeMembership}
                             >
                               PRUEBA {this.props.serviceItem.free_duration} DÍAS GRATIS
                             </button>

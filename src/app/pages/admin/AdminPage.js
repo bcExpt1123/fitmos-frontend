@@ -40,6 +40,7 @@ import {Companies}  from "./Companies";
 import { CompanyCreate } from "./CompanyCreate";
 import { ProductCreate } from "./ProductCreate";
 import { LayoutSplashScreen } from "../../../_metronic";
+import { SurveyReports } from "./SurveyReports";
 
 export default function AdminPage() {
   // useEffect(() => {
@@ -110,6 +111,7 @@ export default function AdminPage() {
         <Route exact path="/admin/survey" component={Survey} />
         <Route exact path="/admin/survey/:id" component={SurveyCreate} />
         <Route exact path="/admin/survey/create" component={SurveyCreate}/>
+        <Route exact path="/admin/survey/:id/view" component={SurveyReports}/>
         <Route exact path="/admin/Companies" component={Companies} />
         <Route exact path="/admin/companies/create" component={CompanyCreate} />
         <Route exact path="/admin/companies/:id" component={CompanyCreate} />

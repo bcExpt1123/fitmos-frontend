@@ -38,6 +38,7 @@
       &.workout-date{
         display: inline-block;
         padding: 0 20px;
+        font-size:20px;
       }
     }
   }
@@ -144,14 +145,43 @@
   }
 }
 @media (max-width: 991px) {
+  .page-title{
+    .sub-title{
+      display: none;
+    }
+  }  
   .workout{
+    margin-left: -20px;
+    margin-right: -20px;
     .workout-header{
       padding:18px 20px;
+      font-size: 14px;
+      span.workout-date{
+        font-size: 14px;
+      }
     }
     .workout-body{
       .block{
         padding:0 20px;
+        .nav.nav-tabs{
+          width: auto;
+          margin-left: 0;
+          padding-left: calc(30% - 15px);
+        }  
       }
+      .blog{
+        padding:0 20px;
+      }  
+      .actions{
+        display: flex; 
+        justify-content: flex-end;
+        button{
+          padding: 3px 10px;
+          &.next{
+            padding: 3px 20px;
+          }
+        }
+      }  
     }
   }
 }

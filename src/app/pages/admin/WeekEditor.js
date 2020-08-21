@@ -331,7 +331,15 @@ function Main({
         title={weekdates[weekDay] + "'s " + weekdates[day]}
         subTitle={column && columnLabels[column]} 
         content={content}
+        timerType={timerType}
+        work={work}
+        round={round}
+        rest={rest}
         handleChange={handleChange}
+        handleTimerTypeChange={handleTimerTypeChange}
+        handleTimerWorkChange={handleTimerWorkChange}
+        handleTimerRoundChange={handleTimerRoundChange}
+        handleTimerRestChange={handleTimerRestChange}
         handleSave={handleSave}
       />
       <WorkoutNoteEditDialog 

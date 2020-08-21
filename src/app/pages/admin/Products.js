@@ -153,19 +153,19 @@ const Main = () =>{
                       <TableCell align="center" className={classes.tablePadding}>{row.name}</TableCell>
                       <TableCell align="center" className={classes.tablePadding}>{row.price_type}</TableCell>
                       {row.price_type=="offer"?(
-                        <TableCell align="center" className={classes.tablePadding}><i>Empty</i></TableCell>
+                        <TableCell align="center" className={classes.tablePadding}>&nbsp;</TableCell>
                       ):(
                         <TableCell align="center" className={classes.tablePadding}>{row.discount}</TableCell>
                       )}
                       {row.price_type=="offer"?(
                         <TableCell align="center" className={classes.tablePadding}>{row.regular_price}</TableCell>
                         ):(
-                          <TableCell align="center" className={classes.tablePadding}><i>Empty</i></TableCell>
+                          <TableCell align="center" className={classes.tablePadding}>&nbsp;</TableCell>
                       )}
                        {row.price_type=="offer"?(
                          <TableCell align="center" className={classes.tablePadding}>{row.price}</TableCell>
                          ):(
-                          <TableCell align="center" className={classes.tablePadding}><i>Empty</i></TableCell>
+                          <TableCell align="center" className={classes.tablePadding}>&nbsp;</TableCell>
                       )}
                       <TableCell align="center" className={classes.tablePadding}>{row.voucher_type}</TableCell>
                       <TableCell align="center" className={classes.tablePadding}>{row.expiration_date}</TableCell>

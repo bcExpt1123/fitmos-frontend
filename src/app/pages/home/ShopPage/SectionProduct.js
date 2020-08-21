@@ -7,7 +7,7 @@ const SectionProduct = ({product}) => (
     <div className="content">
       <NavLink
         aria-label="Product"
-        title={`Read ${product.title}`}
+        title={`Read ${product.name}`}
         to={`/shop/products/${product.id}`}
       >
         <div className="image">

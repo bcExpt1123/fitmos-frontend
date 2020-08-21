@@ -3,6 +3,7 @@ import Card from "react-bootstrap/Card";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { http } from "../../services/api";
+import { currentCustomerWeights } from "../../services/convert";
 import { updateCustomerAttribute as updateWeightsAction } from "../../redux/auth/actions";
 import SectionChangeGoal from "../../DashboardPage/SectionChangeGoal";
 import { $resetPublished } from "../../../../../modules/subscription/benchmark";
@@ -76,7 +77,7 @@ const Objective = () => {
         </div>
         <label>Equipo</label>
         <div className="row">
-          <div className="value col-10">{currentUser.customer.weights}</div>
+          <div className="value col-10">{currentCustomerWeights(currentUser.customer.weights)}</div>
           <div className="col-2 edit"><i className="fa fa-pen" onClick={handleClick}></i></div>
         </div>
         <label>Intensidad</label>

@@ -33,7 +33,7 @@ class Tabata extends Base {
     if (!this.isDone()) return
 
     const { rounds } = this.state
-
+    this.props.setIsRunning(false);
     return `${rounds} ${pluralize(rounds, 'round', 'rounds')} completados`
   }
 
@@ -66,7 +66,7 @@ class Tabata extends Base {
     this.setItem('rounds', rounds)
     this.setItem('work', work)
     this.setItem('rest', rest)
-
+    this.props.setIsRunning(true);
     this.setState({
       intervalId: createTabata({ rounds, work, rest, cb, cbDelay, cbDone })
     })
@@ -93,9 +93,9 @@ class Tabata extends Base {
           <div className="timer--settingField mb3">
               <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
               <span className="mh4">
-                {formatMinSec(this.state.rounds * this.state.work * this.state.rest * 60)}
+                {formatMinSec(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
               </span>
-              <span className="tl">&nbsp;seconds</span>
+              <span className="tl">&nbsp;minutos</span>
           </div>
 
         </div>
@@ -121,6 +121,7 @@ class Tabata extends Base {
         goBackFn={this.handleStop}
         isRunning={this.isRunning()}
         isDone={this.isDone()}
+        setIsRunning={this.props.setIsRunning}
         appendTopHeader={this.appendTopHeader()}
         handleRestart={this.handleStart}
         time={

@@ -62,7 +62,6 @@ export default function WorkoutEditDialog(props) {
           </Col>
           <Col sm={5}>
             <TextField
-              autoFocus
               margin="dense"
               id="node"
               label="Note"

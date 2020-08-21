@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import { put, call, takeLatest,select, takeEvery,takeLeading } from "redux-saga/effects";
 import { push } from "react-router-redux";
@@ -56,10 +55,10 @@ const initialState = {
     pageTotal: 1,
     total: 0
   },
-  frontData:null,
+  frontData:[],
   frontMeta: {
     page: 1,
-    pageSize: 6,
+    pageSize: 9,
     pageTotal: 1,
     total: 0
   },
@@ -148,7 +147,7 @@ export const reducer = persistReducer(
       case actionTypes.COMPANY_FRONT_INDEX_SUCCESS:
         return {
           ...state,
-          frontData: action.frontData,
+          frontData: [...state.frontData,...action.frontData],
           frontMeta: { ...state.frontMeta, ...action.frontMeta }
         };
       case actionTypes.COMPANY_FRONT_INDEX_META:
@@ -216,8 +215,8 @@ export function $showCompanyDetail(id) {
   return { type: actionTypes.SHOW_COMPANY_DETAIL, id };
 }
 export const $fetchFrontIndex = () => ({ type: actionTypes.COMPANY_FRONT_INDEX_REQUEST });
-export function $frontPage(page = 1) {
-  return { type: actionTypes.COMPANY_FRONT_PAGE_CHANGED, page: page };
+export function $frontPage() {
+  return { type: actionTypes.COMPANY_FRONT_PAGE_CHANGED};
 }
 
 const companiesRequest = (meta, searchCondition) =>
@@ -550,14 +549,16 @@ function* fetchFrontCompany(){
     yield put({ type: actionTypes.COMPANY_INDEX_FAILURE, error: e.message });
   }
 }
-function* changeFrontPage({ page }) {
+function* changeFrontPage() {
   const frontMeta = yield select(store => store.company.frontMeta);
+  const page = frontMeta.page+1;
   if (page < 0) {
     page = 0;
   }
 
   if (page > frontMeta.pageTotal) {
-    page = frontMeta.pageTotal - 1;
+    yield put({ type: actionTypes.COMPANY_FRONT_INDEX_META, frontMeta: { page: page+1 } });
+    return;
   }
   yield put({ type: actionTypes.COMPANY_FRONT_INDEX_META, frontMeta: { page: page } });
   yield put({ type: actionTypes.COMPANY_FRONT_INDEX_REQUEST });
