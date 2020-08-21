@@ -2,7 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import SectionProduct from "./SectionProduct";
-import { $fetchFrontIndex, $frontPage } from "../../../../modules/subscription/product";
+import { $fetchFrontIndex, $frontPage,$cleanCompanyId } from "../../../../modules/subscription/product";
 import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
 
 
@@ -14,6 +14,9 @@ const Company = ({match}) => {
       dispatch($fetchFrontIndex(match.params.id));
     }
     setId(match.params.id);
+    return () => {
+      dispatch($cleanCompanyId());
+    };
   }, []);
   const product = useSelector(({ product }) => product);
   const meta = product.frontMeta;

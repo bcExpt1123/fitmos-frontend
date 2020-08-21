@@ -230,7 +230,8 @@ export const actionTypes = {
     return { type: actionTypes.PRODUCT_FRONT_PAGE_CHANGED,companyId};
   }
   export const $showFrontProduct = (id) => ({ type: actionTypes.PRODUCT_FRONT_SHOW,id });
-  export const $generateVoucher = ()=>({type:actionTypes.PRODUCT_GENERATE_VOUCHER})
+  export const $generateVoucher = ()=>({type:actionTypes.PRODUCT_GENERATE_VOUCHER});
+  export const $cleanCompanyId = ()=>({type:actionTypes.PRODUCT_SET_VALUE,key:"companyId",value:null});
 	const productsRequest = (meta, searchCondition,item) =>
   http({
     path: `products?${serializeQuery({
