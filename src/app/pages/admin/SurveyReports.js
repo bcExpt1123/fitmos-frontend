@@ -29,6 +29,7 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Rating from '@material-ui/lab/Rating';
 import {$fetchSurveyReport,$pageReport,$pageSizeReport,$moreDetail} from "../../../modules/subscription/survey";
 const useStyles = makeStyles(theme => ({
   table: {
@@ -174,46 +175,46 @@ function Main() {
               aria-describedby="alert-dialog-description"
               classes={{paper: classes.dialog}}
             >
-                <DialogContent style={{marginTop:"30px"}}>
-                  {viewDetail != null &&
-                  viewDetail.map(row => (
-                    <DialogContentText id="alert-dialog-description" key={row.id}>
-                      {row.question=='text'?(
-                        <div>
-                          <p className={classes.question} >{row.label}</p>
-                          <p className={classes.answer} >{row.text_answer}</p>
-                        </div>
-                      ):(<></>)}
-                    </DialogContentText>
-                  ))}
-                  {viewDetail != null &&
-                  viewDetail.map(row => (
-                    <DialogContentText id="alert-dialog-description" key={row.label}>
-                      {row.question=='level'?(
-                        <div>
-                          <p className={classes.question} >{row.label}</p>
-                          <p className={classes.answer} >{row.level_answer}</p>
-                        </div>
-                      ):(<></>)}
-                    </DialogContentText>
-                  ))}
-                  {viewDetail != null &&
-                  viewDetail.map(row => (
-                    <DialogContentText id="alert-dialog-description" key={row.larbel}>
-                      {row.question=='select'?(
-                        <div>
-                          <p className={classes.question} >{row.label}</p>
-                          <p className={classes.answer} >{row.select_answer}</p>
-                        </div>
-                      ):(<></>)}
-                    </DialogContentText>
-                  ))}
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick={handleClose} style={{padding:'20px'}} color="primary" autoFocus>
-                    Close
-                  </Button>
-                </DialogActions>
+              <DialogContent style={{marginTop:"30px"}}>
+                {viewDetail != null &&
+                viewDetail.map(row => (
+                  <DialogContentText id="alert-dialog-description" key={row.id}>
+                    {row.question=='text'?(
+                      <div>
+                        <p className={classes.question} >{row.label}</p>
+                        <p className={classes.answer} >{row.text_answer}</p>
+                      </div>
+                    ):(<></>)}
+                  </DialogContentText>
+                ))}
+                {viewDetail != null &&
+                viewDetail.map(row => (
+                  <DialogContentText id="alert-dialog-description" key={row.label}>
+                    {row.question=='level'?(
+                      <div>
+                        <p className={classes.question} >{row.label}</p>
+                        <p className={classes.answer}><Rating name="read-only" value={row.level_answer} readOnly /></p>
+                      </div>
+                    ):(<></>)}
+                  </DialogContentText>
+                ))}
+                {viewDetail != null &&
+                viewDetail.map(row => (
+                  <DialogContentText id="alert-dialog-description" key={row.larbel}>
+                    {row.question=='select'?(
+                      <div>
+                        <p className={classes.question} >{row.label}</p>
+                        <p className={classes.answer} >{row.select_answer}</p>
+                      </div>
+                    ):(<></>)}
+                  </DialogContentText>
+                ))}
+              </DialogContent>
+              <DialogActions>
+                <Button onClick={handleClose} style={{padding:'20px'}} color="primary" autoFocus>
+                  Close
+                </Button>
+              </DialogActions>
             </Dialog>
           </div>
         </div>
