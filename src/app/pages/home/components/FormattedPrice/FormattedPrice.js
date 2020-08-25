@@ -9,7 +9,7 @@ export const formatPrice = ({ intl, currency, price }) =>
   });
 const FormattedPrice = ({ intl, price, currency, children, locale }) => {
   const formattedPrice = formatPrice({ intl, currency, price });
-  return locale == "en" ? (
+  return locale === "en" ? (
     <IntlProvider locale="en">
       <FormattedNumber
         value={price / 10 ** currency.exponent}

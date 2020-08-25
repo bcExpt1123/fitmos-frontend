@@ -1,14 +1,8 @@
 import React,{useState, useEffect} from "react";
-import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
-const iphones = [
-  toAbsoluteUrl("./media/phone/iphone1.png"),
-  toAbsoluteUrl("./media/phone/iphone2.png"),
-  toAbsoluteUrl("./media/phone/iphone3.png")
-]
 export default function SectionGuide() {
   const [background,setBackground] = useState('background iphone2');
-  let i = 1;
   useEffect(()=>{
+    let i = 1;
     const timer = window.setInterval(() => {
       i++;
       if(i>3)i=2;
@@ -17,7 +11,7 @@ export default function SectionGuide() {
     return () => { // Return callback to run on unmount.
       window.clearInterval(timer);
     };
-  },[i]);
+  });
   return (
     <section className="section-guide" id="section-guide">
       <div className="container">

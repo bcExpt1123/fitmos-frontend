@@ -1,14 +1,8 @@
 import React, { Component } from "react";
 
-import LazyImage from "../components/LazyImage";
 import { jarallax } from "jarallax";
 import { NavLink } from "react-router-dom";
 
-const Slide = ({ src, alt }) => (
-  <div className={"styles.carouselSlide"}>
-    <LazyImage src={src} alt={alt} width={496} />
-  </div>
-);
 
 const bannerContent = (
   <div className="container align-center">

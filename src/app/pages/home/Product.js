@@ -2,7 +2,6 @@ import React from "react";
 import MetaTags from "react-meta-tags";
 import { useSelector } from "react-redux";
 
-import TwoColumn from "./layouts/Two";
 import ThreeColumn from "./layouts/Three";
 import Product from "./ShopPage/Product";
 import PageHeader from "./layouts/PageHeader";

@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   LightgalleryProvider,
   LightgalleryItem,
-  withLightgallery,
   useLightgallery
 } from "react-lightgallery";
 import "lightgallery.js/dist/css/lightgallery.css";
@@ -36,7 +35,7 @@ const OpenButtonWithHook = ({product,image,productRender,number}) => {
 const PhotoItem = ({ image, thumb, group }) => (
   <div style={{ maxWidth: "250px", width: "200px", padding: "5px",display:"none" }}>
     <LightgalleryItem group={group} src={image} thumb={thumb}>
-      <img src={image} style={{ width: "100%" }} />
+      <img src={image} style={{ width: "100%" }}  alt="produt-thumbnail-gallery"/>
     </LightgalleryItem>
   </div>
 );
@@ -46,7 +45,7 @@ const Product = ({match}) => {
   const [number, setNumber]=useState(0);
   useEffect(() => {
     dispatch($showFrontProduct(match.params.id));
-  }, [match.params.id]);
+  }, [match.params.id]);// eslint-disable-line react-hooks/exhaustive-deps
   const product = useSelector(({ product }) => product);
   useEffect(() => {
     if(product.item.gallery){
@@ -70,7 +69,7 @@ const Product = ({match}) => {
         <div className="mt-4">{product.item.description}</div>
         <div className="product-attributes">
             <label>Offer:</label>&nbsp;&nbsp;             
-            {product.item.price_type == 'offer'?(
+            {product.item.price_type === 'offer'?(
               <>
                 <span className="regular-price">${product.item.regular_price}</span>&nbsp;&nbsp;<span>${product.item.price}</span>
               </>
@@ -98,7 +97,7 @@ const Product = ({match}) => {
               <div className="gallery col-12 col-md-5 mt-2">
                 {product.item.gallery&&product.item.gallery.map( (image, index)=>
                   <div key={image.id}>
-                    <img src={image.thumbnail} onClick={()=>thumbnailClick(image, index)}/>
+                    <img src={image.thumbnail} onClick={()=>thumbnailClick(image, index)} alt="produt-thumbnail"/>
                   </div>
                 )}
               </div>
@@ -112,7 +111,7 @@ const Product = ({match}) => {
           </LightgalleryProvider>
         </>
       )}
-      <h2 className="mt-5">Related Items</h2>
+      <h2 className="mt-5">Artículos Relacionados</h2>
       <div className="row">
         {products&&products.map((product)=>
           <SectionProduct product={product}  key={product.id} />

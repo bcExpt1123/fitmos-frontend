@@ -1,5 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { connect,useDispatch } from "react-redux";
 import { injectIntl } from "react-intl";
@@ -51,15 +50,15 @@ const CheckoutPage = ({
     if (values[0] && values[0].discount) return values[0];
     return false;
   });
-  const [removeCoupon,setRemoveCoupon] = useState(false);
+  //const [removeCoupon,setRemoveCoupon] = useState(false);
   useEffect(() => {
     const values = Object.values(coupons);
     if (values[0] && values[0].discount) {
       setEnteredVoucher(values[0]);
     }else{
-      if(!currentUser.has_workout_subscription){
+      //if(!currentUser.has_workout_subscription){
         //if(!removeCoupon)generateFirstPayVoucher();
-      }  
+      //}  
     }
   },[coupons]);
   const dispatch = useDispatch();
@@ -71,7 +70,7 @@ const CheckoutPage = ({
     return () => {
       dispatch(outside());
     };
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   
 
   // Voucher entered manually by user via voucher form, or from query params,
@@ -119,10 +118,11 @@ const CheckoutPage = ({
     currentSubscriptionsAmountCents: undefined,
     bundlePrices: { total: serviceItem[activePlan] * 100 }
   };
-  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal == '1')) {
+  /*eslint-disable no-mixed-operators*/
+  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal === '1')) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(enteredVoucher.form == '%')pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+    if(enteredVoucher.form === '%')pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
     else {
       pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
       if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
@@ -141,7 +141,7 @@ const CheckoutPage = ({
   const resetActiveVoucher = () => {
     initialVoucher();
     setEnteredVoucher(undefined);
-    setRemoveCoupon(true);
+    //setRemoveCoupon(true);
     changeVoucher();
   };
 

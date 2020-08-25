@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import {Button} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import { useDispatch } from "react-redux";
 import FormGroup from "../../../components/FormGroup";

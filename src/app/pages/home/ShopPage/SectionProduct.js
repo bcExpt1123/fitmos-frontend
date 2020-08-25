@@ -25,7 +25,7 @@ const SectionProduct = ({product}) => (
             {product.name}
           </div>
           <div className="price mt-3">
-            {product.price_type == 'offer'?(
+            {product.price_type === 'offer'?(
               <>
                 <span className="regular-price">${product.regular_price}</span>&nbsp;&nbsp;<span>${product.price}</span>
               </>

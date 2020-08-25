@@ -1,12 +1,12 @@
-import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { all,  put, select, takeLatest } from "redux-saga/effects";
 import {
   declineMarketingConsent,
   grantMarketingConsent,
   marketingConsentUpdated
 } from "./actions";
-import { setUser } from "../auth/actions";
+//import { setUser } from "../auth/actions";
 
-import { update as updateUser } from "../../services/user";
+//import { update as updateUser } from "../../services/user";
 
 function* onGrantMarketingConsent() {
   const user = yield select(store => store.auth.currentUser);

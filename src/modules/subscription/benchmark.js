@@ -5,9 +5,7 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -127,7 +125,7 @@ export const reducer = persistReducer(
         return { ...state, errors };
       case actionTypes.BENCHMARK_UPDATE_RESULT:
         const clonedPublished = [...state.published];
-        const index = clonedPublished.findIndex(item => item.id == action.id);
+        const index = clonedPublished.findIndex(item => item.id === action.id);
         if (index > -1) {
           clonedPublished[index].result = action.repetition;
         }
@@ -228,7 +226,7 @@ function* fetchBenchmark() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -253,7 +251,7 @@ function* searchBenchmark({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -284,15 +282,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(benchmarkActionRequest, action, id);
+    yield call(benchmarkActionRequest, action, id);
     const benchmark = yield select(store => store.benchmark);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.BENCHMARK_INDEX_REQUEST });
     } else {
       let data = benchmark.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Draft";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Draft";
           else item.status = "Publish";
         }
       });
@@ -303,7 +301,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -314,7 +312,7 @@ function* callAction({ action, id }) {
   }
 }
 function benchmarkActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `benchmarks/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -331,7 +329,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.BENCHMARK_LOADING_REQUEST });
   if (benchmarks != null) {
     const filterBenchmarks = benchmarks.filter(benchmark => {
-      return benchmark.id == id;
+      return benchmark.id === id;
     });
     if (filterBenchmarks.length > 0) {
       filterBenchmarks[0].immediate = false;
@@ -349,7 +347,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.BENCHMARK_SET_ITEM, item: result });
     else yield put({ type: actionTypes.BENCHMARK_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -420,7 +418,7 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -443,7 +441,7 @@ const getRecentWorkouts = () =>
   http({ path: `customers/recentWorkouts` }).then(response => response.data);
 function* findPublished() {
   const benchmark = yield select(store => store.benchmark);
-  if (benchmark.published.length == 0) {
+  if (benchmark.published.length === 0) {
     try {
       const {workouts,profile:{fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount}} = yield call(getRecentWorkouts);
       yield put({
@@ -453,7 +451,7 @@ function* findPublished() {
       });
       yield put(setWorkout({fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount}));
     } catch (e) {
-      if (e.response.status == 401) {
+      if (e.response.status === 401) {
         yield put({ type: deleteAuthData });
         return;
       }
@@ -466,7 +464,7 @@ function* findPublished() {
         value: result.published
       });
     } catch (e) {
-      if (e.response.status == 401) {
+      if (e.response.status === 401) {
         yield put({ type: deleteAuthData });
         return;
       }
@@ -479,7 +477,7 @@ function* findPublished() {
         value: { labels: results.labels, data: results.data,histories:results.histories }
       });
     } catch (e) {
-      if (e.response.status == 401) {
+      if (e.response.status === 401) {
         yield put({ type: deleteAuthData });
         return;
       }
@@ -495,7 +493,7 @@ function* resetPublished(){
       value: workouts
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put({ type: deleteAuthData });
       return;
     }
@@ -508,7 +506,7 @@ function* resetPublished(){
       value: result.published
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put({ type: deleteAuthData });
       return;
     }
@@ -521,7 +519,7 @@ function* resetPublished(){
       value: { labels: results.labels, data: results.data,histories:results.histories }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put({ type: deleteAuthData });
       return;
     }

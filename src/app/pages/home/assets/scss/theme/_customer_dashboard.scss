@@ -386,6 +386,13 @@
     font-weight: 500;
   }
 }
+@media (max-width: 769px) {
+  .edit-benchbark{
+    .btn-edit{
+      margin-top: 19px;
+    }
+  }
+}
 @media (max-width: 380px) {
   .c-dashboard {
     .workout {

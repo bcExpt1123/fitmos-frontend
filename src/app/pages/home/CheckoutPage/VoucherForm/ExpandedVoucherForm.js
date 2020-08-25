@@ -7,8 +7,6 @@ import Button from "../../components/Button";
 import { addAlertMessage } from "../../redux/alert/actions";
 import { validateVoucher } from "../../redux/vouchers/actions";
 
-const styles = {};
-
 export const mapStateToProps = state => ({
   currentUserId: state.auth.currentUserId,
   vouchers: state.vouchers

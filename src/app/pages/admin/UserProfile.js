@@ -1,15 +1,10 @@
 import React, { useState, Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { validateEmail } from "../../../modules/validate.js";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import { Formik, Form, Field } from "formik";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { makeStyles } from "@material-ui/styles";
+import { Button, Paper } from "@material-ui/core";
+import {Row, Col} from "react-bootstrap";
 import FormGroup from "../home/components/FormGroup";
 import { updateAdminProfile } from "../home/redux/userSettings/actions";
 const validate = withPassword => ({
@@ -254,7 +249,7 @@ class Sub extends Component {
               <span />
             </button>
           )}
-          {this.props.currentUser.type == "admin" ? (
+          {this.props.currentUser.type === "admin" ? (
             this.props.currentUser ? (
               <h3 className="kt-subheader__title">My Profile</h3>
             ) : this.props.isloading ? (

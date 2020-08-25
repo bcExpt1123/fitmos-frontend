@@ -1,18 +1,17 @@
-import React,{useState, useEffect, useRef,useCallback} from "react";
-import { FormattedMessage } from "react-intl";
+import React,{useState, useEffect, useRef} from "react";
 import Slider from "react-slick";
-import Modal from "react-bootstrap/Modal";
+import {Modal } from "react-bootstrap";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 
 import LazyImage from "../components/LazyImage";
 import { http } from "../services/api";
-import { imgixUrl } from "../../../../lib/imgixUrl";
+//import { imgixUrl } from "../../../../lib/imgixUrl";
 import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
 import "../slick.css";
 
 const logoUrl = toAbsoluteUrl("/media/logos/logo-mini-sm.png");
-const imgUrl1 = toAbsoluteUrl("/media/media/1.png");
+/*const imgUrl1 = toAbsoluteUrl("/media/media/1.png");
 const imgUrl2 = toAbsoluteUrl("/media/media/2.png");
 const imgUrl3 = toAbsoluteUrl("/media/media/3.png");
 const imgUrl4 = toAbsoluteUrl("/media/media/4.png");
@@ -181,7 +180,7 @@ const samplePhotos = [
     timestamp:"2018-03-21",
     like_count:3,
   },
-];
+];*/
 const carouselSettingsSm = {
   arrows: false,
   infinite: true,
@@ -254,13 +253,10 @@ const SectionInstagram = () => {
   const [next, setNext] = useState(false);
   const [show, setShow] = useState(false);
   const [hidden, setHidden] = useState(false);
-  const [loading, setLoading] = useState(false);
+  //const [loading, setLoading] = useState(false);
   const sliderRef = useRef();
-  useEffect(() => {
-    fetchPhotos();
-  }, []);
   const fetchPhotos = async ()=>{
-    setLoading(true);
+    //setLoading(true);
     const res = await http({
       path:false,
       httpUrl: next?next:`https://graph.instagram.com/${userId}/media?fields=media_url,thumbnail_url,caption,id,media_type,timestamp,username,comments_count,like_count,permalink,children{media_url,id,media_type,timestamp,permalink,thumbnail_url}&limit=12&access_token=${accessToken}`,
@@ -269,7 +265,7 @@ const SectionInstagram = () => {
     if(res.data){      
       if(res.data.paging.next){
         setNext(res.data.paging.next);
-        setLoading(false);
+        //setLoading(false);
       }
       else {
         setNext(null);
@@ -278,11 +274,14 @@ const SectionInstagram = () => {
       else{
         let clonedPhotos = photos.concat(res.data.data);
         setPhotos(clonedPhotos);
-        setLoading(false);
+        //setLoading(false);
       }
   
     }
   }
+  useEffect(() => {
+    fetchPhotos();
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   /*const fetchPhotos = ()=>{
     if(photos == null) setPhotos(samplePhotos);
     else{

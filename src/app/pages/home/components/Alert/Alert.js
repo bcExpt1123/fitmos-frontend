@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import classnames from "classnames";
-import { FormattedHTMLMessage,FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { dismissAlert } from "../../redux/alert/actions";
 
 const styles = { success: "success", error: "error" };

@@ -1,9 +1,7 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest, takeLeading, select,delay } from "redux-saga/effects";
+import { put, call,  takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
-import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
 
 export const actionTypes = {
@@ -11,7 +9,6 @@ export const actionTypes = {
   WEEKWORKOUT_SET_ITEM: "WEEKWORKOUT_SET_ITEM",
   WEEKWORKOUT_LOADING_REQUEST: "WEEKWORKOUT_LOADING_REQUEST",
   WEEKWORKOUT_FETCH_REQUEST: "WEEKWORKOUT_FETCH_REQUEST",
-  WEEKWORKOUT_LOADING_REQUEST: "WEEKWORKOUT_LOADING_REQUEST",
   WEEKWORKOUT_INDEX_SUCCESS: "WEEKWORKOUT_INDEX_SUCCESS",
   WEEKWORKOUT_OPEN_CELL: "WEEKWORKOUT_OPEN_CELL",
   WEEKWORKOUT_PREVIEW_DATE: "WEEKWORKOUT_PREVIEW_DATE",
@@ -23,7 +20,6 @@ export const actionTypes = {
   WEEKWORKOUT_UPLOAD_IMAGE: "WEEKWORKOUT_UPLOAD_IMAGE"
 };
 
-const d = new Date();
 const initialState = {
   data: [],
   id: null,
@@ -117,7 +113,7 @@ export const reducer = persistReducer(
         return { ...state, data: clonedData1 };
       case actionTypes.WEEKWORKOUT_TAKE_VALUE:
         const clonedData2 = Object.assign({}, state.data);
-        if(action.name == 'image_path'){
+        if(action.name === 'image_path'){
           clonedData2[action.weekDay][state.day][action.name] = action.value;
         }else{
           clonedData2[action.weekDay][state.day][state.column+'_'+action.name] = action.value;
@@ -167,7 +163,7 @@ function* changeItem({ id, history }) {
       history.push("/admin/subscription-manager");
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       history.push("/admin/subscription-manager");
@@ -198,7 +194,7 @@ function* fetchRequest({ history,id }) {
     try {
       yield put({ type: actionTypes.WEEKWORKOUT_INDEX_SUCCESS, data: result.data });
     } catch (e) {
-      if (e.response.status == 401) {
+      if (e.response.status === 401) {
         yield put(logOut());
       } else {
         //history.push('/admin/subscription-manager');
@@ -303,7 +299,7 @@ function* saveContent({weekDay}) {
         }
       } catch (e) {
         console.log(e)
-        if (e.response.status == 401) {
+        if (e.response.status === 401) {
           yield put(logOut());
         } else {
           //history.push('/admin/subscription-manager');

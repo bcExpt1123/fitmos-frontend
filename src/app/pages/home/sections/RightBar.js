@@ -1,9 +1,7 @@
 import React,{useState,useEffect} from 'react';  
 import { useDispatch, useSelector } from "react-redux";
-import { FormattedMessage } from "react-intl";
 import { NavLink } from "react-router-dom";
-import ProgressBar from 'react-bootstrap/ProgressBar';
-import Icon from "../components/Icon";
+import { ProgressBar } from 'react-bootstrap';
 import Avatar from "../components/Avatar";
 import QuickStatsChart from "../../../widgets/QuickStatsChart";
 import { $findPublished } from "../../../../modules/subscription/benchmark";
@@ -13,8 +11,7 @@ import SectionEditWeight from "../DashboardPage/SectionEditWeight";
 import SectionChangeGoal from "../DashboardPage/SectionChangeGoal";
 
 const RightBar = () => {  
-  const [file, setFile] = useState(false);
-  const [images, setImages] = useState(false);
+  const file=false;
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const done = useSelector(({ done }) => done);
   const now = (done.workoutCount)/(done.toWorkout)*100;
@@ -30,11 +27,11 @@ const RightBar = () => {
     .reduce((acc, result) => acc + parseInt(result), 0);
   const dispatch = useDispatch();  
   useEffect(()=>{
-    if(total==0){
+    if(total===0){
       console.log("published")
       dispatch($findPublished());
     }
-  },[])    
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const [show, setShow] = useState(false);
   const [showWeight, setShowWeight] = useState(false);
   const [objective, setObjective] = useState(false);
@@ -99,7 +96,7 @@ const RightBar = () => {
         <div className="progress-bar-wrapper">
           <div className="medal-image">
             {done.toWorkoutImage&&(
-              <img src={done.toWorkoutImage} />
+              <img src={done.toWorkoutImage} alt="workout-medal"/>
             )}
           </div>
           <div className="progress-bar-body">

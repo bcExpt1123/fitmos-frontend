@@ -1,11 +1,10 @@
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest,select, takeEvery,takeLeading } from "redux-saga/effects";
-import { push } from "react-router-redux";
+import { put, call, takeLatest,select, takeLeading } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import { INDEX_PAGE_SIZE_DEFAULT, INDEX_PAGE_SIZE_OPTIONS } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
-import { logOut, deleteAuthData } from "../../app/pages/home/redux/auth/actions";
+import { logOut } from "../../app/pages/home/redux/auth/actions";
 import { setShopMenu } from "../../app/pages/home/redux/done/actions";
 export const actionTypes = {
   COMPANY_INDEX_REQUEST: "COMPANY_INDEX_REQUEST",
@@ -139,7 +138,7 @@ export const reducer = persistReducer(
         return { ...state, errors };
       case actionTypes.COMPANY_UPDATE_RESULT:
         const clonedPublished = [...state.published];
-        const index = clonedPublished.findIndex(item => item.id == action.id);
+        const index = clonedPublished.findIndex(item => item.id === action.id);
         if (index > -1) {
           clonedPublished[index].result = action.repetition;
         }
@@ -242,7 +241,7 @@ function* fetchCompany() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -286,7 +285,7 @@ function* searchCompany({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -310,7 +309,7 @@ const saveCompany = company => {
   formData.append("twitter", company.item.twitter);
   formData.append("description", company.item.description);
   formData.append("allCountries", company.country);
-  if(company.item.all==true){
+  if(company.item.all===true){
     formData.append("is_all_countries","yes");
   }
   else{
@@ -375,7 +374,7 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -396,7 +395,7 @@ const countriesRequest = (meta, searchCondition) =>
   }).then(response => response.data);
 function* fetchCountry() {
   try {
-    const company = yield select(store => store.company);
+    yield select(store => store.company);
     const result = yield call(
       countriesRequest,
     );
@@ -406,7 +405,7 @@ function* fetchCountry() {
       data: result,
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -418,17 +417,17 @@ function* fetchCountry() {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(companyActionRequest, action, id);
+    yield call(companyActionRequest, action, id);
     const company = yield select(store => store.company);
     console.log(company);
    
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.COMPANY_INDEX_REQUEST });
     } else {
       let data = company.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Disable";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Disable";
           else item.status = "Active";
         }
       });
@@ -439,7 +438,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -450,7 +449,7 @@ function* callAction({ action, id }) {
   }
 }
 function companyActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `companies/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -466,22 +465,6 @@ function* initial(){
     value: []
   });
 }
-function* changeItem({id}){
-  const companies = yield select(store => store.company.data);
-  console.log(companies);
-  const filterCompanies = companies.filter(company => {
-    return company.id == id;
-  });
-  console.log(filterCompanies)
-  if (filterCompanies.length > 0) {
-    yield put({
-      type: actionTypes.COMPANY_SET_ITEM,
-      item: filterCompanies[0]
-    });
-    yield put({ type: actionTypes.COMPANY_UPLOAD_IMAGE, image: null });
-    return;
-  }
-}
 function* fetchProductId({id}){
   yield put({
     type: actionTypes.COMPANY_SET_ITEM_VALUE,
@@ -494,7 +477,6 @@ const showItem =(id) =>{
 };
 function* showCompanyDetail({id}){
   yield call(fetchCountry);
-  const companies = yield select(store => store.company.data);
   const result = yield call(showItem, id);
   yield put({ type: actionTypes.COMPANY_LOADING_REQUEST });
   if(result){
@@ -503,7 +485,7 @@ function* showCompanyDetail({id}){
       type: actionTypes.COMPANY_SET_ITEM,
       item: result.company
     });
-    if(result.company.is_all_countries=="no"){
+    if(result.company.is_all_countries==="no"){
       yield put({
         type: actionTypes.COMPANY_SET_ITEM_VALUE,
         name: "all",
@@ -551,7 +533,7 @@ function* fetchFrontCompany(){
 }
 function* changeFrontPage() {
   const frontMeta = yield select(store => store.company.frontMeta);
-  const page = frontMeta.page+1;
+  let page = frontMeta.page+1;
   if (page < 0) {
     page = 0;
   }

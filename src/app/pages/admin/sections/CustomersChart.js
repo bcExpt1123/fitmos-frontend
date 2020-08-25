@@ -30,10 +30,6 @@ export default function CustomersChart({
             .rgbString(),
             pointHoverRadius: 4,
             pointHoverBorderWidth: 12,
-            pointBackgroundColor: Chart.helpers
-              .color("#000000")
-              .alpha(0)
-              .rgbString(),
             pointBorderColor: Chart.helpers
               .color("#000000")
               .alpha(0)
@@ -57,10 +53,6 @@ export default function CustomersChart({
             .rgbString(),
             pointHoverRadius: 4,
             pointHoverBorderWidth: 12,
-            pointBackgroundColor: Chart.helpers
-              .color("#000000")
-              .alpha(0)
-              .rgbString(),
             pointBorderColor: Chart.helpers
               .color("#000000")
               .alpha(0)
@@ -84,10 +76,6 @@ export default function CustomersChart({
             .rgbString(),
             pointHoverRadius: 4,
             pointHoverBorderWidth: 12,
-            pointBackgroundColor: Chart.helpers
-              .color("#000000")
-              .alpha(0)
-              .rgbString(),
             pointBorderColor: Chart.helpers
               .color("#000000")
               .alpha(0)
@@ -327,7 +315,7 @@ export default function CustomersChart({
       chart.destroy();
       chartLine.destroy();
     };
-  }, [data]);
+  }, [data]);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="row">

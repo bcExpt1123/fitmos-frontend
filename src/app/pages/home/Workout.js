@@ -1,4 +1,4 @@
-import React,{ useEffect,useState } from "react";
+import React,{ useEffect } from "react";
 import { useDispatch,useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 
@@ -13,7 +13,7 @@ const WorkoutPage = () => {
   useEffect(() => {
     dispatch(findWorkouts());
     dispatch(initialBlock());
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const currentUser = useSelector(({auth})=>auth.currentUser);
 
   //get workout from date

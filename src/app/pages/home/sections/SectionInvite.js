@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   EmailShareButton,
   EmailIcon,
@@ -10,8 +10,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
+import {DropdownButton, Dropdown} from 'react-bootstrap';
 
 import { http } from "../services/api";
 
@@ -32,7 +31,7 @@ const SectionInvite = () => {
       }
     }
     fetchData();
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   return(
     <div className="invite pt-5 pb-4">
       <h3 className="text-center">{currentUser&&currentUser.customer.first_name}, ¡Compartamos el Fitness!</h3>

@@ -1,10 +1,10 @@
 import React, { Component } from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import SectionEditBenchmark from "./SectionEditBenchmark";
 import { $findPublished } from "../../../../modules/subscription/benchmark";
 
@@ -48,7 +48,7 @@ class Benchmarks extends Component {
                       <Button variant="light" className="transparent-btn">
                         <i className="fa fa-edit"></i>
                       </Button>
-                      {benchmark.result == "" ? (
+                      {benchmark.result === "" ? (
                         <div className="repetition">PENDIENTE</div>
                       ) : (
                         <div className="repetition">{benchmark.result}</div>

@@ -1,10 +1,9 @@
-import React, { Component,useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { injectIntl } from "react-intl";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from '@material-ui/core/Grid';
-import { NavLink } from "react-router-dom";
+import { makeStyles } from "@material-ui/styles";
+import { Paper, Grid, Button } from "@material-ui/core";
+import {$viewImagesAction,} from "../../../modules/subscription/product";
 const useStyles = makeStyles( theme => ({
     root: {
       display: "block",
@@ -46,7 +45,8 @@ const Main =() =>{
 }
 const ViewImages = injectIntl(Main);
 function Sub({match,history}) {
-	const product = useSelector(({ product }) => product);
+	const dispatch=useDispatch();
+  useEffect(() => { if(match.params.id){ dispatch($viewImagesAction(match.params.id)); }});
 	return (
 		<>
 			<div className="kt-subheader__main">
@@ -65,14 +65,14 @@ function Sub({match,history}) {
 
 			<div className="kt-subheader__toolbar">
 				<div className="kt-subheader__wrapper">
-          <NavLink
+          <Button
             className="btn kt-subheader__btn-primary  btn-primary MuiButton-root"
             aria-label="Create"
             title="Create"
-            to={`/admin/companies`}
+						onClick={history.goBack}
           >
             <span className="MuiButton-label">Back&nbsp;</span>
-          </NavLink>
+          </Button>
 				</div>
 			</div>
 		</>

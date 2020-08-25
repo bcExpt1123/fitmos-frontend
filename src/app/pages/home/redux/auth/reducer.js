@@ -5,7 +5,6 @@ import {
   updateIdToken,
   setAuthData,
   setUser,
-  logOut,
   logOuting,
   initialAuth,
   deleteAuthData,

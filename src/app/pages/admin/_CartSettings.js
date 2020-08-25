@@ -1,14 +1,6 @@
 import React, { useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Paper, InputLabel, MenuItem, FormControl, TextField, Select, Grid, styles} from "@material-ui/core";
 import {
   $saveItem,
   $updateItemValue,
@@ -16,7 +8,7 @@ import {
 } from "../../../modules/subscription/cartSetting";
 
 const useStyles = () => {
-  return makeStyles(theme => ({
+  return styles.makeStyles(theme => ({
     root: {
       display: "block",
       flexWrap: "wrap"
@@ -37,7 +29,7 @@ const CartSettings = () => {
   const cartSetting = useSelector(({cartSetting})=>cartSetting);
   useEffect(() => {
     dispatch($fetchSetting());
-  },[]);
+  });
   const handleOnSubmit = e =>{
     e.preventDefault();
     dispatch($saveItem());
@@ -156,7 +148,6 @@ const SubHeaderCartSettings = () => {
       <div className="kt-subheader__toolbar">
         <div className="kt-subheader__wrapper">
           <Button
-            type="button"
             className="btn kt-subheader__btn-primary btn-primary"
             form="cart-settings-form"
             type="submit"
@@ -165,7 +156,6 @@ const SubHeaderCartSettings = () => {
             Submit &nbsp;
           </Button>
           <Button
-            type="button"
             className="btn kt-subheader__btn-primary btn-primary"
             form="cart-settings-form"
             type="button"

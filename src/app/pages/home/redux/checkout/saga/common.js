@@ -1,19 +1,19 @@
-import { call, put } from "redux-saga/effects";
+import { call } from "redux-saga/effects";
 //import { analytics } from '@freeletics/web-package-tracking';
 
 //import { setClaims } from '../../claims/actions';
 //import { getNavigation } from '../../../navigation';
 
-import { PAYMENT_PROVIDER } from "../../../constants/payment-provider";
-import { VOUCHER_TYPE } from "../../../constants/voucher-type";
-import { productBrand } from "../../../../../../lib/productBrand";
+//import { PAYMENT_PROVIDER } from "../../../constants/payment-provider";
+//import { VOUCHER_TYPE } from "../../../constants/voucher-type";
+//import { productBrand } from "../../../../../../lib/productBrand";
 
 const states = {};
 const Claim = {};
 
-const brandToCheckoutSlug = () => "service";
+//const brandToCheckoutSlug = () => "service";
 // TODO: check if it's really needed
-function toPrice(cents, currencyExponent) {
+/*function toPrice(cents, currencyExponent) {
   const amount = Math.round(cents) / 10 ** currencyExponent;
 
   if (currencyExponent > 0) {
@@ -56,7 +56,7 @@ function hoursSince(date) {
   const now = new Date();
   const diff = now.getTime() - date.getTime();
   return Math.round(diff / 1000 / 60 / 60);
-}
+}*/
 
 // Creating or updating some claims, like e.g. `training-nutrition-coach`,
 // results in multiple claims being created or updated. Thus, we need to
@@ -105,13 +105,12 @@ export function trackPurchaseSuccess({
   voucher,
   areInstallmentsSelected
 }) {
-  const { subscription } = claim;
-  const isTrial =
+  /*const isTrial =
     Boolean(voucher) &&
     [VOUCHER_TYPE.FREE_TRIAL, VOUCHER_TYPE.LASTING_FREE_TRAIL].includes(
       voucher.type
-    );
-  const event = isTrial ? "start_trial" : "purchase";
+    );*/
+  //const event = isTrial ? "start_trial" : "purchase";
 
   // New tracking code
   /*analytics.track('analytics_event', {

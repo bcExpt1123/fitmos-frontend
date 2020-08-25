@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { reactLocalStorage } from 'reactjs-localstorage';
 
 import Sidebar from "./Sidebar";
 import PaymentForm from "./PaymentForm";
-import { CHECKOUT_KIND } from "../../constants/checkout-kind";
-import { productBrand } from "../../../../../lib/productBrand";
+//import { CHECKOUT_KIND } from "../../constants/checkout-kind";
+//import { productBrand } from "../../../../../lib/productBrand";
 
-const getCheckoutKind = (checkoutType, activeVoucher) => {
+/*const getCheckoutKind = (checkoutType, activeVoucher) => {
   if(checkoutType == 1)return CHECKOUT_KIND.ACTIVATE;
   if(checkoutType == 2)return CHECKOUT_KIND.ACTIVATE_WITH_TRIAL;
-};
+};*/
 
 const StepPayment = ({
   service,

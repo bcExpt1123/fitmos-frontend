@@ -1,14 +1,10 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLeading,
-  takeEvery,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -191,7 +187,7 @@ function* fetchCategory() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -216,7 +212,7 @@ function* searchCategory({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -247,11 +243,10 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(categoryActionRequest, action, id);
-    const category = yield select(store => store.category);
+    yield call(categoryActionRequest, action, id);
     yield put({ type: actionTypes.CATEGORY_INDEX_REQUEST });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -262,7 +257,7 @@ function* callAction({ action, id }) {
   }
 }
 function categoryActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `categories/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -279,7 +274,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.CATEGORY_LOADING_REQUEST });
   if (categories != null) {
     const filterCategorys = categories.filter(category => {
-      return category.id == id;
+      return category.id === id;
     });
     if (filterCategorys.length > 0) {
       yield put({
@@ -295,7 +290,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.CATEGORY_SET_ITEM, item: result });
     else yield put({ type: actionTypes.CATEGORY_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -352,7 +347,7 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({

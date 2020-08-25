@@ -21,11 +21,6 @@ import * as Cookies from "./services/storage";
 import { withRouter } from "react-router";
 import "./assets/scss/theme/signup.scss";
 
-const preloadImage = url => {
-  const image = new Image();
-  image.src = url;
-};
-
 class SignupPage extends React.Component {
   state = {
     currentStep: 0,
@@ -47,7 +42,6 @@ class SignupPage extends React.Component {
     if (this.state.currentStep !== prevState.currentStep) {
       window.scrollTo(0, 0);
     }
-    const parsed = qs.parse(window.location.search);
   }
   componentDidMount() {
     const parsed = qs.parse(window.location.search);
@@ -84,7 +78,6 @@ class SignupPage extends React.Component {
     const {
       gender,
       level,
-      place,
       goal,
       info: { birthday, weight, weightUnit, height, heightUnit }
     } = this.state;

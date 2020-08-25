@@ -1,14 +1,10 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLatest,
-  takeEvery,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -199,7 +195,7 @@ function* fetchCoupon() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.COUPON_INDEX_FAILURE, error: e.message });
@@ -221,7 +217,7 @@ function* searchCoupon({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.COUPON_INDEX_FAILURE, error: e.message });
@@ -249,15 +245,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(couponActionRequest, action, id);
+    yield call(couponActionRequest, action, id);
     const coupon = yield select(store => store.coupon);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.COUPON_INDEX_REQUEST });
     } else {
       let data = coupon.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Disabled";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Disabled";
           else item.status = "Active";
         }
       });
@@ -268,7 +264,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.COUPON_INDEX_FAILURE, error: e.message });
@@ -276,7 +272,7 @@ function* callAction({ action, id }) {
   }
 }
 function couponActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `coupons/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -293,7 +289,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.COUPON_LOADING_REQUEST });
   if (coupons != null) {
     const filterCoupons = coupons.filter(coupon => {
-      return coupon.id == id;
+      return coupon.id === id;
     });
     if (filterCoupons.length > 0) {
       yield put({ type: actionTypes.COUPON_SET_ITEM, item: filterCoupons[0] });
@@ -306,7 +302,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.COUPON_SET_ITEM, item: result });
     else yield put({ type: actionTypes.COUPON_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.COUPON_INDEX_FAILURE, error: e.message });
@@ -364,7 +360,7 @@ function* saveItem({ history }) {
       yield put({ type: actionTypes.COUPON_CHANGE_SAVE_STATUS, status: false });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.COUPON_INDEX_FAILURE, error: e.message });

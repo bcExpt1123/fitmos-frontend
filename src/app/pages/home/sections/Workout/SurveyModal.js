@@ -1,23 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
 import Rating from '@material-ui/lab/Rating';
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import classnames from "classnames";
+import {Button,Modal,Form} from "react-bootstrap";
 import { submitSurvey } from "../../redux/done/actions";
 
-const validate = values => {
-  const errors = {};
-  if (!values.email) {
-    errors.email = {
-      id: "LogInForm.Error.Email.required"
-    };
-  }else if (!/.+@.+/.test(values.email)) {
-    errors.email = { id: "LogInForm.Error.Email.invalid" };
-  }
-  return errors;
-};
 const SurveyItem = ({item, handleChange, error})=>{
   const handleLevelChange = (event, newValue)=>{
     handleChange(item.id, newValue,'level');
@@ -33,24 +20,24 @@ const SurveyItem = ({item, handleChange, error})=>{
       <Form.Label>
         {item.label}
       </Form.Label>
-      {item.question == 'level'&&(
+      {item.question === 'level'&&(
         <div id={`level${item.id}`} className={classnames({"rating-error":error})}>
           <Rating name={`qualityLevel${item.id}`} size="large" value={item.report} onChange={handleLevelChange}/>
         </div>
       )}
-      {item.question == 'text'&&(
+      {item.question === 'text'&&(
         <>
           <Form.Control size="lg" type="text" value={item.report} onChange={handleTextChange} isInvalid={error}/>
         </>
       )}
-      {item.question == 'select' && (
+      {item.question === 'select' && (
         item.options.map(option=>(
           <Form.Check
             label={option.option_label}
             key={option.id}
             value={option.id}
             onChange={()=>handleSelectChange(option.id)} 
-            checked={option.id==item.report}
+            checked={option.id===item.report}
             isInvalid={error}
             type="radio"
           />
@@ -60,18 +47,17 @@ const SurveyItem = ({item, handleChange, error})=>{
   )
 }
 const SurveyModal = ({show, handleClose, survey}) => {
-  const currentUser = useSelector(({ auth }) => auth.currentUser);
   const dispatch = useDispatch();
   const [items,setItems] = useState([]);
   const [errors,setErrors] = useState([]);
   useEffect(()=>{
     const surveyItems = survey.items.map( item =>{
-      if(item.question == 'level')item.report=0;
+      if(item.question === 'level')item.report=0;
       else item.report="";
       return item;
     })
     setItems(surveyItems);
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleConfirm = ()=>{
     const validate = changeErrors();
     if(validate===false){
@@ -81,12 +67,12 @@ const SurveyModal = ({show, handleClose, survey}) => {
   }
   const changeErrors = ()=>{
     const surveyErrors = survey.items.map( item =>{
-      if(item.question == 'level' ){
-        if(item.report==0)return true;
+      if(item.question === 'level' ){
+        if(item.report===0)return true;
         return false;
       }
       else {
-        if(item.report=="") return true;
+        if(item.report==="") return true;
         return false;
       }
     })
@@ -97,7 +83,7 @@ const SurveyModal = ({show, handleClose, survey}) => {
   const handleChange = (id, level,type)=>{
     //let surveyItems = [...items];
     const surveyItems = items.map((item)=>{
-      if(item.id == id)item.report = level;
+      if(item.id === id)item.report = level;
       return item;
     });
     setItems(surveyItems);

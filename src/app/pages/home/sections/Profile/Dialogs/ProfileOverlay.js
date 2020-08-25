@@ -1,16 +1,12 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useDispatch } from "react-redux";
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import { Modal, Button, Row, Col } from 'react-bootstrap';
 import { FormattedMessage } from "react-intl";
 import Dropzone from 'react-dropzone';
 import Cropper from 'react-cropper';
 
 import fileSizeLessThan from '../../../components/DropNCrop/util/fileSizeLessThan';
 import fileType from '../../../components/DropNCrop/util/fileType';
-import DropNCrop from '../../../components/DropNCrop';
 import "../../../assets/scss/theme/react-drop-n-crop.css";
 import { deleteProfileImage as deleteProfileImageAction } from "../../../redux/userSettings/actions";
 
@@ -22,8 +18,7 @@ const ProfileOverlay = (props) => {//setUploadImage
     function () {
       props.setUploadImage(show);
     },
-    [show]
-  )
+    [show]);// eslint-disable-line react-hooks/exhaustive-deps
   // Upload
   const cropOptions = {
     guides: true,
@@ -86,7 +81,7 @@ const ProfileOverlay = (props) => {//setUploadImage
           : !fileSizeValidation.isValid ? fileSizeValidation.message : null, // TODO: Update error state to be an array to handle both messages if necessary
       });
     }
-  }, [])
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const dispatch = useDispatch();
   const deleteProfileImage = () =>{
     if(window.confirm('¿Estás segura de eliminar la imagen de tu perfil?')){
@@ -139,7 +134,7 @@ const ProfileOverlay = (props) => {//setUploadImage
         <Modal.Body>
           <Row gutter={[16, 0]}>
             <Col xs="12" md="4">
-              <img src={dropState.result} className="rounded-circle" width="150" height="150" />
+              <img src={dropState.result} className="rounded-circle" width="150" height="150" alt="drop-state-result"/>
               <div style={{ display: preshow }}>
                 <span className="upload-img-preview" >Tu imagen de perfil:{dropState.filename}</span>
               </div>

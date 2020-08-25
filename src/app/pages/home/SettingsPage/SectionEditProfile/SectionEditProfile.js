@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { Formik, Form, Field } from "formik";
-import classnames from "classnames";
 import { connect } from "react-redux";
-//import Form from 'react-bootstrap/Form';
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import {Row,Col} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import es from 'react-phone-input-2/lang/es.json';
@@ -15,8 +11,6 @@ import Avatar from "../../components/Avatar";
 import Icon from "../../components/Icon";
 import FormGroup from "../../components/FormGroup";
 import { updateProfile } from "../../redux/userSettings/actions";
-
-const styles = {};
 
 const validate = withPassword => ({
   email,
@@ -64,10 +58,6 @@ const EditProfile = ({ updateProfile, currentUser }) => {
   const [images, setImages] = useState(false);
   // this is used to disable Google/FB disconnect buttons if Google/FB is the only
   // auth type for user.
-  const noOtherAuth = authType =>
-    !Object.entries(currentUser.authentications).find(
-      authPair => authPair[0] !== authType && authPair[1]
-    );
 
   const onSubmit = (
     {

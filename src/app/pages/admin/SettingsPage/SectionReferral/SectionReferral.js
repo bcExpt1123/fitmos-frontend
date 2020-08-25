@@ -1,14 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-
+import { makeStyles } from "@material-ui/core";
+import { TextField, Grid, Button } from "@material-ui/core";
 import { http } from "../../../home/services/api";
 
 const useStyles = () => {
@@ -53,13 +45,6 @@ const ReferralSettings = () => {
   const handleOnSubmit = async (e) =>{
     e.preventDefault();
     setIsSaving(true);
-    const res = await http({
-      method: "POST",
-      path: "setting/update-referral-discount",
-      data: {
-        discount
-      }
-    });
     setOriginDiscount(discount);
     setIsSaving(false);
     return false;

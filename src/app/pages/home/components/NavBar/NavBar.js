@@ -5,15 +5,13 @@ import Avatar from "../Avatar";
 import Icon from "../Icon";
 import Logo from "../Logo";
 import CookieConsent from "../CookieConsent";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
+import { Navbar, Container } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import * as qs from 'query-string';
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { withRouter } from "react-router";
 
 import {
-  logOut as logOutAction,
   deleteAuthData as deleteAuthAction,
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
@@ -66,10 +64,7 @@ class NavBarVariantFull extends React.Component {
     //const navbarClassnames = "navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm transparent ";
     const navbarClassnames =
       " align-items-center navbar-fixed-top navbar-toggleable-sm ";
-    const { currentUser, logOut, hideOn, transparent, isScroll } = this.props;
-    const hasSubscription = currentUser
-      ? currentUser.has_active_workout_subscription
-      : false;
+    const { currentUser, transparent, isScroll } = this.props;
     return (
       <>
         <div style={{ textAlign: 'center', fontSize: '12px', padding: '0px', color: 'brown', position: 'fixed', zIndex: '1000', width: '100%', background: 'white',display:'none' }}>
@@ -113,7 +108,7 @@ class NavBarVariantFull extends React.Component {
                 </span>
               </div>
             </div>
-            {(this.props.checkout==undefined && this.props.checkout != true)&&(
+            {(this.props.checkout===undefined && this.props.checkout !== true)&&(
               <Navbar.Collapse id="responsive-navbar-nav">
                 {currentUser ? (
                   <>
@@ -250,7 +245,7 @@ const NavBarWrapper = ({ ...props }) => {
 
   useScrollPosition(
     ({ prevPos, currPos }) => {
-      const isShow = currPos.y == 0;
+      const isShow = currPos.y === 0;
       if (isShow !== hideOnNavbar && props.isScroll!==false) setHideOnNavbar(isShow);
     },
     [hideOnNavbar],

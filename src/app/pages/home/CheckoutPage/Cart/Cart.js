@@ -1,19 +1,15 @@
-import React, { useContext } from "react";
+import React from "react";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import addMonths from "date-fns/addMonths";
 import { useSelector } from "react-redux";
 
-import { INSTALLMENTS_INTEREST_RATE } from "../../services/product";
+
 import Card from "../../components/Card";
-import Typography from "../../components/Typography";
 import FormattedPrice, {
-  formatPrice,
-  FormatEnPrice
+  formatPrice
 } from "../../components/FormattedPrice";
 
 import { CHECKOUT_KIND } from "../../constants/checkout-kind";
-
-const styles = {};
 
 const ChargingInfo = ({
   activeVoucher,
@@ -80,7 +76,7 @@ const Cart = ({
     <section className={"cart"} data-cy="cart section">
       <h2 className="checkout-page-title display-3 d-block d-md-none pt-3">Checkout</h2>
       <Card padding="xs" noMarginBottom>
-        {checkoutKind==CHECKOUT_KIND.ACTIVATE_WITH_TRIAL?(
+        {checkoutKind===CHECKOUT_KIND.ACTIVATE_WITH_TRIAL?(
           <h3>Free Trial</h3>
         ):(
           <h3>Detalle de compra</h3>

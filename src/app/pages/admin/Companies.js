@@ -1,37 +1,14 @@
-import React, { Component,useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import {spacing} from '@material-ui/system';
-import Box from '@material-ui/core/Box';
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
-import TextField from '@material-ui/core/TextField';
-import { red } from "@material-ui/core/colors";      
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
+import { makeStyles } from '@material-ui/core';
+import { Paper, TextField, TablePagination, Table, TableHead, TableBody, TableCell, TableFooter, TableRow, IconButton} from '@material-ui/core';
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";    
-import TableRow from "@material-ui/core/TableRow";
 import { NavLink } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
 import DisableIcon from "@material-ui/icons/Clear";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from "@material-ui/icons/Pageview";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import CustomerOverview from "./CustomerOverview";
-import { CustomerTransactions } from "./CustomerTransactions";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
 import RedoIcon from "@material-ui/icons/Redo";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
 import {
@@ -64,15 +41,13 @@ const Main = () =>{
   const dispatch=useDispatch();
   useEffect(() => {
     dispatch($fetchIndexCompanies())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const company = useSelector(({ company }) => company);
   const companies = company.data;
   console.log(company);
   const meta = company.meta;
   const page = company.meta.page - 1;
   const rowsPerPage = company.meta.pageSize;
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
   const handleChangePage = (event, newPage) => {
     dispatch($page(newPage + 1));
   };
@@ -141,7 +116,7 @@ const Main = () =>{
                     <TableCell align="center">{row.mail}</TableCell>
                     <TableCell align="center">{row.status}</TableCell>
                     <TableCell align="center" style={{ padding: "0" }}>
-                    {row.status == "Active" ? (
+                    {row.status === "Active" ? (
                       <>
                         <IconButton
                           className={classes.button}

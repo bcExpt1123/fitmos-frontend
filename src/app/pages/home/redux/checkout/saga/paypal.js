@@ -1,24 +1,17 @@
-import { call, put, select, spawn,delay } from "redux-saga/effects";
+import { call, put, delay } from "redux-saga/effects";
 import {reactLocalStorage} from 'reactjs-localstorage';
 
 import {
-  paymentRequested,
   paymentFailed,
   paymentSucceeded,
-  paymentCanceled
 } from "../actions";
 
-import { CHECKOUT_KIND } from "../../../constants/checkout-kind";
-import { PAYMENT_PROVIDER } from "../../../constants/payment-provider";
 import { addAlertMessage } from "../../alert/actions";
 import { logError } from "../../../../../../lib/logError";
 import { http } from "../../../services/api";
 import { initialVoucher } from "../../vouchers/actions";
 import { authenticate as regenerateAuthAction } from "../../auth/actions";
 //import { getClaimedBrands } from '../../../routes';
-import { trackPurchaseIntent } from "./common";
-const states = {};
-const Claim = {};
 const logErrorMeta = { SourceModule: "Checkout", PaymentProvider: "PayPal" };
 
 function createSubscription(data) {
@@ -44,7 +37,7 @@ export function* onPayWithPayPal({ payload }) {
       })
     );
     reactLocalStorage.remove('checkout');
-    if (result.now == true) {
+    if (result.now === true) {
       delay(10);
     }
     yield put(regenerateAuthAction());

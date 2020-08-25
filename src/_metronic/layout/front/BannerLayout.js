@@ -1,8 +1,7 @@
-import React,{useEffect,useState} from "react";
+import React,{useState} from "react";
 import { connect, useSelector, useDispatch } from "react-redux";
 import { Helmet } from "react-helmet";
 import IdleTimer from 'react-idle-timer';
-import {reactLocalStorage} from 'reactjs-localstorage';
 import Alert from "../../../app/pages/home/components/Alert";
 import {sessionIn,sessionOut} from "../../../app/pages/home/redux/auth/actions";
 
@@ -11,7 +10,6 @@ function Layout({ children, selfLayout }) {
   // window.scrollTo(0, 0);
   const [idleTimer,setIdleTimer] = useState(null);
   const [idle,setIdle] = useState(false);
-  const [test,setTest] = useState(0);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const onActive = (e)=>{
     if(idle){
@@ -65,13 +63,15 @@ function Layout({ children, selfLayout }) {
           `}
         </script>
         <script type="text/javascript" src="https://downloads.mailchimp.com/js/signup-forms/popup/unique-methods/embed.js" data-dojo-config="usePlainJson: true, isDebug: false"></script>
-        <script>
-        {`
-          window.dojoRequire(["mojo/signup-forms/Loader"], function(L) {
-             L.start({"baseUrl":"mc.us19.list-manage.com","uuid":"7f225e22438d8a37f81a90eae","lid":"102c38967a","uniqueMethods":true
-          }) })
-        `}
-        </script>
+        {(process.env.NODE_ENV !== 'development') &&(
+          <script>
+          {`
+            window.dojoRequire(["mojo/signup-forms/Loader"], function(L) {
+              L.start({"baseUrl":"mc.us19.list-manage.com","uuid":"7f225e22438d8a37f81a90eae","lid":"102c38967a","uniqueMethods":true
+            }) })
+          `}
+          </script>
+        )}
       </Helmet>
       <Alert />
       {currentUser&&(
@@ -86,7 +86,7 @@ function Layout({ children, selfLayout }) {
       )}
       {children}
       <noscript>
-        <img height="1" width="1"  src="https://www.facebook.com/tr?id=2657666124456803&ev=PageView&noscript=1"/>
+        <img height="1" width="1"  src="https://www.facebook.com/tr?id=2657666124456803&ev=PageView&noscript=1" alt="text"/>
       </noscript>
     </>
   ) : (

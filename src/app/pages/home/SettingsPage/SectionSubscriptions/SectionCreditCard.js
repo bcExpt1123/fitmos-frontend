@@ -1,8 +1,8 @@
-import React,{useState,useRef} from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import { Formik, Form, Field } from "formik";
+import {Button} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
+import { Formik, Form } from "formik";
 import usePaymentInputs from "react-payment-inputs/es/usePaymentInputs";
 import CreditCardForm from "../../CheckoutPage/StepPayment/CreditCardForm";
 import Spinner from "../../components/Spinner";

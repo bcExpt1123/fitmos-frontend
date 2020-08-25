@@ -247,6 +247,47 @@
     display: none;
   }
 }
+@media (max-height: 830px) {
+  .wrapper #sidebar {
+    ul {
+      li a[href]{
+        margin:25px 0;
+      }
+    }
+    footer{
+      bottom: 30px;
+    }
+  }
+}
+@media (max-height: 800px) {
+  .wrapper #sidebar {
+    ul {
+      li a[href]{
+        margin:20px 0;
+      }
+      ul li a{
+        margin-top: 15px!important;
+        margin-bottom: 0px!important;
+      }
+    }
+  }
+}
+@media (max-height: 770px) {
+  .wrapper #sidebar {
+    ul {
+      li a[href]{
+        margin:15px 0;
+      }
+      ul li a{
+        margin-top: 10px!important;
+        margin-bottom: 0px!important;
+      }
+    }
+    footer{
+      bottom: 10px;
+    }
+  }
+}
 @media (max-width: 1024px) {
   .wrapper {
     #rightbar {

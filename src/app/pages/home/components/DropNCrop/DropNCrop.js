@@ -86,7 +86,6 @@ class DropNCrop extends Component {
   _crop(){
     if (typeof this.cropperRef.getCroppedCanvas() !== 'undefined') {
       const {
-        value,
         onCroped,
       } = this.props;      
       onCroped(
@@ -101,8 +100,8 @@ class DropNCrop extends Component {
       className,
       cropperOptions,
       instructions,
-      allowedFileTypes,
-      maxFileSize,
+      //allowedFileTypes,
+      //maxFileSize,
       value,
     } = this.props;
 

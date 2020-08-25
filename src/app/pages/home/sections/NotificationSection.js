@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import { http } from "../services/api";
 import { updateCustomerAttribute as updateWeightsAction } from "../redux/auth/actions";
 
 function Notification({ updateWeightsAction, currentUser }) {
-  const [focused, setFocused] = useState({});
   const handleClick = async event => {
     if (window.confirm("Por favor confirmar para hacer el cambio.")) {
-      const res = await http({
+      await http({
         method: "POST",
         app: "user",
         path: "customers/changeWeights",
@@ -23,7 +22,7 @@ function Notification({ updateWeightsAction, currentUser }) {
     <>
       {currentUser &&
         currentUser.customer &&
-        currentUser.customer.weights == "sin pesas" && (
+        currentUser.customer.weights === "sin pesas" && (
           <div
             className="section-notification"
             id="section-notification"

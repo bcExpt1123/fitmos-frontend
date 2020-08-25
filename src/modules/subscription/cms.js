@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import { put, call, takeLatest, takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
@@ -127,17 +126,17 @@ export const reducer = persistReducer(
       case actionTypes.CMS_TAKE_CONTENT:
         const clonedData1 = Object.assign({}, state.data);
         const weekDay = state.editorDate.getDay();
-        if(weekDay==0)clonedData1[state.column][weekDay+6] = action.content;
+        if(weekDay===0)clonedData1[state.column][weekDay+6] = action.content;
         else clonedData1[state.column][weekDay-1] = action.content;
         return { ...state, data: clonedData1 };
       case actionTypes.CMS_TAKE_VALUE:
         const clonedData2 = Object.assign({}, state.data);
         const weekDay1 = state.editorDate.getDay();
-        if(action.name == 'image_path'){
-          if(weekDay1==0)clonedData2[action.name][weekDay1+6] = action.value;
+        if(action.name === 'image_path'){
+          if(weekDay1===0)clonedData2[action.name][weekDay1+6] = action.value;
           else clonedData2[action.name][weekDay1-1] = action.value;
         }else{
-          if(weekDay1==0)clonedData2[state.column+'_'+action.name][weekDay1+6] = action.value;
+          if(weekDay1===0)clonedData2[state.column+'_'+action.name][weekDay1+6] = action.value;
           else clonedData2[state.column+'_'+action.name][weekDay1-1] = action.value;
         }
         return { ...state, data: clonedData2 };
@@ -208,7 +207,7 @@ function* changeItem({ id, history }) {
       history.push("/admin/subscription-manager");
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       history.push("/admin/subscription-manager");
@@ -227,7 +226,7 @@ function* changePrevYear() {
         year: cms.year - 1
       });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       //history.push('/admin/subscription-manager');
@@ -246,7 +245,7 @@ function* changeNextYear() {
         year: cms.year + 1
       });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       //history.push('/admin/subscription-manager');
@@ -281,7 +280,7 @@ function* fetchWeekly({ history }) {
   try {
     yield put({ type: actionTypes.CMS_INDEX_SUCCESS, data: result.data });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       //history.push('/admin/subscription-manager');
@@ -309,7 +308,7 @@ function* fetchPrevWeekly() {
   try {
     yield put({ type: actionTypes.CMS_INDEX_SUCCESS, data: result.data });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       //history.push('/admin/subscription-manager');
@@ -337,7 +336,7 @@ function* fetchNextWeekly() {
   try {
     yield put({ type: actionTypes.CMS_INDEX_SUCCESS, data: result.data });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       //history.push('/admin/subscription-manager');
@@ -432,7 +431,7 @@ function* saveContent() {
       } 
       catch (e) {
         console.log(e);
-        if (e.response.status == 401) {
+        if (e.response.status === 401) {
           yield put(logOut());
         } else {
           //history.push('/admin/subscription-manager');

@@ -1,13 +1,10 @@
 import React, {useState, useEffect} from "react";
-import { useDispatch, useSelect} from "react-redux";
+import { useDispatch} from "react-redux";
 import MetaTags from "react-meta-tags";
-import Button from "react-bootstrap/Button";
+import {Button, Row, Col, Table} from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
 import Pagination from "react-js-pagination";
-import Table from "react-bootstrap/Table";
-import IconButton from "@material-ui/core/IconButton";
+import {IconButton} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import classnames from "classnames";
 
@@ -42,9 +39,10 @@ const LevelPage = () => {
     pageTotal: 1,
     total: 0
   });
+  const dispatch = useDispatch();
   useEffect(() => {
     fetchRecords(activePage);
-  }, []);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const fetchRecords = async (page)=>{
     const res = await http({
       path: `levelTests?${serializeQuery({
@@ -67,11 +65,9 @@ const LevelPage = () => {
       }
     }
   }
-  const dispatch = useDispatch();
   const onSubmit = async ({ repetition }, { setSubmitting }) => {
-    let res;
     if (id) {
-      res = await http({
+      await http({
         method: "PUT",
         app: "user",
         path: "levelTests/" + id,
@@ -81,7 +77,7 @@ const LevelPage = () => {
         }
       });
     } else {
-      res = await http({
+      await http({
         method: "POST",
         app: "user",
         path: "levelTests",
@@ -110,7 +106,7 @@ const LevelPage = () => {
     fetchRecords(number);
   }
   const deleteAction = async (id)=>{
-    const res = await http({
+    await http({
       method: "DELETE",
       app: "user",
       path: "levelTests/" + id,

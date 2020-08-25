@@ -1,8 +1,8 @@
 import React,{useState} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 
 import ThreeColumn from "./layouts/Three";
 import PageHeader from "./layouts/PageHeader";
@@ -50,7 +50,7 @@ const BenchmarksPage = () => {
                   </div>
                   <div className="body row">
                     <div className="title col-8">{benchmark.title}</div>
-                        {benchmark.result == "" ? (
+                        {benchmark.result === "" ? (
                           <div className="repetition col-4">PENDIENTE</div>
                         ) : (
                           <div className="repetition col-4">{benchmark.result}</div>

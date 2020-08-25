@@ -3,9 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import objectPath from "object-path";
 import { withRouter } from "react-router-dom";
-import { QuickActions } from "./components/QuickActions";
-import { LayoutContextConsumer } from "../LayoutContext";
-import { ReactComponent as SortNum1Icon } from "../../../../_metronic/layout/admin/assets/layout-svg-icons/SortNum1.svg";
 import * as builder from "../../../ducks/builder";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { SubHeaderDashboard } from "../../../../app/pages/admin/Dashboard";
@@ -56,7 +53,6 @@ class SubHeader extends React.Component {
     const {
       subheaderCssClasses,
       subheaderContainerCssClasses,
-      subheaderMobileToggle
     } = this.props;
     return (
       <div

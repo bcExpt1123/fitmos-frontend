@@ -1,11 +1,10 @@
 // --- Dependencies
-import React from 'react'
+import React from 'react';
 
 // --- Components
-import TimerWrapper from './Wrapper'
-import Button from './Button'
-import Label from './Label'
-import Base from './Base'
+import TimerWrapper from './Wrapper';
+import Button from './Button';
+import Base from './Base';
 
 // --- Utils
 import createForTime from '../../sections/Workout/lib/createForTime';
@@ -100,7 +99,7 @@ class ForTime extends Base {
       return this.state.minSecDesc
     }
 
-    return this.isDelay() ? 11 - this.state.count : this.state.minSecAsc
+    return this.isDelay() ? 11 - this.state.count : this.isRunning() && this.state.minSecAsc
   }
 
   render() {
@@ -108,9 +107,10 @@ class ForTime extends Base {
       <TimerWrapper
         name="For Time"
         goBackFn={this.handleStop}
-        handleRestart={this.handleStart}
+        handleRestart={this.handleReset}
         isRunning={this.isRunning()}
         isDone={this.isDone()}
+        isDelay = {this.isDelay()}
         setIsRunning={this.props.setIsRunning}
         subheader={this.renderDone()}
         time={this.renderTime()}

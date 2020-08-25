@@ -1,7 +1,7 @@
 import React from "react";
 import MetaTags from "react-meta-tags";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
 import SVG from "react-inlinesvg";
 
 import ThreeColumn from "./layouts/Three";
@@ -36,17 +36,17 @@ const ProfilePage = () => (
         </Col>
       </Row>
       <div className="profile-footer">
-        Follow us on &nbsp;&nbsp;
-        <a href="https://www.instagram.com/fitemoslatam/" target='_blank'>
-          <SVG src={toAbsoluteUrl("/media/icons/svg/Social/instagram.svg")} />
+        &nbsp;&nbsp;
+        <a href="https://www.instagram.com/fitemoslatam/" target='_blank' rel="noopener noreferrer">
+          <img src={toAbsoluteUrl("/media/icons/png/social/instagram.png")} alt="instagram"/>
         </a>
         &nbsp;&nbsp;
-        <a href="https://www.facebook.com/fitemoslatam/" target='_blank'>
-          <SVG src={toAbsoluteUrl("/media/icons/svg/Social/facebook.svg")} />
+        <a href="https://www.facebook.com/fitemoslatam/" target='_blank' rel="noopener noreferrer">
+          <img src={toAbsoluteUrl("/media/icons/png/social/facebook.png")} alt="facebook"/>
         </a>
         &nbsp;&nbsp;
-        <a href="https://www.youtube.com/channel/UCI_YlVV3NhzHr2HoYp0LcVw" target='_blank'>
-          <SVG src={toAbsoluteUrl("/media/icons/svg/Social/youtube.svg")} />
+        <a href="https://www.youtube.com/channel/UCI_YlVV3NhzHr2HoYp0LcVw" target='_blank' rel="noopener noreferrer">
+          <img src={toAbsoluteUrl("/media/icons/png/social/youtube.png")} alt="youtube"/>
         </a>
 
       </div>

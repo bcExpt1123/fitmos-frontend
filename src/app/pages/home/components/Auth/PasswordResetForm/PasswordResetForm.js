@@ -1,6 +1,5 @@
 import React from "react";
 
-import { FormattedMessage } from "react-intl";
 import { Formik, Form, Field } from "formik";
 import { withRouter } from "react-router";
 

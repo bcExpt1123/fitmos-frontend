@@ -1,10 +1,9 @@
-import React from 'react'
+import React from 'react';
 
 // --- Components
-import Base from './Base'
-import TimerWrapper from './Wrapper'
-import Button from './Button'
-import Label from './Label'
+import Base from './Base';
+import TimerWrapper from './Wrapper';
+import Button from './Button';
 
 // --- Utils
 import createTabata from '../../sections/Workout/lib/createTabata';
@@ -118,12 +117,14 @@ class Tabata extends Base {
       <TimerWrapper
         name="Tabata"
         round={this.state.round}
+        rounds={this.state.rounds}
         goBackFn={this.handleStop}
         isRunning={this.isRunning()}
         isDone={this.isDone()}
+        isDelay = {this.isDelay()}
         setIsRunning={this.props.setIsRunning}
         appendTopHeader={this.appendTopHeader()}
-        handleRestart={this.handleStart}
+        handleRestart={this.handleReset}
         time={
           this.isDelay()
             ? 11 - this.state.count

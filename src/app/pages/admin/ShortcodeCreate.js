@@ -1,41 +1,15 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect} from "react-redux";
 import { withRouter } from "react-router";
+import { injectIntl } from "react-intl";
 import {
   $setNewItem,
   $saveItem,
   $updateItemValue,
   $changeItem
 } from "../../../modules/subscription/shortcode";
-import { validateEmail } from "../../../modules/validate.js";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-
-const useStyles = () => {
-  return makeStyles(theme => ({
-    root: {
-      display: "block",
-      flexWrap: "wrap"
-    },
-    textField: {
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2)
-    },
-    margin: {
-      margin: theme.spacing(1)
-    }
-  }));
-};
-
+import { makeStyles } from "@material-ui/core";
+import { Button, Paper, TextField, Grid } from "@material-ui/core";
 class Main extends Component {
   //function Main({item,isloading})
   constructor(props) {
@@ -172,7 +146,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="shortcode-form"
               type="submit"

@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 
@@ -19,7 +19,7 @@ const PostPage = ({match}) => {
   
   useEffect(() => {
     dispatch($changeItem(match.params.id));    
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const post = useSelector(({ event }) => event.item);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   return (

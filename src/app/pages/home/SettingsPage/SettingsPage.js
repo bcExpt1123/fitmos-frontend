@@ -1,8 +1,7 @@
 import React,{useState} from "react";
 import { bindActionCreators } from "redux";
 import { useDispatch } from "react-redux";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import {Modal,Button } from "react-bootstrap";
 
 import { addAlertMessage } from "../redux/alert/actions";
 //import { updateMessagingProfile } from '../redux/messagingProfile/actions';

@@ -1,6 +1,6 @@
 import React,{useState} from "react";
 import { FormattedMessage } from "react-intl";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 
 import DetailModal from "./Dialogs/Detail";

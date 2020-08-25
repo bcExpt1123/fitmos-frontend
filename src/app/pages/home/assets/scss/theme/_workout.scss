@@ -40,11 +40,14 @@
         padding: 0 20px;
         font-size:20px;
       }
+      &.mobile-full-screen{
+        display:none;
+      }
     }
   }
   .workout-body{
     padding:10px 0;
-    color:rgba($color: $basic-text-color, $alpha: 0.7);
+    color:rgba($color: $basic-text-color, $alpha: 1);
     .block{
       padding:0 60px;
       .image{
@@ -80,6 +83,7 @@
           color:#B9B7B7;
           &.active{
             margin-bottom: -2px;
+            border: 0;
             border-bottom: 2px solid #BED533;
             color:$basic-text-color;
             font-weight: 400;
@@ -168,6 +172,17 @@
           margin-left: 0;
           padding-left: calc(30% - 15px);
         }  
+        .view-notes{
+          font-size: 12px!important;
+        }
+        .image{
+          height: 280px;
+          .background-container{
+            .background{
+              height: 280px;
+            }
+          }
+        }
       }
       .blog{
         padding:0 20px;
@@ -182,6 +197,66 @@
           }
         }
       }  
+    }
+  }
+}
+@media (max-width: 500px) {
+  .workout{
+    .workout-body{
+      .block{
+        padding:0;  
+        .tab-content{
+          padding:0 20px;  
+        }
+        .image{
+          height: 143px;
+          .background-container{
+            .background{
+              height: 143px;
+            }
+          }
+        }
+      }
+      .blog{
+        padding:0 20px;
+        #timer-clock{
+          margin-left: -20px;
+          margin-right: -20px;
+          width: calc(100% + 40px)!important;
+        }
+      }  
+      #timer-clock{
+        height:212px;
+        border-radius: 0px;
+        .timer--button-start1{
+          margin-bottom: 20px;
+        }
+        .buttons{
+          .timer--button-start1{
+            margin-bottom: 0px;
+          }
+        }
+      }
+    }
+    &.timer{
+      position: absolute;
+      z-index: 1;
+      top:-84px;
+      width:calc( 100% + 20px );
+      border-radius: 0;
+      .workout-header{
+        span{
+          &:first-child,&:nth-child(4){
+            display:none;
+          }
+          &.mobile-full-screen{
+            display:inline;
+            i{
+              opacity: 1;
+            }
+          }
+        }
+      }
     }
   }
 }

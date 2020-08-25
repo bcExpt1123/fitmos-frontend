@@ -1,5 +1,3 @@
-import { createBrowserNavigation } from "navi";
-
 let navigation;
 
 export const getNavigation = () => {

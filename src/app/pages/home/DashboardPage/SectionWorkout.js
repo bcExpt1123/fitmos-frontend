@@ -1,16 +1,15 @@
 import React,{useState} from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { useSelector,useDispatch } from "react-redux";
-import Accordion from "react-bootstrap/Accordion";
+import { Accordion } from "react-bootstrap";
 import classnames from "classnames";
-import { Markup } from "interweave";
 import ModalVideo from 'react-modal-video';
 import 'react-modal-video/scss/modal-video.scss';
 import { http } from "../services/api";
 import { doneWorkout} from '../redux/done/actions';
 import SectionNote from './SectionNote';
 
-const SectionWorkout = ({}) => {
+const SectionWorkout = () => {
   const [show,setShow] = useState(false);
   const [vid,setVid] = useState(false);
   const workouts = useSelector(({ benchmark }) => benchmark.workouts);
@@ -22,13 +21,10 @@ const SectionWorkout = ({}) => {
     switch(line.tag){
       case 'h1':
         return <h1 key={index}>{line.content}</h1>;
-      break;
       case 'h2':
         return <h2 key={index}>{line.content}</h2>;
-      break;
       case 'modal':
         return <SectionNote key={index} line={line} />;
-      break;
       case 'p':
         return <p key={index}>
           {line.before_content}&nbsp;
@@ -36,7 +32,7 @@ const SectionWorkout = ({}) => {
             <button onClick={()=>{
                 setVid(line.youtube.vid);
                 setShow(true);
-                const res = http({
+                http({
                   method: "POST",
                   app: "user",
                   path: "customers/activity",
@@ -51,7 +47,7 @@ const SectionWorkout = ({}) => {
           )}
           {line.after_content}
           </p>;
-      break;
+      default:
     }
   }
   return (
@@ -99,6 +95,5 @@ const SectionWorkout = ({}) => {
   );
 };
 
-const mapDispatchToProps = {};
 
 export default SectionWorkout;

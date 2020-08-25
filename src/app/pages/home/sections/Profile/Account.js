@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import EmailModal from "./Dialogs/Email";
 import PasswordModal from "./Dialogs/Password";

@@ -2,23 +2,9 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField, MenuItem, FormControl, InputLabel, Select, CircularProgress,  }from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import ListAltIcon from "@material-ui/icons/ListAlt";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import FlagIcon from "@material-ui/icons/Flag";
 import DisableIcon from "@material-ui/icons/Clear";
 import ViewIcon from "@material-ui/icons/Visibility";
@@ -67,7 +53,7 @@ function Main() {
   const classes = useStyles();
   useEffect(() => {
     dispatch($fetchIndex())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const customer = useSelector(({ customer }) => customer);
   const page=customer.meta.page-1;
   const customers= customer.data;
@@ -122,13 +108,13 @@ function Main() {
                       className={classnames(
                         " btn btn-bold btn-xs btn-font-sm normal",
                         {
-                          "btn-label-success": row.status == "Active",
-                          "btn-label-danger": row.status == "Inactive"
+                          "btn-label-success": row.status === "Active",
+                          "btn-label-danger": row.status === "Inactive"
                         }
                       )}
                     >
                       {row.status}
-                      {row.trial == 1 && <FlagIcon color="primary" />}
+                      {row.trial === 1 && <FlagIcon color="primary" />}
                     </span>
                   </TableCell>
                   <TableCell align="left" style={{ padding: "0" }}>
@@ -145,7 +131,7 @@ function Main() {
                         <ViewIcon />
                       </IconButton>
                     </NavLink>  
-                    {row.status == "Disabled" ? (
+                    {row.status === "Disabled" ? (
                       <>
                         <IconButton
                           color="secondary"

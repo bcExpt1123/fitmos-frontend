@@ -109,7 +109,7 @@ function* onSetPublicCoucher({ payload }) {
   const currentUser = yield select(store => store.auth.currentUser);
   if (currentUser === undefined) {
     try {
-      const voucher = yield call(validatePublicVoucherRequest, {
+      yield call(validatePublicVoucherRequest, {
         code: payload,
       });
       reactLocalStorage.set('publicCoupon', payload);
@@ -220,7 +220,7 @@ function* onSetReferralVoucher({ payload }) {
   const currentUser = yield select(store => store.auth.currentUser);
   if (currentUser === undefined) {
     try {
-      const voucher = yield call(validateReferralVoucherRequest, {
+      yield call(validateReferralVoucherRequest, {
         code: payload,
       });
       reactLocalStorage.set('referralCode', payload);
@@ -232,6 +232,7 @@ function* onSetReferralVoucher({ payload }) {
     const vouchers = yield select(({vouchers}) => vouchers);
     const filterVouchers = Object.values(vouchers).filter((voucher)=>{
       if( voucher.code ) return voucher;
+      return null;
     });
     if( filterVouchers.length > 0 ) return;
     try {

@@ -1,4 +1,4 @@
-import { call, takeEvery, takeLeading, put, select } from "redux-saga/effects";
+import { call, takeLeading, put } from "redux-saga/effects";
 import {
   doneWorkout,
   setWorkout,

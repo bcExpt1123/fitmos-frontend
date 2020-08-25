@@ -3,22 +3,23 @@ import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
 import classnames from "classnames";
 import { useSelector, useDispatch } from "react-redux";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import { Modal, Button } from "react-bootstrap";
 import { withRouter } from "react-router";
+import {Link} from '@material-ui/core';
 
-import { toAbsoluteUrl,isMobile } from "../../../../_metronic/utils/utils";
+import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
 import NotificationSection from "../sections/NotificationSection";
 import { logOut as logOutAction } from "../redux/auth/actions";
 import { $fetchFrontIndex } from "../../../../modules/subscription/company";
-
-
+import { stopRunning } from "../redux/done/actions";
 const SideBar = ({history}) => {
   const [submenu, setSubmenu] = useState(true);
   const [subContain, setSubContain] = useState(true);
   const [showMenu, setShowMenu] = useState(false);
   const [showForm,setShowForm] = useState(false);
   const shopMenu = useSelector(({done})=>done.shopMenu);
+  const isRunning = useSelector(({done})=>done.isRunning);
+  const dispatch = useDispatch();
   useEffect(()=>{
     const paths = ["/perfil","/profile","/ayuda"];
     if( paths.includes(window.location.pathname)){
@@ -29,7 +30,14 @@ const SideBar = ({history}) => {
     if(shopMenu === null){
       dispatch($fetchFrontIndex());
     }
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  const changeConfirm = ()=>{
+    if(isRunning){
+      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return false;
+      dispatch(stopRunning());
+    }
+    return true;
+  }
   const expandSubmenu = ()=>{
     setSubmenu(false);
   }
@@ -43,12 +51,11 @@ const SideBar = ({history}) => {
     setShowMenu(false);
   }
   const handleShowLogoutModal = ()=>{
-    setShowForm(true);
+    if(changeConfirm())setShowForm(true);
   }
   const handleCloseForm = ()=>{
     setShowForm(false);
   }
-  const dispatch = useDispatch();
   const handleLogout = ()=>{
     dispatch(logOutAction());
     setShowForm(false);
@@ -149,7 +156,7 @@ const SideBar = ({history}) => {
             </NavLink>
           </li>
           <li onMouseEnter={expandSubmenu} onMouseLeave={collaseSubmenu}>
-            <a className="menu-link menu-toggle" onClick={redirectProfilePage}>
+            <Link className="menu-link menu-toggle" onClick={redirectProfilePage}>
               <span className="svg-icon menu-icon">
                 <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/profile.svg")} />
               </span>
@@ -158,7 +165,7 @@ const SideBar = ({history}) => {
               </span>
               <span className="menu-text">Cuenta</span>
               <i className="menu-arrow" />
-            </a>
+            </Link>
             <ul className={classnames("list-unstyled", {collapse:submenu })} id="pageSubmenu">
               <li className="responsive-menu">
                 <NavLink className="menu-link menu-toggle" to="/perfil" activeClassName="active">
@@ -176,9 +183,9 @@ const SideBar = ({history}) => {
                 </NavLink>
               </li>
               <li>
-                <a className="menu-link menu-toggle"  onClick={handleShowLogoutModal}>
+                <Link className="menu-link menu-toggle"  onClick={handleShowLogoutModal}>
                   Cerrar sesión
-                </a>
+                </Link>
               </li>
             </ul>          
           </li>

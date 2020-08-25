@@ -1,8 +1,7 @@
 import React, { useState,useEffect } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import { useDispatch } from "react-redux";
-
 import { http } from "../home/services/api";
 import CustomersChart from "./sections/CustomersChart.js";
 import { $exportReport } from "../../../modules/subscription/customer";
@@ -27,7 +26,7 @@ export default function Dashboard() {
   const [data, setData] = useState(null);
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const classes = useStyles();
   const fetchReports = async ()=>{
     const res = await http({
@@ -40,7 +39,7 @@ export default function Dashboard() {
   }  
   const dispatch = useDispatch();
   const handleSearch = ()=>{
-    if(from=="" || to=="" || from>to){
+    if(from==="" || to==="" || from>to){
       alert("please choose valid dates");
       return;
     }

@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
-import Collapse from 'react-bootstrap/Collapse';
-import Button from 'react-bootstrap/Button';
-import Modal from "react-bootstrap/Modal";
+import {Modal,Button,Collapse } from "react-bootstrap";
 
 const BlockSection = ({ block, renderLine, index })=>{
   const [open, setOpen] = useState(false);
-  const [buttonLabel, setButtonLabel] = useState("Ver notas");
+  //const [buttonLabel, setButtonLabel] = useState("Ver notas");
+  const buttonLabel = "Ver notas";
   useEffect(()=>{
     //if(open)setButtonLabel("Cerrar notas");
     //else setButtonLabel("Ver notas");
@@ -50,6 +49,9 @@ const BlockSection = ({ block, renderLine, index })=>{
           }
         </>
       )}
+      <div>&nbsp;</div>
+      <hr />
+      <div>&nbsp;</div>
       <Modal
         show={open}
         onHide={handleHide}

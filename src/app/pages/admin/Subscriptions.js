@@ -1,28 +1,14 @@
 import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/styles";
+import { Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, 
+  colors, TextField, MenuItem, FormControl, InputLabel, Select } from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import ViewIcon from "@material-ui/icons/Visibility";
 import RedoIcon from "@material-ui/icons/Redo";
 import ListAltIcon from "@material-ui/icons/ListAlt";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
@@ -51,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -134,8 +120,8 @@ function Main({ subscriptions, meta, $page, $pageSize, $cancel, $restore }) {
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Active",
-                            "btn-label-info": row.status == "LEAVING"
+                            "btn-label-success": row.status === "Active",
+                            "btn-label-info": row.status === "LEAVING"
                           }
                         )}
                       >
@@ -153,7 +139,7 @@ function Main({ subscriptions, meta, $page, $pageSize, $cancel, $restore }) {
                           <ViewIcon />
                         </IconButton>
                       </NavLink>  
-                      {row.status == "Active" ? (
+                      {row.status === "Active" ? (
                         <>
                           <IconButton
                             className={classes.button}

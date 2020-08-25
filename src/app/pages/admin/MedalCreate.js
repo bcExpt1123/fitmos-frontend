@@ -1,21 +1,10 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { makeStyles } from "@material-ui/core";
+import { Button, Paper, TextField, Grid, IconButton } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
 import {
   $setNewItem,
   $saveItem,
@@ -23,24 +12,6 @@ import {
   $changeItem,
   $updateItemImage,
 } from "../../../modules/subscription/medal";
-
-
-const useStyles = () => {
-  return makeStyles(theme => ({
-    root: {
-      display: "block",
-      flexWrap: "wrap"
-    },
-    textField: {
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2)
-    },
-    margin: {
-      margin: theme.spacing(1)
-    }
-  }));
-};
-
 class Main extends Component {
   //function Main({item,isloading})
   constructor(props) {
@@ -53,7 +24,7 @@ class Main extends Component {
   }
   handleOnSubmit = e => {
     e.preventDefault();
-    if (this.props.item.image == "" && this.state.file == "") {
+    if (this.props.item.image === "" && this.state.file === "") {
       alert("Please upload image");
       return false;
     }
@@ -144,9 +115,9 @@ class Main extends Component {
 
                   <div className="uploaded-photo">
                     {this.state.file ? (
-                      <img src={this.state.file} width="200px" />
+                      <img src={this.state.file} alt='img' width="200px" />
                     ) : this.props.item.image ? (
-                      <img src={this.props.item.image} width="200px" />
+                      <img src={this.props.item.image} alt='img' width="200px" />
                     ) : (
                           <label htmlFor="raised-button-file">
                             <IconButton color="primary" component="span">
@@ -225,7 +196,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="medal-form"
               type="submit"

@@ -1,18 +1,7 @@
 import React from "react";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { makeStyles } from "@material-ui/core/styles";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, Select, InputLabel, MenuItem, FormControl} from "@material-ui/core";
+import { Row, Col} from "react-bootstrap";
+import { makeStyles } from "@material-ui/core";
 const useStyles = ()=>{
   return makeStyles(theme => ({
     root: {
@@ -28,8 +17,6 @@ const useStyles = ()=>{
     }
   }));
 }
-
-
 export default function WorkoutEditDialog(props) {
   const classes = useStyles();
   return(
@@ -78,7 +65,7 @@ export default function WorkoutEditDialog(props) {
               </Select>
             </FormControl>            
             {props.timerType&&(
-              props.timerType == "tabata"?(
+              props.timerType === "tabata"?(
                 <div>
                   <TextField
                     autoFocus

@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { http } from "../../services/api";
@@ -10,7 +10,7 @@ import { $resetPublished } from "../../../../../modules/subscription/benchmark";
 
 export const findObjective = (objective,currentUser) => {
   let label;
-  if (objective == 'auto') {
+  if (objective === 'auto') {
     if (currentUser.customer.imc >= 25) objective = 'cardio';
     else if (currentUser.customer.imc <= 18.5) objective = 'strong';
     else objective = 'fit';
@@ -23,16 +23,16 @@ export const findObjective = (objective,currentUser) => {
       label = 'Ponerte en forma';
       break;
     case 'strong':
-      label = currentUser.customer.gender == "Male"
+      label = currentUser.customer.gender === "Male"
         ? "Ganar musculatura" : "Tonificar"
       break;
+    default:  
   }
   return label;
 }
 const Objective = () => {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const [objective, setObjective] = useState(false);
-  const [condition, setCondition] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -44,8 +44,8 @@ const Objective = () => {
   }
   const handleClick = async event => {
     if (window.confirm("Por favor confirmar para hacer el cambio.")) {
-      const weights = currentUser.customer.weights=='con pesas'?'sin pesas':'con pesas';
-      const res = await http({
+      const weights = currentUser.customer.weights==='con pesas'?'sin pesas':'con pesas';
+      await http({
         method: "POST",
         app: "user",
         path: "customers/changeWeights",
@@ -57,13 +57,6 @@ const Objective = () => {
       dispatch($resetPublished());
     }
   };
-  const handleCloseCondition = ()=>{
-    setCondition(false);
-  }
-  const openModalCondition = ()=>{
-    setCondition(true);
-  }
-
   return (
     <Card>
       <Card.Header>

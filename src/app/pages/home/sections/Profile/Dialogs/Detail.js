@@ -1,12 +1,8 @@
 import React, { useState } from "react";
-import { FormattedMessage } from "react-intl";
 import { Formik, Form, Field } from "formik";
 import { connect,useSelector,useDispatch } from "react-redux";
 import SVG from "react-inlinesvg";
-import Modal from "react-bootstrap/Modal";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import {Modal, Button, Row, Col } from "react-bootstrap";
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import es from 'react-phone-input-2/lang/es.json';
@@ -52,16 +48,12 @@ const validate = withPassword => ({
 };
 
 const EditProfile = ({ show, handleClose }) => {
+  const countries = []
+  Object.keys(es).forEach(key => countries.push({name: key, value: es[key]}));
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const isProfileImageLoading = useSelector(({ done }) => done.isProfileImageLoading);
   const [focused, setFocused] = useState({});
   const [uploadImage,setUploadImage] = useState(false);
-  const [file, setFile] = useState({
-    result: null,
-    filename: null,
-    filetype: null,
-    src: null,
-    error: null});
   const dispatch = useDispatch();    
   const onSubmit = (
     {
@@ -75,6 +67,7 @@ const EditProfile = ({ show, handleClose }) => {
     },
     { setSubmitting, setErrors, setFieldValue }
   ) => {
+    country = es[country_code];
     let params = {
       first_name,
       last_name,
@@ -236,8 +229,35 @@ const EditProfile = ({ show, handleClose }) => {
               </Row>
               <Row>
                 <Col xs={12}>
+                  <FormGroup
+                    hasValue={Boolean(values.country_code)}
+                    name="country_code"
+                    htmlFor="country_code"
+                    label={"País"}
+                    focused={focused.country_code}
+                    touched={touched.country_code}
+                    valid={Boolean(values.country_code && !errors.country_code)}
+                  >
+                    <Field 
+                      as="select" 
+                      name="country_code"
+                      id="country_code"
+                      autoComplete="country_code"
+                      onFocus={handleFocus}
+                    >
+                      {
+                        countries.map(country=>(
+                          <option value={country.name} key={country.name}>{country.value}</option>
+                        ))
+                      }
+                    </Field>
+                  </FormGroup>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12}>
                   <PhoneInput
-                    country={currentUser.customer.country_code}
+                    country={values.country_code}
                     localization={es}
                     id="whatsapp_phone_number"
                     type="text"

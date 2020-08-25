@@ -15,6 +15,10 @@ export const {
   startProfileImageUploading,
   endProfileImageUploading,
   setShopMenu,
+  setRunning,
+  stopRunning,
+  setTimer,
+  removeTimer,
 } = createActions(
   "DONE_WORKOUT",
   "SET_WORKOUT",
@@ -30,5 +34,9 @@ export const {
   "START_PROFILE_IMAGE_UPLOADING",
   "END_PROFILE_IMAGE_UPLOADING",
   "SET_SHOP_MENU",
+  "SET_RUNNING",
+  "STOP_RUNNING",
+  "SET_TIMER",
+  "REMOVE_TIMER",
   { prefix: "DONE" }
 );

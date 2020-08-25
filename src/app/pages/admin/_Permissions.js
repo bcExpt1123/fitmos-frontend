@@ -1,15 +1,6 @@
 import React, { useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import { Checkbox, FormControlLabel, TextField } from "@material-ui/core";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import { styles, Button, Paper, MenuItem, Select, Grid, Checkbox, FormControlLabel, TextField } from "@material-ui/core";
 import {
   $saveItem,
   $updateItemValue,
@@ -17,7 +8,7 @@ import {
 } from "../../../modules/subscription/permission";
 
 const useStyles = () => {
-  return makeStyles(theme => ({
+  return styles.makeStyles(theme => ({
     root: {
       display: "block",
       flexWrap: "wrap"
@@ -38,7 +29,7 @@ const Permissions = () => {
   const permission = useSelector(({permission})=>permission);
   useEffect(() => {
     dispatch($fetchSetting());
-  },[]);
+  });
   const handleOnSubmit = e =>{
     e.preventDefault();
     dispatch($saveItem());
@@ -136,7 +127,6 @@ const SubHeaderPermissions = () => {
       <div className="kt-subheader__toolbar">
         <div className="kt-subheader__wrapper">
           <Button
-            type="button"
             className="btn kt-subheader__btn-primary btn-primary"
             form="cart-settings-form"
             type="submit"
@@ -145,7 +135,6 @@ const SubHeaderPermissions = () => {
             Submit &nbsp;
           </Button>
           <Button
-            type="button"
             className="btn kt-subheader__btn-primary btn-primary"
             form="cart-settings-form"
             type="button"

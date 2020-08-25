@@ -1,7 +1,8 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-
+import SVG from "react-inlinesvg";
+import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
 const PageHeader = ({title,tagLine, breadcrumb})=>{
   const currentUser = useSelector(({auth})=>auth.currentUser);
   return (
@@ -17,9 +18,9 @@ const PageHeader = ({title,tagLine, breadcrumb})=>{
             {
               item.arrow&&(
                 <>
-                  &nbsp;
-                  &#129082;
-                  &nbsp;
+                &nbsp;
+                <SVG src={toAbsoluteUrl("/media/icons/svg/Shopping/next.svg")} width="15px"/>
+                &nbsp;
                 </>
               )
             }

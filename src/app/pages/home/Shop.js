@@ -1,7 +1,6 @@
 import React from "react";
 import MetaTags from "react-meta-tags";
 
-import TwoColumn from "./layouts/Two";
 import ThreeColumn from "./layouts/Three";
 import Shop from "./ShopPage";
 import PageHeader from "./layouts/PageHeader";

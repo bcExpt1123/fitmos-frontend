@@ -3,8 +3,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 const Logo = ({ color, className, variant,checkout, ...other }) => {
-  /* eslint-disable max-len */
   const currentUser = useSelector(({ auth }) => auth.currentUser);
+  /*eslint-disable no-mixed-operators*/
   const link = ( currentUser&&currentUser.has_workout_subscription===false || checkout)?"/pricing":"/";
   return (
     checkout?(

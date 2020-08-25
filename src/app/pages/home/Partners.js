@@ -1,9 +1,7 @@
 import React from "react";
 import MetaTags from "react-meta-tags";
 
-import TwoColumn from "./layouts/Two";
 import ThreeColumn from "./layouts/Three";
-import { http } from "./services/api";
 import SectionInvite from "./sections/SectionInvite";
 import SectionPartners from "./sections/SectionPartners";
 import PageHeader from "./layouts/PageHeader";

@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import { put, call, takeLatest, takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
@@ -162,7 +161,7 @@ function* fetchCustomer() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -184,7 +183,7 @@ function* searchCustomer({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -212,10 +211,10 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(customerActionRequest, action, id);
+    yield call(customerActionRequest, action, id);
     yield put({ type: actionTypes.CUSTOMER_INDEX_REQUEST });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -247,7 +246,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.CUSTOMER_SET_ITEM, item: result });
     else yield put({ type: actionTypes.CUSTOMER_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });

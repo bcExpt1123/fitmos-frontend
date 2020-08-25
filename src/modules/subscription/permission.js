@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
@@ -6,7 +5,6 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
@@ -63,7 +61,7 @@ export const reducer = persistReducer(
       case actionTypes.PERMISSION_SETTING_CHOOSE_ROLE:
         let item;
         for(let i =0;i<state.roles.length;i++){
-          if(action.id == state.roles[i].id){
+          if(action.id === state.roles[i].id){
             item = state.roles[i];
             break;
           }
@@ -75,7 +73,7 @@ export const reducer = persistReducer(
         const length = permissions.length;
         let index = -1;
         for(let i=0;i<length;i++){
-          if(permissions[i].id == action.permission.id){
+          if(permissions[i].id === action.permission.id){
             index = i;
             break;
           }
@@ -93,11 +91,11 @@ export const reducer = persistReducer(
         return { ...state, isSaving: action.status };
       case actionTypes.PERMISSION_SETTING_SET_ITEM_ERROR:
         const errors1 = { ...clonedErrors, [action.name]: action.value };
-        return { ...state, errors };
+        return { ...state, errors:errors1 };
       case actionTypes.PERMISSION_EDIT_ROLE:
         let role;
         for(let i =0;i<state.roles.length;i++){
-          if(action.id == state.roles[i].id){
+          if(action.id === state.roles[i].id){
             role = state.roles[i];
             break;
           }
@@ -164,7 +162,7 @@ function* fetchPermissionSetting() {
       permissions:result.permissions,
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.PERMISSION_SETTING_FAILURE, error: e.message });
@@ -185,11 +183,11 @@ function* saveItem() {
   const role = yield select(store => store.permission.item);
   yield put({ type: actionTypes.PERMISSION_SETTING_CHANGE_SAVE_STATUS, status: true });
   try {
-    const result = yield call(savePermissionSetting, role);
+    yield call(savePermissionSetting, role);
     alert("Saving success.");
       //yield put({type: actionTypes.PERMISSION_SETTING_REQUEST});
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.PERMISSION_SETTING_FAILURE, error: e.message });
@@ -197,11 +195,6 @@ function* saveItem() {
       yield put({ type: actionTypes.PERMISSION_SETTING_CHANGE_SAVE_STATUS, status: false });
     }
   }
-}
-const removeRole = id=>{
-  return http({ path: `roles/${id}`, method: "delete" }).then(
-    response => response.data
-  );
 }
 function* deleteRole({id}){
   try{
@@ -235,7 +228,7 @@ function* saveRole(){
   const role = yield select(store => store.permission.roleItem);
   yield put({ type: actionTypes.PERMISSION_SETTING_CHANGE_SAVE_STATUS, status: true });
   try {
-    const result = yield call(submitRole, role);
+    yield call(submitRole, role);
     alert("Saving success.");
     const roleItem = {
       name: "",
@@ -243,7 +236,7 @@ function* saveRole(){
     yield put({ type: actionTypes.PERMISSION_SET_ITEM_ROLE, roleItem });  
     yield put({ type: actionTypes.PERMISSION_SETTING_REQUEST });    
   } catch (e) {
-    if (e.response.status == 403) {
+    if (e.response.status === 403) {
       yield put({
         type: actionTypes.PERMISSION_SETTING_SET_ITEM_ERROR,
         name: "name",

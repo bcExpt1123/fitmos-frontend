@@ -1,17 +1,13 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
 import { useSelector } from "react-redux";
 
 import Card from "../../components/Card";
-import Typography from "../../components/Typography";
 import VoucherForm from "../VoucherForm";
 import Cart from "../Cart";
 
 import { CHECKOUT_KIND } from "../../constants/checkout-kind";
 
 import AboutFitemos from "../About/AboutFitemos";
-
-const BRANDS = {};
 
 const Sidebar = ({
   service,

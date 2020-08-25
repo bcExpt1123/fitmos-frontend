@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 import OneColumn from "./layouts/One";
 import ThreeColumn from "./layouts/Three";

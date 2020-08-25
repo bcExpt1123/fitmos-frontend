@@ -1,16 +1,16 @@
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import classnames from "classnames";
-import Tab from 'react-bootstrap/Tab';
-import Tabs from 'react-bootstrap/Tabs';
+import { Tab, Tabs } from 'react-bootstrap';
 import {  useDispatch,useSelector } from "react-redux";
+import { Prompt } from 'react-router';
 
 import Timer from "./Timer";
-import { nextBlock,previousBlock,doneWorkout,initialBlock } from "../../redux/done/actions";
+import { nextBlock,previousBlock,doneWorkout,initialBlock,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
 
 const Block = ({ block,renderLine,setAll })=>{
   const workouts = useSelector(({done})=>done.workouts);
+  const isRunning = useSelector(({done})=>done.isRunning);
   const step = useSelector(({done})=>done.step);
-  const [isRunning, setIsRunning] = useState(false);
   const renderImage = (url)=>{
     if(url){
       return (
@@ -28,30 +28,53 @@ const Block = ({ block,renderLine,setAll })=>{
     }
   }
   const dispatch = useDispatch();
-  const nextStep = ()=>{
+  const changeConfirm = ()=>{
     if(isRunning){
-      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return;
+      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return false;
+      dispatch(stopRunning());
     }
-    dispatch(nextBlock());
+    return true;
+  }
+  const nextStep = ()=>{
+    if( changeConfirm() ){
+      dispatch(nextBlock());
+    }
   }
   const previousStep = ()=>{
-    dispatch(previousBlock());
+    if( changeConfirm() ){
+      dispatch(previousBlock());
+    }
   }
   const handleComplete = (item)=>{
-    if(isRunning){
-      if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return;
+    if( changeConfirm() ){
+      if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
+      dispatch(initialBlock());
     }
-    if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
-    dispatch(initialBlock());
   }
+  const setIsRunning = (running)=>{
+    if(running)dispatch(setRunning());
+    else dispatch(stopRunning());
+  }
+  useEffect(()=>{
+    if(block.timer_type) dispatch(setTimer());
+    return ()=>{
+      dispatch(removeTimer());
+    }
+  },[block]);// eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="block">
+      <Prompt
+        when={isRunning}
+        message={() =>
+          `El reloj aún sigue corriendo. ¿Deseas avanzar?`
+        }
+      />      
       {renderImage(block.image_path)}
       {block.timer_type&&(
         <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} setIsRunning={setIsRunning}/>
       )}
       {
-        step==0?(
+        step===0?(
           block.content&&block.content.map( (render,index1)=>(
             renderLine(render, index1)
           ))
@@ -71,7 +94,7 @@ const Block = ({ block,renderLine,setAll })=>{
         )
       }
       {
-        step==workouts.current.blocks.length-1?(
+        step===workouts.current.blocks.length-1?(
           <div className="actions">
             <button onClick={previousStep} className="previous">
               Anterior
@@ -81,7 +104,7 @@ const Block = ({ block,renderLine,setAll })=>{
             </button>
           </div>  
         ):(
-          step==0?(
+          step===0?(
             <div className="actions">
               <button className="previous" onClick={()=>setAll(true)}>Ver Workout</button>
               <button onClick={nextStep} className="next">

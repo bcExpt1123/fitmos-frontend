@@ -9,7 +9,7 @@ const theme = createMuiTheme(
   {
     // direction: "rtl",
     typography: {
-      fontFamily: ["Nunito"].join(",")
+      fontFamily: ["Rubik"].join(",")
     },
 
     palette: {

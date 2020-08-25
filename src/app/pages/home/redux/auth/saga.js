@@ -1,17 +1,13 @@
-import { all, call, put, select, takeLatest, takeLeading } from "redux-saga/effects";
+import { all, call, put, takeLatest, takeLeading } from "redux-saga/effects";
 import {
   authenticate,
   authenticationFailed,
   authenticationRequested,
-  authenticationSkipped,
   authenticationSucceeded,
   signInUser,
-  generateAuthData,
-  reAuthenticate,
   logOut,
   logOuting,
   initialAuth,
-  setAuthData,
   sessionIn,
   sessionOut,
   findUserDetails,
@@ -21,12 +17,11 @@ import { endProfileImageUploading } from "../done/actions";
 import {actionTypes} from '../../../../../modules/subscription/benchmark';
 //import { setClaims } from '../claims/actions';
 
-import * as User from "../../services/user";
+//import * as User from "../../services/user";
 //import * as Claim from '../../services/claim';
 import { clear as clearStorage } from "../../services/storage";
 import { http } from "../../services/api";
 import { actions } from "../../../../../_metronic/ducks/i18n";
-import {reactLocalStorage} from 'reactjs-localstorage';
 
 const generateAuth = () =>
   http({ path: `users/accessToken`, method: "POST" }).then(
@@ -65,7 +60,7 @@ function* onFindUserDetails(){
     yield put(authenticationFailed());
   }
 }
-function* onAuthenticate() {
+/*function* onAuthenticate() {
   const accessToken = yield select(store => store.auth.accessToken);
   if (!accessToken) {
     yield put(authenticationSkipped());
@@ -83,7 +78,7 @@ function* onAuthenticate() {
   }
 }
 
-function* onSignInUser({ payload }) {}
+function* onSignInUser({ payload }) {}*/
 const deleteRefreshToken = async () =>
   http({
     method: "delete",
@@ -111,7 +106,7 @@ function* onLogOut() {
   yield put(initialAuth());
   // Reload the page
   //yield call([window.location, 'assign'], states.home());
-  if(document.location.pathname=="/pricing")document.location.href="/";
+  if(document.location.pathname==="/pricing")document.location.href="/";
 }
 const sessionInAction = () =>
   http({ path: `sessions/inside`, method: "POST" }).then(
@@ -119,7 +114,7 @@ const sessionInAction = () =>
   );
 function* onSessionIn(){
   try {
-    const result = yield call(sessionInAction);
+    yield call(sessionInAction);
   } catch (error) {
     return;
   }

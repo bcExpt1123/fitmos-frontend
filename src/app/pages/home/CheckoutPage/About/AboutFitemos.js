@@ -2,8 +2,6 @@ import React from "react";
 
 import Card from "../../components/Card";
 
-const styles = {};
-
 const AboutFitemos = () => (
   <Card padding="xs" className="mt-4 mb-4">
     <h3>Este plan incluye:</h3>

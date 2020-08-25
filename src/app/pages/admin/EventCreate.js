@@ -1,22 +1,11 @@
-import React, { Component,useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
-import { withRouter } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/core";
+import { Button, Paper, InputLabel, MenuItem, FormControl, TextField, Select, Grid, IconButton, Checkbox, FormControlLabel} from "@material-ui/core";
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import {
   $setNewItem,
   $saveItem,
@@ -49,7 +38,7 @@ function Main({history}) {
   const [state,setState] = React.useState({file:""});
   const handleOnSubmit = e => {
     e.preventDefault();
-    if (item.image == "" && state.file == "") {
+    if (item.image === "" && state.file === "") {
       alert("Please upload image");
       return false;
     }
@@ -202,9 +191,9 @@ function Main({history}) {
 
                 <div className="uploaded-photo">
                   {state.file ? (
-                    <img src={state.file} width="200px" />
+                    <img src={state.file} alt='img' width="200px" />
                   ) : item.image ? (
-                    <img src={item.image} width="200px" />
+                    <img src={item.image} alt='img' width="200px" />
                   ) : (
                         <label htmlFor="raised-button-file">
                           <IconButton color="primary" component="span">
@@ -239,7 +228,7 @@ function Sub({match,history}) {
     }else{
       dispatch($setNewItem());
     }
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const event = useSelector(({ event }) => event);
     return (
       <>
@@ -272,7 +261,6 @@ function Sub({match,history}) {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="event-form"
               type="submit"

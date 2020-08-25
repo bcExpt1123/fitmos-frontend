@@ -11,6 +11,10 @@ import {
   startProfileImageUploading,
   endProfileImageUploading,
   setShopMenu,
+  setRunning,
+  stopRunning,
+  setTimer,
+  removeTimer,
 } from "./actions";
 
 const initialState = {
@@ -25,6 +29,8 @@ const initialState = {
   tagLine:null,
   isProfileImageLoading:false,
   shopMenu:null,
+  isRunning:false,
+  timer:false,
 };
 const reducer = persistReducer(
   {
@@ -78,6 +84,22 @@ const reducer = persistReducer(
       [setShopMenu]:(state,{ payload:{shopMenu}})=>({
         ...state,
         shopMenu
+      }),
+      [setRunning]:(state)=>({
+        ...state,
+        isRunning:true,
+      }),
+      [stopRunning]:(state)=>({
+        ...state,
+        isRunning:false,
+      }),
+      [setTimer]:(state)=>({
+        ...state,
+        timer:true,
+      }),
+      [removeTimer]:(state)=>({
+        ...state,
+        timer:false,
       }),
     },
     initialState

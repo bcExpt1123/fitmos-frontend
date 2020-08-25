@@ -1,8 +1,4 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
-import FacebookIcon from "@material-ui/icons/Facebook";
-import YouTubeIcon from "@material-ui/icons/YouTube";
-import InstagramIcon from "@material-ui/icons/Instagram";
 import { NavLink } from "react-router-dom";
 
 import Logo from "../Logo";
@@ -14,11 +10,10 @@ export const mapStateToProps = state => ({
 });
 
 function Footer({ locale, checkout }) {
-  const currentYear = new Date().getFullYear();
 
   return (
     <>
-      {(checkout == undefined && checkout != true) && (
+      {(checkout === undefined && checkout !== true) && (
         <section className={"footer"}>
           <div className="container">
             <div className="media-container-row content text-white">
@@ -75,20 +70,20 @@ function Footer({ locale, checkout }) {
                 <h3 className="pb-3">Redes sociales</h3>
                 <ul>
                   <li>
-                    <a href="https://www.instagram.com/fitemoslatam/" target='_blank'>
-                      <img src={require("../../assets/social/instagram.png")} />
+                    <a href="https://www.instagram.com/fitemoslatam/" target='_blank' rel="noopener noreferrer">
+                      <img src={require("../../assets/social/instagram.png")} alt="instagram"/>
                       &nbsp;&nbsp;Instagram
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.facebook.com/fitemoslatam" target='_blank'>
-                      <img src={require("../../assets/social/facebook.png")} />
+                    <a href="https://www.facebook.com/fitemoslatam" target='_blank' rel="noopener noreferrer">
+                      <img src={require("../../assets/social/facebook.png")}  alt="facebook"/>
                       &nbsp;&nbsp;Facebook
                     </a>
                   </li>
                   <li>
-                    <a href="https://www.youtube.com/channel/UCI_YlVV3NhzHr2HoYp0LcVw" target='_blank'>
-                      <img src={require("../../assets/social/youtube.png")} />
+                    <a href="https://www.youtube.com/channel/UCI_YlVV3NhzHr2HoYp0LcVw" target='_blank' rel="noopener noreferrer">
+                      <img src={require("../../assets/social/youtube.png")}  alt="youtube"/>
                       &nbsp;&nbsp;Youtube
                     </a>
                   </li>

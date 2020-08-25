@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import {Button, Modal,Form} from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import Rating from '@material-ui/lab/Rating';
-import { makeStyles } from '@material-ui/core/styles';
 
 import { $cancelActiveSubscription } from "../../../../modules/subscription/subscription";
 import { createRenewalVoucher } from "../redux/vouchers/actions";
@@ -109,11 +106,11 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     label="Es bueno pero"
                     name="radioReason"
                     required
-                    checked={radioReason == 'good'}
+                    checked={radioReason === 'good'}
                     onChange={(event) => { setRadioReason('good'); }}
                     id="radioReason1"
                   />
-                  {radioReason == 'good'&&(
+                  {radioReason === 'good'&&(
                     <Form.Group controlId="reasonText">
                       <Form.Control as="input" name="reasonText" required placeholder="Escribe algo..."/>
                       <Form.Control.Feedback type="invalid">Por favor ingrese su razón</Form.Control.Feedback>
@@ -125,7 +122,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     label="El método de entrenamientos no se ajusta a mi"
                     name="radioReason"
                     required
-                    checked={radioReason == 'not_suit'}
+                    checked={radioReason === 'not_suit'}
                     onChange={(event) => { setRadioReason('not_suit'); }}
                     id="radioReason2"
                   />
@@ -134,7 +131,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     label="El producto / servicio no llena mis expectativas"
                     name="radioReason"
                     required
-                    checked={radioReason == 'poor_quaulity'}
+                    checked={radioReason === 'poor_quaulity'}
                     onChange={(event) => { setRadioReason('poor_quaulity'); }}
                     id="radioReason3"
                     feedback="You must agree before submitting."
@@ -144,7 +141,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     label="Muy costoso / no tengo tiempo"
                     name="radioReason"
                     required
-                    checked={radioReason == 'expensive'}
+                    checked={radioReason === 'expensive'}
                     onChange={(event) => { setRadioReason('expensive'); }}
                     id="radioReason4"
                     feedback="You must agree before submitting."
@@ -154,12 +151,12 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     label="Otro"
                     name="radioReason"
                     required
-                    checked={radioReason == 'other'}
+                    checked={radioReason === 'other'}
                     onChange={(event) => { setRadioReason('other'); }}
                     id="radioReason5"
                     feedback="You must agree before submitting."
                   />
-                  {radioReason == 'other'&&(
+                  {radioReason === 'other'&&(
                     <Form.Group controlId="reasonText">
                       <Form.Control as="input" name="reasonText" required placeholder="Escribe algo..."/>
                       <Form.Control.Feedback type="invalid">Por favor ingrese su razón</Form.Control.Feedback>
@@ -179,7 +176,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
       <Modal.Footer>
         {step===0&&(
           <>
-            <a className="btn btn-subscription" onClick={()=>setStep(1)}>Finalizar suscripción</a>
+            <a href="!#" className="btn btn-subscription" onClick={()=>setStep(1)}>Finalizar suscripción</a>
             <Button variant="subscription-renewal" onClick={handleRenewal}  type="button">Tomar oferta 10%</Button>
           </>
         )}

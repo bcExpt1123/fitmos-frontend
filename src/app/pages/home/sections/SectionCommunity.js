@@ -1,5 +1,4 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
 import Carousel from "react-slick";
 import { NavLink } from "react-router-dom";
 

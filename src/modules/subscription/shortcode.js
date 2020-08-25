@@ -1,14 +1,10 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLatest,
-  takeEvery,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -200,7 +196,7 @@ function* fetchShortcode() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -225,7 +221,7 @@ function* searchShortcode({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -256,15 +252,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(shortcodeActionRequest, action, id);
+    yield call(shortcodeActionRequest, action, id);
     const shortcode = yield select(store => store.shortcode);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.SHORTCODE_INDEX_REQUEST });
     } else {
       let data = shortcode.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Disabled";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Disabled";
           else item.status = "Active";
         }
       });
@@ -275,7 +271,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -286,7 +282,7 @@ function* callAction({ action, id }) {
   }
 }
 function shortcodeActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `shortcodes/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -303,7 +299,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.SHORTCODE_LOADING_REQUEST });
   if (shortcodes != null) {
     const filterShortcodes = shortcodes.filter(shortcode => {
-      return shortcode.id == id;
+      return shortcode.id === id;
     });
     if (filterShortcodes.length > 0) {
       yield put({
@@ -319,7 +315,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.SHORTCODE_SET_ITEM, item: result });
     else yield put({ type: actionTypes.SHORTCODE_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -375,7 +371,7 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({

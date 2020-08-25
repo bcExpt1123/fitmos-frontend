@@ -1,15 +1,11 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLatest,
-  takeLeading,
   takeEvery,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -19,10 +15,8 @@ import {
 import { serializeQuery } from "../../app/components/utils/utils";
 import {
   logOut,
-  deleteAuthData
 } from "../../app/pages/home/redux/auth/actions";
-import { setWorkout } from "../../app/pages/home/redux/done/actions";
-import { result, initial } from "lodash";
+
 export const selectors = {};
 const initialState = {
   data: null,
@@ -169,7 +163,7 @@ export const reducer = persistReducer(
         return { ...state, errors };
       case actionTypes.SURVEY_UPDATE_RESULT:
         const clonedPublished = [...state.published];
-        const index = clonedPublished.findIndex(item => item.id == action.id);
+        const index = clonedPublished.findIndex(item => item.id === action.id);
         if (index > -1) {
           clonedPublished[index].result = action.repetition;
         }
@@ -515,7 +509,7 @@ function* searchSurvey({ name, value }) {
       metaIn: { total: resultIn.total, pageTotal: resultIn.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -528,13 +522,7 @@ function* searchSurvey({ name, value }) {
 const findSurvey = id =>
   http({ path: `surveys/${id}` }).then(response => response.data);
 function* changeItem({ id }) {
-  const survey = yield select(store => store.survey.data_active);
   yield put({ type: actionTypes.SURVEY_LOADING_REQUEST });
-  if (survey != null) {
-    const filterSurvey = survey.filter(survey => {
-      return survey.id == id;
-    });
-  }
   try {
     const result = yield call(findSurvey, id);
     if (result.survey.id){
@@ -560,7 +548,7 @@ function* changeItem({ id }) {
 function* callActionActive({ action, id }) {
   try {
     const survey = yield select(store => store.survey);
-    if (action == "delete") {
+    if (action === "delete") {
       const result = yield call(surveyActiveActionRequest, action, id);
       yield put({ type: actionTypes.SURVEY_INDEX_REQUEST_ACTIVE });
       yield put({ type: actionTypes.SURVEY_INDEX_REQUEST_INACTIVE });
@@ -568,18 +556,18 @@ function* callActionActive({ action, id }) {
         alert('Success!');
       }
     } 
-    if (action == "deleteItem"){
+    if (action === "deleteItem"){
       const result = yield call(surveyActiveActionRequest, action, id);
       if(result){
         yield put({ type: actionTypes.SURVEY_INDEX_REQUEST_ITEM });
         alert('Success!');
       }
     }
-    if  (action == "editItem"){
+    if  (action === "editItem"){
         const resultData=survey.data_display;
         const resultSelect=survey.options;
-        const filterSurvey = resultData.filter(result => result.id == id);
-        const filterOptions = resultSelect.filter(result =>result.survey_item_id == id);
+        const filterSurvey = resultData.filter(result => result.id === id);
+        const filterOptions = resultSelect.filter(result =>result.survey_item_id === id);
         yield put({
           type: actionTypes.SURVEY_DISPLAY_DATA_ITEM,
           data: filterSurvey[0],
@@ -599,17 +587,17 @@ function* callActionActive({ action, id }) {
   }
 }
 function surveyActiveActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `surveys/${id}`, method: "delete" }).then(
       response => response.data
     );
   }
-  else if(action == "deleteItem"){
+  else if(action === "deleteItem"){
     return http({ path: `survey-items/${id}`, method: "delete" }).then(
       response => response.data
     );
   }
-  else if(action == "editItem"){
+  else if(action === "editItem"){
     return http({ path: `survey-items/${id}` }).then(
       response => response.data
     );

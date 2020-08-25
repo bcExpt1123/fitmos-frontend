@@ -10,7 +10,7 @@ export const {
 } = createActions(
   {
     ADD_ALERT_MESSAGE: ({ type, message, delay = 5000 }) => {
-      if(type=='error'&&delay==5000)delay = 20000;
+      if(type==='error'&&delay===5000)delay = 20000;
       return {
         type,
         message,

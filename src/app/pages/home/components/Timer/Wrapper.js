@@ -1,7 +1,7 @@
 import React,{useState} from 'react'
 
 import Button from './Button'
-import Modal from "react-bootstrap/Modal";
+import {Modal } from "react-bootstrap";
 
 
 // --- Audio
@@ -23,9 +23,11 @@ const TimerWrapper = ({
   appendTopHeader,
   subheader,
   round,
+  rounds,
   isRunning,
   setIsRunning,
   isDone,
+  isDelay,
   handleRestart,
 }) => {
   const [pause, setPause] = useState(false);
@@ -40,7 +42,7 @@ const TimerWrapper = ({
   const restartTimer = e => {
     // for disabling selection in mobile
     e.preventDefault();
-    setIsRunning(true);
+    setIsRunning(false);
     setShowRestartDialog(true);    
   }
   const handleCloseRestartDialog = ()=>{
@@ -64,14 +66,18 @@ const TimerWrapper = ({
             {subheader}
           </h3>
         )}
-        {time && (
+        {time && (isRunning || isDelay) && (
           <>
             <time
               dateTime={time}
               className="timer--clock iosevka fw6 w-100 pointer"
               onClick={pauseTimer}
             >
-              {isRunning && <span className="red">{round}</span>} {time}
+              {isRunning && <span className="red"><span className="top">{round}</span>
+              {
+                round&&<span className="middle">/</span>
+              }
+              <span className="bottom">{rounds}</span></span>} {time}
             </time>
           </>
         )}

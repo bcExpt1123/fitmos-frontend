@@ -9,21 +9,21 @@ import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
 const Company = ({match}) => {
   const dispatch = useDispatch();
   const [id, setId] = useState(null);
+  const product = useSelector(({ product }) => product);
   useEffect(() => {
-    if(product.companyId != match.params.id){
+    if(product.companyId !== match.params.id){
       dispatch($fetchFrontIndex(match.params.id));
     }
     setId(match.params.id);
     return () => {
       dispatch($cleanCompanyId());
     };
-  }, []);
-  const product = useSelector(({ product }) => product);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const meta = product.frontMeta;
   const products = product.frontData;
   useEffect(() => {
     setIsFetching(false);
-  }, [product.frontMeta]);
+  }, [product.frontMeta]);// eslint-disable-line react-hooks/exhaustive-deps
   const fetchMoreListItems = ()=>{
     dispatch($frontPage(id));
   }

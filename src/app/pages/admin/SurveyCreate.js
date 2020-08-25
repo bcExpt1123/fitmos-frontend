@@ -1,26 +1,12 @@
-import React, { Component,useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import TextField from '@material-ui/core/TextField';
-import { red } from "@material-ui/core/colors";      
+import { makeStyles } from '@material-ui/core';
+import { Paper, Button, Box, TextField, IconButton, Radio, RadioGroup, FormControlLabel, Tooltip, Grid, Dialog, DialogActions, DialogContent, DialogTitle, colors} from '@material-ui/core';
 import { NavLink } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import NoteAddIcon from "@material-ui/icons/NoteAdd";
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Tooltip from '@material-ui/core/Tooltip';
-import Grid from '@material-ui/core/Grid';
-import {Dialog} from '@material-ui/core';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import SaveIcon from '@material-ui/icons/Save';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import {
@@ -51,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
   },
   iconHover: {
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
 	},
 	modal: {
@@ -106,7 +92,6 @@ const useStyles = makeStyles((theme) => ({
 const Main = ({history}) =>{
   const classes=useStyles();
   const dispatch=useDispatch();
-  const [valueTitle, setValueTitle] = React.useState(false);
   const [option, setOption] = React.useState({
     selectText:[],
     selectTextValue:'',
@@ -121,13 +106,12 @@ const Main = ({history}) =>{
   });
   const survey = useSelector(({ survey }) => survey);
   console.log(survey)
-  useEffect(() => { dispatch($fetchIndexItem()) }, []);
+  useEffect(() => { dispatch($fetchIndexItem()) }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const item = survey.item;
   const displayItem=survey.data_display_item;
   const surveyData = survey.data_display;
   const isloading = survey.loading;
   const actionSurveyTitleSave = event => {
-    setValueTitle(true);
     event.preventDefault();
     dispatch($actionSurveyTitleSave(history));
   };
@@ -136,7 +120,7 @@ const Main = ({history}) =>{
     setOpen(false);
   };
   const handleChange = name =>event => {
-    if(name=='option_label'){
+    if(name==='option_label'){
       setOption({...option,selectTextValue:event.target.value});
       setValue({...value,inputValue:event.target.value});
     }
@@ -156,7 +140,7 @@ const Main = ({history}) =>{
     setOption({selectText:[],selectTextValue:'',focus:false,save:false,editIndex:''});
   };
   const addOption = (event) =>{
-    if(option.save==true){
+    if(option.save===true){
       const array = option.selectText;
       array[option.editIndex]=[option.selectTextValue];
       setOption({ ...option,selectText:array,save:false,selectTextValue:''});
@@ -179,9 +163,6 @@ const Main = ({history}) =>{
   }
   const deleteOption = list => event =>{
     if (window.confirm("Are you sure to delete this item?")){
-      const array = option.selectText;
-      const index =  array.indexOf(list);
-      const newArray = array.splice(index,1);
       setOption({...option,selectTextValue:'',save:false});
     }
   }
@@ -294,7 +275,7 @@ const Main = ({history}) =>{
                   ><NoteAddIcon/>&nbsp;&nbsp;Create
                   </Button>
                 ):(
-                  <h3></h3>
+                  <></>
                 )}
               </Box>
             ):(
@@ -355,13 +336,13 @@ const Main = ({history}) =>{
                 justifyContent="space-around" 
                 style={{margin:"20px",marginTop:"30px"}}
                 onChange={handleChange("radio")}>
-                <RadioGroup row aria-label="position" name="position" defaultValue="top" defaultValue={displayItem.question} className={classes.mg}>
+                <RadioGroup row aria-label="position" name="position" defaultValue={displayItem.question} className={classes.mg}>
                   <FormControlLabel id="level" value="level" control={<Radio color="primary" />} label="level" />
                   <FormControlLabel id="text" value="text" control={<Radio color="primary"/>} label="text" />
                   <FormControlLabel id="select" value="select" control={<Radio color="primary"/>} label="select" />
                 </RadioGroup>
               </Box>
-              {(displayItem.question=='select'||survey.item.radio=='select')?(
+              {(displayItem.question==='select'||survey.item.radio==='select')?(
                 <>
                 <Box display="flex" justifyContent="space-around">
                 {(!survey.data_display_item.id)?(
@@ -380,7 +361,7 @@ const Main = ({history}) =>{
                     <IconButton 
                       color="primary" 
                       onClick={addOption}>
-                      {option.save==false?(
+                      {option.save===false?(
                       <AddCircleOutlineIcon/>
                       ):(
                         <SaveIcon/>
@@ -400,7 +381,7 @@ const Main = ({history}) =>{
                       value={value.inputValue}
                       fullWidth
                     />
-                    {value.flag==false?(
+                    {value.flag===false?(
                       <IconButton 
                         color="primary" 
                         onClick={actionSaveSelectItem}>
@@ -457,7 +438,7 @@ const Main = ({history}) =>{
                 ):(<></>)}
               </DialogContent>
             <DialogActions>
-              {(!survey.data_display_item.id&&(displayItem.question=='select'||survey.item.radio=='select'))?(
+              {(!survey.data_display_item.id&&(displayItem.question==='select'||survey.item.radio==='select'))?(
                 <Button
                 color="secondary"
                 onClick={selectOptionSave}
@@ -484,7 +465,6 @@ const Main = ({history}) =>{
 };
 const SurveyCreate = injectIntl(Main);
 const Sub = ({match}) => {
-  const classes = useStyles();
   const dispatch = useDispatch();
   useEffect(() => {
     if(match.params.id){
@@ -492,9 +472,8 @@ const Sub = ({match}) => {
     }else{
       dispatch($setNewItem());
     }
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const survey = useSelector(({ survey }) => survey);
-  const searchCondition = useSelector(({ event }) => event.searchCondition);
   return (
     <>
       <div className="kt-subheader__main">

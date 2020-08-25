@@ -13,6 +13,7 @@ export const currentWorkoutPlan = (slug)=>{
     case "yearly":
       text = "Anual";
       break;
+    default:  
   }
   return text;
 }
@@ -25,6 +26,7 @@ export const currentCustomerWeights = (slug)=>{
     case "con pesas":
       text = "Con mancuernas";
       break;
+    default:  
   }
   return text;
 }

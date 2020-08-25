@@ -4,7 +4,6 @@ import { injectIntl} from "react-intl";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Formik, Form } from "formik";
-import get from "lodash/get";
 import usePaymentInputs from "react-payment-inputs/es/usePaymentInputs";
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
@@ -15,7 +14,6 @@ import FormattedPrice from "../../components/FormattedPrice";
 import Spinner from "../../components/Spinner";
 import { PaypalButton } from "../../components/PaymentButton";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
-import ChargingInfo from "./ChargingInfo";
 import CreditCardForm from "./CreditCardForm";
 //import CreditCardLogo from './CreditCardLogo';
 //import { usePayPal } from './usePayPal';
@@ -130,19 +128,18 @@ const PaymentForm = ({
   // than once with the same data, when visiting the page. It's required by
   // backend to process the payment request. It's regenerated in saga, whenever
   // there's an error during payment, to allow submitting the form again.
+  // PayPal JS library opens its payment flow in a popup, so we need to load it
+  // upfront to make sure that the time from user's click on the submit button,
+  // till the popup shows up is less than 2 seconds. Otherwise, some browser,
+  // like e.g. Firefox, can block the popup.
+  //const payPal = true; //usePayPal();
+  const dispatch = useDispatch();
   useEffect(() => {
     actions.setIdempotencyKey({ idempotencyKey: uuidv4() });
     actions.changePaymentProvider(PAYMENT_PROVIDER.NMI);
     dispatch($fetchIndex());
     setClicked(true);
-    console.log(clicked);
-  }, [actions]);
-  // PayPal JS library opens its payment flow in a popup, so we need to load it
-  // upfront to make sure that the time from user's click on the submit button,
-  // till the popup shows up is less than 2 seconds. Otherwise, some browser,
-  // like e.g. Firefox, can block the popup.
-  const payPal = true; //usePayPal();
-  const dispatch = useDispatch();
+  }, [actions]);// eslint-disable-line react-hooks/exhaustive-deps
   const canUsePaypal = false;//PAYPAL_CURRENCIES.includes(currency.code);
   const canUseNmi = true; //NMI_COUNTRIES.includes(countryCode);
   const creditCardProvider = PAYMENT_PROVIDER.NMI;
@@ -223,7 +220,7 @@ const PaymentForm = ({
                     values,
                     countryCode,
                 });*/
-        if(values.nmiPaymentToken =='' || values.nmiPaymentToken=='new'){
+        if(values.nmiPaymentToken === '' || values.nmiPaymentToken === 'new'){
           if (Object.keys(creditCardErrors).length) {
             errors.creditCard = creditCardErrors;
           }
@@ -284,7 +281,7 @@ const PaymentForm = ({
                     </NavLink>
                     {cards.map((card,index)=>
                       <div key={card.id}>
-                        {index==0?(
+                        {index===0?(
                           <>
                             <input
                               className={"expandableTokenToggle"}
@@ -293,7 +290,7 @@ const PaymentForm = ({
                               ref={ref}
                               name="nmiSavedCard"
                               value={card.id}
-                              checked={values.nmiPaymentToken!=''&&values.nmiPaymentToken ==card.id}
+                              checked={values.nmiPaymentToken!==''&&values.nmiPaymentToken === card.id}
                               onChange={() => {
                                 setFieldValue('nmiPaymentToken',card.id);
                               }}          
@@ -303,7 +300,7 @@ const PaymentForm = ({
                               htmlFor={`credit-card-token-radio-button${card.id}`}
                             >
                               {card.holder} 
-                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} />
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
                               &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
                             </label>
                           </>
@@ -315,7 +312,7 @@ const PaymentForm = ({
                               type="radio"
                               name="nmiSavedCard"
                               value={card.id}
-                              checked={values.nmiPaymentToken!=''&&values.nmiPaymentToken ==card.id}
+                              checked={values.nmiPaymentToken !== '' && values.nmiPaymentToken === card.id}
                               onChange={() => {
                                 console.log("nmi payment")
                                 setFieldValue('nmiPaymentToken',card.id);
@@ -326,7 +323,7 @@ const PaymentForm = ({
                               htmlFor={`credit-card-token-radio-button${card.id}`}
                             >
                               {card.holder} 
-                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} />
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
                               &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
                             </label>
                           </>
@@ -341,7 +338,7 @@ const PaymentForm = ({
                         type="radio"
                         name="nmiSavedCard"
                         value="new"
-                        checked={values.nmiPaymentToken =='new'}
+                        checked={values.nmiPaymentToken === 'new'}
                         onChange={() => {
                           setFieldValue('nmiPaymentToken','new');
                         }}          
@@ -352,7 +349,7 @@ const PaymentForm = ({
                       >
                         Use a new Card
                       </label>
-                      {values['nmiPaymentToken'] =='new'&&(
+                      {values['nmiPaymentToken'] === 'new' &&(
                         <CreditCardForm
                           errors={errors}
                           touched={touched}
@@ -437,9 +434,10 @@ const PaymentForm = ({
                   // all providers - disable button while processing payment
                   isProcessingPayment ||
                   // Nmi - disable button if Nmi credit card and/or personal info fields are invalid
+                  /*eslint-disable no-mixed-operators*/
                   (selectedPaymentProvider === PAYMENT_PROVIDER.NMI && 
                     ((!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)) && (cards && cards.length>0)===false || 
-                    (cards && cards.length>0)&&(values.nmiPaymentToken=='new' && (!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)))))
+                    (cards && cards.length>0)&&(values.nmiPaymentToken==='new' && (!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)))))
                 }
                 data-cy="submit button"
                 className="fs-btn"

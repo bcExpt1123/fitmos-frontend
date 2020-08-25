@@ -19,13 +19,10 @@ const Body = ()=>{
     switch(line.tag){
       case 'h1':
         return <h1 key={index}>{line.content}</h1>;
-      break;
       case 'h2':
         return <h2 key={index}>{line.content}</h2>;
-      break;
       case 'modal':
         return <SectionNote key={index} line={line} />;
-      break;
       case 'p':
         return <p key={index}>
           {line.before_content}&nbsp;
@@ -33,7 +30,7 @@ const Body = ()=>{
             <button onClick={()=>{
                 setVid(line.youtube.vid);
                 setShow(true);
-                const res = http({
+                http({
                   method: "POST",
                   app: "user",
                   path: "customers/activity",
@@ -48,7 +45,7 @@ const Body = ()=>{
           )}
           {line.after_content}
           </p>;
-      break;
+      default:
     }
   }
   return (
@@ -62,7 +59,7 @@ const Body = ()=>{
             <Blocks renderLine={renderLine} setAll={setAll}/>
           ):(
             workouts.current.blocks.map( (block,index)=>(
-              step==index&&(
+              step===index&&(
                 <Block key={index} 
                   block={block} 
                   renderLine={renderLine} 

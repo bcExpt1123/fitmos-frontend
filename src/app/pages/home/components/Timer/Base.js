@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Base extends Component {
   constructor() {
@@ -21,7 +21,7 @@ class Base extends Component {
   }
 
   getItemPrefix() {
-    throw 'Not implement'
+    //throw 'Not implement';
   }
 
   setItem(key, value) {
@@ -110,7 +110,10 @@ class Base extends Component {
       this.setState({minutes:this.props.work});
       this.setState({work:this.props.work});
     }
-    if(this.props.rounds)this.setState({rounds:this.props.rounds,rest:this.props.rest});
+    if(this.props.rounds){
+      if(this.props.rest)this.setState({rounds:this.props.rounds,rest:this.props.rest});
+      else this.setState({rounds:this.props.rounds,rest:0});
+    }
     document.addEventListener('keydown', this.handleESC, false)
     document.addEventListener('playBeep', this.handleBeeps, false)
   }

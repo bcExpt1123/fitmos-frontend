@@ -1,11 +1,7 @@
 import {
   call,
-  delay,
   put,
-  takeLatest,
   takeLeading,
-  select,
-  spawn
 } from "redux-saga/effects";
 import { addAlertMessage } from "../alert/actions";
 //import { setUser } from '../auth/actions';
@@ -95,20 +91,20 @@ export function* onUpdateProfile({ payload: { params, resolve, reject } }) {
       if (
         errors &&
         errors.email &&
-        errors.email == "The email has already been taken."
+        errors.email === "The email has already been taken."
       ) {
         errors.email = "El correo electrónico ha sido deplicado.";
       }
       if (
         errors &&
         errors.customer_email &&
-        errors.customer_email == "The email has already been taken."
+        errors.customer_email === "The email has already been taken."
       ) {
         errors.customer_email = "El correo electrónico ha sido deplicado.";
       }
       if(errors &&
         errors.whatsapp_phone_number &&
-        errors.whatsapp_phone_number == "invalid"
+        errors.whatsapp_phone_number === "invalid"
         ){
           errors.whatsapp_phone_number = "el número de whatsapp no es válido";
           yield put(addAlertMessage({
@@ -171,7 +167,6 @@ export function* onUpdateAdminProfile({
   payload: { params, resolve, reject }
 }) {
   let errors = {};
-  let success = false;
 
   // eslint-disable-next-line no-restricted-syntax
   try {
@@ -180,7 +175,6 @@ export function* onUpdateAdminProfile({
 
     // TODO: refactor UserApi, so snakeReq will be called there.
     yield call(updateAdminUserProfile, params);
-    success = true;
   } catch (error) {
     if (error.response.status === 422) {
       console.log(error.response.data.errors);
@@ -249,7 +243,6 @@ const updateUserEmail = params => {
 };
 function* onUpdateEmail({ payload: { params, resolve, reject } }) {
   let errors = {};
-  let success = false;
 
   // eslint-disable-next-line no-restricted-syntax
   try {
@@ -258,7 +251,6 @@ function* onUpdateEmail({ payload: { params, resolve, reject } }) {
 
     // TODO: refactor UserApi, so snakeReq will be called there.
     yield call(updateUserEmail, params);
-    success = true;
   } catch (error) {
     if (error.response.status === 422) {
       console.log(error.response.data.errors);
@@ -270,13 +262,13 @@ function* onUpdateEmail({ payload: { params, resolve, reject } }) {
       if (
         errors &&
         errors.email &&
-        errors.email == "The email has already been taken."
+        errors.email === "The email has already been taken."
       ) {
         errors.email = "El correo electrónico ha sido deplicado.";
       }
       if(errors &&
         errors.whatsapp_phone_number &&
-        errors.whatsapp_phone_number == "invalid"
+        errors.whatsapp_phone_number === "invalid"
         ){
           errors.whatsapp_phone_number = "Inválido. ¿Su código de país?";
         }
@@ -324,7 +316,6 @@ const updateUserOnlyEmail = params => {
 };
 function* onUpdateOnlyEmail({ payload: { params, resolve, reject } }) {
   let errors = {};
-  let success = false;
   // eslint-disable-next-line no-restricted-syntax
   try {
     // eslint-disable-next-line no-continue
@@ -332,7 +323,6 @@ function* onUpdateOnlyEmail({ payload: { params, resolve, reject } }) {
 
     // TODO: refactor UserApi, so snakeReq will be called there.
     yield call(updateUserOnlyEmail, params);
-    success = true;
   } catch (error) {
     if (error.response.status === 422) {
       console.log(error.response.data.errors);
@@ -344,7 +334,7 @@ function* onUpdateOnlyEmail({ payload: { params, resolve, reject } }) {
       if (
         errors &&
         errors.email &&
-        errors.email == "The email has already been taken."
+        errors.email === "The email has already been taken."
       ) {
         errors.email = "El correo electrónico ha sido deplicado.";
       }
@@ -398,7 +388,6 @@ function uploadProfileImageOnBackend(params){
 }
 function* onUploadProfileImage({payload:{image}}){
   let errors = {};
-  let success = false;
 
   // eslint-disable-next-line no-restricted-syntax
   try {
@@ -407,7 +396,6 @@ function* onUploadProfileImage({payload:{image}}){
 
     yield put(startProfileImageUploading());
     yield call(uploadProfileImageOnBackend, {image});
-    success = true;
     yield put(regenerateAuthAction());
   } catch (error) {
     console.log(error)
@@ -446,7 +434,6 @@ const updateUserPassword = params => {
 };
 function* onUpdatePassword({ payload: { params, resolve, reject } }) {
   let errors = {};
-  let success = false;
 
   // eslint-disable-next-line no-restricted-syntax
   try {
@@ -455,7 +442,6 @@ function* onUpdatePassword({ payload: { params, resolve, reject } }) {
 
     // TODO: refactor UserApi, so snakeReq will be called there.
     yield call(updateUserPassword, params);
-    success = true;
   } catch (error) {
     if (error.response.status === 422) {
       console.log(error.response.data.errors);

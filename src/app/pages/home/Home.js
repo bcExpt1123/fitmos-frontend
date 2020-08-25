@@ -1,11 +1,11 @@
 import React,{ useEffect } from "react";
 import { withRouter } from "react-router";
-
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
-
 import { connect, useDispatch, useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
+import classnames from "classnames";
+
 import SectionBanner from "./sections/SectionBanner";
 import SectionStep from "./sections/SectionStep";
 import SectionGuide from "./sections/SectionGuide";
@@ -31,8 +31,9 @@ const Home = ({ auth,history }) => {
     dispatch(findWorkouts());
     dispatch(initialBlock());
     dispatch(fetchSurvey());
-  }, []);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const tagLine = useSelector(({done})=>done.tagLine);
+  const timer = useSelector(({done})=>done.timer);
   return (
   <>
 
@@ -48,7 +49,7 @@ const Home = ({ auth,history }) => {
         </MetaTags>
         <ThreeColumn>
           <PageHeader title={`Hola ${auth.currentUser.customer.first_name}`} tagLine={tagLine}/>
-          <div className="workout">
+          <div className={classnames("workout",{timer:timer})}>
             <Header/>
             <Body/>
           </div>
@@ -95,7 +96,6 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-const mapDispatchToProps = {};
 
 const HomePage = connect(mapStateToProps, null)(withRouter(Home));
 

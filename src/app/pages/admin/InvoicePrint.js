@@ -1,10 +1,10 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core";
+import { Paper } from "@material-ui/core";
 import {
-  $showInvoice, $page
+  $showInvoice
 } from "../../../modules/subscription/invoice";
 import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
 
@@ -16,7 +16,7 @@ function InvoicePrint() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($showInvoice(id));
-  }, [id]);
+  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
   const invoice = useSelector(({ invoice }) => invoice.item);
   return (
     <Paper className={classes.root}>
@@ -27,7 +27,7 @@ function InvoicePrint() {
               <div className="kt-invoice__brand">
                 <h1 className="kt-invoice__title">FACTURA</h1>
                 <div href="#" className="kt-invoice__logo">
-                  <a href="#"><img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} style={{height:'50px'}} /></a>
+                  <img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} alt='img' style={{height:'50px'}} />
                   <span className="kt-invoice__desc">
                     <span></span>
                     <span></span>

@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form } from "formik";
 import usePaymentInputs from "react-payment-inputs/es/usePaymentInputs";
-import Table from "react-bootstrap/Table";
-import Modal from "react-bootstrap/Modal";
-import { NavLink } from "react-router-dom";
+import {Table} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
 import Button from "../../components/Button";
 import Spinner from "../../components/Spinner";
 import CreditCardForm from "../../CheckoutPage/StepPayment/CreditCardForm";
@@ -57,10 +56,10 @@ const validateNmiCreditCardForm = ({ values }) => {
 
 const SectionPayments = () => {
   const dispatch = useDispatch();
+  const items = useSelector(({ tocken }) => tocken.items);
   useEffect(() => {
     dispatch($fetchIndex());
-  }, [items]);
-  const items = useSelector(({ tocken }) => tocken.items);
+  }, [items]);// eslint-disable-line react-hooks/exhaustive-deps
   const item = useSelector(({ tocken }) => tocken.item);
   const isSaving = useSelector(({ tocken }) => tocken.isSaving);
   const showForm = useSelector(({ tocken }) => tocken.showForm);
@@ -91,7 +90,7 @@ const SectionPayments = () => {
     dispatch($showFormAction());
   }
   const handleDelete = (id) => {
-    if(items.length == 1 && currentUser.has_active_workout_subscription && currentUser.customer.services['1'].end_date==null){
+    if(items.length === 1 && currentUser.has_active_workout_subscription && currentUser.customer.services['1'].end_date === null){
       setShow(true);
     }else if(window.confirm('¿Estás segura de eliminar esta tarjeta de crédito?')){
       dispatch($delete(id));
@@ -153,7 +152,7 @@ const SectionPayments = () => {
                 <tr key={card.id}>
                 <td>{card.holder}</td>
                 <td>
-                  <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} />
+                  <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="credit card type" />
                   &#9679;&#9679;&#9679;{card.last4}</td>
                 <td>{card.expiry_month+'/'+card.expiry_year}</td>
                 <td>

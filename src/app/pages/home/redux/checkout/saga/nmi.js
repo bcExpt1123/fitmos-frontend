@@ -1,5 +1,4 @@
 import { call, put, select, delay } from "redux-saga/effects";
-import pick from "lodash/pick";
 import get from "lodash/get";
 import {reactLocalStorage} from 'reactjs-localstorage';
 
@@ -9,14 +8,14 @@ import { authenticate as regenerateAuthAction } from "../../auth/actions";
 import { addAlertMessage } from "../../alert/actions";
 import { initialVoucher } from "../../vouchers/actions";
 
-import apiErrorMatcher from "../../../../../../lib/apiErrorMatcher";
+//import apiErrorMatcher from "../../../../../../lib/apiErrorMatcher";
 import { http } from "../../../services/api";
 
 
 const logErrorMeta = { SourceModule: "Checkout", PaymentProvider: "NMI" };
 
 // TODO: replace with proper error messages
-const errorMessages = {
+/*const errorMessages = {
   "BP-DR-13": {
     message: "CheckoutPage.StepPayment.NmiForm.Error.emptyName",
     field: "nmi.fullName"
@@ -47,7 +46,7 @@ const mapApiErrors = apiErrorMatcher(
     }
   ],
   { id: "CheckoutPage.Alert.Error.generic_error" }
-);
+);*/
 
 
 function loadNmiRequest(creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken,checkoutKind){
@@ -80,7 +79,7 @@ export function* onPayWithNmi({
 }) {
 
   yield put(paymentRequested());
-  const activePlan = yield select(store => store.service.activePlan);
+  //const activePlan = yield select(store => store.service.activePlan);
   try {
     const result = yield call(loadNmiRequest,creditCard,selectedProduct,activeVoucher,frequency,nmiPaymentToken,checkoutKind);
     yield put(paymentSucceeded());
@@ -94,7 +93,7 @@ export function* onPayWithNmi({
     reactLocalStorage.remove('publicCouponId');
     yield put(regenerateAuthAction());
     yield put(initialVoucher());
-    if (result.now == true) {
+    if (result.now === true) {
       let currentUser;
       currentUser = yield select(store => store.auth.currentUser);
       while(!currentUser.has_workout_subscription){

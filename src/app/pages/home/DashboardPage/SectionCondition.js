@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import QuickStatsChart from "../../../widgets/QuickStatsChart";
 import { useSelector } from "react-redux";
 const SectionCondition = () => {

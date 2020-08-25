@@ -1,19 +1,10 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/styles";
+import { Button, Paper, TextField, Grid, IconButton, Select, InputLabel, MenuItem, FormControl } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
 import {
   $changeItem,
   $saveItem,
@@ -155,16 +146,16 @@ class Main extends Component {
                             style={{width:'200px'}}
                           >
                             <MenuItem value="">None</MenuItem>
-                            {this.props.item.monthly!=null && this.props.item.monthly!=""&&(
+                            {this.props.item.monthly!==null && this.props.item.monthly!==""&&(
                               <MenuItem value="1">Monthly</MenuItem>
                             )}
-                            {this.props.item.quarterly!=null && this.props.item.quarterly!=""&&(
+                            {this.props.item.quarterly!==null && this.props.item.quarterly!==""&&(
                               <MenuItem value="3">Quarterly</MenuItem>
                             )}
-                            {this.props.item.semiannual!=null && this.props.item.semiannual!=""&&(
+                            {this.props.item.semiannual!==null && this.props.item.semiannual!==""&&(
                               <MenuItem value="6">Semiannual</MenuItem>
                             )}
-                            {this.props.item.yearly!=null && this.props.item.yearly!=""&&(
+                            {this.props.item.yearly!==null && this.props.item.yearly!==""&&(
                               <MenuItem value="12">Yearly</MenuItem>
                             )}
                           </Select>
@@ -202,9 +193,9 @@ class Main extends Component {
                     </label>
                     <div>
                       {this.state.file ? (
-                        <img src={this.state.file} width="200px" />
+                        <img src={this.state.file} width="200px" alt="state file alt"/>
                       ) : (
-                        <img src={this.props.item.photo_path} width="200px" />
+                        <img src={this.props.item.photo_path} width="200px"  alt="props file alt"/>
                       )}
                     </div>
                   </Grid>
@@ -241,7 +232,6 @@ const SubscriptionManagerEdit = injectIntl(
 class Sub extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
-    const item = this.props.item;
     this.props.$changeItem(id);
   }
   render() {
@@ -274,7 +264,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="subscroption-manager-form"
               type="submit"

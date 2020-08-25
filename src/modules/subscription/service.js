@@ -1,6 +1,5 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest, takeEvery, select } from "redux-saga/effects";
+import { put, call, takeLatest,  select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -172,7 +171,7 @@ function* fetchService() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });
@@ -205,7 +204,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.SERVICE_LOADING_REQUEST });
   if (services != null) {
     const filterServices = services.filter(service => {
-      return service.id == id;
+      return service.id === id;
     });
     if (filterServices.length > 0) {
       yield put({
@@ -221,7 +220,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.SERVICE_SET_ITEM, item: result });
     else yield put({ type: actionTypes.SERVICE_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });
@@ -261,7 +260,7 @@ function* saveItem() {
       alert("Saving success.");
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });

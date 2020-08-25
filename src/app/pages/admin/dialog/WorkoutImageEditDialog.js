@@ -1,17 +1,7 @@
-import React,{useState,useEffect} from "react";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import React,{useState} from "react";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, IconButton} from "@material-ui/core";
+import { Row, Col} from "react-bootstrap";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
-
-
 export default function WorkoutEditDialog(props) {
   const [file,setFile] = useState(null);
   const [hash,setHash] = useState(Date.now());
@@ -78,10 +68,10 @@ export default function WorkoutEditDialog(props) {
             </label>
             <div>
               {file ? (
-                <img src={file} width="200px" />
+                <img src={file} alt='props' width="200px" />
               ) : (
                 props.image&&(
-                  <img src={`${props.image}?${hash}`} width="200px" />
+                  <img src={`${props.image}?${hash}`} alt="props" width="200px" />
                 )
               )}
             </div>

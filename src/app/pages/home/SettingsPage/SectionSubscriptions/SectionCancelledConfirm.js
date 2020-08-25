@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import { useSelector, useDispatch } from "react-redux";
+import React from "react";
+import {Button} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 
 const CancelledConfirm = ({show,handleClose}) => {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -24,13 +24,13 @@ const CancelledConfirm = ({show,handleClose}) => {
       <Modal.Body>
         <div >
           <p>{firstName}, gracias por tu confianza.</p>
-          {cancelled.just == "yes"&&(
+          {cancelled.just === "yes"&&(
             <>
               <p>Tu suscripción ha sido cancelada con éxito y no se volverán a hacer cobros adicionales.</p>
               <p>Tendrás el servicio disponible hasta ({cancelled.endDate}).</p>
             </>
           )}
-          {cancelled.just == "no"&&(
+          {cancelled.just === "no"&&(
             <p>Tu suscripción ha sido cancelada con éxito y no se volverán a hacer cobros adicionales.</p>
           )}
         </div>

@@ -11,7 +11,6 @@ import {
   changeVoucher,
   canceledPayPal,
   errorPayPal,
-  checkoutInitial,
   reactivateSubscription,
   inside,
   outside,
@@ -32,9 +31,6 @@ import { addAlertMessage } from "../alert/actions";
 import { $findWorkoutSerive,$updateInterval} from "../../../../../modules/subscription/service";
 import { initialVoucher,validateVoucherSucceeded} from '../vouchers/actions'
 
-function* onCheckoutInitial() {
-  // get service, coupons,
-}
 function getPaymentTestMode() {
   return http({
     path: "subscriptions/checkout", // get paymentTest and createOrUpdate paypal plan
@@ -64,7 +60,7 @@ function findPaypalPlan(frequency, couponId) {
 }
 function* onChangePaymentProvider({ payload }) {
   yield put(setKeyValue({ key: "selectedPaymentProvider", value: payload }));
-  if (payload == "paypal") {
+  if (payload === "paypal") {
     const frequency = yield select(store => store.service.frequency);
     const vouchers = yield select(store => store.vouchers);
     const coupons = Object.values(vouchers);
@@ -87,7 +83,7 @@ function* onChangeVoucher() {
   const selectedPaymentProvider = yield select(
     store => store.checkout.selectedPaymentProvider
   );
-  if (selectedPaymentProvider == "paypal") {
+  if (selectedPaymentProvider === "paypal") {
     const frequency = yield select(store => store.service.frequency);
     const vouchers = yield select(store => store.vouchers);
     const coupons = Object.values(vouchers);
@@ -117,7 +113,7 @@ function subscriptionRenewal(id,frequency){
 function* onReactivateSubscription({payload}) {
   const currentUser = yield select(store => store.auth.currentUser);
   try {
-    const result = yield call(subscriptionRenewal, currentUser.customer.workoutSubscriptionId, payload.frequency);
+    yield call(subscriptionRenewal, currentUser.customer.workoutSubscriptionId, payload.frequency);
     yield put(addAlertMessage({
       type: "success",
       message: {id:"Subscription.Renewal.Success"} 
@@ -139,7 +135,7 @@ function checkoutInSide(frequency){
 }
 function* onCheckoutInSide({payload}){
   try {
-    const result = yield call(checkoutInSide, payload.activePlan);
+    yield call(checkoutInSide, payload.activePlan);
   }catch (error) {
     console.log(error);
     yield put(trackError(error));
@@ -153,7 +149,7 @@ function checkoutOutSide(){
 }
 function* onCheckoutOutSide(){
   try {
-    const result = yield call(checkoutOutSide);
+    yield call(checkoutOutSide);
   }catch (error) {
     console.log(error);
     yield put(trackError(error));

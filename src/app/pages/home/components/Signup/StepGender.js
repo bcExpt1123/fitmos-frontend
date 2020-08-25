@@ -1,8 +1,4 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
-
-import Icon from "../Icon";
-import Typography from "../Typography";
 import RadioButton from "./RadioButton";
 //import trackVirtualPageImpression from '../../../../../lib/trackVirtualPageImpression';
 

@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
@@ -6,9 +5,7 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import {reactLocalStorage} from 'reactjs-localstorage';
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
@@ -254,7 +251,7 @@ function* fetchEvent() {
       yield put({ type: actionTypes.EVENT_FETCH_CATEGORY, categories });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.EVENT_INDEX_FAILURE, error: e.message });
@@ -276,7 +273,7 @@ function* searchEvent({ name, value }) {
       yield put({ type: actionTypes.EVENT_FETCH_CATEGORY, categories });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.EVENT_INDEX_FAILURE, error: e.message });
@@ -304,15 +301,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(eventActionRequest, action, id);
+    yield call(eventActionRequest, action, id);
     const event = yield select(store => store.event);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.EVENT_INDEX_REQUEST });
     } else {
       let data = event.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Draft";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Draft";
           else item.status = "Publish";
         }
       });
@@ -323,7 +320,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.EVENT_INDEX_FAILURE, error: e.message });
@@ -331,7 +328,7 @@ function* callAction({ action, id }) {
   }
 }
 function eventActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `events/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -360,7 +357,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.EVENT_LOADING_REQUEST });
   if (event.data != null) {
     const filterEvents = event.data.filter(event => {
-      return event.id == id;
+      return event.id === id;
     });
     if (filterEvents.length > 0) {
       filterEvents[0].immediate = false;
@@ -375,7 +372,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.EVENT_SET_ITEM, item: result });
     else yield put({ type: actionTypes.EVENT_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.EVENT_INDEX_FAILURE, error: e.message });
@@ -440,7 +437,7 @@ function* saveItem({ history }) {
       yield put({ type: actionTypes.EVENT_CHANGE_SAVE_STATUS, status: false });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.EVENT_INDEX_FAILURE, error: e.message });
@@ -512,9 +509,9 @@ const sendSubscribeRequest = ({name,email}) =>
   }).then(res => res.data);
 // Whole login flow in one saga
 function* subscribe({ type, payload }){
-  const { provider, requestFunction } = subscribeTypes[type];
+  const { requestFunction } = subscribeTypes[type];
   const result = yield call(requestFunction, { payload });
-  const { response, error } = result;
+  const { error } = result;
   if (error) {
     yield put(addAlertMessage({ type: "error", message: error }));
     // special case - when account is not confirmed redirect to resend confirmation screen instead
@@ -543,7 +540,7 @@ function* onSubscribeWithEmail({ payload }) {
   let response;
   yield put({ type: actionTypes.EVENT_SET_VALUE, key:'subscribed',value:true });
   try {
-    const response = yield call(sendSubscribeRequest, payload);
+    yield call(sendSubscribeRequest, payload);
   } catch (error) {
     if(error.response){
       switch (error.response.status) {

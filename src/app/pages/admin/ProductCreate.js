@@ -1,31 +1,11 @@
-import React, { Component,useEffect, useState } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {useLocation} from "react-router-dom";
 import { injectIntl } from "react-intl";
-import { withRouter } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from '@material-ui/core/Grid';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormLabel from '@material-ui/core/FormLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import Radio from '@material-ui/core/Radio';
+import { makeStyles } from "@material-ui/core";
+import { Button, Paper, FormLabel, TextField, Grid, FormControlLabel, FormControl, RadioGroup, Radio, Box, Tooltip} from "@material-ui/core";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImages, faImage } from '@fortawesome/free-solid-svg-icons';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import StarBorderIcon from '@material-ui/icons/StarBorder';
-import Box from '@material-ui/core/Box';
-import Tooltip from '@material-ui/core/Tooltip';
+import { faImage } from '@fortawesome/free-solid-svg-icons';
 import {
 	$updateItemValue,
 	$setNewItem,
@@ -34,8 +14,6 @@ import {
   $showProductDetail,
   $deleteImage,
 } from "../../../modules/subscription/product";
-import { useSelect } from "downshift";
-import { iteratee, forEach } from "lodash";
 const useStyles = makeStyles( theme => ({
     root: {
       display: "block",
@@ -70,35 +48,45 @@ const useStyles = makeStyles( theme => ({
 		}
   }));
 const Main =({history}) =>{
+  let location = useLocation();
+  let pathId =  location.pathname.split("/");
+  let companyId = Number(pathId[3]);
+  let productId ;
+  if(pathId[5]==="create"){
+    productId = pathId[5];
+  }
+  else{
+    productId = Number(pathId[5]);
+  }
+	useEffect(() => {
+    if(productId==="create"){
+      dispatch($setNewItem(companyId))
+    }
+    else{
+      dispatch($showProductDetail(productId));
+    }}, []);// eslint-disable-line react-hooks/exhaustive-deps
 	const classes = useStyles();
 	const dispatch=useDispatch();
-	useEffect(() => {	dispatch($setNewItem())}, []);
-	const product = useSelector(({ product }) => product);
-	console.log(product);
-	const company = useSelector(({ company }) => company);
+  const product = useSelector(({ product }) => product);
 	const productData = product.item;
 	const [state,setState] = React.useState({
 		uploading: false,
 		multiFile: [],
 		multiImage:[],
 	});
-	console.log(product);
-	const prices = product.item.priceType;
-	console.log(state);
 	const changeCapture = event =>{
-		if(state.uploading=false){
-			const files = Array.from(event.target.files);
-			const multiImage = []; 
+    if(state.uploading===false){
+      const files = Array.from(event.target.files);
 			files.forEach(item=>{
-				multiImage.push(item)
+        state.multiImage.push(item);
 			});
       setState({...state,uploading:true});
-      dispatch($updateItemImage(multiImage));
+      dispatch($updateItemImage(state.multiImage));
 		}
 		else{
 			const files = Array.from(event.target.files);
 			files.forEach(item=>{
-				state.multiImage.push(item)
+				state.multiImage.push(item);
 			});
       setState({...state,uploading:true})
       dispatch($updateItemImage(state.multiImage));
@@ -106,7 +94,6 @@ const Main =({history}) =>{
 		for(let i=0;i<state.multiImage.length;i++){
 			state.multiFile[i] = URL.createObjectURL(state.multiImage[i]);
 		}
-		console.log(state);
 	}
 	const handleChange = (name) => {
     return event => {
@@ -128,12 +115,12 @@ const Main =({history}) =>{
 		var arrayLength = state.multiFile.length;
 		var index;
     for (var j = -1; j < arrayLength; j++) {
-			if(filterImage[j] == event.target.src){
+			if(filterImage[j] === event.target.src){
 				index = j;
 			}
 		}
-		if(index==(arrayLength-1)){
-      if(index==0){
+		if(index===(arrayLength-1)){
+      if(index===0){
         setState({
           uploading: false,
 		      multiFile: [],
@@ -162,13 +149,11 @@ const Main =({history}) =>{
 		}
   }
   const deleteAction =(event) =>{
-    console.log(event.target.src);
     dispatch($deleteImage(event.target.src));
   }
-	console.log(state);
 	return(
 		<>  
-			{company.item.productId?(
+			{product.item.companyMatchId?(
 			<Grid  container>
 				<Grid item xs className={classes.margin}>
 					<form
@@ -209,7 +194,7 @@ const Main =({history}) =>{
 								</FormControl>
 							</Grid>
 							<Grid item xs={12} className={classes.margin}>
-								{productData.price_type=="discounted"&&(
+								{productData.price_type==="discounted"&&(
 									<TextField
 										required
 										id="discountValue"
@@ -222,7 +207,7 @@ const Main =({history}) =>{
 								 )}
 							</Grid>
 							<Grid item xs={12} className={classes.margin}>
-								{productData.price_type=="offer"&&(
+								{productData.price_type==="offer"&&(
 									<TextField
 										required
 										id="regularPrice"
@@ -235,7 +220,7 @@ const Main =({history}) =>{
 								)}
 							</Grid>
 							<Grid item xs={12} className={classes.margin}>
-								{productData.price_type=="offer"&&(
+								{productData.price_type==="offer"&&(
 									<TextField
 										required
 										id="salePrice"
@@ -383,7 +368,6 @@ const ProductCreate = injectIntl(Main);
 
 function Sub({match,history}) {
 	const product = useSelector(({ product }) => product);
-	const dispatch=useDispatch();
 	return (
 		<>
 			<div className="kt-subheader__main">

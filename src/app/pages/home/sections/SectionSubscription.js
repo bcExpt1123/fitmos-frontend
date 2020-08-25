@@ -1,10 +1,8 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import MetaTags from "react-meta-tags";
 import classnames from "classnames";
-import Button from 'react-bootstrap/Button';
-import Modal from "react-bootstrap/Modal";
+import { Modal, Button } from "react-bootstrap";
 import { withRouter } from "react-router";
 import { NavLink } from "react-router-dom";
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -44,35 +42,28 @@ class Subscription extends React.Component {
   componentDidMount() {
     this.props.$findWorkoutSerive();
     this.props.setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
-    if(this.props.serviceItem && this.props.serviceItem.frequency!=""){
-      let key = "monthly";
-      switch(this.props.serviceItem.frequency){
-        case "3":
-          key = "quarterly";
-          break;
-        case "6":
-          key = "semiannual";
-          break;
-        case "12":
-          key = "yearly";
-          break;
-      }
-      this.changeMembership(key);    
-    }
     const { currentUser, serviceItem } = this.props;
-    let count = 0;
     let frequency = 1;
-    let monthlyFee;
     let activePlan;
+    /*eslint-disable no-unused-vars*/
+    let count;
+    let monthlyFee;
     [count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
-    if (this.state.activePlan == "")
+    if( this.props.activePlan){
+      activePlan = this.props.activePlan;
+      frequency = this.props.frequency;
+    }
+    this.setState({count, frequency, monthlyFee, activePlan});
+    if ( this.props.activePlan == null ){
       this.props.$updateInterval(frequency, activePlan);
+    }
+      
   }
   getActivePlan(key, activePlan) {
-    if (this.state.activePlan != "") {
-      return key == this.state.activePlan;
+    if (this.state.activePlan !== "") {
+      return key === this.state.activePlan;
     } else {
-      return key == activePlan;
+      return key === activePlan;
     }
   }
   changeMembership(key) {
@@ -92,6 +83,7 @@ class Subscription extends React.Component {
         monthlyFee = monthlyFee / 12;
         frequency = 12;
         break;
+      default:
     }
     monthlyFee = roundToMoney(monthlyFee);
     this.props.$updateInterval(frequency, activePlan);
@@ -136,7 +128,7 @@ class Subscription extends React.Component {
           <div className="plan-price">
             <span className="price-value">$</span>
             <span className="price-figure">
-              {this.state.monthlyFee == ""
+              {this.state.monthlyFee === ""
                 ? monthlyFee
                 : this.state.monthlyFee}
             </span>
@@ -149,7 +141,7 @@ class Subscription extends React.Component {
                 <del>
                   <span className="price-value">$</span>
                   <span className="price-figure">
-                    {this.state.monthlyFee == ""
+                    {this.state.monthlyFee === ""
                       ? monthlyFee
                       : this.state.monthlyFee}
                   </span>
@@ -165,7 +157,7 @@ class Subscription extends React.Component {
               <div className="plan-price">
                 <span className="price-value">$</span>
                 <span className="price-figure">
-                  {this.state.monthlyFee == ""
+                  {this.state.monthlyFee === ""
                     ? monthlyFee
                     : this.state.monthlyFee}
                 </span>
@@ -181,7 +173,7 @@ class Subscription extends React.Component {
         <div className="plan-price">
           <span className="price-value">$</span>
           <span className="price-figure">
-            {this.state.monthlyFee == ""
+            {this.state.monthlyFee === ""
               ? monthlyFee
               : this.state.monthlyFee}
           </span>
@@ -197,32 +189,32 @@ class Subscription extends React.Component {
     let monthlyFee;
     let activePlan;
     if (serviceItem) {
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!='monthly'){
-        if (serviceItem.monthly != "") count++;
+      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='monthly'){
+        if (serviceItem.monthly !== "") count++;
       }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!='quarterly'){
+      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='quarterly'){
         count++;
         monthlyFee = serviceItem.quarterly / 3;
         activePlan = "quarterly";
         frequency = 3;
       }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!='semiannual'){
-        if (serviceItem.semiannual != "") {
+      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='semiannual'){
+        if (serviceItem.semiannual !== "") {
           count++;
           monthlyFee = serviceItem.semiannual / 6;
           activePlan = "semiannual";
           frequency = 6;
         }
       }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!='yearly'){
-        if (serviceItem.yearly != "") {
+      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='yearly'){
+        if (serviceItem.yearly !== "") {
           count++;
           monthlyFee = serviceItem.yearly / 12;
           activePlan = "yearly";
           frequency = 12;
         }
       }
-      if (monthlyFee == undefined) {
+      if (monthlyFee === undefined) {
         monthlyFee = serviceItem.monthly;
         activePlan = "monthly";
         frequency = 1;
@@ -237,11 +229,12 @@ class Subscription extends React.Component {
     const hasWorkoutSubscription = currentUser
       ? currentUser.has_workout_subscription
       : false;
-    let count = 0;
-    let frequency = 1;
-    let monthlyFee;
-    let activePlan;
-    [count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
+    let count = this.state.count;
+    /*eslint-disable no-unused-vars*/
+    let frequency = this.state.frequency;
+    let monthlyFee = this.state.monthlyFee;
+    let activePlan = this.state.activePlan;
+    //[count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
 
     let classes;
     switch (count) {
@@ -257,6 +250,7 @@ class Subscription extends React.Component {
       case 4:
         classes = "col-6 col-md-3";
         break;
+      default:  
     }
     return (
       <>
@@ -279,7 +273,7 @@ class Subscription extends React.Component {
             </div>
             {currentUser && serviceItem && (
               <div className="row mt-2">
-                {serviceItem.monthly != "" && currentUser.customer.currentWorkoutPlan !='monthly'&&(
+                {serviceItem.monthly !== "" && currentUser.customer.currentWorkoutPlan !=='monthly'&&(
                   <div
                     className={classes}
                     onClick={() => this.changeMembership("monthly")}
@@ -294,7 +288,7 @@ class Subscription extends React.Component {
                     </div>
                   </div>
                 )}
-                {serviceItem.quarterly != "" && currentUser.customer.currentWorkoutPlan !='quarterly'&&(
+                {serviceItem.quarterly !== "" && currentUser.customer.currentWorkoutPlan !=='quarterly'&&(
                   <div
                     className={classes}
                     onClick={() => this.changeMembership("quarterly")}
@@ -309,7 +303,7 @@ class Subscription extends React.Component {
                     </div>
                   </div>
                 )}
-                {serviceItem.semiannual != "" && currentUser.customer.currentWorkoutPlan !='semiannual'&&(
+                {serviceItem.semiannual !== "" && currentUser.customer.currentWorkoutPlan !=='semiannual'&&(
                   <div
                     className={classes}
                     onClick={() => this.changeMembership("semiannual")}
@@ -324,7 +318,7 @@ class Subscription extends React.Component {
                     </div>
                   </div>
                 )}
-                {serviceItem.yearly != "" && currentUser.customer.currentWorkoutPlan !='yearly'&&(
+                {serviceItem.yearly !== "" && currentUser.customer.currentWorkoutPlan !=='yearly'&&(
                   <div
                     className={classes}
                     onClick={() => this.changeMembership("yearly")}
@@ -365,7 +359,7 @@ class Subscription extends React.Component {
                       Podrás cancelar en cualquier momento
                     </div>
                     <div className="plan-btn">
-                      {currentUser == undefined ? (
+                      {currentUser === undefined ? (
                         <NavLink
                           to={`/signup`}
                           className="btn btn-md btn-primary fs-btn"
@@ -405,7 +399,7 @@ class Subscription extends React.Component {
                     <div className="border-line"></div>
                   </div>
                 </div>
-                {(currentUser && hasWorkoutSubscription == false) && false && (
+                {(currentUser && hasWorkoutSubscription === false) && false && (
                   <p className="text-white pt-5 text-center">
                     Comienza hoy y recibe 10% de descuento al afiliarte
                   </p>
@@ -413,8 +407,8 @@ class Subscription extends React.Component {
               </div>
               <div className="col-12 col-lg-3"></div>
             </div>
-            {(currentUser == undefined ||
-              (currentUser && hasWorkoutSubscription == false)) && false && (
+            {(currentUser === undefined ||
+              (currentUser && hasWorkoutSubscription === false)) && false && (
               <div className="media-container-row">
                 <div className="col-12 col-md-2"></div>
                 <div className="col-12 col-md-8">
@@ -422,7 +416,7 @@ class Subscription extends React.Component {
                     <span>O</span>
                   </div>
                   <div className="text-center free-plan">
-                    {currentUser == undefined ? (
+                    {currentUser === undefined ? (
                       <NavLink
                         to={`/signup`}
                         className="btn btn-md btn-primary fs-btn"
@@ -477,7 +471,9 @@ class Subscription extends React.Component {
 const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
   loading: state.subscription.isloading,
-  serviceItem: state.service.item
+  serviceItem: state.service.item,
+  frequency:state.service.frequency,
+  activePlan:state.service.activePlan,
 });
 
 const mapDispatchToProps = {

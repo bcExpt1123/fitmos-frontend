@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import {Button} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import FormGroup from "../components/FormGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";

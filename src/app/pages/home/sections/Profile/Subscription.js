@@ -1,5 +1,5 @@
 import React,{ useState, useEffect } from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -36,26 +36,24 @@ const Subscription = () => {
               )}
             </div>
           );
-          break;
         case 'Cancelled':
           return (
             <div style={{ color: "#c32121" }}>
               Cancelado
             </div>
           )
-          break;
         case 'Active':
           if (currentUser.customer.services[1].expire_at && currentUser.customer.services[1].expire_at > 0) {
             return (
-              <div style={{ color: "#51AB80" }}>Expira en {currentUser.customer.services[1].expire_at} dias</div>
+              <div style={{ color: "#51AB80" }}>Expira {currentUser.customer.services[1].expire_at} dias</div>
             )
-          }
-          if(currentUser.customer.services[1].expired_date){
+          }else{
             return (
-              <div style={{ color: "#51AB80" }}>Expira el {currentUser.customer.services[1].expired_date}</div>
+              <div style={{ color: "#51AB80" }}>Renueva</div>
             )
           }
           break;
+        default:
       }
       return (
         <div style={{ color: "transparent" }}>

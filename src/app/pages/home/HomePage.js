@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Redirect, Route, Switch } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
 import About from "./About";
 import Home from "./Home";
 import Signup from "./Signup";
@@ -29,7 +29,6 @@ import Workout from "./Workout";
 import LevelPage from "./Level";
 import SubscriptionTabs from "./Subscriptions";
 import { LayoutSplashScreen } from "../../../_metronic";
-import * as Cookies from "./services/storage";
 
 export default function HomePage() {
   // useEffect(() => {

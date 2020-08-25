@@ -20,7 +20,7 @@
     color:#ffffff;
     font-size:12px;
     font-weight: 600;
-    padding: 20px 12.3px;
+    padding: 20px 10px;
     text-decoration:none;
     text-shadow:-1px 0px 0px #333333;
     &:hover{
@@ -39,7 +39,7 @@
     color:#ffffff;
     font-size:12px;
     font-weight: 600;
-    padding: 20px 9.96px;
+    padding: 20px 8.05px;
     text-decoration:none;
     text-shadow:-1px 0px 0px #333333;
     &:hover{
@@ -78,7 +78,7 @@
     color:#ffffff;
     font-size:12px;
     font-weight: 600;
-    padding: 20px 5.1px;
+    padding: 20px 2.55px;
     text-decoration:none;
     text-shadow:-1px 0px 0px #333333;
     &:hover {
@@ -155,6 +155,22 @@
 }
 .timer--clock{
   font-weight: 900;
+  span.red{
+    display: inline-block;
+    vertical-align: middle;
+    .top{
+      vertical-align: top;
+      display: inline-block;
+    }
+    .middle{
+      font-style: italic;
+      vertical-align: middle;
+    }
+    .bottom{
+      vertical-align: bottom;
+      display: inline-block;
+    }
+  }
 }
 .restart-modal{
   .title{
@@ -188,6 +204,19 @@
 @media only screen and (min-width: 769px){
   .timer--clock {
     font-size: 132px;
+    span.red{
+      font-size: 90px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -30px;        
+      }
+      .middle{
+        font-size: 132px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
   }
   .timer--label, .timer--input, .timer--button, .timer--header {
     font-size: 25px;
@@ -201,6 +230,19 @@
 @media only screen and (max-width: 768px){
   .timer--clock {
     font-size: 96px;
+    span.red{
+      font-size: 60px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -25px;        
+      }
+      .middle{
+        font-size: 96px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
   }
   .timer--label, .timer--input, .timer--button, .timer--header {
     font-size: 20px;
@@ -208,6 +250,97 @@
   #timer-clock{
     .timer--settingField{
       font-size:14px;
+    }
+  }
+}
+@media only screen and (max-width: 568px){
+  .timer--clock {
+    font-size: 88px;
+    span.red{
+      font-size: 55px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 88px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 468px){
+  .timer--clock {
+    font-size: 83px;
+    span.red{
+      font-size: 52px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 83px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 448px){
+  .timer--clock {
+    font-size: 80px;
+    span.red{
+      font-size: 47px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 80px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 408px){
+  .timer--clock {
+    font-size: 70px;
+    span.red{
+      font-size: 42px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 70px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 378px){
+  .timer--clock {
+    font-size: 60px;
+    span.red{
+      font-size: 38px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -10px;        
+      }
+      .middle{
+        font-size: 60px;
+      }
+      .bottom{
+        margin-left: -10px;        
+      }
     }
   }
 }

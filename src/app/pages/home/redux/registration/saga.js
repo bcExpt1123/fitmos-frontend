@@ -1,6 +1,6 @@
-import { all, call, put, select, spawn, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
 //import { cid, analytics, GATracker } from '@freeletics/web-package-tracking';
-import Cookie from "js-cookie";
+//import Cookie from "js-cookie";
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { http } from "../../services/api";
 import apiErrorMatcher from "../../../../../lib/apiErrorMatcher";
@@ -15,7 +15,6 @@ import {
   registerWithPassword,
   registerWithFacebook,
   registerWithGoogle,
-  setStep
 } from "./actions";
 import { addAlertMessage } from "../alert/actions";
 import { signInUser } from "../auth/actions";
@@ -88,18 +87,18 @@ const getApiErrorMessage = error => {
   const errors =
     error && error.response ? error.response.data.errors : undefined;
   const result = mapApiErrors(errors);
-  if (result.id == "RegistrationForm.Error.Api.error") {
+  if (result.id === "RegistrationForm.Error.Api.error") {
     if (
       errors &&
       errors.email &&
-      errors.email[0] == "The email has already been taken."
+      errors.email[0] === "The email has already been taken."
     )
       return { id: "RegistrationForm.Error.Api.error.email.taken" };
   }
   return result;
 };
 
-const getGenderFromAthleteProfile = () => {
+/*const getGenderFromAthleteProfile = () => {
   try {
     const cookie = Cookie.get("athlete_profile");
     const athleteProfile = cookie && JSON.parse(cookie);
@@ -125,7 +124,7 @@ const createPersonalizedTrainingPlan = (slug, idToken = undefined) =>
     app: "bodyweight",
     path: `/v5/coach/training_plans/${slug}/personalized_plans.json`,
     authToken: idToken
-  });
+  });*/
 
 /* Password */
 
@@ -484,7 +483,7 @@ const registrationTypes = {
   }
 };
 
-function* getDataFromCookie(name, callback) {
+/*function* getDataFromCookie(name, callback) {
   try {
     const value = yield call([Cookie, "get"], name);
     if (value) {
@@ -494,16 +493,16 @@ function* getDataFromCookie(name, callback) {
   } catch (error) {
     yield put(trackError(error));
   }
-}
+}*/
 
 function* onRegister({ type, payload }) {
-  const locale = yield select(store => store.i18n.lang);
+  //const locale = yield select(store => store.i18n.lang);
 
   yield put(registrationRequested());
   //yield put(grantMarketingConsent());
 
   // Extract provider and request function from action type
-  const { provider, requestFunction, trackingProvider } = registrationTypes[
+  const { provider, requestFunction } = registrationTypes[
     type
   ];
   let couponCode = reactLocalStorage.get('publicCoupon');
@@ -523,7 +522,6 @@ function* onRegister({ type, payload }) {
     const { user, authentication } = response.data;
 
     const standardAuthentication = true; //authentication.audience === 'standard';
-    const idToken = authentication.id_token;
 
     yield put(
       registrationSucceeded({
@@ -573,7 +571,7 @@ function* onRegister({ type, payload }) {
     // Switch to 2nd step
     // If user is fully authenthicated just redirect to desired page
     if (standardAuthentication) {
-      const { returnTo } = payload;
+      //const { returnTo } = payload;
       // redirect to pricing page or customer dashboard
     } else {
       //yield put(setStep(REGISTRATION_STEPS.CONFIRMATION));

@@ -1,35 +1,10 @@
-import React, { Component,useEffect } from "react";
-import { connect,useState, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import {spacing} from '@material-ui/system';
-import Box from '@material-ui/core/Box';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
+import { makeStyles } from '@material-ui/core';
+import { ListItemText, Select as MatSelect, Paper, Grid, Button, Checkbox, TextField, MenuItem, IconButton, FormControlLabel, Switch} from '@material-ui/core';
 import { NavLink } from "react-router-dom";
-import IconButton from "@material-ui/core/IconButton";
-import DisableIcon from "@material-ui/icons/Clear";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
-import CustomerOverview from "./CustomerOverview";
-import { CustomerTransactions } from "./CustomerTransactions";
-import Select from "@material-ui/core/Select";
-import FormControl from "@material-ui/core/FormControl";
-import MenuItem from "@material-ui/core/MenuItem";
-import RedoIcon from "@material-ui/icons/Redo";
-import InputLabel from "@material-ui/core/InputLabel";
 import PhotoCamera from '@material-ui/icons/PhotoCamera';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import { ListItemText, Select as MatSelect } from '@material-ui/core';
 import {
   $saveItem,
   $updateItemValue,
@@ -64,22 +39,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 const Main = ({history}) =>{
-  const icon = <CheckBoxOutlineBlankIcon fontSize="small" />;
-  const checkedIcon = <CheckBoxIcon fontSize="small" />;
   const classes = useStyles();
   const company = useSelector(({ company }) => company);
   console.log(company)
   const dispatch=useDispatch();
   useEffect(() => {
     dispatch($fetchCountries())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const item = company.item;
   const isloading = company.loading;
   const countryList = company.data;
   const [state,setState] = React.useState({file:""});
   const handleOnSubmit = e => {
     e.preventDefault();
-    if (item.image == "" && state.file == "") {
+    if (item.image === "" && state.file === "") {
       alert("Please upload image");
       return false;
     }
@@ -251,7 +224,7 @@ const Main = ({history}) =>{
                 />
               </Grid>
               <Grid item xs={9}>
-                {company.item.all==false&&(
+                {company.item.all===false&&(
                   <MatSelect
                     multiple
                     style={{ width: '70%' }}
@@ -310,9 +283,9 @@ const Main = ({history}) =>{
                       )} 
                       <div className="uploaded-photo">
                         {state.file ? (
-                          <img src={state.file} width="200px" />
+                          <img src={state.file} alt='prop' width="200px" />
                         ) : item.logo ? (
-                          <img src={item.logo} width="200px" />
+                          <img src={item.logo} alt='prop' width="200px" />
                         ) : (
                           <label htmlFor="raised-button-file">
                             <IconButton color="primary" component="span">
@@ -353,8 +326,7 @@ function Sub({match}) {
       dispatch($setNewItem());
       console.log('id not exist');
     }
-  }, []);
-  const benchmark = useSelector(({ benchmark }) => benchmark);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   return (
     <>
       <div className="kt-subheader__main">

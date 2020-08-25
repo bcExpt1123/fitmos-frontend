@@ -2,17 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import classnames from "classnames";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/styles";
+import {Table, TableHead, TableBody, TableCell, TableRow, Button, Paper, IconButton} from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
+import classnames from "classnames";
 import {
   $datePicked,
   $prevWeek,
@@ -76,15 +69,15 @@ function Main({
   previewContent
 }) {
   const classes = useStyles();
-  const onDatePicked = date => {
+  //const onDatePicked = date => {
     //$datePicked(date.toDate(),history);
-  };
+  //};
   const copiedDate = new Date(pickedDate.getTime());
-  if(copiedDate.getDay()==0){
+  if(copiedDate.getDay()===0){
     let date = copiedDate.getDate() - copiedDate.getDay() -7;
     copiedDate.setDate(date);
   }
-  const options = { year: "numeric", month: "2-digit", day: "2-digit" };
+  //const options = { year: "numeric", month: "2-digit", day: "2-digit" };
   const labelOptions = { month: "long", day: "numeric", weekday: "long" };
   const weeks = [0, 1, 2, 3, 4, 5, 6];
   const dateLabel = (number) => {
@@ -128,9 +121,9 @@ function Main({
   const [openPreview, setOpenPreview] = React.useState(false);
   const handleClickOpen = (day, column) => {
     if (activateWorkout(day, column)) {
-      if(column == 'comentario'){
+      if(column === 'comentario'){
         setOpenFirst(true);
-      }else if(column == 'blog'){
+      }else if(column === 'blog'){
         setOpenBlog(true);
       }else{
         setOpenBlock(true);
@@ -138,7 +131,7 @@ function Main({
       let cellDate = new Date(pickedDate.getTime());
       const weekDay = cellDate.getDay();
       let date = cellDate.getDate() - cellDate.getDay() + day+1;
-      if(weekDay == 0){
+      if(weekDay === 0){
         date = cellDate.getDate() - cellDate.getDay() + day-6;
       }
       cellDate.setDate(date);
@@ -150,7 +143,7 @@ function Main({
     let cellDate = new Date(pickedDate.getTime());
     const weekDay = cellDate.getDay();
     let date = cellDate.getDate() - cellDate.getDay() + day+1;
-    if(weekDay == 0){
+    if(weekDay === 0){
       date = cellDate.getDate() - cellDate.getDay() + day-6;
     }
     cellDate.setDate(date);
@@ -159,26 +152,27 @@ function Main({
   const activateWorkout = (dayNumber, column) => {
     switch (dayNumber) {
       case 0:
-        if (column == "blog" || column == "activo") return false;
+        if (column === "blog" || column === "activo") return false;
         break;
       case 1:
-        if (column == "blog") return false;
+        if (column === "blog") return false;
         break;
       case 2:
-        if (column == "blog" || column == "activo") return false;
+        if (column === "blog" || column === "activo") return false;
         break;
       case 3:
-        if (column != "blog") return false;
+        if (column !== "blog") return false;
         break;
       case 4:
-        if (column == "blog") return false;
+        if (column === "blog") return false;
         break;
       case 5:
-        if (column == "activo") return false;
+        if (column === "activo") return false;
         break;
       case 6:
-        if (column != "blog") return false;
+        if (column !== "blog") return false;
         break;
+      default:  
     }
     return true;
   };
@@ -304,11 +298,11 @@ function Main({
                     align="left"
                     key={index}
                     className={classnames({
-                      blog: activateWorkout(col, row) == false
+                      blog: activateWorkout(col, row) === false
                     })}
                   >
-                    {data[row] != undefined &&
-                      data[row][col] != undefined && data[row][col] != "" && (
+                    {data[row] !== undefined &&
+                      data[row][col] !== undefined && data[row][col] !== "" && (
                         <div className={classes.preview}>
                           <IconButton
                             className={classes.button}
@@ -326,8 +320,8 @@ function Main({
                         className={classes.cell}
                         onClick={() => handleClickOpen(col, row)}
                       >
-                        {data[row] != undefined &&
-                          data[row][col] != undefined &&
+                        {data[row] !== undefined &&
+                          data[row][col] !== undefined &&
                           data[row][col]}
                       </div>
                     ) : (
@@ -444,7 +438,7 @@ class Sub extends Component {
     const options = { year: "numeric", month: "short", day: "numeric" };
     const weekDay = copiedDate.getDay();
     var first = copiedDate.getDate() - weekDay; // First day is the day of the month - the day of the week
-    if(weekDay == 0){
+    if(weekDay === 0){
       first = first - 7;
     }
     var last = first + 7; // last day is the first day + 6
@@ -485,13 +479,13 @@ class Sub extends Component {
           {true ? (
             <>
               <h3 className="kt-subheader__title">
-                <a onClick={this.handlePrevWeek()}>
+                <a onClick={this.handlePrevWeek()} href="!#">
                   <i className="la la-angle-left"></i>
                 </a>
                 &nbsp;&nbsp;
                 {this.getWeekDays(this.props.pickedDate)}
                 &nbsp;&nbsp;
-                <a onClick={this.handleNextWeek()}>
+                <a onClick={this.handleNextWeek()} href="!#">
                   <i className="la la-angle-right"></i>
                 </a>
               </h3>

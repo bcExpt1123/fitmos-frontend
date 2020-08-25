@@ -19,22 +19,18 @@ class Pricing extends React.Component {
   render() {
     const { serviceItem } = this.props;
     //hasPaid? or free
-    let count = 0;
     let monthlyFee;
     if (serviceItem) {
-      if (serviceItem.quarterly != "") {
-        count++;
+      if (serviceItem.quarterly !== "") {
         monthlyFee = serviceItem.quarterly / 3;
       }
-      if (serviceItem.semiannual != "") {
-        count++;
+      if (serviceItem.semiannual !== "") {
         monthlyFee = serviceItem.semiannual / 6;
       }
-      if (serviceItem.yearly != "") {
-        count++;
+      if (serviceItem.yearly !== "") {
         monthlyFee = serviceItem.yearly / 12;
       }
-      if (monthlyFee == undefined) {
+      if (monthlyFee === undefined) {
         monthlyFee = serviceItem.monthly;
       }
       monthlyFee = roundToMoney(monthlyFee);

@@ -1,8 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import Form from "react-bootstrap/Form";
+import {Button, Modal, Form} from "react-bootstrap";
 import { http } from "../services/api";
 import { updateCustomerAttribute as updateConditionAction } from "../../home/redux/auth/actions";
 import { $resetPublished } from "../../../../modules/subscription/benchmark";
@@ -27,7 +25,7 @@ class ChangeGoal extends React.Component {
     this.setState({ goal: this.selectEl.value });
   }
   handleLevel = async () => {
-    const res = await http({
+    await http({
       method: "POST",
       app: "user",
       path: "customers/changeObjective",
@@ -68,7 +66,7 @@ class ChangeGoal extends React.Component {
               >
                 <option value="cardio">Perder peso - Quema la grasa corporal</option>
                 <option value="fit">Ponerte en forma - Mejora tu condición física </option>
-                {this.props.currentUser.customer.gender == "Male" ? (
+                {this.props.currentUser.customer.gender === "Male" ? (
                   <option value="strong">Ganar musculatura - Desarrolla tus músculos</option>
                 ) : (
                   <option value="strong">Tonificar - Define tus músculos</option>

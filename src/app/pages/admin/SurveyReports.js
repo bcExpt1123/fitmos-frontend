@@ -1,34 +1,12 @@
-import React, { Component,useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import DisableIcon from "@material-ui/icons/Clear";
-import DeleteIcon from "@material-ui/icons/Delete";
-import EditIcon from "@material-ui/icons/Edit";
-import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
+import { makeStyles } from "@material-ui/core";
+import { Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, Button, Dialog, DialogActions, DialogContent, DialogContentText, colors} from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
-import Button from '@material-ui/core/Button';
-import Box from '@material-ui/core/Box';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Rating from '@material-ui/lab/Rating';
 import {$fetchSurveyReport,$pageReport,$pageSizeReport,$moreDetail} from "../../../modules/subscription/survey";
 const useStyles = makeStyles(theme => ({
@@ -46,7 +24,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   },
   dialog: {
@@ -85,7 +63,6 @@ function Main() {
   const meta = survey.metaReport;
   const page = survey.metaReport.page - 1;
   const rowsPerPage = survey.metaReport.pageSize;
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
   const handleChangePage = (event, newPage) => {
     dispatch($pageReport(newPage + 1));
   };
@@ -179,7 +156,7 @@ function Main() {
                 {viewDetail != null &&
                 viewDetail.map(row => (
                   <DialogContentText id="alert-dialog-description" key={row.id}>
-                    {row.question=='text'?(
+                    {row.question==='text'?(
                       <div>
                         <p className={classes.question} >{row.label}</p>
                         <p className={classes.answer} >{row.text_answer}</p>
@@ -190,7 +167,7 @@ function Main() {
                 {viewDetail != null &&
                 viewDetail.map(row => (
                   <DialogContentText id="alert-dialog-description" key={row.label}>
-                    {row.question=='level'?(
+                    {row.question==='level'?(
                       <div>
                         <p className={classes.question} >{row.label}</p>
                         <p className={classes.answer}><Rating name="read-only" value={row.level_answer} readOnly /></p>
@@ -201,7 +178,7 @@ function Main() {
                 {viewDetail != null &&
                 viewDetail.map(row => (
                   <DialogContentText id="alert-dialog-description" key={row.larbel}>
-                    {row.question=='select'?(
+                    {row.question==='select'?(
                       <div>
                         <p className={classes.question} >{row.label}</p>
                         <p className={classes.answer} >{row.select_answer}</p>
@@ -224,8 +201,7 @@ function Main() {
 }
 const SurveyReports = injectIntl(Main);
 function Sub({match}) {
-  useEffect(() => { if(match.params.id){ dispatch($fetchSurveyReport(match.params.id)); }}, []);
-  const classes = useStyles();
+  useEffect(() => { if(match.params.id){ dispatch($fetchSurveyReport(match.params.id)); }}, []);// eslint-disable-line react-hooks/exhaustive-deps
   const dispatch = useDispatch();
   const survey = useSelector(({ survey }) => survey);
   const surveyReport = survey.data_report

@@ -1,23 +1,13 @@
-import React, { Component,useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField, colors }from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
@@ -47,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -67,7 +57,7 @@ function Main() {
   const meta = event.meta;
   useEffect(() => {
     dispatch($fetchIndex())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
 
   const page = event.meta.page - 1;
   const rowsPerPage = event.meta.pageSize;
@@ -125,8 +115,8 @@ function Main() {
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Publish",
-                            "btn-label-brand": row.status == "Draft"
+                            "btn-label-success": row.status === "Publish",
+                            "btn-label-brand": row.status === "Draft"
                           }
                         )}
                       >
@@ -134,7 +124,7 @@ function Main() {
                       </span>
                     </TableCell>
                     <TableCell align="left" style={{ padding: "0" }}>
-                      {row.status == "Publish" ? (
+                      {row.status === "Publish" ? (
                         <>
                           <NavLink
                             className=""

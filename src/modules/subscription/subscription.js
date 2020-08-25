@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
@@ -6,9 +5,7 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http,fileDownload } from "../../app/pages/home/services/api";
 import {
@@ -237,7 +234,7 @@ function* fetchSubscription() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -266,7 +263,7 @@ function* searchSubscription({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -300,12 +297,12 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(subscriptionActionRequest, action, id);
-    const subscription = yield select(store => store.subscription);
+    yield call(subscriptionActionRequest, action, id);
+    yield select(store => store.subscription);
     yield put({ type: actionTypes.SUBSCRIPTION_INDEX_REQUEST });
   } catch (e) {
     console.log(e);
-    if (e.response && e.response.status == 401) {
+    if (e.response && e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -316,7 +313,7 @@ function* callAction({ action, id }) {
   }
 }
 function subscriptionActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `subscriptions/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -344,7 +341,7 @@ function* showItem({ id }) {
       key: "item",
       value: null
     });
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -370,7 +367,7 @@ function* takeFreeWorkflowSubscription({ history }) {
     }
   } catch (e) {
     console.log(e);
-    if (e.response && e.response.status == 401) {
+    if (e.response && e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -424,8 +421,8 @@ function* takeCancelActionCompleted(){
       completed:false,
     }
   });
-  if(just == "no")yield put(logOut());
-  if(just == "yes")yield put(regenerateAuthAction());
+  if(just === "no")yield put(logOut());
+  if(just === "yes")yield put(regenerateAuthAction());
 }
 export function* saga() {
   yield takeLatest(actionTypes.SUBSCRIPTION_INDEX_REQUEST, fetchSubscription);

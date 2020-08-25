@@ -142,3 +142,9 @@
     }
   }
 }
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-image: url("/media/icons/png/calendar.png");// no-repeat;
+  width: 18px;
+  height: 18px;
+  border-width: thin;
+}

@@ -1,8 +1,4 @@
 import React from "react";
-import { FormattedMessage } from "react-intl";
-
-import Icon from "../Icon";
-import Typography from "../Typography";
 import RadioButton from "./RadioButton";
 //import trackVirtualPageImpression from '../../../../../lib/trackVirtualPageImpression';
 
@@ -20,8 +16,8 @@ class StepGoal extends React.Component {
   render() {
     const { gender, goal, info, onSubmit } = this.props;
     let imc = (info.weight / info.height / info.height) * 10000;
-    if (info.heightUnit == "in") imc = imc / 2.5399 / 2.5399;
-    if (info.weightUnit == "lbs") imc = imc / 2.20462;
+    if (info.heightUnit === "in") imc = imc / 2.5399 / 2.5399;
+    if (info.weightUnit === "lbs") imc = imc / 2.20462;
     return (
       <main className="row justify-content-md-center">
         <div className="col-12 col-lg-2"></div>
@@ -41,10 +37,10 @@ class StepGoal extends React.Component {
               onSelect={() => onSubmit({ goal: GOALS.LOSE_WEIGHT })}
             >
               <strong>Perder peso</strong>
-              {gender == "male" ? (
-                <img src={require("../../assets/img/male_lose.png")} />
+              {gender === "male" ? (
+                <img src={require("../../assets/img/male_lose.png")}  alt="male-lose-alt"/>
               ) : (
-                <img src={require("../../assets/img/female_lose.png")} />
+                <img src={require("../../assets/img/female_lose.png")} alt="female-lose-alt" />
               )}
               <span>Quema la grasa corporal</span>
               {imc >= 25 && <div className="recommend">RECOMENDADO</div>}
@@ -56,7 +52,7 @@ class StepGoal extends React.Component {
               onSelect={() => onSubmit({ goal: GOALS.GENERAL_FITNESS })}
             >
               <strong>Ponerte en forma</strong>
-              <img src={require("../../assets/img/fit.png")} />
+              <img src={require("../../assets/img/fit.png")} alt="fit-alt" />
               <span>Mejora tu condición física </span>
               {imc >= 18.5 && imc < 25 && (
                 <div className="recommend">RECOMENDADO</div>
@@ -69,13 +65,13 @@ class StepGoal extends React.Component {
               checked={goal === GOALS.BUILD_MUSCLE}
               onSelect={() => onSubmit({ goal: GOALS.BUILD_MUSCLE })}
             >
-              {gender == "male" ? (
+              {gender === "male" ? (
                 <strong>Ganar musculatura</strong>
               ) : (
                 <strong>Tonificar</strong>
               )}
-              <img src={require("../../assets/img/strong.png")} />
-              {gender == "male" ? (
+              <img src={require("../../assets/img/strong.png")} alt="strong-alt" />
+              {gender === "male" ? (
                 <span>Desarrolla tus músculos</span>
               ) : (
                 <span>Define tus músculos</span>

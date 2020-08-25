@@ -9,7 +9,7 @@ export default function Blog() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($fetchFrontIndex())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const event = useSelector(({ event }) => event);
   const meta = event.frontMeta;
   const posts = event.frontData;

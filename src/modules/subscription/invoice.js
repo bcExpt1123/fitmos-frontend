@@ -1,6 +1,5 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest, takeEvery,takeLeading, select } from "redux-saga/effects";
+import { put, call, takeLatest, takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http,fileDownload } from "../../app/pages/home/services/api";
 import {
@@ -156,7 +155,7 @@ function* fetchInvoice() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.INVOICE_INDEX_FAILURE, error: e.message });
@@ -178,7 +177,7 @@ function* searchInvoice({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.INVOICE_INDEX_FAILURE, error: e.message });

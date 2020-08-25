@@ -1,6 +1,5 @@
 import { persistReducer } from "redux-persist";
-import {put,call,takeLatest,takeLeading,select,delay} from "redux-saga/effects";
-import { push } from "react-router-redux";
+import {put,call,takeLatest,takeLeading,select,} from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http, fileDownload } from "../../app/pages/home/services/api";
 import {INDEX_PAGE_SIZE_DEFAULT,INDEX_PAGE_SIZE_OPTIONS } from "../constants/constants";
@@ -142,7 +141,7 @@ export const actionTypes = {
           return { ...state, errors };
         case actionTypes.PRODUCT_UPDATE_RESULT:
           const clonedPublished = [...state.published];
-          const index = clonedPublished.findIndex(item => item.id == action.id);
+          const index = clonedPublished.findIndex(item => item.id === action.id);
           if (index > -1) {
             clonedPublished[index].result = action.repetition;
           }
@@ -162,9 +161,8 @@ export const actionTypes = {
     }
   );
 
-  export const $fetchIndexProducts = () => ({
-    type: actionTypes.PRODUCT_INDEX_REQUEST
-	});
+  export const $fetchIndexProducts = (companyMatchId) => ({
+    type: actionTypes.PRODUCT_INDEX_REQUEST ,companyMatchId	});
 	export function $page(page = 1) {
     return { type: actionTypes.PRODUCT_PAGE_CHANGED, page: page };
   }
@@ -181,7 +179,7 @@ export const actionTypes = {
   export function $updateItemValue(name, value) {
     return { type: actionTypes.PRODUCT_SET_ITEM_VALUE, name, value };
   }
-  export function $setNewItem() {
+  export function $setNewItem(companyMatchId) {
     const item = { id: null, 
       name: "", 
       description: "", 
@@ -195,6 +193,7 @@ export const actionTypes = {
       codigo:"",
       link:"",
       loading:false,
+      companyMatchId:companyMatchId
     };
     return { type: actionTypes.PRODUCT_SET_ITEM, item };
   }
@@ -232,34 +231,37 @@ export const actionTypes = {
   export const $showFrontProduct = (id) => ({ type: actionTypes.PRODUCT_FRONT_SHOW,id });
   export const $generateVoucher = ()=>({type:actionTypes.PRODUCT_GENERATE_VOUCHER});
   export const $cleanCompanyId = ()=>({type:actionTypes.PRODUCT_SET_VALUE,key:"companyId",value:null});
-	const productsRequest = (meta, searchCondition,item) =>
+	const productsRequest = (meta, searchCondition,companyMatchId) =>
   http({
     path: `products?${serializeQuery({
-			company_id:item.productId,
+			company_id:companyMatchId,
       pageSize: meta.pageSize,
       pageNumber: meta.page - 1,
       search: searchCondition.search
     })}`
   }).then(response => response.data);
-function* fetchProducts() {
+function* fetchProducts({companyMatchId}) {
   try {
-		const company = yield select(store=>store.company);
-		// console.log(company.item.productId);
     const product = yield select(store => store.product);
     const result = yield call(
       productsRequest,
       product.meta,
 			product.searchCondition,
-			company.item
-    );
-    console.log(result)
+			companyMatchId
+      );
+      console.log(result)
+    yield put({
+      type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+      name: "companyMatchId",
+      value: companyMatchId
+    });
     yield put({
       type: actionTypes.PRODUCT_INDEX_SUCCESS,
       data: result.indexData.data,
       meta: { total: result.indexData.total, pageTotal: result.indexData.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -278,29 +280,33 @@ function* changePage({ page }) {
   if (page > meta.pageTotal) {
     page = meta.pageTotal - 1;
   }
+  const product = yield select(store => store.product);
+  const companyMatchId = product.item.companyMatchId;
   yield put({ type: actionTypes.PRODUCT_INDEX_META, meta: { page: page } });
-  yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST });
+  yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST, companyMatchId});
 }
 function* changePageSize({ pageSize }) {
+  const product = yield select(store => store.product);
+  const companyMatchId = product.item.companyMatchId;
   yield put({
     type: actionTypes.PRODUCT_INDEX_META,
     meta: { page: 1, pageSize: pageSize }
   });
-  yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST });
+  yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST, companyMatchId});
 }
 
 ///////////////////////////////////////////
 const saveProduct = (product,company) => {
   console.log(product)
   const formData = new FormData();
-  formData.append("company_id",company.item.productId);
+  formData.append("company_id",product.item.companyMatchId);
   formData.append("name", product.item.name);
   formData.append("price_type", product.item.price_type);
   formData.append("voucher_type", product.item.voucher_type);
-  if(product.item.price_type=="discounted"){
+  if(product.item.price_type==="discounted"){
     formData.append("discount", product.item.discount);
   }
-  if(product.item.price_type=="offer"){
+  if(product.item.price_type==="offer"){
     formData.append("regular_price", product.item.regular_price);
     formData.append("price", product.item.price);
   }
@@ -349,14 +355,18 @@ function* saveItem({ history }) {
   try {
     const result = yield call(saveProduct, product,company);
     if (result.product) {
+      alert("Saving success.");
       yield put({
         type: actionTypes.PRODUCT_SET_ITEM_VALUE,
         name: "loading",
         value: false
       });
-      console.log(company.item.productId)
-      alert("Saving success.");
-      history.push(`/admin/companies/${company.item.productId}/products`);
+      yield put({
+        type: actionTypes.PRODUCT_SET_ITEM_VALUE,
+        name: "companyMatchId",
+        value: result.product.company_id,
+      });
+      history.push(`/admin/companies/${product.item.companyMatchId}/products`);
     } else {
       if (result.errors.name) {
         yield put({
@@ -376,7 +386,7 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       console.log(e);
@@ -399,17 +409,18 @@ function* saveItem({ history }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(productActionRequest, action, id);
+    yield call(productActionRequest, action, id);
     const product = yield select(store => store.product);
     console.log(product);
    
-    if (action == "delete") {
-      yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST });
+    if (action === "delete") {
+      const companyMatchId = product.item.companyMatchId;
+      yield put({ type: actionTypes.PRODUCT_INDEX_REQUEST ,companyMatchId});
     } else {
       let data = product.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Disabled";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Disabled";
           else item.status = "Active";
         }
       });
@@ -420,7 +431,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -431,7 +442,7 @@ function* callAction({ action, id }) {
   }
 }
 function productActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `products/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -463,7 +474,6 @@ const viewImage =(id) =>{
   return(http({ path: `viewImages/${id}` }).then(response => response.data));
 };
 function* viewImages({id}){
-  const product = yield select(store => store.product);
   const result = yield call(viewImage,id);
   if(result){
     yield put({
@@ -543,7 +553,7 @@ function* fetchFrontProducts({companyId}){
 }
 function* changeFrontPage({companyId}) {
   const frontMeta = yield select(store => store.product.frontMeta);
-  const page = frontMeta.page+1;
+  let page = frontMeta.page+1;
   if (page < 0) {
     page = 0;
   }
