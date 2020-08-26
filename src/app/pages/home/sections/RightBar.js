@@ -75,18 +75,18 @@ const RightBar = () => {
           <div className="objective-value" onClick={openModalObjective}>{findObjective(currentUser.customer.objective, currentUser)}</div>
         </div>
       </div>
-      <div className="imc row"  onClick={openModalWeight}>
+      <div className="imc row">
         <div className="col-4">
           <div className="value">{parseInt(currentUser.customer.current_height)}
           <span className="unit">{currentUser.customer.current_height_unit}</span></div>
           <div className="label">Altura</div>
         </div>
-        <div className="col-4">
+        <div className="col-4"  onClick={openModalWeight}>
           <div className="value">{parseInt(currentUser.customer.current_weight)}
           <span className="unit">{currentUser.customer.current_weight_unit}</span></div>
           <div className="label">Peso</div>
         </div>
-        <div className="col-4">
+        <div className="col-4"  onClick={openModalWeight}>
           <div className="value">{currentUser.customer.imc}</div>
           <div className="label">IMC</div>
         </div>

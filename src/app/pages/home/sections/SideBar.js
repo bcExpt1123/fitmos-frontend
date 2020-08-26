@@ -192,18 +192,20 @@ const SideBar = ({history}) => {
         </ul>
         <NotificationSection />
         <footer className="menu">
-          <NavLink className="menu-link menu-toggle" to="/terms_and_condition" activeClassName="active">
-            Términos
-          </NavLink>        
-          -
-          <NavLink className="menu-link menu-toggle" to="/privacy" activeClassName="active">
-            Privacidad
-          </NavLink>        
-          -
-          <NavLink className="menu-link menu-toggle" to="/cookies" activeClassName="active">
-            Cookies
-          </NavLink>        
-          &nbsp;&nbsp;&nbsp;Fitemos 2020
+          <div>
+            <NavLink className="menu-link menu-toggle" to="/terms_and_condition" activeClassName="active">
+              Términos
+            </NavLink>        
+            -
+            <NavLink className="menu-link menu-toggle" to="/privacy" activeClassName="active">
+              Privacidad
+            </NavLink>        
+            -
+            <NavLink className="menu-link menu-toggle" to="/cookies" activeClassName="active">
+              Cookies
+            </NavLink>        
+          </div>
+          Fitemos 2020
         </footer>
         <Modal
           size="md"

@@ -479,15 +479,15 @@ class Sub extends Component {
           {true ? (
             <>
               <h3 className="kt-subheader__title">
-                <a onClick={this.handlePrevWeek()} href="!#">
+                <span onClick={this.handlePrevWeek()} style={{cursor:"pointer"}}>
                   <i className="la la-angle-left"></i>
-                </a>
+                </span>
                 &nbsp;&nbsp;
                 {this.getWeekDays(this.props.pickedDate)}
                 &nbsp;&nbsp;
-                <a onClick={this.handleNextWeek()} href="!#">
+                <span onClick={this.handleNextWeek()} style={{cursor:"pointer"}}>
                   <i className="la la-angle-right"></i>
-                </a>
+                </span>
               </h3>
               <span className="kt-subheader__separator kt-subheader__separator--v" />
               <span className="kt-subheader__desc"></span>

@@ -97,7 +97,7 @@ const SectionInvoices = () => {
               <div className="kt-invoice__brand">
                 <h1 className="kt-invoice__title">FACTURA</h1>
                 <div className="kt-invoice__logo">
-                  <a href="!#"><img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} style={{height:'50px'}} alt="fitemos-logo"/></a>
+                  <img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} style={{height:'50px'}} alt="fitemos-logo"/>
                   <span className="kt-invoice__desc">
                     <span></span>
                     <span></span>

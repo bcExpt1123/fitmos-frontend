@@ -45,11 +45,12 @@ const Subscription = () => {
         case 'Active':
           if (currentUser.customer.services[1].expire_at && currentUser.customer.services[1].expire_at > 0) {
             return (
-              <div style={{ color: "#51AB80" }}>Expira {currentUser.customer.services[1].expire_at} dias</div>
+              <div style={{ color: "#51AB80" }}>Expira en {currentUser.customer.services[1].expire_at} dias</div>
             )
-          }else{
+          } 
+          if(currentUser.customer.services[1].expired_date){
             return (
-              <div style={{ color: "#51AB80" }}>Renueva</div>
+              <div style={{ color: "#51AB80" }}>Renueva el {currentUser.customer.services[1].expired_date}</div>
             )
           }
           break;

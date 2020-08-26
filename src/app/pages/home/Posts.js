@@ -25,7 +25,7 @@ const PostsPage = () => {
     </MetaTags>
     {currentUser?(
       <ThreeColumn>
-        <PageHeader title={`Noticias`}/>
+        <PageHeader title={`Blog`}/>
         <Private section={()=><SectionBlog />} />
       </ThreeColumn>
     ):(

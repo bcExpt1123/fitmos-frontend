@@ -40,12 +40,15 @@
 }
 .imc{
   margin-top: 30px;
-  cursor: pointer;
   .col-4:first-child{
     border-right: 2px solid rgba(51,51,51,0.6);
   }
+  .col-4:nth-child(2){
+    cursor: pointer;
+  }
   .col-4:last-child{
     border-left: 2px solid rgba(51,51,51,0.6);
+    cursor: pointer;
   }
   .label{
     margin-top: 10px;

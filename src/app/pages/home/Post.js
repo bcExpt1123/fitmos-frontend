@@ -35,7 +35,7 @@ const PostPage = ({match}) => {
 
         {currentUser?(
           <ThreeColumn>
-            <PageHeader title={`Noticias`}/>
+            <PageHeader title={`Blog`}/>
             <Private section={()=><SectionPost id={match.params.id}/>} />
           </ThreeColumn>
         ):(

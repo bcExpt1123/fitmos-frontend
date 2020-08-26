@@ -176,7 +176,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
       <Modal.Footer>
         {step===0&&(
           <>
-            <a href="!#" className="btn btn-subscription" onClick={()=>setStep(1)}>Finalizar suscripción</a>
+            <button className="btn btn-subscription" onClick={()=>setStep(1)}>Finalizar suscripción</button>
             <Button variant="subscription-renewal" onClick={handleRenewal}  type="button">Tomar oferta 10%</Button>
           </>
         )}
