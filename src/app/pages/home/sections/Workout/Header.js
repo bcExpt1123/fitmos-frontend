@@ -86,6 +86,7 @@ const Header = ()=>{
           onHide={handleHide}
           animation={false}
           centered
+          backdrop="static"
         >
           <Modal.Header closeButton>
             <Modal.Title className="text-center w-100">
@@ -123,7 +124,7 @@ const Header = ()=>{
               <Button
                 type="button"
                 onClick={handleConfirm}
-                className="fs-btn"
+                className="blue-btn"
                 style={{ margin: "10px auto", fontSize: "17px", width: "auto" }}
               >
                 Aceptar

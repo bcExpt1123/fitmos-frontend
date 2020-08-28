@@ -173,6 +173,11 @@
     color:white;
   }
 }
+#cancel-subscription-form{
+  .MuiRating-label{
+    font-size: 1.5rem;
+  }
+}
 @media (max-width: 767px) {
   .section-subscription {
     padding-top: 80px;

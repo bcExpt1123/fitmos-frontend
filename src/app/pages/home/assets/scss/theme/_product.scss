@@ -38,6 +38,7 @@ section.product{
         .usage{
           font-size: 12px;
           color:rgba($color: $basic-text-color, $alpha: 0.5);
+          display: none;
         }
       }
       .btn{

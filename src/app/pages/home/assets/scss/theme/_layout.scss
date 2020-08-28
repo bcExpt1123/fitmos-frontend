@@ -250,8 +250,13 @@
 @media (max-height: 830px) {
   .wrapper #sidebar {
     ul {
-      li a[href]{
-        margin:25px 0;
+      li {
+        a{
+          margin: 25px 0 20px 0;
+        }
+        a[href]{
+          margin:25px 0;
+        }
       }
     }
     footer{
@@ -262,8 +267,13 @@
 @media (max-height: 800px) {
   .wrapper #sidebar {
     ul {
-      li a[href]{
-        margin:20px 0;
+      li {
+        a{
+          margin: 20px 0 18px 0;
+        }
+        a[href]{
+          margin:20px 0;
+        }
       }
       ul li a{
         margin-top: 15px!important;
@@ -275,8 +285,13 @@
 @media (max-height: 770px) {
   .wrapper #sidebar {
     ul {
-      li a[href]{
-        margin:15px 0;
+      li {
+        a{
+          margin: 15px 0 13px 0;
+        }
+        a[href]{
+          margin:15px 0;
+        }
       }
       ul li a{
         margin-top: 10px!important;

@@ -27,7 +27,7 @@
     font-size: 16px;
     span{
       i{
-        opacity: 0.5;
+        opacity: 0;
       }
       &.active{
         i{
@@ -140,6 +140,9 @@
     .form-group {
       label{
         vertical-align: text-top;
+        &.MuiRating-label{
+          font-size: 1.5rem;
+        }
       }
       .rating-error{
         border: 1px solid #fd397a;
@@ -147,6 +150,11 @@
       }
     }
   }
+}
+.blue-btn{
+  border: 1px solid #1A7998;
+  background-color: #1A7998;  
+  display:block;
 }
 @media (max-width: 991px) {
   .page-title{
@@ -204,11 +212,14 @@
   .workout{
     .workout-body{
       .block{
-        padding:0;  
+        padding:0 20px;  
         .tab-content{
-          padding:0 20px;  
+          padding:0px;  
         }
         .image{
+          margin-left: -20px;
+          margin-right: -20px;
+          width: calc(100% + 40px);
           height: 143px;
           .background-container{
             .background{

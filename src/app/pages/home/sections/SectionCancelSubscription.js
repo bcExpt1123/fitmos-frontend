@@ -11,7 +11,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const [step, setStep] = useState(0);
   const [just, setJust] = useState(false);
-  const [qualityLevel, setQualityLevel] = useState(3);
+  const [qualityLevel, setQualityLevel] = useState(0);
   const [radioReason, setRadioReason] = useState('good');
   const [validated, setValidated] = useState(false);
   const dispatch = useDispatch();
@@ -99,7 +99,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
               <fieldset>
                 <Form.Group>
                   <Form.Label as="legend">
-                    2.Si tuvieras que escoger una razón de cancelamiento, ¿cual sería?
+                    2. Si tuvieras que escoger una razón de cancelamiento, ¿cual sería?
                   </Form.Label>
                   <Form.Check
                     type="radio"
@@ -165,7 +165,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                 </Form.Group>
               </fieldset>    
               <Form.Group controlId="reason">
-                <Form.Label>3.¿Si pudieras darnos una recomendación cuál sería?</Form.Label>
+                <Form.Label>3. ¿Si pudieras darnos una recomendación cuál sería?</Form.Label>
                 <Form.Control as="textarea" name="recommendation" required rows="3" placeholder="Escribe algo..."/>
                 <Form.Control.Feedback type="invalid">Por favor ingrese su recomendación</Form.Control.Feedback>
               </Form.Group>                        

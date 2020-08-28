@@ -96,6 +96,7 @@ const SurveyModal = ({show, handleClose, survey}) => {
       animation={false}
       className="surveys"
       centered
+      backdrop="static"
     >
       <Modal.Header closeButton>
         <Modal.Title className="text-center w-100">
@@ -112,10 +113,10 @@ const SurveyModal = ({show, handleClose, survey}) => {
           <Button
             type="button"
             onClick={handleConfirm}
-            className="fs-btn"
+            className="blue-btn"
             style={{ margin: "10px auto", fontSize: "17px", width: "auto" }}
           >
-            Cambiar
+            Confirmar
           </Button>
         </Form>
       </Modal.Body>
