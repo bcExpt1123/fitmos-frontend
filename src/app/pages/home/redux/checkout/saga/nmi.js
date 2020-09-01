@@ -96,7 +96,7 @@ export function* onPayWithNmi({
     if (result.now === true) {
       let currentUser;
       currentUser = yield select(store => store.auth.currentUser);
-      while(!currentUser.has_workout_subscription){
+      while(!currentUser.has_workout_subscription || !currentUser.has_active_workout_subscription){
         yield delay(50);
         currentUser = yield select(store => store.auth.currentUser);
       }

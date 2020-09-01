@@ -41,7 +41,10 @@ const SubscriptionsPage = () => {
     setShowCredit(true);
     setShowPayment(false);
   }
-  const handleCloseCredit = ()=>setShowCredit(false);
+  const handleCloseCredit = ()=>{
+    setShowCredit(false);
+    setTimeout(()=>{setShowRenewal(true);},300);
+  }
   const handleCloseRenewal = () => setShowRenewal(false);
   const handleCloseCancelledConfirm = ()=>{
     dispatch($cancelActionCompleted());

@@ -51,21 +51,10 @@
     .block{
       padding:0 60px;
       .image{
-        height:388px;
         margin: 10px 0 20px;
-        .background-container{
-          height: 100%;
-          overflow: hidden;
-          pointer-events: none;
-          .background{
-            background-position: 50% 50%;
-            background-size: cover;
-            background-repeat: no-repeat;
-            border-radius: 10px;
-            height: 388px;
-            overflow: hidden;
-            pointer-events: none;            
-          }          
+        img{
+          width: 100%;
+          border-radius: 10px;
         }
       }
       button{
@@ -183,14 +172,6 @@
         .view-notes{
           font-size: 12px!important;
         }
-        .image{
-          height: 280px;
-          .background-container{
-            .background{
-              height: 280px;
-            }
-          }
-        }
       }
       .blog{
         padding:0 20px;
@@ -220,12 +201,10 @@
           margin-left: -20px;
           margin-right: -20px;
           width: calc(100% + 40px);
-          height: 143px;
-          .background-container{
-            .background{
-              height: 143px;
-            }
-          }
+        }
+        #timer-clock{
+          width:calc(100% + 40px)!important;
+          margin-left: -20px;
         }
       }
       .blog{

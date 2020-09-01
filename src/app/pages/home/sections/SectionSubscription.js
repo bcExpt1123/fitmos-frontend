@@ -191,12 +191,15 @@ class Subscription extends React.Component {
     if (serviceItem) {
       if(currentUser&&currentUser.customer.currentWorkoutPlan!=='monthly'){
         if (serviceItem.monthly !== "") count++;
+        console.log(count);
       }
       if(currentUser&&currentUser.customer.currentWorkoutPlan!=='quarterly'){
-        count++;
-        monthlyFee = serviceItem.quarterly / 3;
-        activePlan = "quarterly";
-        frequency = 3;
+        if (serviceItem.quarterly !== ""){
+          count++;
+          monthlyFee = serviceItem.quarterly / 3;
+          activePlan = "quarterly";
+          frequency = 3;
+        }
       }
       if(currentUser&&currentUser.customer.currentWorkoutPlan!=='semiannual'){
         if (serviceItem.semiannual !== "") {
@@ -364,7 +367,7 @@ class Subscription extends React.Component {
                           to={`/signup`}
                           className="btn btn-md btn-primary fs-btn"
                         >
-                          COMENZAR
+                          PRUEBA {this.props.serviceItem.free_duration} DÍAS
                         </NavLink>
                       ) : (
                         hasWorkoutSubscription?(

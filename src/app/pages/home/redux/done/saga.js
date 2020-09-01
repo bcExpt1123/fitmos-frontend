@@ -1,6 +1,7 @@
 import { call, takeLeading, put } from "redux-saga/effects";
 import {
   doneWorkout,
+  startWorkout,
   setWorkout,
   findWorkouts,
   putWorkout,
@@ -107,8 +108,23 @@ function* onSubmitSurvey({payload}){
     yield put(trackError(error));
   }
 }
+const sendStartWorkout = (date) =>
+  http({
+    path: "done/start",
+    method: "POST",
+    data: {
+      date,
+    }
+  }).then(response => response.data);
+function* onStartWorkout({payload:{date}}) {
+  try {
+    yield call(sendStartWorkout,date);
+  } catch (error) {
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(doneWorkout,onDoneWorkout);
+  yield takeLeading(startWorkout,onStartWorkout);
   yield takeLeading(findWorkouts,onFindWorkouts);
   yield takeLeading(doneQuestion,onDoneQuestion);
   yield takeLeading(fetchSurvey, onFetchSurvey);

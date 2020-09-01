@@ -23,10 +23,10 @@ const SideBar = ({history}) => {
   useEffect(()=>{
     const paths = ["/perfil","/profile","/ayuda"];
     if( paths.includes(window.location.pathname)){
-      console.log("contain");
       setSubmenu(false);
       setSubContain(true);
     }
+    console.log(shopMenu === null);
     if(shopMenu === null){
       dispatch($fetchFrontIndex());
     }

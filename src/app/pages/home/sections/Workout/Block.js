@@ -5,7 +5,7 @@ import {  useDispatch,useSelector } from "react-redux";
 import { Prompt } from 'react-router';
 
 import Timer from "./Timer";
-import { nextBlock,previousBlock,doneWorkout,initialBlock,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
+import { nextBlock,previousBlock,doneWorkout,startWorkout,initialBlock,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
 
 const Block = ({ block,renderLine,setAll })=>{
   const workouts = useSelector(({done})=>done.workouts);
@@ -15,14 +15,7 @@ const Block = ({ block,renderLine,setAll })=>{
     if(url){
       return (
         <div className="image">
-          <div className="background-container">
-              <div className="background" 
-                style={{
-                  backgroundImage: "url(" + url + ")"
-                }}
-              >
-              </div>
-          </div>
+          <img src = {url} alt="workout introduction" />
         </div>  
       )                        
     }
@@ -38,6 +31,7 @@ const Block = ({ block,renderLine,setAll })=>{
   const nextStep = ()=>{
     if( changeConfirm() ){
       dispatch(nextBlock());
+      dispatch(startWorkout({date:workouts.current.today}));
     }
   }
   const previousStep = ()=>{

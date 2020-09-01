@@ -7,6 +7,7 @@ import { NavLink } from "react-router-dom";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import PageviewIcon from '@material-ui/icons/Pageview';
+import ListAltIcon from "@material-ui/icons/ListAlt";
 
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants"; 
@@ -14,7 +15,8 @@ import {
   $fetchIndexInactive,
   $pageInactive,
   $pageSizeInactive,
-  $deleteActive
+  $deleteActive,
+  $export
 } from "../../../modules/subscription/survey";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -74,6 +76,9 @@ const Main = () =>{
   const actionDelete = id => event => {
     if (window.confirm("Are you sure to delete this item?")) dispatch($deleteActive(id));
   };
+  const actionExport = id=>event=>{
+    dispatch($export(id));
+  }
   return(
 		<>
 			<Paper>
@@ -128,6 +133,13 @@ const Main = () =>{
                         onClick={actionDelete(row.id)}
                       >
                         <DeleteIcon color="error" />
+                      </IconButton>
+                      <IconButton
+                        className={classes.button}
+                        title="Export"
+                        onClick={actionExport(row.id)}
+                      >
+                        <ListAltIcon color="primary" />
                       </IconButton>
                     </TableCell>
                   </TableRow>

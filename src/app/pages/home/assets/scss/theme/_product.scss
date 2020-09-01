@@ -31,6 +31,9 @@ section.product{
         font-size: 14px;
         color:#EB5757;
         font-weight: 600;
+        label{
+          color:black;
+        }
         .regular-price{
           color:$basic-text-color;
           text-decoration: line-through;

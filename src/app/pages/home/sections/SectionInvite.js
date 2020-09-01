@@ -54,19 +54,19 @@ const SectionInvite = () => {
           </FacebookShareButton>
 
           <TwitterShareButton
-            url={referralUrl}
+            url={""}
             title={text}>
             <TwitterIcon size={32} round />
           </TwitterShareButton>
 
           <EmailShareButton
             subject={`Fitemos invitar`}
-            body={`${text}`}>
+            url = {text}>
             <EmailIcon size={32} round />
           </EmailShareButton>
 
           <WhatsappShareButton
-              url={referralUrl}
+              url={""}
               title={text}
               separator=":: "        
           >

@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 const headRows = [
   { id: "id", numeric: false, disablePadding: false, label: "ID",width:"auto" },
   { id: "customers", numeric: false, disablePadding: false, label: "Customers" ,width:"auto"},
-  { id: "time", numeric: false, disablePadding: false, label: "Roport Date" ,width:"auto"},
+  { id: "time", numeric: false, disablePadding: false, label: "Report Date" ,width:"auto"},
   { id: "moredetail", numeric: false, disablePadding: false, label: "More Detail" ,width:"auto"}
 ];
 function Main() {

@@ -45,6 +45,13 @@ const ReferralSettings = () => {
   const handleOnSubmit = async (e) =>{
     e.preventDefault();
     setIsSaving(true);
+    const res = await http({
+      method: "POST",
+      path: "setting/update-referral-discount",
+      data: {
+        discount
+      }
+    });    
     setOriginDiscount(discount);
     setIsSaving(false);
     return false;

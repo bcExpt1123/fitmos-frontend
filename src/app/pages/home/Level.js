@@ -252,16 +252,16 @@ const LevelPage = () => {
           </div>
           <div className="col-2 container">
             <div className="vertical">
-              <div className="level-bar level-bar-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100" style={{height: currentLevel+'%'}}>
+              <div className="level-bar level-bar-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="80" style={{height: ((currentLevel>80)?100:currentLevel/0.8)+'%'}}>
               </div>  
             </div>
           </div>
           <div className="col-4">
-            <div className="number-level-value">+100</div>
-            <div className="number-level-value">80</div>
+            <div className="number-level-value">+80</div>
             <div className="number-level-value">60</div>
             <div className="number-level-value">40</div>
             <div className="number-level-value">20</div>
+            <div className="number-level-value">0</div>
           </div>
         </div>
       </div>

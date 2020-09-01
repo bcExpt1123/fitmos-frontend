@@ -1,4 +1,5 @@
 import React,{useState, useEffect, useRef} from "react";
+import { useSelector } from "react-redux";
 import Slider from "react-slick";
 import {Modal } from "react-bootstrap";
 import classnames from "classnames";
@@ -305,8 +306,9 @@ const SectionInstagram = () => {
   const handleHide = ()=>{
     setShow(false);
   }
+  const serviceItem = useSelector(({service})=>service.item);
   return (
-    <section id="section-instagram" className={"instagram pt-5"}>
+    <section id="section-instagram" className={"instagram pt-5"} style={{backgroundColor:"white"}}>
       <div>
         <div>
           <div className={"header container"}>
@@ -365,7 +367,7 @@ const SectionInstagram = () => {
         </div>
         <div className="community-btn">
           <NavLink to="/signup" className={"btn btn-md btn-primary fs-btn"} exact>
-            COMENZAR
+            PRUEBA {serviceItem.free_duration} DÍAS
           </NavLink>
         </div>
       </div>

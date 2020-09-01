@@ -7,7 +7,7 @@ import {
   select,
 } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
-import { http } from "../../app/pages/home/services/api";
+import { http, fileDownload } from "../../app/pages/home/services/api";
 import {
   INDEX_PAGE_SIZE_DEFAULT,
   INDEX_PAGE_SIZE_OPTIONS
@@ -102,6 +102,7 @@ export const actionTypes = {
   SURVEY_REPORT_VIEWREPORT:"SURVEY_REPORT_VIEWREPORT",
   SURVEY_PAGE_CHANGED_REPORT:"SURVEY_PAGE_CHANGED_REPORT",
   SURVEY_REPORT_MORE_DETAIL:"SURVEY_REPORT_MORE_DETAIL",
+  SURVEY_EXPORT:"SURVEY_EXPORT",
 
 };
 export const reducer = persistReducer(
@@ -285,6 +286,9 @@ export function $fetchSurveyReport(id) {
 }
 export function $moreDetail(id) {
   return { type: actionTypes.SURVEY_REPORT_MORE_DETAIL, id };
+}
+export function $export(id){
+  return { type: actionTypes.SURVEY_EXPORT, id };
 }
 function* actionSurveyTitleSave({history}) {
   const survey = yield select(store => store.survey);
@@ -827,7 +831,7 @@ const viewReportRequest = (id,surveyId) =>{
   formData.append('customerId',id);
   formData.append('surveyId',surveyId);
   return http({
-    path: `survey-roports/view`,
+    path: `survey-reports/view`,
     method: "POST",
     data: formData,
     headers: {
@@ -846,7 +850,24 @@ function* viewReport({id}){
     });
   }
 }
-
+function download(path,id){
+  fileDownload({path}).then((response)=>{
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `survey-${id}.xlsx`); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+  });
+}
+function* exportSurvey({id}){
+  const path = `survey-reports/export?survey_id=${id}`;
+  try{
+    yield call(download,path,id);
+  }catch(e){
+    console.log(e)
+  }
+}
 export function* saga(){
   yield takeLatest(actionTypes.SURVEY_INDEX_REQUEST_ACTIVE, fetchSurveyActive);
   yield takeLatest(actionTypes.SURVEY_INDEX_REQUEST_INACTIVE, fetchSurveyInactive);
@@ -871,5 +892,5 @@ export function* saga(){
   yield takeLatest(actionTypes.SURVEY_SELECT_OPTIONS_EDIT, selectOptionEdit);
   yield takeLatest(actionTypes.SURVEY_REPORT_FETCH_DATA, fetchSurveyReportItems);
   yield takeLatest(actionTypes.SURVEY_REPORT_MORE_DETAIL, viewReport);
-  
+  yield takeLatest(actionTypes.SURVEY_EXPORT, exportSurvey);
 }

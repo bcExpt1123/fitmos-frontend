@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import * as qs from 'query-string';
@@ -71,7 +72,7 @@ class Pricing extends React.Component {
                       className={"btn btn-md btn-primary fs-btn"}
                       exact
                     >
-                      COMENZAR
+                      PRUEBA {serviceItem.free_duration} DÍAS
                     </NavLink>
                   </div>
                 </div>

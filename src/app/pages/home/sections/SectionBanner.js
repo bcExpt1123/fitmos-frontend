@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+import { useSelector } from "react-redux";
 
 import { jarallax } from "jarallax";
 import { NavLink } from "react-router-dom";
 
 
-const bannerContent = (
+const BannerContent = ()=>{
+  const serviceItem = useSelector(({service})=>service.item);
+  return(
   <div className="container align-center">
     <div className="row justify-content-md-center">
       <div className="mbr-white col-md-12">
@@ -26,13 +29,13 @@ const bannerContent = (
             className={"btn btn-md btn-primary fs-btn"}
             exact
           >
-            COMENZAR
+            PRUEBA {serviceItem.free_duration} DÍAS
           </NavLink>
         </div>
       </div>
     </div>
   </div>
-);
+)};
 
 class SectionBanner extends Component {
   constructor(props) {
@@ -80,7 +83,7 @@ class SectionBanner extends Component {
           className="mbr-overlay"
           style={{ opacity: 0.4, backgroundColor: "rgb(35, 35, 35)" }}
         ></div>
-        {bannerContent}
+        <BannerContent />
       </section>
     );
   }

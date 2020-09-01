@@ -83,10 +83,10 @@ class Tabata extends Base {
               <span className="mh4">
                 rondas de
               </span>
-              <span className="tl">&nbsp;{this.state.work}&nbsp;</span>
+              <span className="tl">&nbsp;{this.state.work>60?(formatMinSec(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
               <span className="tr">&nbsp;de actividad &nbsp;</span>
               {this.state.rest>0&&(
-                <span>y {this.state.rest} de descanso.</span>
+                <span>y {this.state.rest>60?(formatMinSec(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso.</span>
               )}
           </div>
           <div className="timer--settingField mb3">

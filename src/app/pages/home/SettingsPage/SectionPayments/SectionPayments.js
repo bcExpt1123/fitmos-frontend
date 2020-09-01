@@ -59,7 +59,7 @@ const SectionPayments = () => {
   const items = useSelector(({ tocken }) => tocken.items);
   useEffect(() => {
     dispatch($fetchIndex());
-  }, [items]);// eslint-disable-line react-hooks/exhaustive-deps
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const item = useSelector(({ tocken }) => tocken.item);
   const isSaving = useSelector(({ tocken }) => tocken.isSaving);
   const showForm = useSelector(({ tocken }) => tocken.showForm);
@@ -195,7 +195,16 @@ const SectionPayments = () => {
             onSubmit={onSubmit}
             validate={validate}
             isInitialValid={false}
-            render={({ isValid, errors, touched, values }) => (
+            >
+              {({
+                handleSubmit,
+                handleChange,
+                handleBlur,
+                values,
+                touched,
+                isValid,
+                errors
+              }) => (
               <Form noValidate>
                 <CreditCardForm
                   errors={errors}
@@ -222,9 +231,8 @@ const SectionPayments = () => {
                     )}
                 </Button>
               </Form>
-            )}
-          />
-
+              )}
+           </Formik>
         </Modal.Body>
       </Modal>
       <Modal

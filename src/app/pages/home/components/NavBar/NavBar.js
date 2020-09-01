@@ -212,7 +212,7 @@ class NavBarVariantFull extends React.Component {
                           className={"btn btn-sm btn-primary display-4 fs-btn"}
                           exact
                         >
-                          Comenzar
+                          Prueba {this.props.serviceItem.free_duration} días
                         </NavLink>
                       </div>
                       <div className="navbar-buttons mbr-section-btn  d-none d-md-block">
@@ -274,7 +274,8 @@ const NavBarWrapper = ({ ...props }) => {
 
 export const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
-  expires_at: state.auth.expires_at
+  expires_at: state.auth.expires_at,
+  serviceItem: state.service.item,
 });
 
 export const mapDispatchToProps = {

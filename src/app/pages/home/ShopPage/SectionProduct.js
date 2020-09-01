@@ -11,14 +11,7 @@ const SectionProduct = ({product}) => (
         to={`/shop/products/${product.id}`}
       >
         <div className="image">
-          <div className="background-container">
-            <div className="background" 
-              style={{
-                backgroundImage: "url(" + product.media_url + ")"
-              }}
-            >
-            </div>
-          </div>
+          <img src={product.media_url} alt={product.name}/>
         </div>
         <div className="body">
           <div className="name">

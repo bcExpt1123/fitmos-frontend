@@ -45,6 +45,13 @@ const TagLineSettings = () => {
   const handleOnSubmit = async (e) =>{
     e.preventDefault();
     setIsSaving(true);
+    const res = await http({
+      method: "POST",
+      path: "setting/update-tag-line",
+      data: {
+        tagLine
+      }
+    });
     setOriginTagLine(tagLine);
     setIsSaving(false);
     return false;

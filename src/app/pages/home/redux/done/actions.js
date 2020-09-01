@@ -2,6 +2,7 @@ import { createActions } from "redux-actions";
 
 export const {
   doneWorkout,
+  startWorkout,
   setWorkout,
   findWorkouts,
   putWorkout,
@@ -21,6 +22,7 @@ export const {
   removeTimer,
 } = createActions(
   "DONE_WORKOUT",
+  "START_WORKOUT",
   "SET_WORKOUT",
   "FIND_WORKOUTS",
   "PUT_WORKOUT",

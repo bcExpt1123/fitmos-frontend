@@ -230,6 +230,23 @@ class StepInfo extends React.Component {
   }
 
   render() {
+    const dateConfig = {
+      'date': {
+        format: 'DD',
+        caption: 'Day',
+        step: 1,
+      },
+      'month': {
+        format: 'MM',
+        caption: 'Mon',
+        step: 1,
+      },
+      'year': {
+          format: 'YYYY',
+          caption: 'Year',
+          step: 1,
+      },
+    };
     return (
       <main className="row justify-content-md-center">
         <div className="col-12 col-lg-2"></div>
@@ -394,6 +411,7 @@ class StepInfo extends React.Component {
                     isOpen={this.state.isOpen}
                     confirmText={'Confirmar'}
                     cancelText={'Cancelar'}
+                    dateConfig={dateConfig}
                     onSelect={this.handleSelect}
                     onCancel={this.handleCancel} />
                 </>

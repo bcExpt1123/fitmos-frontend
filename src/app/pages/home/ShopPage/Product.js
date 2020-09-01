@@ -65,10 +65,10 @@ const Product = ({match}) => {
   const productRender = (product)=>{
     return (
       <>
-        <h3>{product.name}</h3>
+        <h3>{product.item.name}</h3>
         <div className="mt-4">{product.item.description}</div>
         <div className="product-attributes">
-            <label>Offer:</label>&nbsp;&nbsp;             
+            <label>Oferta:</label>&nbsp;&nbsp;             
             {product.item.price_type === 'offer'?(
               <>
                 <span className="regular-price">${product.item.regular_price}</span>&nbsp;&nbsp;<span>${product.item.price}</span>

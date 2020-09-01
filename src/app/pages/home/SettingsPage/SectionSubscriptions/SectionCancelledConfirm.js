@@ -27,7 +27,7 @@ const CancelledConfirm = ({show,handleClose}) => {
           {cancelled.just === "yes"&&(
             <>
               <p>Tu suscripción ha sido cancelada con éxito y no se volverán a hacer cobros adicionales.</p>
-              <p>Tendrás el servicio disponible hasta ({cancelled.endDate}).</p>
+              <p>Tendrás el servicio disponible hasta {cancelled.endDate}.</p>
             </>
           )}
           {cancelled.just === "no"&&(
