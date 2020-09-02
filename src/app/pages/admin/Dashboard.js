@@ -4,7 +4,7 @@ import { Paper } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 import { http } from "../home/services/api";
 import CustomersChart from "./sections/CustomersChart.js";
-import { $exportReport } from "../../../modules/subscription/customer";
+import { $exportReport, $exportReportUsage } from "../../../modules/subscription/customer";
 
 const useStyles = makeStyles(theme => ({
 }));
@@ -48,13 +48,15 @@ export default function Dashboard() {
   const handleExport = ()=>{
     dispatch($exportReport(from,to));
   }
+  const handleExportUsage = ()=>{
+    dispatch($exportReportUsage(from,to));
+  }
   const changeFromDate = (event)=>{
     setFrom(event.target.value);
   }
   const changeToDate = (event)=>{
     setTo(event.target.value);
   }
-  const labels = ['2020/06/01','2020/06/02','2020/06/03','2020/06/04','2020/06/05','2020/06/06'];
   return <>
     <Paper className={classes.root}>
       <div className="pt-5 pb-5">
@@ -66,10 +68,11 @@ export default function Dashboard() {
           <input name="to" type="date" value={to} onChange={changeToDate}/>
           <button className="btn btn-primary" onClick={handleSearch}>Filter</button>
           <button className="btn btn-primary" onClick={handleExport}>Export</button>
+          <button className="btn btn-primary" onClick={handleExportUsage}>Export Usage</button>
         </div>
       </div>
       {data&&
-        <CustomersChart data={data} labels={labels} color={"green"}/>
+        <CustomersChart data={data} color={"green"}/>
       }
     </Paper>
   </>;

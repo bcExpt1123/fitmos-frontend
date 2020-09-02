@@ -22,6 +22,7 @@ export const actionTypes = {
   CUSTOMER_EXPORT_START: "CUSTOMER_EXPORT_START",
   CUSTOMER_EXPORT_END: "CUSTOMER_EXPORT_END",
   CUSTOMER_DASHBOARD_EXPORT_REQUEST: "CUSTOMER_DASHBOARD_EXPORT_REQUEST",
+  CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST:"CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST",
   //for pagination
   CUSTOMER_INDEX_META: "CUSTOMER_INDEX_META",
   CUSTOMER_PAGE_CHANGED: "CUSTOMER_PAGE_CHANGED",
@@ -128,6 +129,9 @@ export function $export(searchCondition) {
 }
 export function $exportReport(from,to) {
   return { type: actionTypes.CUSTOMER_DASHBOARD_EXPORT_REQUEST,from,to};
+}
+export function $exportReportUsage(from, to){
+  return { type: actionTypes.CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST,from,to};
 }
 export function $disable(id) {
   return { type: actionTypes.CUSTOMER_ACTION_REQUEST, action: "disable", id };
@@ -278,12 +282,12 @@ function* exportCustomers({searchCondition}){
     yield put({type:actionTypes.CUSTOMER_EXPORT_END});
   }
 }
-function downloadReport(path,from,to){
+function downloadReport(path,from,to, name){
   fileDownload({path}).then((response)=>{
     const url = window.URL.createObjectURL(new Blob([response.data]));
     const link = document.createElement('a');
     link.href = url;
-    link.setAttribute('download', 'Report-'+from+'-'+to+'.xlsx'); //or any other extension
+    link.setAttribute('download', name); //or any other extension
     document.body.appendChild(link);
     link.click();
   });
@@ -295,7 +299,21 @@ function* exportReport({from,to}){
   })}`;
   yield put({type:actionTypes.CUSTOMER_EXPORT_START});
   try{
-    yield call(downloadReport,path,from,to);
+    yield call(downloadReport,path,from,to,'Report-'+from+'-'+to+'.xlsx');
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }catch(e){
+    console.log(e)
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }
+}
+function* exportReportUsage({from,to}){
+  const path = `reports/export-usage?${serializeQuery({
+    from,
+    to
+  })}`;
+  yield put({type:actionTypes.CUSTOMER_EXPORT_START});
+  try{
+    yield call(downloadReport,path,from,to,'Report-Usage-'+from+'-'+to+'.xlsx');
     yield put({type:actionTypes.CUSTOMER_EXPORT_END});
   }catch(e){
     console.log(e)
@@ -311,4 +329,5 @@ export function* saga() {
   yield takeLatest(actionTypes.CUSTOMER_CHANGE_ITEM, changeItem);
   yield takeLeading(actionTypes.CUSTOMER_EXPORT_REQUEST, exportCustomers);
   yield takeLeading(actionTypes.CUSTOMER_DASHBOARD_EXPORT_REQUEST,exportReport);
+  yield takeLeading(actionTypes.CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST,exportReportUsage);
 }
