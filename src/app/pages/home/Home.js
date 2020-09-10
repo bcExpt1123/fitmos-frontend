@@ -33,7 +33,7 @@ const Home = ({ auth,history }) => {
     dispatch(fetchSurvey());
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const tagLine = useSelector(({done})=>done.tagLine);
-  const timer = useSelector(({done})=>done.timer);
+  const step = useSelector(({done})=>done.step);
   return (
   <>
 
@@ -49,7 +49,7 @@ const Home = ({ auth,history }) => {
         </MetaTags>
         <ThreeColumn>
           <PageHeader title={`Hola ${auth.currentUser.customer.first_name}`} tagLine={tagLine}/>
-          <div className={classnames("workout",{timer:timer})}>
+          <div className={classnames("workout",{timer:step!==0})}>
             <Header/>
             <Body/>
           </div>

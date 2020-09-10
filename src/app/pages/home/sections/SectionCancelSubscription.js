@@ -12,7 +12,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
   const [step, setStep] = useState(0);
   const [just, setJust] = useState(false);
   const [qualityLevel, setQualityLevel] = useState(0);
-  const [radioReason, setRadioReason] = useState('good');
+  const [radioReason, setRadioReason] = useState('not_suit');
   const [validated, setValidated] = useState(false);
   const dispatch = useDispatch();
   const firstName = currentUser.customer.first_name;
@@ -32,7 +32,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
       let reasonText = null;
       if(form.elements.reasonText)reasonText = form.elements.reasonText.value;
       const recommendation = form.elements.recommendation.value;
-      const enableEnd = just?"no":"yes";
+      const enableEnd = "yes";
       dispatch($cancelActiveSubscription(qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit));
       handleClose();
       return false;
@@ -72,18 +72,19 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
               y podamos acompañarte en todos tus logros.</p>
           </div>
         )}
-        {step===1&&(
+        {step===2&&(
           <div >
             <h3 className='mb-2'>{firstName}, ¡Aún puedes quedarte!</h3>
             <p>Tu suscripción expira el {currentUser.customer.services['1'].expired_date}. ¿Deseas cancelar y seguir
               recibiendo los entrenamientos?</p>
+            <p>Si, quiero cancelar y continuar recibiendo los entrenamientos hasta que expire la suscripción</p>
             <Form.Group>
               <Form.Check type="radio" name="enableEnd" id="cancelRadio1" value={'no'} onChange={onTriggerCancelNow} checked={just} label="No quiero recibir más los entrenamientos"/>
               <Form.Check type="radio" name="enableEnd" id="cancelRadio2" value={'yes'} onChange={onTriggerCancelNow} checked={!just} label="Si, quiero cancelar y continuar recibiendo los entrenamientos hasta que expire la suscripción" />
             </Form.Group>
           </div>
         )}
-        {step===2&&(
+        {step===1&&(
           <div >
             <p>
              {firstName}, gracias por confiar en nosotros. Antes de cancelar agradeceríamos que contestes estas tres preguntas (tarda menos de un minuto).
@@ -101,21 +102,6 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                   <Form.Label as="legend">
                     2. Si tuvieras que escoger una razón de cancelamiento, ¿cual sería?
                   </Form.Label>
-                  <Form.Check
-                    type="radio"
-                    label="Es bueno pero"
-                    name="radioReason"
-                    required
-                    checked={radioReason === 'good'}
-                    onChange={(event) => { setRadioReason('good'); }}
-                    id="radioReason1"
-                  />
-                  {radioReason === 'good'&&(
-                    <Form.Group controlId="reasonText">
-                      <Form.Control as="input" name="reasonText" required placeholder="Escribe algo..."/>
-                      <Form.Control.Feedback type="invalid">Por favor ingrese su razón</Form.Control.Feedback>
-                    </Form.Group>                        
-                  )}
 
                   <Form.Check
                     type="radio"
@@ -146,6 +132,21 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
                     id="radioReason4"
                     feedback="You must agree before submitting."
                   />
+                  <Form.Check
+                    type="radio"
+                    label="Es bueno pero"
+                    name="radioReason"
+                    required
+                    checked={radioReason === 'good'}
+                    onChange={(event) => { setRadioReason('good'); }}
+                    id="radioReason1"
+                  />
+                  {radioReason === 'good'&&(
+                    <Form.Group controlId="reasonText">
+                      <Form.Control as="input" name="reasonText" required placeholder="Escribe algo..."/>
+                      <Form.Control.Feedback type="invalid">Por favor ingrese su razón</Form.Control.Feedback>
+                    </Form.Group>                        
+                  )}
                   <Form.Check
                     type="radio"
                     label="Otro"
@@ -182,13 +183,13 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
         )}
         {step===1&&(
           <>
-            <Button variant="subscription" form="cancel-subscription-form"  onClick={()=>setStep(2)}>Continuar</Button>
+            <Button variant="subscription" form="cancel-subscription-form" type="submit">Finalizar suscripción</Button>
             <Button variant="subscription-renewal"  onClick={()=>setStep(0)} type="button">Regresar</Button>
           </>
         )}
         {step===2&&(
           <>
-            <Button variant="subscription" form="cancel-subscription-form" type="submit">Finalizar suscripción</Button>
+            <Button variant="subscription" form="cancel-subscription-form"  onClick={()=>setStep(2)}>Continuar</Button>
             <Button variant="subscription-renewal"  onClick={()=>setStep(0)} type="button">Regresar</Button>
           </>
         )}

@@ -88,7 +88,7 @@ const Block = ({ block,renderLine,setAll })=>{
         )
       }
       {
-        step===workouts.current.blocks.length-1?(
+        step!==0 && step===workouts.current.blocks.length-1?(
           <div className="actions">
             <button onClick={previousStep} className="previous">
               Anterior

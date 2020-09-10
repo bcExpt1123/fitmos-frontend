@@ -26,10 +26,10 @@ const BannerContent = ()=>{
         <div className="mbr-section-btn">
           <NavLink
             to="/signup"
-            className={"btn btn-md btn-primary fs-btn"}
+            className={"btn btn-md btn-primary fs-home-btn"}
             exact
           >
-            PRUEBA {serviceItem.free_duration} DÍAS
+            PRUEBA {serviceItem && serviceItem.free_duration} DÍAS
           </NavLink>
         </div>
       </div>

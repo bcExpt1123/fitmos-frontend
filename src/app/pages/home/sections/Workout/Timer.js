@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 
 
-import ForTime from '../../components/Timer/ForTime'
-import AMRAP from '../../components/Timer/AMRAP'
-import Tabata from '../../components/Timer/Tabata'
+import ForTime from '../../components/Timer/ForTime';
+import AMRAP from '../../components/Timer/AMRAP';
+import Tabata from '../../components/Timer/Tabata';
+import Calentamiento from '../../components/Timer/Calentamiento';
+import Extra from '../../components/Timer/Extra';
 
 
 function Timer({ type, work, round, rest,setIsRunning }) {
@@ -37,6 +39,16 @@ function Timer({ type, work, round, rest,setIsRunning }) {
       {selectedTimer==='tabata'&&(
         <>
           <Tabata handleStop={handleStop} work={work} rounds={round} rest={rest} setIsRunning={setIsRunning}/>
+        </>
+      )}
+      {selectedTimer==='calentamiento'&&(
+        <>
+          <Calentamiento handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
+        </>
+      )}
+      {selectedTimer==='extra'&&(
+        <>
+          <Extra handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
         </>
       )}
     </>

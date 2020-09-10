@@ -15,7 +15,7 @@ const Blocks = ({ renderLine,setAll })=>{
     <>
     {
       workouts.current.blocks.map( (block,index)=>(
-        block.note&&(
+        index!==0&&(
           <div className="block" key={index}>
             <BlockSection block={block} renderLine={renderLine} index={index}/>
           </div>

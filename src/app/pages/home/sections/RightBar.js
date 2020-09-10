@@ -76,7 +76,7 @@ const RightBar = () => {
         </div>
       </div>
       <div className="imc row">
-        <div className="col-4">
+        <div className="col-4"  onClick={openModal}>
           <div className="value">{parseInt(currentUser.customer.current_height)}
           <span className="unit">{currentUser.customer.current_height_unit}</span></div>
           <div className="label">Altura</div>

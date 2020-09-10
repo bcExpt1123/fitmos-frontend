@@ -17,7 +17,6 @@ import { http } from "../services/api";
 const SectionInvite = () => {
   const [referralUrl,setReferralUrl] = useState(false);
   const [text,setText] = useState(false);
-  const [discount, setDiscount] = useState("");
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect( () => {
     async function fetchData(){
@@ -25,7 +24,6 @@ const SectionInvite = () => {
         path: "customers/referral"
       });
       if( res.data && res.data.referralUrl ){
-        setDiscount(res.data.discount)
         setReferralUrl(res.data.referralUrl);
         setText(`${currentUser.customer.first_name} ${currentUser.customer.last_name} te invita a entrenar con Fitemos. Afíliate con este link: ${res.data.referralUrl} para obtener ${currentUser.customer.services[1].free_duration} de prueba sin compromiso y luego ${res.data.discount}% de descuento mensual.`);
       }
@@ -37,7 +35,7 @@ const SectionInvite = () => {
       <h3 className="text-center">{currentUser&&currentUser.customer.first_name}, ¡Compartamos el Fitness!</h3>
       <ul className="mt-5 pt-2">
         <li>Al invitar un amigo, le enviarás {currentUser.customer.services[1].free_duration} días de prueba, sin compromiso.</li>
-        <li>De tu amigo quedarse entrenando contigo, ambos tendrán {discount}% descuento en cada renovación.</li>
+        <li>De tu amigo quedarse entrenando contigo, ambos tendrán {currentUser.referral_discount}% descuento en cada renovación.</li>
         <li>Tu invitado tendrá el descuento inmediatamente. Tu lo tendrás en tu próxima renovación.</li>
         <li>El descuento será renovable. Siempre y cuando tengas uno o más invitados activos.</li>
         <li>Haz click en el boton de abajo, genera tu enlace e invita a tus amigos.</li>

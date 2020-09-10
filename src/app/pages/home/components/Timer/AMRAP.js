@@ -56,17 +56,20 @@ class AMRAP extends Base {
         <div className="amrap-timer-start-height">&nbsp;</div>
         <div className="w-100">
           <div className="timer--settingField mb3">
-              <span className="tr">Completar en  
-                el menor tiempo posible.</span>
+            <span className="tr">La mayor cantidad&nbsp;</span>
+            <span className="mh4">
+              de rondas
+            </span>
+            <span className="tl"> y repeticiones</span>
+            <span className="tr"> en:</span>
           </div>
           <div className="timer--settingField mb3">
-              <span className="tr">Tiempo Límite:&nbsp;</span>
-              <span className="mh4">
-                {formatMinSec(this.state.minutes*60)}
-              </span>
-              <span className="tl">&nbsp;minutos.</span>
+            <span className="tr">Tiempo Límite:&nbsp;</span>
+            <span className="mh4">
+              {formatMinSec(this.state.minutes*60)}
+            </span>
+            <span className="tl">&nbsp;minutos.</span>
           </div>
-
         </div>
         <div className="amrap-timer-start-height">&nbsp;</div>
         <Button

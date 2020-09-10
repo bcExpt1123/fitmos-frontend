@@ -25,7 +25,7 @@ const Details = () => {
     <Card>
       <Card.Header>
         <div className="row">
-          <div className="col-10"><Card.Title>Details</Card.Title></div>
+          <div className="col-10"><Card.Title>Detalles</Card.Title></div>
           <div className="col-2 edit"><i className="fa fa-pen" onClick={openModal}></i></div>
         </div>
       </Card.Header>

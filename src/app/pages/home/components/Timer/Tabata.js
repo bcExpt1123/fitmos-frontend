@@ -79,24 +79,27 @@ class Tabata extends Base {
         <div className="tabata-timer-start-height">&nbsp;</div>
         <div className="w-100">
           <div className="timer--settingField mb3">
-              <span className="tr">{this.state.rounds}&nbsp;</span>
-              <span className="mh4">
-                rondas de
-              </span>
-              <span className="tl">&nbsp;{this.state.work>60?(formatMinSec(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
-              <span className="tr">&nbsp;de actividad &nbsp;</span>
-              {this.state.rest>0&&(
-                <span>y {this.state.rest>60?(formatMinSec(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso.</span>
-              )}
-          </div>
+            <span className="tr">Completar {this.state.rounds}&nbsp;</span>
+            <span className="mh4">
+              rondas de:
+            </span>
+          </div>  
           <div className="timer--settingField mb3">
-              <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
-              <span className="mh4">
-                {formatMinSec(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
-              </span>
-              <span className="tl">&nbsp;minutos</span>
+            <span className="tl">&nbsp;{this.state.work>60?(formatMinSec(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
+            <span className="tr">&nbsp;de actividad. &nbsp;</span>
           </div>
-
+          {this.state.rest>0&&(
+            <div className="timer--settingField mb3">
+              <span>{this.state.rest>60?(formatMinSec(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
+            </div>  
+          )}
+          <div className="timer--settingField mb3">
+            <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
+            <span className="mh4">
+              {formatMinSec(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
+            </span>
+            <span className="tl">&nbsp;minutos.</span>
+          </div>
         </div>
         <div className="tabata-timer-start-height">&nbsp;</div>
         <Button

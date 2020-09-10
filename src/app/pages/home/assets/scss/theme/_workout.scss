@@ -81,6 +81,9 @@
       }
       .view-notes{
         width:180px;
+        border: 1px solid #B9B7B7!important;
+        background-color: #ffffff!important;
+        color:$basic-text-color!important;
       }
     }
     .blog,&>.actions{
@@ -129,8 +132,12 @@
     .form-group {
       label{
         vertical-align: text-top;
+        font-size: 1.2rem;
         &.MuiRating-label{
           font-size: 1.5rem;
+        }
+        &.form-check-label{
+          margin-left:3px;
         }
       }
       .rating-error{
@@ -157,6 +164,7 @@
     .workout-header{
       padding:18px 20px;
       font-size: 14px;
+      border-bottom: 0;
       span.workout-date{
         font-size: 14px;
       }
@@ -171,6 +179,8 @@
         }  
         .view-notes{
           font-size: 12px!important;
+          width:100px;
+          margin:5px;
         }
       }
       .blog{
@@ -201,6 +211,9 @@
           margin-left: -20px;
           margin-right: -20px;
           width: calc(100% + 40px);
+          img{
+            border-radius: 0px;
+          }
         }
         #timer-clock{
           width:calc(100% + 40px)!important;

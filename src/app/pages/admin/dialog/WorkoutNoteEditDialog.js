@@ -76,6 +76,8 @@ export default function WorkoutEditDialog(props) {
                 <MenuItem value="amrap">Amrap</MenuItem>
                 <MenuItem value="for_time">For time</MenuItem>
                 <MenuItem value="tabata">Tabata</MenuItem>
+                <MenuItem value="calentamiento">Calentamiento</MenuItem>
+                <MenuItem value="extra">Extra Workout</MenuItem>
               </Select>
             </FormControl>            
             {props.timerType&&(
@@ -115,7 +117,7 @@ export default function WorkoutEditDialog(props) {
                     autoFocus
                     margin="dense"
                     id="workout"
-                    value={props.work}
+                    value={(props.work==="" && (props.timerType === "calentamiento" || props.timerType==="extra"))?30:props.work}
                     onChange={props.handleTimerWorkChange}
                     type="number"
                     label="Work Time(Minutes)"

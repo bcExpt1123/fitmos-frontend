@@ -157,7 +157,11 @@ const SectionPayments = () => {
                 <td>{card.expiry_month+'/'+card.expiry_year}</td>
                 <td>
                   <button onClick={(event) => handleShowForm(card.id)}>Editar</button>
-                  <button onClick={(event) => handleDelete(card.id)}>Eliminar</button>
+                  {
+                    currentUser.has_active_workout_subscription && items.length>1 && (
+                      <button onClick={(event) => handleDelete(card.id)}>Eliminar</button>
+                    )
+                  }
                 </td>
               </tr>
               )}

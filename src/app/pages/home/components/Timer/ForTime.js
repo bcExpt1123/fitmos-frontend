@@ -67,12 +67,8 @@ class ForTime extends Base {
       <div className="amrap-timer-start-height">&nbsp;</div>
         <div className="w-100">
           <div className="timer--settingField mb3">
-            <span className="tr">La mayor cantidad&nbsp;</span>
-            <span className="mh4">
-              de rondas
-            </span>
-            <span className="tl"> y repeticiones</span>
-            <span className="tr"> en:</span>
+            <span className="tr">Completar en  
+              el menor tiempo posible.</span>
           </div>
           <div className="timer--settingField mb3">
             <span className="tr">Tiempo Total:&nbsp;</span>

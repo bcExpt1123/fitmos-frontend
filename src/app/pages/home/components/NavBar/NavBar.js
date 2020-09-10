@@ -16,6 +16,7 @@ import {
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
+import { $changeItem } from "../../../../../modules/subscription/service";
 
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
@@ -51,6 +52,7 @@ class NavBarVariantFull extends React.Component {
       //console.log(parsed.coupon);
       this.props.setPrivateVoucher(parsed.coupon);
     }
+    if(this.props.serviceItem == null)this.props.$changeItem(1);
   }
 
   toggleisDrawerOpen = () => {
@@ -209,10 +211,10 @@ class NavBarVariantFull extends React.Component {
                       <div className="navbar-buttons mbr-section-btn">
                         <NavLink
                           to="/signup"
-                          className={"btn btn-sm btn-primary display-4 fs-btn"}
+                          className={"btn btn-sm btn-primary display-4 fs-home-btn"}
                           exact
                         >
-                          Prueba {this.props.serviceItem.free_duration} días
+                          Prueba {this.props.serviceItem && this.props.serviceItem.free_duration} días
                         </NavLink>
                       </div>
                       <div className="navbar-buttons mbr-section-btn  d-none d-md-block">
@@ -281,7 +283,8 @@ export const mapStateToProps = state => ({
 export const mapDispatchToProps = {
   deleteAuthAction: deleteAuthAction,
   regenerateAuthAction,
-  setPrivateVoucher
+  setPrivateVoucher,
+  $changeItem,
 };
 
 export default withRouter(NavBarWrapper);

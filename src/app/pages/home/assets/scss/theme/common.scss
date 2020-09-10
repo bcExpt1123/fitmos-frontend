@@ -30,6 +30,15 @@
 @import "./_footer_checkout.scss";
 .fs-btn {
   border-radius: 7px;
+  background: linear-gradient(90deg, #028fb4, #bfd734);
+  border: 0;
+  &:hover {
+    background: linear-gradient(90deg, #187688, #97c84f);
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+.fs-home-btn {
+  border-radius: 7px;
   background: linear-gradient(90deg,#B62602,#D76F33);
   border: 0;
   font-weight: bold;
@@ -113,4 +122,9 @@ h3 {
       }
     }
   } 
+}
+.modal .modal-content .modal-header {
+  .close{
+    margin-left:-34px;
+  }
 }

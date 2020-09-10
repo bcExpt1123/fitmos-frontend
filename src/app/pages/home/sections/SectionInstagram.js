@@ -366,8 +366,8 @@ const SectionInstagram = () => {
           )}
         </div>
         <div className="community-btn">
-          <NavLink to="/signup" className={"btn btn-md btn-primary fs-btn"} exact>
-            PRUEBA {serviceItem.free_duration} DÍAS
+          <NavLink to="/signup" className={"btn btn-md btn-primary fs-home-btn"} exact>
+            PRUEBA { serviceItem && serviceItem.free_duration} DÍAS
           </NavLink>
         </div>
       </div>
