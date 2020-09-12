@@ -114,6 +114,13 @@
 }
 @media(max-width:767px){
   .subscriptions {
+    &.modal{
+      .modal-content{
+        .modal-body{
+          padding: 30px 10px 10px 10px;
+        }
+      }
+    }
     thead{
       background-color: rgba(44,44,44,0.7);
       th{
