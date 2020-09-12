@@ -185,6 +185,32 @@ const LevelPage = () => {
             </Formik>
           </div>
           <div>
+            <div className="row no-glutter d-md-none">
+              <div className="col-6">
+                <div className={classnames("number-level",{active:currentLevel>79})}>Nivel Fisico 5</div>
+                <div className={classnames("number-level",{active:currentLevel>59 && currentLevel<=79})}>Nivel Fisico 4</div>
+                <div className={classnames("number-level",{active:currentLevel>39 && currentLevel<=59})}>Nivel Fisico 3</div>
+                <div className={classnames("number-level",{active:currentLevel>19 && currentLevel<=39})}>Nivel Fisico 2</div>
+                <div className={classnames("number-level",{active:currentLevel>0 && currentLevel<=19})}>Nivel Fisico 1</div>
+              </div>
+              <div className="col-2 container">
+                <div className="vertical">
+                  <div className="level-bar level-bar-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="80" style={{height: ((currentLevel>80)?100:currentLevel/0.8)+'%'}}>
+                  </div>  
+                </div>
+              </div>
+              <div className="col-4">
+                <div className="number-level-value">+80</div>
+                <div className="number-level-value">60</div>
+                <div className="number-level-value">40</div>
+                <div className="number-level-value">20</div>
+                <div className="number-level-value">0</div>
+              </div>
+            </div>
+            <p>En este prueba determinaremos el nivel de condición física. 
+              La intensidad del programa se ajustará en función del resultado. 
+              Esta prueba se recomienda realizarla en una ventana mínima de dos semanas entre pruebas. 
+              Al realizarla ingresaremos nuestro puntaje en el recuadro inferior.</p>
             <h4 className="mb-2 mt-2">Registro de Repeticiones</h4>
             <Table responsive className='records'>
               <thead>
@@ -214,32 +240,6 @@ const LevelPage = () => {
                   ))}
               </tbody>
             </Table>
-            <div className="row no-glutter d-md-none">
-              <div className="col-6">
-                <div className={classnames("number-level",{active:currentLevel>79})}>Nivel Fisico 5</div>
-                <div className={classnames("number-level",{active:currentLevel>59 && currentLevel<=79})}>Nivel Fisico 4</div>
-                <div className={classnames("number-level",{active:currentLevel>39 && currentLevel<=59})}>Nivel Fisico 3</div>
-                <div className={classnames("number-level",{active:currentLevel>19 && currentLevel<=39})}>Nivel Fisico 2</div>
-                <div className={classnames("number-level",{active:currentLevel>0 && currentLevel<=19})}>Nivel Fisico 1</div>
-              </div>
-              <div className="col-2 container">
-                <div className="vertical">
-                  <div className="level-bar level-bar-info" role="progressbar" aria-valuenow="90" aria-valuemin="0" aria-valuemax="80" style={{height: ((currentLevel>80)?100:currentLevel/0.8)+'%'}}>
-                  </div>  
-                </div>
-              </div>
-              <div className="col-4">
-                <div className="number-level-value">+80</div>
-                <div className="number-level-value">60</div>
-                <div className="number-level-value">40</div>
-                <div className="number-level-value">20</div>
-                <div className="number-level-value">0</div>
-              </div>
-            </div>
-            <p>En este prueba determinaremos el nivel de condición física. 
-              La intensidad del programa se ajustará en función del resultado. 
-              Esta prueba se recomienda realizarla en una ventana mínima de dos semanas entre pruebas. 
-              Al realizarla ingresaremos nuestro puntaje en el recuadro inferior.</p>
             <div className="pagination-wrapper pb-3">
               <Pagination
                 activePage={activePage}
