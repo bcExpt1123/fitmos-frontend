@@ -50,7 +50,7 @@ class ChangeGoal extends React.Component {
         animation={false}
         centered
       >
-        <Modal.Header closeButton>
+        <Modal.Header className="close-button-center" closeButton>
           <Modal.Title className="text-center w-100">
             Elige tu objetivo
           </Modal.Title>

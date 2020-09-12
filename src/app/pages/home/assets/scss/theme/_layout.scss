@@ -13,6 +13,7 @@
     left: 2rem;
     border-color:transparent;    
     z-index: 1;
+    background-color: transparent;
     .hamburger{
       span {
         position: absolute;
@@ -26,12 +27,12 @@
           -webkit-transition: all .2s;
           transition: all .2s;          
         }
-        &:nth-child(2),&:nth-child(3) {
+        &:nth-child(2) {
           top: 8px;
           -webkit-transition: all .15s;
           transition: all .15s;
         }
-        &:nth-child(4) {
+        &:nth-child(3) {
           top: 16px;
           -webkit-transition: all .15s;
           transition: all .15s;

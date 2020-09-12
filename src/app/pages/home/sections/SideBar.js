@@ -71,7 +71,6 @@ const SideBar = ({history}) => {
             <span></span>
             <span></span>
             <span></span>
-            <span></span>
           </div>
         </button>
         <div className="menu-logo">
