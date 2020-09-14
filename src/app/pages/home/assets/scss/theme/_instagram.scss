@@ -48,7 +48,7 @@
   }
   .community-btn {
     text-align: center;
-    .fs-btn {
+    .fs-home-btn,.fs-btn {
       width: 283px;
       font-size: 1.75rem;
       font-weight: 500;
@@ -158,7 +158,7 @@
       display: none;
     }
     .community-btn {
-      .fs-btn {
+      .fs-home-btn,.fs-btn {
         font-size: 1.25rem !important;
         width: 162px;
         padding: 0.5rem 1rem;

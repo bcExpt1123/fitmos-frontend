@@ -17,6 +17,7 @@ import { http } from "../services/api";
 const SectionInvite = () => {
   const [referralUrl,setReferralUrl] = useState(false);
   const [text,setText] = useState(false);
+  const [whatsappText,setWhatsappText] = useState(false);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect( () => {
     async function fetchData(){
@@ -25,7 +26,8 @@ const SectionInvite = () => {
       });
       if( res.data && res.data.referralUrl ){
         setReferralUrl(res.data.referralUrl);
-        setText(`${currentUser.customer.first_name} ${currentUser.customer.last_name} te invita a entrenar con Fitemos. Afíliate con este link: ${res.data.referralUrl} para obtener ${currentUser.customer.services[1].free_duration} de prueba sin compromiso y luego ${res.data.discount}% de descuento mensual.`);
+        setText(`${currentUser.customer.first_name} ${currentUser.customer.last_name} te invita a entrenar con Fitemos. Afíliate con este enlace: ${res.data.referralUrl} para obtener ${currentUser.customer.services[1].free_duration} días de prueba sin compromiso y luego ${res.data.discount}% de descuento mensual.`);
+        setWhatsappText(`${currentUser.customer.first_name} ${currentUser.customer.last_name} te invita a entrenar con Fitemos. Afíliate con este enlace  para obtener ${currentUser.customer.services[1].free_duration} días de prueba sin compromiso y luego ${res.data.discount}% de descuento mensual.`);
       }
     }
     fetchData();
@@ -64,9 +66,9 @@ const SectionInvite = () => {
           </EmailShareButton>
 
           <WhatsappShareButton
-              url={""}
-              title={text}
-              separator=":: "        
+              url={referralUrl}
+              title={whatsappText}
+              separator=" "        
           >
             <WhatsappIcon size={32} round />
           </WhatsappShareButton>

@@ -7,7 +7,7 @@ import Button from './Button';
 
 // --- Utils
 import createTabata from '../../sections/Workout/lib/createTabata';
-import {formatMinSec} from '../../sections/Workout/lib/timer';
+import {formatMinSec,formatMinSecOther} from '../../sections/Workout/lib/timer';
 import { pluralize } from '../../sections/Workout/lib/pluralize';
 
 /**
@@ -85,18 +85,18 @@ class Tabata extends Base {
             </span>
           </div>  
           <div className="timer--settingField mb3">
-            <span className="tl">&nbsp;{this.state.work>60?(formatMinSec(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
+            <span className="tl">&nbsp;{this.state.work>=60?(this.state.work==60?formatMinSecOther(this.state.work)+" minuto":formatMinSecOther(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
             <span className="tr">&nbsp;de actividad. &nbsp;</span>
           </div>
           {this.state.rest>0&&(
             <div className="timer--settingField mb3">
-              <span>{this.state.rest>60?(formatMinSec(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
+              <span>{this.state.rest>=60?(this.state.work==60?formatMinSecOther(this.state.work)+" minuto":formatMinSecOther(this.state.work)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
             </div>  
           )}
           <div className="timer--settingField mb3">
             <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
             <span className="mh4">
-              {formatMinSec(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
+              {formatMinSecOther(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
             </span>
             <span className="tl">&nbsp;minutos.</span>
           </div>

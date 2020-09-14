@@ -99,7 +99,7 @@
           margin-bottom: 20px;
         }
         .plan-btn {
-          .fs-btn {
+          .fs-home-btn,.fs-btn {
             font-weight: 500;
             padding-left: 75px;
             padding-right: 75px;
@@ -231,12 +231,14 @@
               font-size: 0.81rem;
               margin-bottom: 10px;
             }
-            .plan-btn .fs-btn {
-              font-size: 0.75rem !important;
-              font-weight: 500;
-              padding: 7px 36px;
-              margin: 0;
-            }
+            .plan-btn{
+              .fs-home-btn,.fs-btn {
+                font-size: 0.75rem !important;
+                font-weight: 500;
+                padding: 7px 36px;
+                margin: 0;
+              }
+            } 
           }
           .border-line-container {
             .border-line {

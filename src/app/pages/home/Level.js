@@ -134,7 +134,7 @@ const LevelPage = () => {
             <h4 className="mb-2 mt-2">Máximos Burpees en 5:00 minutos.</h4>
           </div>
           <div>
-            <h4 className="mb-3 mt-2">Ingresar Repeticiones</h4>
+            <h4 className="mb-3 mt-4">Ingresar Repeticiones</h4>
             <Formik
               enableReinitialize
               validate={validate}

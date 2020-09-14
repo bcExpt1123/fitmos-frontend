@@ -18,7 +18,7 @@ const CancelledConfirm = ({show,handleClose}) => {
     >
       <Modal.Header closeButton>
         <Modal.Title className="text-center w-100">
-          CONFIRMACIÓN DE CANCELACIÓN
+          Cancelación Exitosa
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

@@ -71,7 +71,7 @@ class ForTime extends Base {
               el menor tiempo posible.</span>
           </div>
           <div className="timer--settingField mb3">
-            <span className="tr">Tiempo Total:&nbsp;</span>
+            <span className="tr">Tiempo Límite:&nbsp;</span>
             <span className="mh4">
               {formatMinSec(this.state.minutes*60)}
             </span>

@@ -12,6 +12,7 @@ import NotificationSection from "../sections/NotificationSection";
 import { logOut as logOutAction } from "../redux/auth/actions";
 import { $fetchFrontIndex } from "../../../../modules/subscription/company";
 import { stopRunning } from "../redux/done/actions";
+import { isMobile } from '../../../../_metronic/utils/utils';
 const SideBar = ({history}) => {
   const [submenu, setSubmenu] = useState(true);
   const [subContain, setSubContain] = useState(true);
@@ -21,7 +22,7 @@ const SideBar = ({history}) => {
   const isRunning = useSelector(({done})=>done.isRunning);
   const dispatch = useDispatch();
   useEffect(()=>{
-    const paths = ["/perfil","/profile","/ayuda"];
+    const paths = ["/perfil","/profile","/ayuda","/level"];
     if( paths.includes(window.location.pathname)){
       setSubmenu(false);
       setSubContain(true);
@@ -61,7 +62,7 @@ const SideBar = ({history}) => {
     setShowForm(false);
   }
   const redirectProfilePage = ()=>{
-    history.push('/profile');
+    if(isMobile() === false)history.push('/profile');
   }
   return (
     <>
@@ -172,7 +173,12 @@ const SideBar = ({history}) => {
                 </NavLink>
               </li>
               <li>
-                <NavLink className="menu-link menu-toggle" to="/profile" activeClassName="active">
+                <NavLink className="menu-link menu-toggle" to="/profile" activeClassName="active"
+                  isActive={(match, location) => {
+                    if(location.pathname === "/profile" || location.pathname === "/level" ) return true;
+                    return false;
+                  }}                
+                >
                   Ajustes
                 </NavLink>
               </li>

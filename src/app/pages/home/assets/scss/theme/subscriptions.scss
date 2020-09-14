@@ -156,3 +156,11 @@
     }
   }
 }
+@media(max-width:377px){
+  .subscriptions {
+    .btn-subscription,.btn-subscription-renewal{
+      font-size: 10px!important;
+      padding: 0.5rem 0.5rem;
+    }
+  }
+}
