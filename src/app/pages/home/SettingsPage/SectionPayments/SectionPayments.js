@@ -90,7 +90,7 @@ const SectionPayments = () => {
     dispatch($showFormAction());
   }
   const handleDelete = (id) => {
-    if(items.length === 1 && currentUser.has_active_workout_subscription && currentUser.customer.services['1'].end_date === null){
+    if(items.length === 1 && currentUser.has_active_workout_subscription ){//&& currentUser.customer.services['1'].end_date === null
       setShow(true);
     }else if(window.confirm('¿Estás segura de eliminar esta tarjeta de crédito?')){
       dispatch($delete(id));
@@ -158,9 +158,7 @@ const SectionPayments = () => {
                 <td>
                   <button onClick={(event) => handleShowForm(card.id)}>Editar</button>
                   {
-                    currentUser.has_active_workout_subscription && items.length>1 && (
-                      <button onClick={(event) => handleDelete(card.id)}>Eliminar</button>
-                    )
+                    <button onClick={(event) => handleDelete(card.id)}>Eliminar</button>
                   }
                 </td>
               </tr>
