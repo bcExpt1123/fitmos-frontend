@@ -55,65 +55,67 @@ const RightBar = () => {
   }
   return (  
     <div id="rightbar">
-      <div className="profile-image">
-        <div className="avatar" onClick={openModal}>
-          <Avatar
-            pictureUrls={currentUser.avatarUrls}
-            size="xm"
-            className={"userAvatar"}
-            changeImage={file}
+      <div className="wrapper-rightbar">
+        <div className="profile-image">
+          <div className="avatar" onClick={openModal}>
+            <Avatar
+              pictureUrls={currentUser.avatarUrls}
+              size="xm"
+              className={"userAvatar"}
+              changeImage={file}
+            />
+          </div>
+          <div className="name">
+            <div className="username" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
+            <div className="level">
+              <NavLink className="" to="/level">
+                Nivel Físico {currentUser.customer.current_condition}
+              </NavLink>
+            </div>
+            <div className="objective-label" onClick={openModalObjective}>Objetivo</div>
+            <div className="objective-value" onClick={openModalObjective}>{findObjective(currentUser.customer.objective, currentUser)}</div>
+          </div>
+        </div>
+        <div className="imc row">
+          <div className="col-4"  onClick={openModal}>
+            <div className="value">{parseInt(currentUser.customer.current_height)}
+            <span className="unit">{currentUser.customer.current_height_unit}</span></div>
+            <div className="label">Altura</div>
+          </div>
+          <div className="col-4"  onClick={openModalWeight}>
+            <div className="value">{parseInt(currentUser.customer.current_weight)}
+            <span className="unit">{currentUser.customer.current_weight_unit}</span></div>
+            <div className="label">Peso</div>
+          </div>
+          <div className="col-4"  onClick={openModalWeight}>
+            <div className="value">{currentUser.customer.imc}</div>
+            <div className="label">IMC</div>
+          </div>
+        </div>
+        <div className="workout">
+          <h3 className="">Workouts</h3>
+          <div className="progress-bar-wrapper">
+            <div className="medal-image">
+              {done.toWorkoutImage&&(
+                <img src={done.toWorkoutImage} alt="workout-medal"/>
+              )}
+            </div>
+            <div className="progress-bar-body">
+              <span>{done.workoutCount}/{done.toWorkout}</span>
+              <ProgressBar now={now} />
+            </div>
+          </div>
+        </div>
+        <div className="workout-progress">
+          <QuickStatsChart
+            value={total}
+            desc="Progreso"
+            data={chartOptions.data}
+            labels={chartOptions.labels}
+            color={chartOptions.color}
+            border={chartOptions.border}
           />
         </div>
-        <div className="name">
-          <div className="username" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
-          <div className="level">
-            <NavLink className="" to="/level">
-              Nivel Físico {currentUser.customer.current_condition}
-            </NavLink>
-          </div>
-          <div className="objective-label" onClick={openModalObjective}>Objetivo</div>
-          <div className="objective-value" onClick={openModalObjective}>{findObjective(currentUser.customer.objective, currentUser)}</div>
-        </div>
-      </div>
-      <div className="imc row">
-        <div className="col-4"  onClick={openModal}>
-          <div className="value">{parseInt(currentUser.customer.current_height)}
-          <span className="unit">{currentUser.customer.current_height_unit}</span></div>
-          <div className="label">Altura</div>
-        </div>
-        <div className="col-4"  onClick={openModalWeight}>
-          <div className="value">{parseInt(currentUser.customer.current_weight)}
-          <span className="unit">{currentUser.customer.current_weight_unit}</span></div>
-          <div className="label">Peso</div>
-        </div>
-        <div className="col-4"  onClick={openModalWeight}>
-          <div className="value">{currentUser.customer.imc}</div>
-          <div className="label">IMC</div>
-        </div>
-      </div>
-      <div className="workout">
-        <h3 className="">Workouts</h3>
-        <div className="progress-bar-wrapper">
-          <div className="medal-image">
-            {done.toWorkoutImage&&(
-              <img src={done.toWorkoutImage} alt="workout-medal"/>
-            )}
-          </div>
-          <div className="progress-bar-body">
-            <span>{done.workoutCount}/{done.toWorkout}</span>
-            <ProgressBar now={now} />
-          </div>
-        </div>
-      </div>
-      <div className="workout-progress">
-        <QuickStatsChart
-          value={total}
-          desc="Progreso"
-          data={chartOptions.data}
-          labels={chartOptions.labels}
-          color={chartOptions.color}
-          border={chartOptions.border}
-        />
       </div>
       <DetailModal show={show} handleClose={handleClose}/>
       <SectionEditWeight handleClose={handleCloseWeight} show={showWeight} />

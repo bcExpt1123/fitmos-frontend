@@ -302,7 +302,7 @@ function Main({
                     })}
                   >
                     {data[row] !== undefined &&
-                      data[row][col] !== undefined && data[row][col] !== "" && (
+                      data[row][col] !== undefined && data[row][col] !== "" && data[row][col] !== null && (
                         <div className={classes.preview}>
                           <IconButton
                             className={classes.button}

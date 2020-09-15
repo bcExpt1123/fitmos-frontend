@@ -83,7 +83,7 @@ function Sub({history,match}) {
       console.log('id not exist');
       console.log(match.params.id)
     }
-  });
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

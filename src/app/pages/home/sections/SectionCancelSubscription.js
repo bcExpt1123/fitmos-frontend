@@ -100,7 +100,7 @@ const CancelSubscription = ({show,handleClose,credit,history}) => {
               <fieldset>
                 <Form.Group>
                   <Form.Label as="legend">
-                    2. Si tuvieras que escoger una razón de cancelamiento, ¿cual sería?
+                    2. Si tuvieras que escoger una razón de cancelamiento, ¿Cuál sería?
                   </Form.Label>
 
                   <Form.Check

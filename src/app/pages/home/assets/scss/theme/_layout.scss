@@ -235,7 +235,6 @@
 	#rightbar{
 		width: 336px;
     position: fixed;
-    padding:30px;
     top: 0;
     right: 0;
     height: 100vh;
@@ -243,6 +242,11 @@
     background: #fff;
     color: $basic-text-color;
     @import "_shared_profile";
+    .wrapper-rightbar{
+      padding:30px;
+      height: 100%;
+      overflow-x: hidden;      
+    }
   }
   .mobile-menu{
     display: none;

@@ -68,7 +68,7 @@ function Main({
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($fetchRequestCms(history,match.params.id));
-  });
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const updateImage = (image)=>{
     dispatch($updateImage(image));
   }
@@ -272,7 +272,7 @@ function Main({
                     })}
                   >
                     {data[weekDay]&&data[weekDay][col] !== undefined &&
-                      data[weekDay][col][row] !== undefined && data[weekDay][col][row] !== "" && (
+                      data[weekDay][col][row] !== undefined && data[weekDay][col][row] !== "" && data[weekDay][col][row] !== null && (
                         <div className={classes.preview}>
                           <IconButton
                             className={classes.button}

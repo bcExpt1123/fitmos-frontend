@@ -46,7 +46,7 @@ const Main =() =>{
 const ViewImages = injectIntl(Main);
 function Sub({match,history}) {
 	const dispatch=useDispatch();
-  useEffect(() => { if(match.params.id){ dispatch($viewImagesAction(match.params.id)); }});
+  useEffect(() => { if(match.params.id){ dispatch($viewImagesAction(match.params.id)); }},[]);// eslint-disable-line react-hooks/exhaustive-deps
 	return (
 		<>
 			<div className="kt-subheader__main">

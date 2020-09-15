@@ -41,7 +41,7 @@ const TagLineSettings = () => {
     }
     setIsLoading(true);
     fetchData();
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleOnSubmit = async (e) =>{
     e.preventDefault();
     setIsSaving(true);

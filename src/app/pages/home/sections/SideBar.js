@@ -22,7 +22,7 @@ const SideBar = ({history}) => {
   const isRunning = useSelector(({done})=>done.isRunning);
   const dispatch = useDispatch();
   useEffect(()=>{
-    const paths = ["/perfil","/profile","/ayuda","/level"];
+    const paths = ["/perfil","/profile","/ayuda","/level","/settings/payments"];
     if( paths.includes(window.location.pathname)){
       setSubmenu(false);
       setSubContain(true);
@@ -175,7 +175,7 @@ const SideBar = ({history}) => {
               <li>
                 <NavLink className="menu-link menu-toggle" to="/profile" activeClassName="active"
                   isActive={(match, location) => {
-                    if(location.pathname === "/profile" || location.pathname === "/level" ) return true;
+                    if(location.pathname === "/profile" || location.pathname === "/level" || location.pathname === "/settings/payments" ) return true;
                     return false;
                   }}                
                 >

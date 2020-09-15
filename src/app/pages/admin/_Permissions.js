@@ -29,7 +29,7 @@ const Permissions = () => {
   const permission = useSelector(({permission})=>permission);
   useEffect(() => {
     dispatch($fetchSetting());
-  });
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleOnSubmit = e =>{
     e.preventDefault();
     dispatch($saveItem());

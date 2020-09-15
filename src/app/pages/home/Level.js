@@ -210,7 +210,7 @@ const LevelPage = () => {
             <p>En este prueba determinaremos el nivel de condición física. 
               La intensidad del programa se ajustará en función del resultado. 
               Esta prueba se recomienda realizarla en una ventana mínima de dos semanas entre pruebas. 
-              Al realizarla ingresaremos nuestro puntaje en el recuadro inferior.</p>
+              Al realizarla ingresaremos nuestro puntaje en el recuadro.</p>
             <h4 className="mb-2 mt-2">Registro de Repeticiones</h4>
             <Table responsive className='records'>
               <thead>

@@ -322,7 +322,7 @@
           }
         }
       }
-      .fs-btn.display-4{
+      .fs-home-btn.display-4,.fs-btn.display-4{
         font-size: calc(1.57rem + (1.2 - 1.07) * ((100vw - 20rem) / (48 - 20)))!important;        
       }
       &.checkout{

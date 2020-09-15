@@ -31,6 +31,7 @@ const Home = ({ auth,history }) => {
     dispatch(findWorkouts());
     dispatch(initialBlock());
     dispatch(fetchSurvey());
+    window.scrollTo(0,1);
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const tagLine = useSelector(({done})=>done.tagLine);
   const step = useSelector(({done})=>done.step);

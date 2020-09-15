@@ -29,7 +29,7 @@ const CartSettings = () => {
   const cartSetting = useSelector(({cartSetting})=>cartSetting);
   useEffect(() => {
     dispatch($fetchSetting());
-  });
+  },[]);
   const handleOnSubmit = e =>{
     e.preventDefault();
     dispatch($saveItem());
