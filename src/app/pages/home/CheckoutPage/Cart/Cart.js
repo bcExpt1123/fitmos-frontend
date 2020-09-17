@@ -163,7 +163,7 @@ const Cart = ({
           Prueba gratis por {serviceItem.free_duration} días. Podrá cancelar en cualquier momento sin compromiso.
           Al concluir el período de prueba se renovará por &nbsp; 
           <FormattedPrice
-              price={pricing.discountedPrices.total}
+              price={pricing.recurringPrices.total}
               currency={currency}
               locale="en"
           />.

@@ -90,7 +90,7 @@ class Tabata extends Base {
           </div>
           {this.state.rest>0&&(
             <div className="timer--settingField mb3">
-              <span>{this.state.rest>=60?(this.state.work==60?formatMinSecOther(this.state.work)+" minuto":formatMinSecOther(this.state.work)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
+              <span>{this.state.rest>=60?(this.state.rest==60?formatMinSecOther(this.state.rest)+" minuto":formatMinSecOther(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
             </div>  
           )}
           <div className="timer--settingField mb3">

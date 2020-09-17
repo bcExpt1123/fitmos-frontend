@@ -122,10 +122,14 @@ const CheckoutPage = ({
   if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal === '1')) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(enteredVoucher.form === '%')pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+    if(enteredVoucher.form === '%'){
+      pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+      if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+    }
     else {
       pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
       if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
+      if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
     }
   }
   // in case of user is navigating to some other page PE-14498 fix
