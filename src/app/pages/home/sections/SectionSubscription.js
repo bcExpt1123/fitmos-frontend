@@ -11,6 +11,7 @@ import {
   $updateInterval
 } from "../../../../modules/subscription/service";
 import { $takeFreeMembership } from "../../../../modules/subscription/subscription";
+import { $changeItem } from "../../../../modules/subscription/service";
 import { setCheckoutKind } from "../redux/checkout/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
 import { CHECKOUT_KIND } from "../constants/checkout-kind";
@@ -57,7 +58,7 @@ class Subscription extends React.Component {
     if ( this.props.activePlan == null ){
       this.props.$updateInterval(frequency, activePlan);
     }
-      
+    if(this.props.serviceItem == null)this.props.$changeItem(1);  
   }
   getActivePlan(key, activePlan) {
     if (this.state.activePlan !== "") {
@@ -367,7 +368,7 @@ class Subscription extends React.Component {
                           to={`/signup`}
                           className="btn btn-md btn-primary fs-btn"
                         >
-                          PRUEBA {this.props.serviceItem.free_duration} DÍAS
+                          PRUEBA { this.props.serviceItem && this.props.serviceItem.free_duration} DÍAS
                         </NavLink>
                       ) : (
                         hasWorkoutSubscription?(
@@ -456,7 +457,7 @@ class Subscription extends React.Component {
           <Modal.Header closeButton>
           </Modal.Header>
           <Modal.Body>
-             <h2>¿Está seguro que desea continuar hacia los {this.props.serviceItem.free_duration} días gratis y perder el bono de 10% en su suscripción?</h2>
+             <h2>¿Está seguro que desea continuar hacia los {this.props.serviceItem && this.props.serviceItem.free_duration} días gratis y perder el bono de 10% en su suscripción?</h2>
           </Modal.Body>
           <Modal.Footer>
           <Button variant="free-plan-button" onClick={this.handleCloseForm}>
@@ -483,7 +484,8 @@ const mapDispatchToProps = {
   $findWorkoutSerive,
   $takeFreeMembership,
   $updateInterval,
-  setCheckoutKind
+  setCheckoutKind,
+  $changeItem,
 };
 
 const SectionSubscription = connect(

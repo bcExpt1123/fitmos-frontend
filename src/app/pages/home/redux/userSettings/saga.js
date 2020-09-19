@@ -16,9 +16,17 @@ import {
   uploadProfileImage,
   deleteProfileImage,
   triggerWorkout, 
-  triggerNotifiable } from "./actions";
-import { authenticate as regenerateAuthAction,regenerateCompleted } from "../auth/actions";
+  triggerNotifiable,
+  removeGoogle,
+  signInWithGoogle,
+  removeFacebook,
+  signInWithFacebook
+ } from "./actions";
+import { authenticate as regenerateAuthAction,regenerateCompleted,updateUserDetails } from "../auth/actions";
 import { startProfileImageUploading } from "../done/actions";
+import Facebook from "../../../../../lib/Facebook";
+import Google from "../../../../../lib/Google";
+
 const flattenErrors = errObj =>
   Object.keys(errObj).reduce(
     (res, key) => ({
@@ -509,6 +517,92 @@ function* onTriggerNotifiable(){
   } catch (error) {
   } 
 }
+function removeGoogleAction(){
+  return http({ path: `users/google`, method: "DELETE"});
+}
+function* onRemoveGoogle(){
+  try {
+    yield call(removeGoogleAction);
+    yield put(regenerateAuthAction());
+  } catch (error) {
+  } 
+}
+function googleLogin(googleUser){
+  return http({
+    method: "POST",
+    path: "users/google",
+    data: googleUser
+  });
+}
+function* onLoginWithGoogle(){
+  let googleUser;
+  try {
+    googleUser = yield call(Google.logIn);
+  } catch (error) {
+    return;// { error: getGoogleErrorMessage(error) };
+  }
+
+  try {
+    const response = yield call(googleLogin, { id_token: googleUser.id_token });
+    yield put(
+      updateUserDetails({
+        user:response.data.user
+      })
+    );
+  } catch (error) {
+    console.log(error)
+    switch (error.response.status) {
+      case 423:
+        //return { error: registerError };
+      default:
+        //return { error: getApiErrorMessage(error) };
+    }
+  }
+  //return { response };
+}
+function removeFacebookAction(){
+  return http({ path: `users/facebook`, method: "DELETE"});
+}
+function* onRemoveFacebook(){
+  try {
+    yield call(removeFacebookAction);
+    yield put(regenerateAuthAction());
+  } catch (error) {
+  } 
+}
+function facebookLogin(facebookUser){
+  return   http({
+    method: "POST",
+    path: "users/facebook",
+    data: facebookUser,
+    skipAuthentication: true
+  });
+}
+function* onLogInWithFacebook(){
+  let accessToken;
+  try {
+    accessToken = yield call(Facebook.login);
+  } catch (error) {
+    console.log(error)
+    return;// { error: getFacebookErrorMessage(error) };
+  }
+
+  try {
+    const { data } = yield call(facebookLogin, { id_token: accessToken });
+    yield put(
+      updateUserDetails({
+        user:data.user
+      })
+    );
+  } catch (error) {
+    switch (error.response.status) {
+      case 423:
+        console.log(error)  
+      default:
+        console.log(error)  
+    }
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(updateProfile, onUpdateProfile);
   yield takeLeading(updateAdminProfile, onUpdateAdminProfile);
@@ -519,4 +613,8 @@ export default function* rootSaga() {
   yield takeLeading(updatePassword, onUpdatePassword);
   yield takeLeading(triggerWorkout, onTriggerWorkout);
   yield takeLeading(triggerNotifiable,onTriggerNotifiable);
+  yield takeLeading(removeGoogle, onRemoveGoogle);
+  yield takeLeading(signInWithGoogle, onLoginWithGoogle)
+  yield takeLeading(removeFacebook, onRemoveFacebook);
+  yield takeLeading(signInWithFacebook, onLogInWithFacebook);
 }

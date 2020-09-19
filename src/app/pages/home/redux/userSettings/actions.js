@@ -9,7 +9,12 @@ export const {
   deleteProfileImage,
   updatePassword, 
   triggerWorkout,
-  triggerNotifiable } = createActions(
+  triggerNotifiable,
+  removeGoogle,
+  signInWithGoogle,
+  removeFacebook,
+  signInWithFacebook
+ } = createActions(
   "UPDATE_PROFILE",
   "UPDATE_ADMIN_PROFILE",
   "UPDATE_EMAIL",
@@ -19,6 +24,10 @@ export const {
   "UPDATE_PASSWORD",
   "TRIGGER_WORKOUT",
   "TRIGGER_NOTIFIABLE",
+  "REMOVE_GOOGLE",
+  "SIGN_IN_WITH_GOOGLE",
+  "REMOVE_FACEBOOK",
+  "SIGN_IN_WITH_FACEBOOK",
   {
     prefix: "USER_SETTINGS"
   }
