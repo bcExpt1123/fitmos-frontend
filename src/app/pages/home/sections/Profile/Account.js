@@ -67,24 +67,22 @@ const Account = () => {
           <div className="value col-10">************</div>
           <div className="col-2 edit"><i className="fa fa-pen"onClick={openPasswordModal}></i></div>
         </div>
-        <label>Google</label>
         <div className="row">
           <div className="col-9 mt-3">
             {currentUser.google_provider_id?(
-              <>Conectado Google como <a href="https://plus.google.com" target="_blank">{currentUser.google_name}</a></>
+              <>Conectado a Google como <a href="https://plus.google.com" target="_blank">{currentUser.google_name}</a></>
             ):(
-              <>Conectarse Google+</>
+              <>Conectarse con Google+</>
             )}
           </div>
           <div className="col-3 edit"><input className="apple-switch" type="checkbox" checked={currentUser.google_provider_id!==null} onChange={onTriggerGoogle}/></div>
         </div>
-        <label>Facebook</label>
         <div className="row">
           <div className="col-9 mt-3">
             {currentUser.facebook_provider_id?(
-              <>Conectado Facebook como <a href="https://facebook.com" target="_blank">{currentUser.facebook_name}</a></>
+              <>Conectado a Facebook como <a href="https://facebook.com" target="_blank">{currentUser.facebook_name}</a></>
             ):(
-              <>Conectarse Facebook</>
+              <>Conectarse con Facebook</>
             )}            
           </div>
           <div className="col-3 edit"><input className="apple-switch" type="checkbox" checked={currentUser.facebook_provider_id!==null} onChange={onTriggerFacebook}/></div>

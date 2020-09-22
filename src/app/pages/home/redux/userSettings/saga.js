@@ -597,9 +597,12 @@ function* onLogInWithFacebook(){
   } catch (error) {
     switch (error.response.status) {
       case 423:
-        console.log(error)  
+        console.log("423");console.log(error)  
+      case 421:case "421":
+        console.log("421");console.log(error)  
+        yield put(addAlertMessage({ type: "error", message: "Esta cuenta de facebook ya está asociada con otra cuenta de Fitemos." }));
       default:
-        console.log(error)  
+        //console.log(error)  
     }
   }
 }

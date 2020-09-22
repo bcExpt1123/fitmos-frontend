@@ -227,6 +227,11 @@ const saveWorkout = (fromDate,weekDate, column, content,note,timerType,work,roun
 };
 function* saveContent({weekDay}) {
   const weekWorkout = yield select(store => store.weekWorkout);
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: true
+  });
   try {
     const result = yield call(
       saveWorkout,
@@ -306,7 +311,18 @@ function* saveContent({weekDay}) {
         }
       }
     }
-  } catch (ex) { }
+  } catch (ex) { 
+  }
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: false
+  });
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "uploadImage",
+    value: null
+  });
 }
 const getPreview = (weekDay,column, day) => {
   return http({

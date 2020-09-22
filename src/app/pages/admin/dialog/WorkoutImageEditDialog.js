@@ -1,10 +1,12 @@
 import React,{useState} from "react";
+import { useSelector } from "react-redux";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, IconButton} from "@material-ui/core";
 import { Row, Col} from "react-bootstrap";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 export default function WorkoutEditDialog(props) {
   const [file,setFile] = useState(null);
   const [hash,setHash] = useState(Date.now());
+  const isSaving = useSelector(({weekWorkout})=>weekWorkout.isSaving);
   const handleCapture = ({ target })=> {
     let file = URL.createObjectURL(target.files[0]);
     setFile(file);
@@ -82,7 +84,7 @@ export default function WorkoutEditDialog(props) {
         <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={handleSave} color="primary">
+        <Button onClick={handleSave} color="primary" disabled={isSaving}>
           Save
         </Button>
       </DialogActions>

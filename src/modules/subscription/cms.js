@@ -4,6 +4,7 @@ import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
+import { actionTypes as weekWorkoutActionTypes } from "./weekWorkout";
 
 export const actionTypes = {
   CMS_REDIRECT: "CMS_REDIRECT",
@@ -367,6 +368,11 @@ const saveWorkout = (date, column, content,note,timerType,work,round,rest,upload
 };
 function* saveContent() {
   const cms = yield select(store => store.cms);
+  yield put({
+    type: weekWorkoutActionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: true
+  });
   try {
     const result = yield call(
       saveWorkout,
@@ -439,6 +445,16 @@ function* saveContent() {
       }
     }
   } catch (ex) {}
+  yield put({
+    type: weekWorkoutActionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: false
+  });
+  yield put({
+    type: actionTypes.CMS_SET_VALUE,
+    key: "uploadImage",
+    value: null
+  });
 }
 const getPreview = (date, column) => {
   return http({
