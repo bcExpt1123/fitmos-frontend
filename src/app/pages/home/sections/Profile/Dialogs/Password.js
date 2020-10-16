@@ -27,11 +27,12 @@ const UpdatePassword = ({show,handleClose}) => {
   };
   const dispatch = useDispatch();
   const onSubmit = (
-    { email },
+    { password, confirm_password },
     { setSubmitting, setErrors, setFieldValue }
   ) => {
     let params = {
-      email,
+      password,
+      confirm_password
     };
     return new Promise((resolve, reject) => {
       dispatch(updatePassword({

@@ -37,9 +37,7 @@ function Layout({ children, selfLayout }) {
   return selfLayout !== "blank" ? (
     <>
       <Helmet>
-        <script type="text/javascript">
-        {`window.$crisp=[];window.CRISP_WEBSITE_ID="4837faab-1573-40cd-bb4d-e9d1aea6294e";(function(){d=document;s=d.createElement("script");s.src="https://client.crisp.chat/l.js";s.async=1;d.getElementsByTagName("head")[0].appendChild(s);})();`}
-        </script>
+        <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>        
         <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162425974-1"></script>
         <script>
         {`window.dataLayer = window.dataLayer || [];
