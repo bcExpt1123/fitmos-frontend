@@ -28,10 +28,15 @@ const Block = ({ block,renderLine,setAll })=>{
     }
     return true;
   }
-  const nextStep = ()=>{
+  const nextStep = (slug,item)=>{
     if( changeConfirm() ){
       dispatch(nextBlock());
-      dispatch(startWorkout({date:workouts.current.today}));
+      if(slug === 'con_content' || slug === 'sin_content'){
+        if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
+        else dispatch(startWorkout({date:workouts.current.today}));
+      }else{
+        dispatch(startWorkout({date:workouts.current.today}));
+      }
     }
   }
   const previousStep = ()=>{
@@ -110,7 +115,7 @@ const Block = ({ block,renderLine,setAll })=>{
               <button  className="previous" onClick={previousStep}>
                 Anterior
               </button>
-              <button onClick={nextStep} className="next">
+              <button onClick={()=>nextStep(block.slug,workouts.current)} className="next">
                 Siguiente
               </button>
             </div>
