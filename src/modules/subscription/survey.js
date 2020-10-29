@@ -570,8 +570,8 @@ function* callActionActive({ action, id }) {
     if  (action === "editItem"){
         const resultData=survey.data_display;
         const resultSelect=survey.options;
-        const filterSurvey = resultData.filter(result => result.id === id);
-        const filterOptions = resultSelect.filter(result =>result.survey_item_id === id);
+        const filterSurvey = resultData.filter(result => parseInt(result.id) === id);
+        const filterOptions = resultSelect.filter(result =>parseInt(result.survey_item_id) === id);
         yield put({
           type: actionTypes.SURVEY_DISPLAY_DATA_ITEM,
           data: filterSurvey[0],
@@ -807,8 +807,9 @@ const findSurveyReport = (metaReport,id) =>
   })}` }).then(response => response.data);
 
 function* fetchSurveyReportItems({id}){
-  console.log(id);
   const survey = yield select(store => store.survey);
+  if(id === undefined)id = survey.item.surveyId;
+  console.log(id);
   const result = yield call( findSurveyReport,survey.metaReport,id);
   if(result){
     yield put({

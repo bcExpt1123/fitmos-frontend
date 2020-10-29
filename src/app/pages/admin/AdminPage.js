@@ -31,6 +31,7 @@ import { CartSettings } from "./SettingsPage/SectionCartSettings";
 import { Permissions } from "./SettingsPage/SectionPermissions";
 import { Referral } from "./SettingsPage/SectionReferral";
 import { TagLine } from "./SettingsPage/SectionTagLine";
+import { Reports } from "./SettingsPage/SectionReport";
 import { UserProfile } from "./UserProfile";
 import {Survey}  from "./Survey";
 import { SurveyCreate } from "./SurveyCreate";
@@ -107,6 +108,7 @@ export default function AdminPage() {
         <Route exact path="/admin/settings/permissions" component={Permissions} />
         <Route exact path="/admin/settings/referral" component={Referral} />
         <Route exact path="/admin/settings/tag-line" component={TagLine} />
+        <Route exact path="/admin/settings/reports" component={Reports} />
         <Route exact path="/admin/profile" component={UserProfile} />
         <Route exact path="/admin/survey" component={Survey} />
         <Route exact path="/admin/survey/:id" component={SurveyCreate} />

@@ -123,6 +123,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/settings/permissions",
     "/admin/settings/referral",
     "/admin/settings/tag-line",
+    "/admin/settings/reports",
     "/admin/profile",
     "/admin/survey",
     "/admin/survey/create",

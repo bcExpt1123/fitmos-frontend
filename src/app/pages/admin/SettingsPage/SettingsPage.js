@@ -25,7 +25,8 @@ const SettingsPage = ({ section }) => {
     { name: "cart", url: "cart", label: "Abandon Cart Settings" },
     { name: "permissions", url: "permissions", label: "Roles & Permissions" },
     { name: "referral", url: "referral", label: "Referral Discount" },
-    { name: "tagLine", url: "tag-line", label: "Tag Line" }
+    { name: "tagLine", url: "tag-line", label: "Tag Line" },
+    { name: "reports", url: "reports", label: "Reports" }
   ];
   return (
     <>
