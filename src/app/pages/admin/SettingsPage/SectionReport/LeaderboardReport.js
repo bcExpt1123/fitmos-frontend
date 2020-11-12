@@ -111,16 +111,16 @@ const LeaderboardReport = () => {
                         ):(
                           records.map(record=>(
                             <tr key={record.id}>
-                              <td>
+                              <td style={{width:'120px'}}>
                                 {record.pos}
                                 {record.workout_completeness === 100 &&(
-                                  <img src={toAbsoluteUrl('/media/medal/first.png')} alt="first" className="avatar"/>
+                                  <img src={toAbsoluteUrl('/media/medal/first.png')} alt="first" className="medal"/>
                                 )}
                                 {record.workout_completeness<100 &&record.workout_completeness>=75&&(
-                                  <img src={toAbsoluteUrl('/media/medal/second.png')} alt="second" className="avatar"/>
+                                  <img src={toAbsoluteUrl('/media/medal/second.png')} alt="second" className="medal"/>
                                 )}
                               </td>
-                              <td><img src={record.avatar_url.small} alt={record.id} className="avatar"/>{record.name}</td>
+                              <td><img src={record.avatar_url.small} alt={record.id} className="avatar"/><div style={{display:'inline-block',width:'150px'}}>{record.name}</div></td>
                               <td>{record.workout_complete_count}</td>
                               <td>{record.workout_completeness}</td>
                               <td>{record.total}</td>

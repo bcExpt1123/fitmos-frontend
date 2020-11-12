@@ -50,15 +50,27 @@ const Company = ({match}) => {
                 `/${product.company.mobile_phone}`
               )
             }</div>
-            <div className="mt-2"><label className="font-bold-weight">Dirección:</label>&nbsp;{product.company.address}&nbsp;</div>
+            {product.company.address&&(
+              <div className="mt-2"><label className="font-bold-weight">Dirección:</label>&nbsp;{product.company.address}&nbsp;</div>
+            )}
             {product.company.website_url&&(
               <div className="mt-2"><label className="font-bold-weight">Website:</label><a href={product.company.website_url} target="new">{product.company.website_url}</a></div>
             )}
-            <div className="mt-2"><label className="font-bold-weight">Correo:</label>&nbsp;{product.company.mail}&nbsp;</div>
-            <div className="mt-2"><label className="font-bold-weight">Facebook:</label>&nbsp;{product.company.facebook}</div>  
-            <div className="mt-2"><label className="font-bold-weight">Horario:</label>&nbsp;{product.company.horario}</div>
-            <div className="mt-2"><label className="font-bold-weight">Instagram:</label>&nbsp;{product.company.instagram}</div>
-            <div className="mt-2"><label className="font-bold-weight">Twitter:</label>&nbsp;{product.company.twitter}</div>
+            {product.company.mail&&(
+              <div className="mt-2"><label className="font-bold-weight">Correo:</label>&nbsp;{product.company.mail}&nbsp;</div>
+            )}
+            {product.company.facebook&&(
+              <div className="mt-2"><label className="font-bold-weight">Facebook:</label>&nbsp;{product.company.facebook}</div>  
+            )}
+            {product.company.horario&&(
+              <div className="mt-2"><label className="font-bold-weight">Horario:</label>&nbsp;{product.company.horario}</div>
+            )}
+            {product.company.instagram&&(
+              <div className="mt-2"><label className="font-bold-weight">Instagram:</label>&nbsp;{product.company.instagram}</div>
+            )}
+            {product.company.twitter&&(
+              <div className="mt-2"><label className="font-bold-weight">Twitter:</label>&nbsp;{product.company.twitter}</div>
+            )}
           </div>
         </div>
       )}

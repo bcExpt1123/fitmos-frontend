@@ -46,20 +46,20 @@ export const Component = ({
         reject
       })
     )
-      .then(
-        voucher => {
-          onEnteredVoucherChange(voucher);
-        },
-        error => {
-          actions.addAlertMessage({
-            type: "error",
-            message: {
-              id: "CheckoutPage.VoucherForm.Error.invalid_token"
-            }
-          });
-        }
-      )
-      .then(() => setIsSubmitting(false));
+    .then(
+      voucher => {
+        onEnteredVoucherChange(voucher);
+      },
+      error => {
+        actions.addAlertMessage({
+          type: "error",
+          message: {
+            id: "CheckoutPage.VoucherForm.Error.invalid_token"
+          }
+        });
+      }
+    )
+    .then(() => setIsSubmitting(false));
   };
 
   return (
@@ -80,7 +80,7 @@ export const Component = ({
         />
         <Button
           size="xs"
-          type="submit"
+          type="button"
           onClick={handleSubmit}
           className="btn fs-btn"
           disabled={isSubmitting}

@@ -28,6 +28,7 @@ class Main extends Component {
     return false;
   };
   handleCapture({ target }) {
+    console.log(target)
     let file = URL.createObjectURL(target.files[0]);
     this.setState({ file });
     this.props.$updateItemImage(target.files);

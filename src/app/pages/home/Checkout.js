@@ -119,7 +119,7 @@ const CheckoutPage = ({
     bundlePrices: { total: serviceItem[activePlan] * 100 }
   };
   /*eslint-disable no-mixed-operators*/
-  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal === '1')) {
+  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && (enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1))) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
     if(enteredVoucher.form === '%'){
