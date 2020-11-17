@@ -39,8 +39,20 @@ class Subscription extends React.Component {
   handleCloseForm = () => {
     this.setState({showForm:false});
   }
-
+  componentDidUpdate(prevProp){
+    const { currentUser, serviceItem } = this.props;
+    let frequency = 1;
+    let activePlan;
+    /*eslint-disable no-unused-vars*/
+    let count;
+    let monthlyFee;
+    [count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
+    if(activePlan !== this.state.activePlan ){
+      this.setState({count, frequency, monthlyFee, activePlan});
+    }
+  }
   componentDidMount() {
+    if(this.props.serviceItem == null)this.props.$changeItem(1);  
     this.props.$findWorkoutSerive();
     this.props.setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
     const { currentUser, serviceItem } = this.props;
@@ -58,7 +70,6 @@ class Subscription extends React.Component {
     if ( this.props.activePlan == null ){
       this.props.$updateInterval(frequency, activePlan);
     }
-    if(this.props.serviceItem == null)this.props.$changeItem(1);  
   }
   getActivePlan(key, activePlan) {
     if (this.state.activePlan !== "") {
@@ -237,11 +248,9 @@ class Subscription extends React.Component {
     /*eslint-disable no-unused-vars*/
     let frequency = this.state.frequency;
     let monthlyFee = this.state.monthlyFee;
-    let activePlan = this.state.activePlan;
     //[count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
-
     let classes;
-    switch (count) {
+    switch (this.state.count) {
       case 1:
         classes = "col-12";
         break;
@@ -284,7 +293,7 @@ class Subscription extends React.Component {
                   >
                     <div
                       className={classnames("membership", {
-                        active: this.getActivePlan("monthly", activePlan),
+                        active: this.getActivePlan("monthly", this.state.activePlan),
                       })}
                     >
                       <h2>Mensual</h2>
@@ -299,7 +308,7 @@ class Subscription extends React.Component {
                   >
                     <div
                       className={classnames("membership", {
-                        active: this.getActivePlan("quarterly", activePlan),
+                        active: this.getActivePlan("quarterly", this.state.activePlan),
                       })}
                     >
                       <h2>Trimestral</h2>
@@ -314,7 +323,7 @@ class Subscription extends React.Component {
                   >
                     <div
                       className={classnames("membership", {
-                        active: this.getActivePlan("semiannual", activePlan)
+                        active: this.getActivePlan("semiannual", this.state.activePlan)
                       })}
                     >
                       <h2>Semestral</h2>
@@ -329,7 +338,7 @@ class Subscription extends React.Component {
                   >
                     <div
                       className={classnames("membership", {
-                        active: this.getActivePlan("yearly", activePlan)
+                        active: this.getActivePlan("yearly", this.state.activePlan)
                       })}
                     >
                       <h2>Anual</h2>
@@ -385,7 +394,7 @@ class Subscription extends React.Component {
                               disabled={this.props.loading}
                               onClick={this.handleFreeMembership}
                             >
-                              PRUEBA {this.props.serviceItem.free_duration} DÍAS GRATIS
+                              PRUEBA {this.props.serviceItem && this.props.serviceItem.free_duration} DÍAS GRATIS
                             </button>
                             <br/>
                             o <NavLink
