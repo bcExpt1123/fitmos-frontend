@@ -6,9 +6,8 @@ section.shop{
       margin: 30px 6px;
       border-radius: 7px;
       .image{
-        height:222px;
         .background-container {
-          height: 100%;
+          max-width: 100%;
           overflow: hidden;
           pointer-events: none;
           .background {
@@ -17,7 +16,8 @@ section.shop{
             background-repeat: no-repeat;
             border-top-left-radius: 7px;
             border-top-right-radius: 7px;
-            height: 222px;
+            width: 100%;
+            padding-bottom: 78%;
             overflow: hidden;
             pointer-events: none;
           }

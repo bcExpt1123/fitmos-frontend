@@ -3,10 +3,9 @@ section.product{
     .item{
       font-size: 16px;
       .image{
-        height:450px;
         cursor: pointer;
         .background-container {
-          height: 100%;
+          max-width: 100%;
           overflow: hidden;
           pointer-events: none;
           border: 1px solid #FFFFFF;
@@ -18,7 +17,8 @@ section.product{
             background-size: cover;
             background-repeat: no-repeat;
             border-radius: 7px;
-            height: 450px;
+            width: 100%;
+            padding-bottom: 79%;
             overflow: hidden;
             pointer-events: none;
           }

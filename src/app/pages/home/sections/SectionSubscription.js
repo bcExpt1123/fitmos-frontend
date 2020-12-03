@@ -30,6 +30,7 @@ class Subscription extends React.Component {
       activePlan: "",
       count: 0,
       showForm:false,
+      changed:false,
       couponId:couponId
     };
     this.changeMembership = this.changeMembership.bind(this);
@@ -47,9 +48,10 @@ class Subscription extends React.Component {
     let count;
     let monthlyFee;
     [count,frequency,monthlyFee,activePlan] = this.getFrequency(currentUser, serviceItem);
-    if(activePlan !== this.state.activePlan ){
+    if(activePlan !== this.state.activePlan && !this.state.changed){
       this.setState({count, frequency, monthlyFee, activePlan});
     }
+    // this.setState({changed:false});
   }
   componentDidMount() {
     if(this.props.serviceItem == null)this.props.$changeItem(1);  
@@ -99,7 +101,8 @@ class Subscription extends React.Component {
     }
     monthlyFee = roundToMoney(monthlyFee);
     this.props.$updateInterval(frequency, activePlan);
-    this.setState({ monthlyFee, activePlan });
+    this.setState({ monthlyFee, activePlan,changed:true });
+    console.log(activePlan)
     this.props.setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
   }
   handleFreeMembership() {
@@ -201,32 +204,68 @@ class Subscription extends React.Component {
     let monthlyFee;
     let activePlan;
     if (serviceItem) {
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='monthly'){
+      if(currentUser&&currentUser.customer.currentWorkoutPlan){
+        if(currentUser.customer.currentWorkoutPlan!=='monthly'){
+          if (serviceItem.monthly !== "") count++;
+        }
+        if(currentUser.customer.currentWorkoutPlan!=='quarterly'){
+          if (serviceItem.quarterly !== ""){
+            count++;
+            monthlyFee = serviceItem.quarterly / 3;
+            activePlan = "quarterly";
+            frequency = 3;
+          }
+        }
+        if(currentUser.customer.currentWorkoutPlan!=='semiannual'){
+          if (serviceItem.semiannual !== "") {
+            count++;
+            monthlyFee = serviceItem.semiannual / 6;
+            activePlan = "semiannual";
+            frequency = 6;
+          }
+        }
+        if(currentUser.customer.currentWorkoutPlan!=='yearly'){
+          if (serviceItem.yearly !== "") {
+            count++;
+            monthlyFee = serviceItem.yearly / 12;
+            activePlan = "yearly";
+            frequency = 12;
+          }
+        }
+      }else{
         if (serviceItem.monthly !== "") count++;
-        console.log(count);
-      }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='quarterly'){
         if (serviceItem.quarterly !== ""){
           count++;
-          monthlyFee = serviceItem.quarterly / 3;
-          activePlan = "quarterly";
-          frequency = 3;
         }
-      }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='semiannual'){
         if (serviceItem.semiannual !== "") {
           count++;
-          monthlyFee = serviceItem.semiannual / 6;
-          activePlan = "semiannual";
-          frequency = 6;
         }
-      }
-      if(currentUser&&currentUser.customer.currentWorkoutPlan!=='yearly'){
         if (serviceItem.yearly !== "") {
           count++;
-          monthlyFee = serviceItem.yearly / 12;
-          activePlan = "yearly";
-          frequency = 12;
+        }
+        if(serviceItem.frequency){
+          switch(serviceItem.frequency){
+            case 1: case '1':
+              monthlyFee = serviceItem.monthly;
+              activePlan = "monthly";
+              frequency = 1;
+              break;
+            case 3:case '3':
+              monthlyFee = serviceItem.quarterly / 3;
+              activePlan = "quarterly";
+              frequency = 3;
+              break;
+            case 6:case '6':
+              monthlyFee = serviceItem.semiannual / 6;
+              activePlan = "semiannual";
+              frequency = 6;  
+              break;
+            case 12:case '12':
+              monthlyFee = serviceItem.yearly / 12;
+              activePlan = "yearly";
+              frequency = 12;  
+              break;
+          }
         }
       }
       if (monthlyFee === undefined) {

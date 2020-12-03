@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { makeStyles } from "@material-ui/styles";
-import { Button, Paper, TextField, Grid, IconButton, Select, InputLabel, MenuItem, FormControl } from "@material-ui/core";
+import { Button, Paper, TextField, Grid, IconButton, Select, InputLabel, MenuItem, FormControl,Checkbox, FormControlLabel } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import {
   $changeItem,
@@ -36,6 +36,13 @@ class Main extends Component {
   handleChange(name) {
     return event => {
       this.props.$updateItemValue(name, event.target.value);
+    };
+  }
+  handleChangeCheckbox(name) {
+    return event => {
+      let value = 'yes';
+      if(this.props.item[name] === 'yes')value = 'no'
+      this.props.$updateItemValue(name, value);
     };
   }
   useStyles() {
@@ -123,7 +130,7 @@ class Main extends Component {
                           margin="normal"
                         />
                       </Grid>
-                      <Grid item sm={4}>
+                      <Grid item sm={2}>
                         <TextField
                           id="free-duration"
                           label="Free duration"
@@ -134,10 +141,8 @@ class Main extends Component {
                           margin="normal"
                         />
                       </Grid>
-                      <Grid item sm={4}>
-                      </Grid>
-                      <Grid item sm={4}>
-                        <FormControl className={this.classes.formControl}>
+                      <Grid item sm={2}>
+                        <FormControl className={this.classes.formControl} style={{marginTop:'16px'}}>
                           <InputLabel id="new-customer-coupon-label">Default Frequency</InputLabel>
                           <Select
                             labelId="new-customer-coupon-label"
@@ -161,6 +166,67 @@ class Main extends Component {
                             )}
                           </Select>
                         </FormControl>
+                      </Grid>
+                      <Grid item sm={6}>
+                        {this.props.item.monthly!==null && this.props.item.monthly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_1"
+                            checked={this.props.item.bank_1==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Monthly"
+                            onChange={this.handleChangeCheckbox("bank_1")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.quarterly!==null && this.props.item.quarterly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_3"
+                            checked={this.props.item.bank_3==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Quarterly"
+                            onChange={this.handleChangeCheckbox("bank_3")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.semiannual!==null && this.props.item.semiannual!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_6"
+                            checked={this.props.item.bank_6==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Semiannual"
+                            onChange={this.handleChangeCheckbox("bank_6")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.yearly!==null && this.props.item.yearly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_11"
+                            checked={this.props.item.bank_12==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Yearly"
+                            onChange={this.handleChangeCheckbox("bank_12")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                      </Grid>
+                      <Grid item sm={2}>
+                        <TextField
+                          id="bank_fee"
+                          label="Bank Fee"
+                          className={this.classes.textField}
+                          type="number"
+                          value={this.props.item.bank_fee}
+                          onChange={this.handleChange("bank_fee")}
+                          margin="normal"
+                        />
                       </Grid>
                       <Grid item sm={12}>
                         <TextField

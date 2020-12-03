@@ -243,6 +243,11 @@ const saveService = service => {
   formData.append("yearly", service.item.yearly);
   formData.append("frequency", service.item.frequency);
   formData.append("free_duration", service.item.free_duration);
+  formData.append("bank_1", service.item.bank_1);
+  formData.append("bank_3", service.item.bank_3);
+  formData.append("bank_6", service.item.bank_6);
+  formData.append("bank_12", service.item.bank_12);
+  formData.append("bank_fee", service.item.bank_fee);
   formData.append("_method", "PUT");
   return http({
     path: `services/${service.item.id}`,
