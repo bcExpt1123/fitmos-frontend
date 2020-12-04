@@ -4,6 +4,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 
 import SectionSubscription from "./sections/SectionSubscription";
+import SectionSubscriptionBank from "./sections/SectionSubscriptionBank";
 import SectionFaq from "./sections/SectionFaq";
 
 import "./assets/scss/theme/style.scss";
@@ -14,7 +15,8 @@ const PricingPage = () => (
   <>
     <NavBar transparent={true} />
 
-    <SectionSubscription />
+    {/* <SectionSubscription /> */}
+    <SectionSubscriptionBank />
 
     <SectionFaq />
 
