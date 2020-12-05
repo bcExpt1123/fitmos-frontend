@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
 import { roundToMoney } from "../../../../../_metronic/utils/utils.js";
+import { $initialPayment, $changeMembership } from "../../../../../modules/subscription/service";
 
 export const getBankFrequency = (currentUser, serviceItem)=>{
   let count = 0;
@@ -14,7 +15,7 @@ export const getBankFrequency = (currentUser, serviceItem)=>{
         if (serviceItem.monthly !== "") count++;
       }
       if(currentUser.customer.currentWorkoutPlan!=='quarterly'){
-        if (serviceItem.quarterly !== "" && serviceItem.bank_2 === 'yes'){
+        if (serviceItem.quarterly !== "" && serviceItem.bank_3 === 'yes'){
           count++;
           monthlyFee = serviceItem.quarterly / 3;
           activePlan = "quarterly";
@@ -22,7 +23,7 @@ export const getBankFrequency = (currentUser, serviceItem)=>{
         }
       }
       if(currentUser.customer.currentWorkoutPlan!=='semiannual'){
-        if (serviceItem.semiannual !== "" && serviceItem.bank_3 === 'yes') {
+        if (serviceItem.semiannual !== "" && serviceItem.bank_6 === 'yes') {
           count++;
           monthlyFee = serviceItem.semiannual / 6;
           activePlan = "semiannual";
@@ -30,7 +31,7 @@ export const getBankFrequency = (currentUser, serviceItem)=>{
         }
       }
       if(currentUser.customer.currentWorkoutPlan!=='yearly'){
-        if (serviceItem.yearly !== "" && serviceItem.bank_4 === 'yes') {
+        if (serviceItem.yearly !== "" && serviceItem.bank_12 === 'yes') {
           count++;
           monthlyFee = serviceItem.yearly / 12;
           activePlan = "yearly";
@@ -39,13 +40,13 @@ export const getBankFrequency = (currentUser, serviceItem)=>{
       }
     }else{
       if (serviceItem.monthly !== "" && serviceItem.bank_1 === 'yes') count++;
-      if (serviceItem.quarterly !== "" && serviceItem.bank_2 === 'yes'){
+      if (serviceItem.quarterly !== "" && serviceItem.bank_3 === 'yes'){
         count++;
       }
-      if (serviceItem.semiannual !== "" && serviceItem.bank_3 === 'yes') {
+      if (serviceItem.semiannual !== "" && serviceItem.bank_6 === 'yes') {
         count++;
       }
-      if (serviceItem.yearly !== "" && serviceItem.bank_4 === 'yes') {
+      if (serviceItem.yearly !== "" && serviceItem.bank_12 === 'yes') {
         count++;
       }
       if(serviceItem.frequency){
@@ -82,16 +83,17 @@ export const getBankFrequency = (currentUser, serviceItem)=>{
   }
   return [count,frequency,monthlyFee,activePlan];
 }
-export default function BankPricing({changeMembership,getActivePlan}) {
+export default function BankPricing({getActivePlan}) {
   const [count, setCount] = useState(4);
   const [classes, setClasses] = useState('');
-  const [activePlan, setActivePlan] = useState('');
+  const activePlan = useSelector(({service})=>service.activePlan);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
+  const dispatch = useDispatch();
   useEffect(() => {
     const data = getBankFrequency(currentUser, serviceItem);
     setCount(data[0]);
-    setActivePlan(data[3]);
+    dispatch($initialPayment(data[1],data[2],data[3]));
     let classes;
     switch (data[0]) {
       case 1:
@@ -115,7 +117,7 @@ export default function BankPricing({changeMembership,getActivePlan}) {
       {serviceItem.monthly !== "" && currentUser.customer.currentWorkoutPlan !=='monthly' && serviceItem.bank_1 === 'yes'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("monthly")}
+          onClick={() => dispatch($changeMembership("monthly"))}
         >
           <div
             className={classnames("membership", {
@@ -128,10 +130,10 @@ export default function BankPricing({changeMembership,getActivePlan}) {
           </div>
         </div>
       )}
-      {serviceItem.quarterly !== "" && currentUser.customer.currentWorkoutPlan !=='quarterly' && serviceItem.bank_2 === 'yes'&&(
+      {serviceItem.quarterly !== "" && currentUser.customer.currentWorkoutPlan !=='quarterly' && serviceItem.bank_3 === 'yes'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("quarterly")}
+          onClick={() => dispatch($changeMembership("quarterly"))}
         >
           <div
             className={classnames("membership", {
@@ -144,10 +146,10 @@ export default function BankPricing({changeMembership,getActivePlan}) {
           </div>
         </div>
       )}
-      {serviceItem.semiannual !== "" && currentUser.customer.currentWorkoutPlan !=='semiannual' && serviceItem.bank_3 === 'yes'&&(
+      {serviceItem.semiannual !== "" && currentUser.customer.currentWorkoutPlan !=='semiannual' && serviceItem.bank_6 === 'yes'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("semiannual")}
+          onClick={() => dispatch($changeMembership("semiannual"))}
         >
           <div
             className={classnames("membership", {
@@ -160,10 +162,10 @@ export default function BankPricing({changeMembership,getActivePlan}) {
           </div>
         </div>
       )}
-      {serviceItem.yearly !== "" && currentUser.customer.currentWorkoutPlan !=='yearly' && serviceItem.bank_4 === 'yes'&&(
+      {serviceItem.yearly !== "" && currentUser.customer.currentWorkoutPlan !=='yearly' && serviceItem.bank_12 === 'yes'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("yearly")}
+          onClick={() => dispatch($changeMembership("yearly"))}
         >
           <div
             className={classnames("membership", {

@@ -7,7 +7,8 @@ import { NavLink, useHistory } from "react-router-dom";
 import { reactLocalStorage } from 'reactjs-localstorage';
 import {
   $findWorkoutSerive,
-  $updateInterval
+  $updateInterval,
+  $changeType,
 } from "../../../../modules/subscription/service";
 import { $changeItem } from "../../../../modules/subscription/service";
 import { setCheckoutKind } from "../redux/checkout/actions";
@@ -97,19 +98,20 @@ const renderPrice = (currentUser,monthlyFee,hasWorkoutSubscription,activePlan,co
   )
 }
 export default function SubscriptionBank() {
-  const [type, setType] = useState('nmi');
-  const [monthlyFee, setMonthlyFee] = useState(0);
-  const [activePlan, setActivePlan] = useState(false);
-  const [frequency, setFrequency] = useState(1);
   const [couponId, setCouponId] = useState(reactLocalStorage.get('publicCouponId'));
   const [showForm, setShowForm] = useState(showForm);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
+  const monthlyFee = useSelector(({service})=>service.monthlyFee);
+  const activePlan = useSelector(({service})=>service.activePlan);
+  const frequency = useSelector(({service})=>service.frequency);
+  const type = useSelector(({service})=>service.type);
   const [hasWorkoutSubscription, setHasWorkoutSubscription] = useState(false);
   const [changed, setChanged] = useState(false);
   const history = useHistory();
+  const dispatch = useDispatch();
   const handleFreeMembership = ()=>{
-    this.props.setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE_WITH_TRIAL});
+    dispatch(setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE_WITH_TRIAL}));
     history.push("/checkout");
   }
   useEffect(() => {
@@ -118,59 +120,41 @@ export default function SubscriptionBank() {
       reactLocalStorage.set('publicCouponId', currentUser.defaultCouponId);
     }  
     if(currentUser)setHasWorkoutSubscription(currentUser.has_workout_subscription);
-    if(serviceItem == null)$changeItem(1);  
-    $findWorkoutSerive();
+    // if(serviceItem == null || serviceItem&&serviceItem.bank_fee == undefined)$changeItem(1);  
+    dispatch($findWorkoutSerive());
     setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
-    const data = getFrequency(currentUser, serviceItem);
-    setActivePlan(data[3]);
-    if(data[3]){
-      setFrequency(data[1]);
-    }
-    setMonthlyFee(data[2]);
-    if ( activePlan == null ){
-      $updateInterval(data[1], data[3]);
-    }
   },[]);
-  // useEffect(() => {
-  //   const data = getFrequency(currentUser, serviceItem);
-  //   if(data[3] !== activePlan && !changed){
-  //     // setActivePlan(data[3]);
-  //     // setFrequency(data[1]);
-  //     setMonthlyFee(data[2]);
-  //     setChanged(false);
-  //   }
-  // },[activePlan]);
   const handleCloseForm = () => {
     setShowForm(false);
   }
-  const changeMembership = (key)=> {
-    let monthlyFee = serviceItem[key];
-    let frequency = 1;
-    const activePlan = key;
-    switch (key) {
-      case "quarterly":
-        monthlyFee = monthlyFee / 3;
-        frequency = 3;
-        break;
-      case "semiannual":
-        monthlyFee = monthlyFee / 6;
-        frequency = 6;
-        break;
-      case "yearly":
-        monthlyFee = monthlyFee / 12;
-        frequency = 12;
-        break;
-      default:
-    }
-    monthlyFee = roundToMoney(monthlyFee);
-    $updateInterval(frequency, activePlan);
-    setMonthlyFee(monthlyFee);
-    setActivePlan(activePlan);
-    setFrequency(frequency);
-    setChanged(true);
-    // console.log(activePlan)
-    setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
-  }
+  // const changeMembership = (key)=> {
+  //   let monthlyFee = serviceItem[key];
+  //   let frequency = 1;
+  //   const activePlan = key;
+  //   switch (key) {
+  //     case "quarterly":
+  //       monthlyFee = monthlyFee / 3;
+  //       frequency = 3;
+  //       break;
+  //     case "semiannual":
+  //       monthlyFee = monthlyFee / 6;
+  //       frequency = 6;
+  //       break;
+  //     case "yearly":
+  //       monthlyFee = monthlyFee / 12;
+  //       frequency = 12;
+  //       break;
+  //     default:
+  //   }
+  //   monthlyFee = roundToMoney(monthlyFee);
+  //   dispatch($updateInterval(frequency, activePlan));
+  //   setMonthlyFee(monthlyFee);
+  //   setActivePlan(activePlan);
+  //   setFrequency(frequency);
+  //   setChanged(true);
+  //   // console.log(activePlan)
+  //   setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
+  // }
   const getActivePlan = (key, plan)=> {
     if (activePlan !== "") {
       return key === activePlan;
@@ -203,7 +187,7 @@ export default function SubscriptionBank() {
               <div className="row mt-2 mb-4">
                 <div
                   className="col-6"
-                  onClick={() => setType('nmi')}
+                  onClick={() => dispatch($changeType('nmi'))}
                 >
                   <div
                     className={classnames("membership", {
@@ -216,7 +200,7 @@ export default function SubscriptionBank() {
                 </div>
                 <div
                   className="col-6"
-                  onClick={() => setType('bank')}
+                  onClick={() => dispatch($changeType('bank'))}
                 >
                   <div
                     className={classnames("membership", {
@@ -228,8 +212,8 @@ export default function SubscriptionBank() {
                   </div>
                 </div>
               </div>
-              {type=='nmi'?<NmiPricing changeMembership={changeMembership} getActivePlan={getActivePlan}/>
-                :<BankPricing changeMembership={changeMembership} getActivePlan={getActivePlan}/>
+              {type=='nmi'?<NmiPricing getActivePlan={getActivePlan}/>
+                :<BankPricing getActivePlan={getActivePlan}/>
               }
             </>
           )}

@@ -8,7 +8,7 @@ import {
 } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
-
+import { roundToMoney } from "../../_metronic/utils/utils.js";
 export const actionTypes = {
   SERVICE_INDEX_REQUEST: "SERVICE_INDEX_REQUEST",
   SERVICE_INDEX_SUCCESS: "SERVICE_INDEX_SUCCESS",
@@ -24,6 +24,9 @@ export const actionTypes = {
   SERVICE_SAVE_ITEM: "SERVICE_SAVE_ITEM",
   SERVICE_CHANGE_SAVE_STATUS: "SERVICE_CHANGE_SAVE_STATUS",
   SERVICE_FIND_ITEM: "SERVICE_FIND_ITEM",
+  SERVICE_CHANGE_TYPE: "SERVICE_CHANGE_TYPE",
+  SERVICE_CHANGE_MEMBERSHIP: "SERVICE_CHANGE_MEMBERSHIP",
+  SERVICE_INITIAL_PAYMENT: "SERVICE_INITIAL_PAYMENT",
   //for pagination
   SERVICE_INDEX_META: "SERVICE_INDEX_META",
   SERVICE_PAGE_CHANGED: "SERVICE_PAGE_CHANGED",
@@ -43,6 +46,8 @@ const initialState = {
   },
   item: null,
   frequency: null,
+  type:'nmi',
+  monthlyFee:0,
   activePlan: null,
   updatedItem: null,
   uploadImage: null,
@@ -96,6 +101,43 @@ export const reducer = persistReducer(
         return { ...state, uploadImage: action.image };
       case actionTypes.SERVICE_CHANGE_SAVE_STATUS:
         return { ...state, isSaving: action.status };
+      case actionTypes.SERVICE_CHANGE_TYPE:
+        return { ...state,type:action.payment};
+      case actionTypes.SERVICE_INITIAL_PAYMENT:
+        return {
+          ...state,
+          frequency:action.frequency,
+          activePlan:action.activePlan,
+          monthlyFee:action.monthlyFee,
+        }    
+      case actionTypes.SERVICE_CHANGE_MEMBERSHIP:
+        let monthlyFee = state.item[action.key];
+        let frequency = 1;
+        const activePlan = action.key;
+        switch (action.key) {
+          case "quarterly":
+            monthlyFee = monthlyFee / 3;
+            frequency = 3;
+            break;
+          case "semiannual":
+            monthlyFee = monthlyFee / 6;
+            frequency = 6;
+            break;
+          case "yearly":
+            monthlyFee = monthlyFee / 12;
+            frequency = 12;
+            break;
+          default:
+        }
+        monthlyFee = roundToMoney(monthlyFee);
+        // setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
+        return {
+          ...state,
+          frequency,
+          activePlan,
+          monthlyFee,
+        };
+
       default:
         return state;
     }
@@ -153,6 +195,15 @@ export function $updateItemImage(image) {
 export function $findWorkoutSerive() {
   const id = 1;
   return { type: actionTypes.SERVICE_CHANGE_ITEM, id: id };
+}
+export function $changeType(type){
+  return { type: actionTypes.SERVICE_CHANGE_TYPE, payment:type };
+}
+export function $changeMembership(key){
+  return { type:actionTypes.SERVICE_CHANGE_MEMBERSHIP,key}
+}
+export function $initialPayment(frequency,monthlyFee,activePlan){
+  return { type:actionTypes.SERVICE_INITIAL_PAYMENT,frequency,monthlyFee,activePlan}
 }
 const servicesRequest = meta =>
   http({

@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
 import { roundToMoney } from "../../../../../_metronic/utils/utils.js";
+import { $initialPayment, $changeMembership } from "../../../../../modules/subscription/service";
 
 export const getFrequency = (currentUser, serviceItem)=>{
   let count = 0;
@@ -82,16 +83,17 @@ export const getFrequency = (currentUser, serviceItem)=>{
   }
   return [count,frequency,monthlyFee,activePlan];
 }
-export default function NmiPricing({changeMembership,getActivePlan}) {
+export default function NmiPricing({getActivePlan}) {
   const [count, setCount] = useState(4);
   const [classes, setClasses] = useState('');
-  const [activePlan, setActivePlan] = useState('');
+  const activePlan = useSelector(({service})=>service.activePlan);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
+  const dispatch = useDispatch();
   useEffect(() => {
     const data = getFrequency(currentUser, serviceItem);
     setCount(data[0]);
-    setActivePlan(data[3]);
+    dispatch($initialPayment(data[1],data[2],data[3]));
     let classes;
     switch (data[0]) {
       case 1:
@@ -115,7 +117,7 @@ export default function NmiPricing({changeMembership,getActivePlan}) {
       {serviceItem.monthly !== "" && currentUser.customer.currentWorkoutPlan !=='monthly'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("monthly")}
+          onClick={() => dispatch($changeMembership("monthly"))}
         >
           <div
             className={classnames("membership", {
@@ -131,7 +133,7 @@ export default function NmiPricing({changeMembership,getActivePlan}) {
       {serviceItem.quarterly !== "" && currentUser.customer.currentWorkoutPlan !=='quarterly'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("quarterly")}
+          onClick={() => dispatch($changeMembership("quarterly"))}
         >
           <div
             className={classnames("membership", {
@@ -147,7 +149,7 @@ export default function NmiPricing({changeMembership,getActivePlan}) {
       {serviceItem.semiannual !== "" && currentUser.customer.currentWorkoutPlan !=='semiannual'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("semiannual")}
+          onClick={() => dispatch($changeMembership("semiannual"))}
         >
           <div
             className={classnames("membership", {
@@ -163,7 +165,7 @@ export default function NmiPricing({changeMembership,getActivePlan}) {
       {serviceItem.yearly !== "" && currentUser.customer.currentWorkoutPlan !=='yearly'&&(
         <div
           className={classes}
-          onClick={() => changeMembership("yearly")}
+          onClick={() => dispatch($changeMembership("yearly"))}
         >
           <div
             className={classnames("membership", {
