@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect,useDispatch } from "react-redux";
+import { connect,useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import MetaTags from "react-meta-tags";
-import { withRouter } from "react-router";
-
+import { useHistory } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import StepPayment from "./CheckoutPage/StepPayment";
@@ -13,37 +12,15 @@ import { checkPaymentMode, changeVoucher,inside,outside } from "./redux/checkout
 import {reactLocalStorage} from 'reactjs-localstorage';
 
 const styles = {};
-
-const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser,
-  countryCode: state.countryCode,
-  serviceItem: state.service.item,
-  frequency: state.service.frequency,
-  activePlan: state.service.activePlan,
-  coupons: state.vouchers
-});
-const mapDispatchToProps = {
-  initialVoucher,
-  checkPaymentMode,
-  checkVoucher,
-  changeVoucher,
-  generateFirstPayVoucher
-};
-
-const CheckoutPage = ({
-  currentUser,
-  countryCode,
-  serviceItem,
-  frequency,
-  activePlan,
-  coupons,
-  initialVoucher,
-  checkPaymentMode,
-  changeVoucher,
-  checkVoucher,
-  generateFirstPayVoucher,
-  history
-}) => {
+const CheckoutPage = () => {
+  const history = useHistory();
+  const currentUser = useSelector(({auth})=>auth.currentUser);
+  const serviceItem = useSelector(({service})=>service.item);
+  const frequency = useSelector(({service})=>service.frequency);
+  const activePlan = useSelector(({service})=>service.activePlan)
+  const bankFee = useSelector(({service})=>service.item.bank_fee);
+  const coupons = useSelector(({vouchers})=>vouchers);
+  const paymentType = useSelector(({service})=>service.type);
   // referrer or campaign.
   const [enteredVoucher, setEnteredVoucher] = useState(() => {
     const values = Object.values(coupons);
@@ -65,8 +42,8 @@ const CheckoutPage = ({
   useEffect(() => {
     reactLocalStorage.set('checkout', true);
     dispatch(inside({activePlan}));
-    checkVoucher();
-    dispatch(checkPaymentMode());
+    dispatch(checkVoucher());
+    dispatch(checkPaymentMode());// check testing or production on payment
     return () => {
       dispatch(outside());
     };
@@ -109,27 +86,52 @@ const CheckoutPage = ({
     free_trial_length: 0
   };
 
-  let pricing = {
-    initialPrices: { total: serviceItem[activePlan] * 100 },
-    originalPrices: undefined,
-    discountedPrices: { total: serviceItem[activePlan] * 100 },
-    recurringPrices: { total: serviceItem[activePlan] * 100 },
-    refundAmountCents: undefined,
-    currentSubscriptionsAmountCents: undefined,
-    bundlePrices: { total: serviceItem[activePlan] * 100 }
-  };
+  let pricing;
+  if(paymentType === 'bank'){
+    pricing = {
+      initialPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
+      originalPrices: undefined,
+      discountedPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
+      recurringPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
+      refundAmountCents: undefined,
+      currentSubscriptionsAmountCents: undefined,
+      bundlePrices: { total: (serviceItem[activePlan]+bankFee) * 100 }
+    };    
+  }else{
+    pricing = {
+      initialPrices: { total: serviceItem[activePlan] * 100 },
+      originalPrices: undefined,
+      discountedPrices: { total: serviceItem[activePlan] * 100 },
+      recurringPrices: { total: serviceItem[activePlan] * 100 },
+      refundAmountCents: undefined,
+      currentSubscriptionsAmountCents: undefined,
+      bundlePrices: { total: serviceItem[activePlan] * 100 }
+    };
+  }
   /*eslint-disable no-mixed-operators*/
   if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && (enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1))) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(enteredVoucher.form === '%'){
-      pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
-      if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
-    }
-    else {
-      pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
-      if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
-      if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
+    if(paymentType === 'bank'){
+      if(enteredVoucher.form === '%'){
+        pricing.discountedPrices.total = Math.round(((serviceItem[activePlan]+bankFee) * 100 * (100 - pricing.savingsInPercent)) / 100);
+        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round(((serviceItem[activePlan]+bankFee) * 100 * (100 - pricing.savingsInPercent)) / 100);
+      }
+      else {
+        pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
+        if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
+        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
+      }
+    }else{
+      if(enteredVoucher.form === '%'){
+        pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
+      }
+      else {
+        pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
+        if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
+        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
+      }
     }
   }
   // in case of user is navigating to some other page PE-14498 fix
@@ -139,14 +141,14 @@ const CheckoutPage = ({
 
   const onEnteredVoucherChange = newEnteredVoucher => {
     setEnteredVoucher(newEnteredVoucher);
-    changeVoucher();
+    dispatch(changeVoucher());
   };
 
   const resetActiveVoucher = () => {
-    initialVoucher();
+    dispatch(initialVoucher());
     setEnteredVoucher(undefined);
     //setRemoveCoupon(true);
-    changeVoucher();
+    dispatch(changeVoucher());
   };
 
   return (
@@ -161,11 +163,11 @@ const CheckoutPage = ({
         <StepPayment
           service={service}
           checkoutType={checkoutType}
-          countryCode={countryCode}
           pricing={pricing}
           enteredVoucher={enteredVoucher}
           selectedProduct={selectedProduct}
           vouchers={vouchers}
+          paymentType={paymentType}
           onEnteredVoucherChange={onEnteredVoucherChange}
           resetActiveVoucher={resetActiveVoucher}
         />
@@ -175,16 +177,4 @@ const CheckoutPage = ({
   );
 };
 
-CheckoutPage.defaultProps = {
-  currentUser: { gender: "Male" }
-};
-
-CheckoutPage.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  currentUser: PropTypes.object
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(injectIntl(CheckoutPage)));
+export default CheckoutPage;

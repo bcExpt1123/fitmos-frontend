@@ -2,7 +2,7 @@ import React from "react";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import addMonths from "date-fns/addMonths";
 import { useSelector } from "react-redux";
-
+import { NavLink } from "react-router-dom";
 
 import Card from "../../components/Card";
 import FormattedPrice, {
@@ -58,6 +58,9 @@ const Cart = ({
   selectedProduct,
   intl
 }) => {
+  const paymentType = useSelector(({service})=>service.type);
+  const currentUser = useSelector(({auth})=>auth.currentUser);
+  const activePlan = useSelector(({service})=>service.activePlan);
   const currency = {
     code: selectedProduct.currency,
     exponent: selectedProduct.currency_exponent
@@ -74,51 +77,82 @@ const Cart = ({
   const serviceItem = useSelector(({service})=>service.item);
   return (
     <section className={"cart"} data-cy="cart section">
-      <h2 className="checkout-page-title display-3 d-block d-md-none pt-3">Checkout</h2>
+      {paymentType==='bank'?<>
+          <h2 className="checkout-page-title d-block d-md-none pt-3">INSTRUCCIONES DE PAGO</h2>
+          <NavLink
+            to={`/pricing`}
+            className="redirect-pricing  d-block d-md-none "
+          >
+            Cambiar método de pago
+          </NavLink>
+        </>:
+        <h2 className="checkout-page-title display-3 d-block d-md-none pt-3">Checkout</h2>}
+      
       <Card padding="xs" noMarginBottom>
-        {checkoutKind===CHECKOUT_KIND.ACTIVATE_WITH_TRIAL?(
-          <h3>Free Trial</h3>
-        ):(
-          <h3>Detalle de compra</h3>
-        )}
+        {paymentType==='nmi'&&
+          (checkoutKind===CHECKOUT_KIND.ACTIVATE_WITH_TRIAL?(
+            <h3>Free Trial</h3>
+          ):(
+            <h3>Detalle de compra</h3>
+        ))}
         
         <div className={"product"}>
           <div className={"product-details"}>
-            <h5>PLAN FITEMOS</h5>
-            <p>
-              <ChargingInfo
-                activeVoucher={activeVoucher}
-                service={service}
-                checkoutKind={checkoutKind}
-                currency={currency}
-                prices={prices}
-                selectedProduct={selectedProduct}
-              />
-            </p>
-          </div>
-
-          {checkoutKind === CHECKOUT_KIND.ACTIVATE && (
-            <div className={"product-price"} data-cy="cart product price">
+          {paymentType==='nmi'?
+            <>
+              <h5>PLAN FITEMOS</h5>
               <p>
-                <FormattedPrice
+                <ChargingInfo
+                  activeVoucher={activeVoucher}
+                  service={service}
+                  checkoutKind={checkoutKind}
+                  currency={currency}
+                  prices={prices}
+                  selectedProduct={selectedProduct}
+                />
+              </p>
+            </>
+            :
+            <>
+              <h5>Plan {activePlan} {currentUser.has_workout_subscription === false&&<>+ 1 mes gratis</>}</h5>
+              <p>
+                Manejo ACH    <FormattedPrice
                   price={prices.initial}
                   currency={currency}
                   locale="en"
                 />
               </p>
-            </div>
-          )}
-          {checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
-            <div className={"product-price"} data-cy="cart product price">
               <p>
-                <FormattedPrice
-                  price={0}
-                  currency={currency}
-                  locale="en"
-                />
+                {currentUser.has_workout_subscription === false&&<>+ 1 mes gratis</>}
               </p>
-            </div>
-          )}
+            </>
+          }
+          </div>
+          {paymentType==='nmi'&&(
+            (checkoutKind === CHECKOUT_KIND.ACTIVATE && (
+              <div className={"product-price"} data-cy="cart product price">
+                <p>
+                  <FormattedPrice
+                    price={prices.initial}
+                    currency={currency}
+                    locale="en"
+                  />
+                </p>
+              </div>
+            )
+            (checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
+              <div className={"product-price"} data-cy="cart product price">
+                <p>
+                  <FormattedPrice
+                    price={0}
+                    currency={currency}
+                    locale="en"
+                  />
+                </p>
+              </div>
+            )
+            )))
+          }
         </div>
         {hasDiscountedPrice && (
           <>
@@ -158,17 +192,19 @@ const Cart = ({
           </p>      
         </>
       )}
-      {checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
-        <p>
-          Prueba gratis por {serviceItem.free_duration} días. Podrá cancelar en cualquier momento sin compromiso.
-          Al concluir el período de prueba se renovará por &nbsp; 
-          <FormattedPrice
-              price={pricing.recurringPrices.total}
-              currency={currency}
-              locale="en"
-          />.
-        </p>      
-      )}
+      {paymentType==='nmi'?
+        <>
+          {checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL && (
+            <p>
+              Prueba gratis por {serviceItem.free_duration} días. Podrá cancelar en cualquier momento sin compromiso.
+              Al concluir el período de prueba se renovará por &nbsp; 
+              <FormattedPrice
+                  price={pricing.recurringPrices.total}
+                  currency={currency}
+                  locale="en"
+              />.
+            </p>      
+          )}
 
         {checkoutKind === CHECKOUT_KIND.UPGRADE &&
           typeof pricing.refundAmountCents === "number" && (
@@ -247,109 +283,131 @@ const Cart = ({
               )}
             </div>
           )}
+          </>
+          :
+          <p>
+            Podrá extender su plan o cambiar su método de pago en cualquier momento.
+          </p>
+        }
       </Card>
-
-      {checkoutKind === CHECKOUT_KIND.UPGRADE ? (
+      {paymentType==='nmi'?
         <>
-          {pricing.refundAmountCents > 0 ? (
-            <Card padding="xs" noMarginBottom>
-              <div className={"totalPrice"} data-cy="upsell cart total">
-                <FormattedMessage id="CheckoutPage.Sidebar.Cart.Refund.Label.value" />
-                <strong>
-                  <FormattedPrice
-                    price={pricing.refundAmountCents}
-                    currency={currency}
-                  />
-                </strong>
-              </div>
+          {checkoutKind === CHECKOUT_KIND.UPGRADE ? (
+            <>
+              {pricing.refundAmountCents > 0 ? (
+                <Card padding="xs" noMarginBottom>
+                  <div className={"totalPrice"} data-cy="upsell cart total">
+                    <FormattedMessage id="CheckoutPage.Sidebar.Cart.Refund.Label.value" />
+                    <strong>
+                      <FormattedPrice
+                        price={pricing.refundAmountCents}
+                        currency={currency}
+                      />
+                    </strong>
+                  </div>
 
-              <div className={"refundDisclaimer"}>
-                <FormattedHTMLMessage
-                  id="CheckoutPage.Sidebar.Cart.Refund.automatic_refund"
-                  values={{
-                    refund: formatPrice({
-                      price: pricing.refundAmountCents,
-                      currency,
-                      intl
-                    }),
-                    renewal_price: formatPrice({
-                      price: prices.recurring,
-                      currency,
-                      intl
-                    }),
-                    renewal_date: intl.formatDate(
-                      addMonths(new Date(), selectedProduct.months)
-                    )
-                  }}
-                />
-              </div>
-            </Card>
+                  <div className={"refundDisclaimer"}>
+                    <FormattedHTMLMessage
+                      id="CheckoutPage.Sidebar.Cart.Refund.automatic_refund"
+                      values={{
+                        refund: formatPrice({
+                          price: pricing.refundAmountCents,
+                          currency,
+                          intl
+                        }),
+                        renewal_price: formatPrice({
+                          price: prices.recurring,
+                          currency,
+                          intl
+                        }),
+                        renewal_date: intl.formatDate(
+                          addMonths(new Date(), selectedProduct.months)
+                        )
+                      }}
+                    />
+                  </div>
+                </Card>
+              ) : (
+                <Card padding="xs" noMarginBottom>
+                  <div className={"totalPrice"} data-cy="cart total">
+                    <FormattedMessage id="CheckoutPage.Sidebar.Cart.Label.Total" />
+
+                    <strong>
+                      <FormattedPrice
+                        price={prices.discounted}
+                        currency={currency}
+                      />
+                    </strong>
+                  </div>
+
+                  <div className={"refundDisclaimer"}>
+                    <FormattedHTMLMessage
+                      id="CheckoutPage.Sidebar.Cart.Disclaimer"
+                      values={{
+                        credit_amount: formatPrice({
+                          price: pricing.currentSubscriptionsAmountCents,
+                          currency,
+                          intl
+                        }),
+                        renewal_price: formatPrice({
+                          price: prices.recurring,
+                          currency,
+                          intl
+                        }),
+                        renewal_date: intl.formatDate(
+                          addMonths(new Date(), selectedProduct.months)
+                        )
+                      }}
+                    />
+                  </div>
+                </Card>
+              )}
+            </>
           ) : (
-            <Card padding="xs" noMarginBottom>
-              <div className={"totalPrice"} data-cy="cart total">
-                <FormattedMessage id="CheckoutPage.Sidebar.Cart.Label.Total" />
-
-                <strong>
-                  <FormattedPrice
-                    price={prices.discounted}
-                    currency={currency}
-                  />
-                </strong>
-              </div>
-
-              <div className={"refundDisclaimer"}>
-                <FormattedHTMLMessage
-                  id="CheckoutPage.Sidebar.Cart.Disclaimer"
-                  values={{
-                    credit_amount: formatPrice({
-                      price: pricing.currentSubscriptionsAmountCents,
-                      currency,
-                      intl
-                    }),
-                    renewal_price: formatPrice({
-                      price: prices.recurring,
-                      currency,
-                      intl
-                    }),
-                    renewal_date: intl.formatDate(
-                      addMonths(new Date(), selectedProduct.months)
-                    )
-                  }}
-                />
-              </div>
-            </Card>
+            checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL ?(
+              <Card padding="xs" noMarginBottom>
+                <div className={"total-price"} data-cy="cart total">
+                  <span>TOTAL</span>
+                  <span>
+                    <FormattedPrice
+                      price={0}
+                      currency={currency}
+                      locale="en"
+                    />
+                  </span>
+                </div>
+              </Card>
+            )
+            :(
+              <Card padding="xs" noMarginBottom>
+                <div className={"total-price"} data-cy="cart total">
+                  <span>TOTAL</span>
+                  <span>
+                    <FormattedPrice
+                      price={prices.discounted}
+                      currency={currency}
+                      locale="en"
+                    />
+                  </span>
+                </div>
+              </Card>
+            )
           )}
         </>
-      ) : (
-        checkoutKind === CHECKOUT_KIND.ACTIVATE_WITH_TRIAL ?(
-          <Card padding="xs" noMarginBottom>
-            <div className={"total-price"} data-cy="cart total">
-              <span>TOTAL</span>
-              <span>
-                <FormattedPrice
-                  price={0}
-                  currency={currency}
-                  locale="en"
-                />
-              </span>
-            </div>
-          </Card>
-        )
-        :(
-          <Card padding="xs" noMarginBottom>
-            <div className={"total-price"} data-cy="cart total">
-              <span>TOTAL</span>
-              <span>
-                <FormattedPrice
-                  price={prices.discounted}
-                  currency={currency}
-                  locale="en"
-                />
-              </span>
-            </div>
-          </Card>
-        )
-      )}
+        :
+        <Card padding="xs" noMarginBottom>
+          <div className={"total-price"} data-cy="cart total">
+            <span>TOTAL</span>
+            <span>
+              <FormattedPrice
+                price={prices.discounted}
+                currency={currency}
+                locale="en"
+              />
+            </span>
+          </div>
+        </Card>
+      }
     </section>
   );
 };

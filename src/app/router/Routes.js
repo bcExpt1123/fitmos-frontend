@@ -92,6 +92,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/subscriptions",
     "/admin/subscriptions/:id",
     "/admin/transactions",
+    "/admin/bank-transfer-requests",
     "/admin/invoices",
     "/admin/invoices/:id",
     "/admin/coupons",

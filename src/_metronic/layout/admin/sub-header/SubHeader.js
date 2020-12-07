@@ -11,6 +11,7 @@ import { SubHeaderCustomerDetail } from "../../../../app/pages/admin/CustomerDet
 import { SubHeaderSubscriptions } from "../../../../app/pages/admin/Subscriptions";
 import { SubHeaderSubscriptionDetail } from "../../../../app/pages/admin/SubscriptionDetail";
 import { SubHeaderTransactions } from "../../../../app/pages/admin/Transactions";
+import { SubHeaderBankTransferRequests } from "../../../../app/pages/admin/BankTransferRequests";
 import { SubHeaderInvoices } from "../../../../app/pages/admin/Invoices";
 import { SubHeaderInvoicePrint } from "../../../../app/pages/admin/InvoicePrint";
 import { SubHeaderCoupons } from "../../../../app/pages/admin/Coupons";
@@ -90,11 +91,8 @@ class SubHeader extends React.Component {
               path="/admin/subscriptions/:id"
               component={SubHeaderSubscriptionDetail}
             />
-            <Route
-              exact
-              path="/admin/transactions"
-              component={SubHeaderTransactions}
-            />
+            <Route exact path="/admin/transactions" component={SubHeaderTransactions}/>
+            <Route exact path="/admin/bank-transfer-requests" component={SubHeaderBankTransferRequests}/>
             <Route exact path="/admin/invoices" component={SubHeaderInvoices} />
             <Route exact path="/admin/invoices/:id" component={SubHeaderInvoicePrint} />
             <Route exact path="/admin/coupons" component={SubHeaderCoupons} />

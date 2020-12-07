@@ -163,6 +163,8 @@
   "CheckoutPage.VoucherForm.Button.RemoveVoucher":"(eliminar)",
   "CheckoutPage.VoucherForm.Label":"Cupón",
   "CheckoutPage.VoucherForm.Error.invalid_token":"El cupón no es válido.",
+  "CheckoutPage.Bank.Add.Coupon":"Cupón aceptado. Tu orden ha sido actualizada.",
+  "CheckoutPage.Bank.Remove.Coupon":"Cupón eliminado. Tu orden ha sido actualizada.",
   "CheckoutPage.Alert.Error.generic_error":"Checkout Error",
   "Subscription.Cancel.Success":"Su suscripción se ha cancelado correctamente.",
   "Subscription.Cancel.Error":"Su suscripción acaba de fallar al cancelar.",

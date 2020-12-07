@@ -15,6 +15,7 @@ import {
   inside,
   outside,
   validCartId,
+  sendBankRequest,
 } from "./actions";
 import {
   onPayWithPayPal,
@@ -100,6 +101,31 @@ function* onChangeVoucher() {
       yield put(trackError(error));
     }
   }
+  const paymentType = yield select(({service})=>service.type);
+  if(paymentType === 'bank'){
+    const frequency = yield select(store => store.service.frequency);
+    const vouchers = yield select(store => store.vouchers);
+    const coupons = Object.values(vouchers);
+    const serviceId = yield select(store => store.service.item.id);
+    let couponId;
+    if (coupons[0] && coupons[0].discount) couponId = coupons[0].id;
+    try {
+      const result = yield call(sendBankRequestApi,frequency,serviceId,couponId);
+      if(couponId){
+        yield put(addAlertMessage({
+          type: "success",
+          message: {id:"CheckoutPage.Bank.Add.Coupon"} 
+        }));    
+      }else{
+        yield put(addAlertMessage({
+          type: "success",
+          message: {id:"CheckoutPage.Bank.Remove.Coupon"} 
+        }));    
+      }
+    } catch (error) {
+      yield put(trackError(error));
+    }
+  }
 }
 function subscriptionRenewal(id,frequency){
   return http({
@@ -175,6 +201,21 @@ function* onValidCartId({payload}){
     yield put(trackError(error));
   }
 }
+function sendBankRequestApi(frequency,service_id,coupon_id){
+  return http({
+    path: "bank/checkout", // get paymentTest and createOrUpdate paypal plan
+    method: "POST",
+    data: {
+      frequency,
+      service_id,
+      coupon_id
+    }
+  }).then(response => response.data);  
+}
+function* onSendBankRequest({payload}){
+  const serviceId = yield select(store => store.service.item.id);
+  const result = yield call(sendBankRequestApi,payload,serviceId,null);
+}
 export default function* rootSaga() {
   yield all([
     takeLeading(payWithPayPal, onPayWithPayPal),
@@ -190,5 +231,6 @@ export default function* rootSaga() {
     takeLeading(inside,onCheckoutInSide),
     takeLeading(outside,onCheckoutOutSide),
     takeLeading(validCartId,onValidCartId),
+    takeLeading(sendBankRequest, onSendBankRequest),
   ]);
 }

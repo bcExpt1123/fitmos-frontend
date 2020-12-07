@@ -36,6 +36,13 @@ export default {
         page: "admin/transactions"
       },
       {
+        title: "Bank Transfer Requests",
+        root: true,
+        icon: "flaticon2-checking",
+        can:["transactions"],
+        page: "admin/bank-transfer-requests"
+      },
+      {
         title: "Invoices",
         root: true,
         icon: "flaticon2-list",

@@ -86,18 +86,20 @@ class NavBarVariantFull extends React.Component {
           onToggle={this.toggleisDrawerOpen}
         >
           <Container>
-            <Navbar.Toggle
-              aria-controls="responsive-navbar-nav"
-              className={"navbar-toggler-right"}
-              children={
-                <div className="hamburger">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              }
-            />
+            {(this.props.checkout===undefined && this.props.checkout !== true)&&
+              <Navbar.Toggle
+                aria-controls="responsive-navbar-nav"
+                className={"navbar-toggler-right"}
+                children={
+                  <div className="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                }
+              />
+            }
             {this.props.checkout&&(
               <button type="button" className={"back-button"} onClick={() => this.props.history.goBack()}>
                 <Icon name="arrowLeft" className="arrow-left" />

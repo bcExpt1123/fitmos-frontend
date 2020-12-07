@@ -68,6 +68,8 @@ class EditWeight extends React.Component {
     this.getWeights();
   }
   async getWeights() {
+    const environment = process.env.NODE_ENV;
+    console.log(environment)
     try {
       const res = await http({
         method: "GET",
@@ -77,7 +79,9 @@ class EditWeight extends React.Component {
       let { data } = res;
       this.setState({ weights: data });
     } catch (e) {
-      this.props.deleteAuthAction();
+      if (e.response.status === 401) {
+        if(environment!=='development')this.props.deleteAuthAction();
+      }
       console.log(e);
     }
   }

@@ -80,7 +80,6 @@ function Main() {
     dispatch($restore(id));
   };
   const actionDelete = id => event => {
-    console.log(333);
     if (window.confirm("Are you sure to delete this item?")) dispatch($delete(id));
   };
   return (

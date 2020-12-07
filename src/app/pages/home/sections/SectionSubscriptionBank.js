@@ -11,7 +11,7 @@ import {
   $changeType,
 } from "../../../../modules/subscription/service";
 import { $changeItem } from "../../../../modules/subscription/service";
-import { setCheckoutKind } from "../redux/checkout/actions";
+import { setCheckoutKind, sendBankRequest } from "../redux/checkout/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
 import { CHECKOUT_KIND } from "../constants/checkout-kind";
 import NmiPricing,{getFrequency} from "./pricing/NmiPricing";
@@ -112,6 +112,10 @@ export default function SubscriptionBank() {
   const dispatch = useDispatch();
   const handleFreeMembership = ()=>{
     dispatch(setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE_WITH_TRIAL}));
+    history.push("/checkout");
+  }
+  const handleBankRequest = ()=>{
+    dispatch(sendBankRequest(frequency));
     history.push("/checkout");
   }
   useEffect(() => {
@@ -269,7 +273,7 @@ export default function SubscriptionBank() {
                           :
                           <button
                             className="btn-md btn-primary fs-btn"
-                            onClick={handleFreeMembership}
+                            onClick={handleBankRequest}
                           >
                             ADQUIERE {frequency} MESES POR USD {roundToMoney(parseFloat(serviceItem[activePlan])+parseFloat(serviceItem.bank_fee))}
                             <br/>

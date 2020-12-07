@@ -6,6 +6,7 @@ import * as customer from "../../modules/subscription/customer";
 import * as admin from "../../modules/subscription/admin";
 import * as service from "../../modules/subscription/service";
 import * as transaction from "../../modules/subscription/transaction";
+import * as bankTransferRequest from "../../modules/subscription/bankTransferRequest";
 import * as coupon from "../../modules/subscription/coupon";
 import * as subscription from "../../modules/subscription/subscription";
 import * as shortcode from "../../modules/subscription/shortcode";
@@ -80,6 +81,7 @@ export const rootReducer = combineReducers({
   admin:admin.reducer,
   service: service.reducer,
   transaction: transaction.reducer,
+  bankTransferRequest:bankTransferRequest.reducer,
   coupon: coupon.reducer,
   subscription: subscription.reducer,
   shortcode: shortcode.reducer,
@@ -115,6 +117,7 @@ export function* rootSaga() {
     admin.saga(),
     service.saga(),
     transaction.saga(),
+    bankTransferRequest.saga(),
     coupon.saga(),
     subscription.saga(),
     shortcode.saga(),

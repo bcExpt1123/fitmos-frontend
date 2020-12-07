@@ -6,6 +6,7 @@ import { CustomerDetail } from "./CustomerDetail";
 import { Subscriptions } from "./Subscriptions";
 import { SubscriptionDetail } from "./SubscriptionDetail";
 import { Transactions } from "./Transactions";
+import { BankTransferRequests } from "./BankTransferRequests";
 import { Invoices } from "./Invoices";
 import { InvoicePrint } from "./InvoicePrint";
 import { Coupons } from "./Coupons";
@@ -61,6 +62,7 @@ export default function AdminPage() {
         <Route exact path="/admin/subscriptions" component={Subscriptions} />
         <Route exact path="/admin/subscriptions/:id" component={SubscriptionDetail} />
         <Route exact path="/admin/transactions" component={Transactions} />
+        <Route exact path="/admin/bank-transfer-requests" component={BankTransferRequests} />
         <Route exact path="/admin/invoices" component={Invoices} />
         <Route exact path="/admin/invoices/:id" component={InvoicePrint} />
         <Route exact path="/admin/coupons" component={Coupons} />

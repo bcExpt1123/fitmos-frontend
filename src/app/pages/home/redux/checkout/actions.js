@@ -27,7 +27,8 @@ export const {
   reactivateSubscription,
   inside,
   outside,
-  validCartId
+  validCartId,
+  sendBankRequest
 } = createActions(
   "PAY_WITH_NMI",
   "PAY_WITH_PAY_PAL",
@@ -56,5 +57,6 @@ export const {
   "INSIDE",
   "OUTSIDE",
   "VALID_CART_ID",
+  "SEND_BANK_REQUEST",
   { prefix: "CHECKOUT" }
 );

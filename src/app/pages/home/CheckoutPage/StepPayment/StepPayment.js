@@ -1,5 +1,6 @@
 import React from "react";
 import { reactLocalStorage } from 'reactjs-localstorage';
+import { NavLink } from "react-router-dom";
 
 import Sidebar from "./Sidebar";
 import PaymentForm from "./PaymentForm";
@@ -14,13 +15,13 @@ import PaymentForm from "./PaymentForm";
 const StepPayment = ({
   service,
   checkoutType,
-  countryCode,
   pricing,
   selectedProduct,
   referrer,
   enteredVoucher,
   vouchers,
   onEnteredVoucherChange,
+  paymentType,
   resetActiveVoucher
 }) => {
   const currency = {
@@ -43,7 +44,17 @@ const StepPayment = ({
         <div className="row">
           <div className={"col-12 col-md-7 pt-4"}>
             <div>
-              <h2 className="checkout-page-title display-3 d-none d-md-block">Checkout</h2>
+              {paymentType==='bank'?
+                <>
+                  <h2 className="checkout-page-title d-none d-md-block">INSTRUCCIONES DE PAGO</h2>
+                  <NavLink
+                    to={`/pricing`}
+                    className="redirect-pricing  d-none d-md-block"
+                  >
+                    Cambiar método de pago
+                  </NavLink>
+                </>:
+                <h2 className="checkout-page-title display-3 d-none d-md-block">Checkout</h2>}
               <PaymentForm
                 service={service}
                 currency={currency}
