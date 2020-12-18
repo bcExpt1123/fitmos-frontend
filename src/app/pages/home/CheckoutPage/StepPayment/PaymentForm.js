@@ -206,154 +206,134 @@ const PaymentForm = ({
     >  
       {({ isValid, errors, touched, values,setFieldValue }) => (
         <Form noValidate>
-          {paymentType==='bank'?
-            <div className="payment-card">
-              <p>Hola {currentUser.customer.first_name},</p>
-              <p>Ya recibimos tu solicitud para entrenar con Fitemos por {frequency}mes + 1 mes gratis.</p>
-              <p>Para que activemos tu cuenta, solo debes enviarnos el pago por &nbsp;
-                <FormattedPrice
-                  price={pricing.discountedPrices.total}
-                  currency={currency}
-                  locale="en"
-                /></p>
-              <b>Datos Bancarios</b><br/>
-              <b>Banco General</b><br/>
-              <b>Fitemos Corp.</b><br/>
-              <b>Cuenta Corriente: 03-17-01-131135-6*</b><br/>
-              <br/>
-              <p>El comprobante enviarlo a: hola@fitemos.com para que activemos su cuenta.</p>
-              <p>La activación es de forma manual y puede tardar un máximo de doce horas.</p>
-            </div>
-          :
-            <Card noMarginBottom className="payment-card">
-              <fieldset
-                className={"expandable"}
-                data-cy="credit-card-radio-button"
+          <Card noMarginBottom className="payment-card">
+            <fieldset
+              className={"expandable"}
+              data-cy="credit-card-radio-button"
+            >
+              <input
+                className={"expandableToggle"}
+                id="credit-card-radio-button"
+                type="radio"
+                name="paymentOption"
+                value="creditCard"
+                checked={selectedPaymentProvider === creditCardProvider}
+                onChange={() => {
+                  setSelectedPaymentProvider(creditCardProvider);
+                  dispatch(actions.changePaymentProvider(creditCardProvider));
+                }}
+              />
+              <label
+                className={"expandableHeader"}
+                htmlFor="credit-card-radio-button"
               >
-                <input
-                  className={"expandableToggle"}
-                  id="credit-card-radio-button"
-                  type="radio"
-                  name="paymentOption"
-                  value="creditCard"
-                  checked={selectedPaymentProvider === creditCardProvider}
-                  onChange={() => {
-                    setSelectedPaymentProvider(creditCardProvider);
-                    dispatch(actions.changePaymentProvider(creditCardProvider));
-                  }}
-                />
-                <label
-                  className={"expandableHeader"}
-                  htmlFor="credit-card-radio-button"
-                >
-                  Tarjeta de crédito o débito
-                </label>
+                Tarjeta de crédito o débito
+              </label>
 
-                <section className={"expandableContainer"}>
-                  {canUseNmi && ((cards && cards.length>0)?(
-                    <>
-                      <NavLink
-                        to="/settings/payments"
-                        className={"btn btn-payment-methods"}
-                        exact
-                      >
-                        Métodos de Pago
-                      </NavLink>
-                      {cards.map((card,index)=>
-                        <div key={card.id}>
-                          {index===0?(
-                            <>
-                              <input
-                                className={"expandableTokenToggle"}
-                                id={`credit-card-token-radio-button${card.id}`}
-                                type="radio"
-                                ref={ref}
-                                name="nmiSavedCard"
-                                value={card.id}
-                                checked={values.nmiPaymentToken!==''&&values.nmiPaymentToken === card.id}
-                                onChange={() => {
-                                  setFieldValue('nmiPaymentToken',card.id);
-                                }}          
-                              />
-                              <label
-                                className={"expandableCardHeader"}
-                                htmlFor={`credit-card-token-radio-button${card.id}`}
-                              >
-                                {card.holder} 
-                                <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
-                                &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
-                              </label>
-                            </>
-                          ):(
-                            <>
-                              <input
-                                className={"expandableTokenToggle"}
-                                id={`credit-card-token-radio-button${card.id}`}
-                                type="radio"
-                                name="nmiSavedCard"
-                                value={card.id}
-                                checked={values.nmiPaymentToken !== '' && values.nmiPaymentToken === card.id}
-                                onChange={() => {
-                                  console.log("nmi payment")
-                                  setFieldValue('nmiPaymentToken',card.id);
-                                }}          
-                              />
-                              <label
-                                className={"expandableCardHeader"}
-                                htmlFor={`credit-card-token-radio-button${card.id}`}
-                              >
-                                {card.holder} 
-                                <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
-                                &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
-                              </label>
-                            </>
-                          )}
-
-                        </div>
-                      )}
-                      <div>
-                        <input
-                          className={"expandableTokenToggle"}
-                          id={`credit-card-token-radio-button`}
-                          type="radio"
-                          name="nmiSavedCard"
-                          value="new"
-                          checked={values.nmiPaymentToken === 'new'}
-                          onChange={() => {
-                            setFieldValue('nmiPaymentToken','new');
-                          }}          
-                        />
-                        <label
-                          className={"expandableCardHeader"}
-                          htmlFor={`credit-card-token-radio-button`}
-                        >
-                          Use a new Card
-                        </label>
-                        {values['nmiPaymentToken'] === 'new' &&(
-                          <CreditCardForm
-                            errors={errors}
-                            touched={touched}
-                            values={values}
-                            paymentInputs={paymentInputs}
-                          />
+              <section className={"expandableContainer"}>
+                {canUseNmi && ((cards && cards.length>0)?(
+                  <>
+                    <NavLink
+                      to="/settings/payments"
+                      className={"btn btn-payment-methods"}
+                      exact
+                    >
+                      Métodos de Pago
+                    </NavLink>
+                    {cards.map((card,index)=>
+                      <div key={card.id}>
+                        {index===0?(
+                          <>
+                            <input
+                              className={"expandableTokenToggle"}
+                              id={`credit-card-token-radio-button${card.id}`}
+                              type="radio"
+                              ref={ref}
+                              name="nmiSavedCard"
+                              value={card.id}
+                              checked={values.nmiPaymentToken!==''&&values.nmiPaymentToken === card.id}
+                              onChange={() => {
+                                setFieldValue('nmiPaymentToken',card.id);
+                              }}          
+                            />
+                            <label
+                              className={"expandableCardHeader"}
+                              htmlFor={`credit-card-token-radio-button${card.id}`}
+                            >
+                              {card.holder} 
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
+                              &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
+                            </label>
+                          </>
+                        ):(
+                          <>
+                            <input
+                              className={"expandableTokenToggle"}
+                              id={`credit-card-token-radio-button${card.id}`}
+                              type="radio"
+                              name="nmiSavedCard"
+                              value={card.id}
+                              checked={values.nmiPaymentToken !== '' && values.nmiPaymentToken === card.id}
+                              onChange={() => {
+                                console.log("nmi payment")
+                                setFieldValue('nmiPaymentToken',card.id);
+                              }}          
+                            />
+                            <label
+                              className={"expandableCardHeader"}
+                              htmlFor={`credit-card-token-radio-button${card.id}`}
+                            >
+                              {card.holder} 
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
+                              &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
+                            </label>
+                          </>
                         )}
-                    </div>
-                  </>
-              ):(
-                    <CreditCardForm
-                      errors={errors}
-                      touched={touched}
-                      values={values}
-                      paymentInputs={paymentInputs}
-                    />
-                  )
-                    
-                  )}
-                </section>
-              </fieldset>
 
-            </Card>
-          }
+                      </div>
+                    )}
+                    <div>
+                      <input
+                        className={"expandableTokenToggle"}
+                        id={`credit-card-token-radio-button`}
+                        type="radio"
+                        name="nmiSavedCard"
+                        value="new"
+                        checked={values.nmiPaymentToken === 'new'}
+                        onChange={() => {
+                          setFieldValue('nmiPaymentToken','new');
+                        }}          
+                      />
+                      <label
+                        className={"expandableCardHeader"}
+                        htmlFor={`credit-card-token-radio-button`}
+                      >
+                        Use a new Card
+                      </label>
+                      {values['nmiPaymentToken'] === 'new' &&(
+                        <CreditCardForm
+                          errors={errors}
+                          touched={touched}
+                          values={values}
+                          paymentInputs={paymentInputs}
+                        />
+                      )}
+                  </div>
+                </>
+            ):(
+                  <CreditCardForm
+                    errors={errors}
+                    touched={touched}
+                    values={values}
+                    paymentInputs={paymentInputs}
+                  />
+                )
+                  
+                )}
+              </section>
+            </fieldset>
+
+          </Card>
 
           <Card className="payment-card second">
             <div className={"notes mt-4"}>

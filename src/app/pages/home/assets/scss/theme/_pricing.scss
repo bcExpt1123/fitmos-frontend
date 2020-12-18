@@ -25,7 +25,7 @@
           font-size: 1.75rem;
           font-weight: 400;
           color: #333333;
-          line-height: 2.3;
+          line-height: 1.5;
         }
       }
       .plan-footer {
@@ -110,6 +110,18 @@
       overflow: hidden;
       pointer-events: none;
     }
+  }
+}
+.strikeout {
+  position: relative;
+  &::after{
+    border-bottom: 0.16em solid black;
+    content: "";
+    left: 0;
+    margin-top: calc(0.16em / 2 * -1);
+    position: absolute;
+    right: 0;
+    top: 50%;
   }
 }
 @media (max-width: 767px) {

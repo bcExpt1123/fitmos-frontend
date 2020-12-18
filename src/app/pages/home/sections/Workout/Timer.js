@@ -8,7 +8,7 @@ import Calentamiento from '../../components/Timer/Calentamiento';
 import Extra from '../../components/Timer/Extra';
 
 
-function Timer({ type, work, round, rest,setIsRunning }) {
+function Timer({ type, work, round, rest,description,setIsRunning }) {
   const [selectedTimer, setSelectedTimer] = useState(null);
   const handleStop = ()=>{
     //noSleep.disable();
@@ -28,27 +28,27 @@ function Timer({ type, work, round, rest,setIsRunning }) {
     <>
       {selectedTimer==='amrap'&&(
         <>
-          <AMRAP handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
+          <AMRAP handleStop={handleStop} work={work} description={description} setIsRunning={setIsRunning}/>
         </>
       )}
       {selectedTimer==='for_time'&&(
         <>
-          <ForTime handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
+          <ForTime handleStop={handleStop} work={work} description={description} setIsRunning={setIsRunning}/>
         </>
       )}
       {selectedTimer==='tabata'&&(
         <>
-          <Tabata handleStop={handleStop} work={work} rounds={round} rest={rest} setIsRunning={setIsRunning}/>
+          <Tabata handleStop={handleStop} work={work} rounds={round} rest={rest} description={description} setIsRunning={setIsRunning}/>
         </>
       )}
       {selectedTimer==='calentamiento'&&(
         <>
-          <Calentamiento handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
+          <Calentamiento handleStop={handleStop} work={work} description={description} setIsRunning={setIsRunning}/>
         </>
       )}
       {selectedTimer==='extra'&&(
         <>
-          <Extra handleStop={handleStop} work={work} setIsRunning={setIsRunning}/>
+          <Extra handleStop={handleStop} work={work} description={description} setIsRunning={setIsRunning}/>
         </>
       )}
     </>

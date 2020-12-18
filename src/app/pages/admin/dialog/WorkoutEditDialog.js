@@ -1,5 +1,7 @@
-import React from "react";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, Select, InputLabel, MenuItem, FormControl} from "@material-ui/core";
+import React,{useState} from "react";
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, Select, InputLabel, MenuItem, FormControl, IconButton} from "@material-ui/core";
+import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import { useSelector } from "react-redux";
 import { Row, Col} from "react-bootstrap";
 import { makeStyles } from "@material-ui/core";
 const useStyles = ()=>{
@@ -19,6 +21,25 @@ const useStyles = ()=>{
 }
 export default function WorkoutEditDialog(props) {
   const classes = useStyles();
+  const [file,setFile] = useState(null);
+  const [hash,setHash] = useState(Date.now());
+  const handleCapture = ({ target })=> {
+    let file = URL.createObjectURL(target.files[0]);
+    setFile(file);
+    props.updateImage(target.files);
+  }
+  const isSaving = useSelector(({weekWorkout})=>weekWorkout.isSaving);
+  const handleClose = ()=>{
+    props.handleClose();
+    setFile(null);
+  }
+  const handleSave = ()=>{
+    props.handleSave();
+    setFile(null);
+    setTimeout(()=>{
+      setHash(Date.now());
+    },1000);
+  }
   return(
     <Dialog
       open={props.open}
@@ -35,7 +56,7 @@ export default function WorkoutEditDialog(props) {
           Please write down workout content.
         </DialogContentText>
         <Row>
-          <Col sm={9}>
+          <Col sm={5}>
             <TextField
               autoFocus
               margin="dense"
@@ -49,8 +70,34 @@ export default function WorkoutEditDialog(props) {
               fullWidth
             />
           </Col>
-          <Col sm={3}>
-          <FormControl className={classes.formControl}>
+          {props.imageEnable&&
+            <Col sm={5}>
+              <input
+                accept="image/*"
+                style={{ display: "none" }}
+                id="raised-button-file"
+                multiple
+                type="file"
+                onChange={handleCapture}
+              />
+              <label htmlFor="raised-button-file">
+                <IconButton color="primary" component="span">
+                  <PhotoCamera />
+                </IconButton>
+              </label>
+              <div>
+                {file ? (
+                  <img src={file} alt='props' width="200px" />
+                ) : (
+                  props.image&&(
+                    <img src={`${props.image}?${hash}`} alt="props" width="200px" />
+                  )
+                )}
+              </div>
+            </Col>
+          }
+          <Col sm={2}>
+            <FormControl className={classes.formControl}>
               <InputLabel id="new-customer-coupon-label">Timer Types</InputLabel>
               <Select
                 labelId="new-customer-coupon-label"
@@ -113,10 +160,10 @@ export default function WorkoutEditDialog(props) {
         </Row>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.handleClose} color="primary">
+        <Button onClick={handleClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={props.handleSave} color="primary">
+        <Button onClick={handleSave} color="primary" disabled={isSaving}>
           Save
         </Button>
       </DialogActions>

@@ -19,6 +19,7 @@ import {
 import { addAlertMessage } from "../alert/actions";
 import { signInUser } from "../auth/actions";
 import { trackError } from "../error/actions";
+import { start } from "../checkout/actions";
 //import { grantMarketingConsent } from '../marketingConsent/actions';
 
 /* Common functions */
@@ -146,7 +147,8 @@ const passwordRequest = ({
   weightUnit,
   height,
   heightUnit,
-  couponCode
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -172,6 +174,7 @@ const passwordRequest = ({
       platform_source: "web",
       application_source: applicationSource,
       couponCode,
+      invitationEmail,
       //      },
       return_to: returnTo,
       referral_id: referralId
@@ -217,6 +220,7 @@ const passwordRequest = ({
 function* onRegisterWithPassword({ payload }) {
   try {
     const response = yield call(passwordRequest, payload);
+    yield put(start());
     return { response };
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -239,7 +243,8 @@ const facebookRequest = ({
   weightUnit,
   height,
   heightUnit,
-  couponCode
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -261,6 +266,7 @@ const facebookRequest = ({
       terms_acceptance: true,
       platform_source: "web",
       couponCode,
+      invitationEmail,
       application_source: applicationSource,
       //      },
       return_to: returnTo,
@@ -339,6 +345,7 @@ function* onRegisterWithFacebook({ payload }) {
   let couponCode = reactLocalStorage.get('publicCoupon');
   const referralCode = reactLocalStorage.get('referralCode');
   if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
   //const locale = yield select((store) => store.i18n.lang);
   //const gender = getGenderFromAthleteProfile();
   try {
@@ -354,7 +361,8 @@ function* onRegisterWithFacebook({ payload }) {
       weightUnit,
       height,
       heightUnit,
-      couponCode
+      couponCode,
+      invitationEmail
     });
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -380,7 +388,9 @@ const googleRequest = ({
   weight,
   weightUnit,
   height,
-  heightUnit
+  heightUnit,
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -405,6 +415,8 @@ const googleRequest = ({
       terms_acceptance: true,
       platform_source: "web",
       application_source: applicationSource,
+      couponCode,
+      invitationEmail,
       //      },
       return_to: returnTo,
       referral_id: referralId
@@ -442,6 +454,8 @@ function* onRegisterWithGoogle({ payload }) {
   let couponCode = reactLocalStorage.get('publicCoupon');
   const referralCode = reactLocalStorage.get('referralCode');
   if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
+  payload.invitationEmail = invitationEmail;
   let response;
   try {
     response = yield call(googleRequest, {
@@ -456,7 +470,8 @@ function* onRegisterWithGoogle({ payload }) {
       weightUnit,
       height,
       heightUnit,
-      couponCode
+      couponCode,
+      invitationEmail
     });
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -508,7 +523,9 @@ function* onRegister({ type, payload }) {
   let couponCode = reactLocalStorage.get('publicCoupon');
   const referralCode = reactLocalStorage.get('referralCode');
   if(referralCode) couponCode = referralCode;
-  payload.couponCode = couponCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
+  if(couponCode)payload.couponCode = couponCode;
+  if(invitationEmail)payload.invitationEmail = invitationEmail;
   try {
     const result = yield call(requestFunction, { payload });
     const { response, error } = result;
@@ -535,6 +552,10 @@ function* onRegister({ type, payload }) {
       if(couponCode){
         reactLocalStorage.set('publicCouponId', user.customer.coupon_id);
         reactLocalStorage.remove('publicCoupon');
+      }
+      const invitationEmail = reactLocalStorage.get('invitationEmail');
+      if(invitationEmail){
+        reactLocalStorage.remove('invitationEmail');
       }
     }  
     if (standardAuthentication) {

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
@@ -21,6 +21,7 @@ import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
 import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
 import WorkoutNoteEditDialog from "./dialog/WorkoutNoteEditDialog";
 import WorkoutPreviewDialog from "./dialog/WorkoutPreviewDialog";
+import {timeType} from "../../../_metronic/utils/utils";
 
 const useStyles = makeStyles(theme => ({
   border: {
@@ -44,6 +45,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "auto",
     width: "30px"
   },
+  timer: {
+    marginRight: "auto",
+    width: "100px",
+    fontWeight:"600"
+  },
   blog: {
     backgroundColor: "grey"
   }
@@ -62,6 +68,7 @@ function Main({
   work,
   round,
   rest,
+  description,
   $updateItemValue,
   $submitContent,
   $updateImage,
@@ -78,8 +85,9 @@ function Main({
     copiedDate.setDate(date);
   }
   //const options = { year: "numeric", month: "2-digit", day: "2-digit" };
-  const labelOptions = { month: "long", day: "numeric", weekday: "long" };
+  const labelOptions = { month: "short", day: "numeric", weekday: "short" };
   const weeks = [0, 1, 2, 3, 4, 5, 6];
+  const [weekDate, setWeekDate] = useState(false);
   const dateLabel = (number) => {
     let date = copiedDate.getDate() - copiedDate.getDay() + number;
     let dayString = new Date(copiedDate.setDate(date)).toLocaleDateString(
@@ -135,6 +143,7 @@ function Main({
         date = cellDate.getDate() - cellDate.getDay() + day-6;
       }
       cellDate.setDate(date);
+      setWeekDate(day);
       $openCell(cellDate, column, day);
     }
   };
@@ -176,6 +185,34 @@ function Main({
     }
     return true;
   };
+  const checkComplete = (dayNumber, column) => {
+    if(activateWorkout(dayNumber, column)===false) return true;
+    if(!data[column]) return false;
+    switch(column){
+      case "comentario":
+        if(data[column][dayNumber] == null || data[column][dayNumber] == "")return false;
+        if(data['image_path'][dayNumber] == null || data['image_path'][dayNumber] == "")return false;
+      break;
+      case "calentamiento":
+      case "con_content":
+      case "sin_content":
+      case "extra_sin":
+      case "strong_male":
+      case "strong_female":
+      case "fit":
+      case "cardio":
+      case "activo":
+        if(data[column][dayNumber] == null || data[column][dayNumber] == "")return false;
+        if(data[column+'_timer_type'][dayNumber] == null || data[column+'_timer_type'][dayNumber] == "")return false;
+        if(data[column+'_note'][dayNumber] == null || data[column+'_note'][dayNumber] == "")return false;
+      break;
+      case "blog":
+        if(data[column][dayNumber] == null || data[column][dayNumber] == "")return false;
+        if(data[column+'_timer_type'][dayNumber] == null || data[column+'_timer_type'][dayNumber] == "")return false;
+      break;
+      }
+    return true;
+  };
   const handleClose = () => {
     setOpenFirst(false);
     setOpenBlock(false);
@@ -207,6 +244,9 @@ function Main({
   };
   const handleTimerRestChange = event => {
     $updateItemValue('timerRest',event.target.value);
+  };
+  const handleTimerDescriptionChange = event => {
+    $updateItemValue('timerDescription',event.target.value);
   };
   return (
     <Paper className={classes.root}>
@@ -298,9 +338,32 @@ function Main({
                     align="left"
                     key={index}
                     className={classnames({
-                      blog: activateWorkout(col, row) === false
+                      blog: activateWorkout(col, row) === false,
+                      imperfect:!checkComplete(col, row)
                     })}
                   >
+                    {data[row+'_timer_type'] !== undefined &&
+                      data[row+'_timer_type'][col] !== undefined && data[row+'_timer_type'][col] !== "" && data[row+'_timer_type'][col] !== null && (
+                        <div className={classes.timer}>
+                          {data[row+'_timer_type'][col]!='tabata'?
+                            <>
+                              {timeType(data[row+'_timer_type'][col])} {data[row+'_timer_work'][col]}
+                            </>
+                          :
+                            <>
+                              {data[row+'_timer_rest'][col]?
+                              <>
+                                {timeType(data[row+'_timer_type'][col])} {data[row+'_timer_round'][col]}:{data[row+'_timer_work'][col]}:{data[row+'_timer_rest'][col]}
+                              </>
+                              :
+                              <>
+                                {timeType(data[row+'_timer_type'][col])} {data[row+'_timer_round'][col]}:{data[row+'_timer_work'][col]}
+                              </>}
+                            </>
+                          }
+                          
+                        </div>
+                      )}
                     {data[row] !== undefined &&
                       data[row][col] !== undefined && data[row][col] !== "" && data[row][col] !== null && (
                         <div className={classes.preview}>
@@ -355,17 +418,22 @@ function Main({
         handleClose={handleClose} 
         title={editorDate && editorDate.toLocaleDateString(undefined, labelOptions)}
         subTitle={column && columnLabels[column]} 
+        imageEnable={weekDate === 3 || weekDate === 6}
+        image={image}
+        updateImage={$updateImage}
         content={content}
         timerType={timerType}
         work={work}
         round={round}
         rest={rest}
+        description={description}
         handleChange={handleChange}
         handleSave={handleSave}
         handleTimerTypeChange={handleTimerTypeChange}
         handleTimerWorkChange={handleTimerWorkChange}
         handleTimerRoundChange={handleTimerRoundChange}
         handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
       />
       <WorkoutNoteEditDialog 
         open={openBlock} 
@@ -378,12 +446,14 @@ function Main({
         work={work}
         round={round}
         rest={rest}
+        description={description}
         handleChange={handleChange}
         handleNoteChange={handleNoteChange}
         handleTimerTypeChange={handleTimerTypeChange}
         handleTimerWorkChange={handleTimerWorkChange}
         handleTimerRoundChange={handleTimerRoundChange}
         handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
         handleSave={handleSave}
       />
       <WorkoutPreviewDialog
@@ -409,6 +479,7 @@ const mapStateToProps = state => ({
   work:state.cms.timerWork,
   round:state.cms.timerRound,
   rest:state.cms.timerRest,
+  description:state.cms.timerDescription,
   previewContent: state.cms.previewContent
 });
 const mapDispatchToProps = {

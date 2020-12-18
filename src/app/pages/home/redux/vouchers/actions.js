@@ -9,6 +9,7 @@ export const {
   generateFirstPayVoucher,
   setPublicVoucher,
   setReferralVoucher,
+  setEmailInvitationVoucher,
   createRenewalVoucher,
   checkVoucher
 } = createActions(
@@ -20,6 +21,7 @@ export const {
   "GENERATE_FIRST_PAY_VOUCHER",
   "SET_PUBLIC_VOUCHER",
   "SET_REFERRAL_VOUCHER",
+  "SET_EMAIL_INVITATION_VOUCHER",
   "CREATE_RENEWAL_VOUCHER",
   "CHECK_VOUCHER",
   { prefix: "VOUCHERS" }

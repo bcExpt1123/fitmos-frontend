@@ -66,17 +66,25 @@ class ForTime extends Base {
       <>
       <div className="amrap-timer-start-height">&nbsp;</div>
         <div className="w-100">
-          <div className="timer--settingField mb3">
-            <span className="tr">Completar en  
-              el menor tiempo posible.</span>
-          </div>
-          <div className="timer--settingField mb3">
-            <span className="tr">Tiempo Límite:&nbsp;</span>
-            <span className="mh4">
-              {formatMinSec(this.state.minutes*60)}
-            </span>
-            <span className="tl">&nbsp;minutos.</span>
-          </div>
+        {(!this.props.description || this.props.description==='')?
+          <>
+            <div className="timer--settingField mb3">
+              <span className="tr">Completar en  
+                el menor tiempo posible.</span>
+            </div>
+            <div className="timer--settingField mb3">
+              <span className="tr">Tiempo Límite:&nbsp;</span>
+              <span className="mh4">
+                {formatMinSec(this.state.minutes*60)}
+              </span>
+              <span className="tl">&nbsp;minutos.</span>
+            </div>
+          </>
+            :
+            <div style={{whiteSpace: "pre-wrap"}}>
+              {this.props.description}
+            </div>
+          }
         </div>
         <div className="amrap-timer-start-height">&nbsp;</div>
           <Button

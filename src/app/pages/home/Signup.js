@@ -13,7 +13,7 @@ import StepGoal from "./components/Signup/StepGoal";
 import StepInfo from "./components/Signup/StepInfo";
 import StepTrainingPlace from "./components/Signup/StepTrainingPlace";
 import StepRegisteration from "./components/Signup/StepRegisteration";
-import { setReferralVoucher } from "./redux/vouchers/actions";
+import { setReferralVoucher, setPublicVoucher, setEmailInvitationVoucher } from "./redux/vouchers/actions";
 //import MetaTags from '../../components/MetaTags';
 import * as Cookies from "./services/storage";
 
@@ -47,6 +47,12 @@ class SignupPage extends React.Component {
     const parsed = qs.parse(window.location.search);
     if (parsed.referral) {
       this.props.setReferralVoucher(parsed.referral);
+    }
+    if (parsed.codigo) {
+      this.props.setPublicVoucher(parsed.codigo);
+    }
+    if(parsed.ein){
+      this.props.setEmailInvitationVoucher(parsed.ein);
     }
   }
 
@@ -155,7 +161,9 @@ class SignupPage extends React.Component {
   }
 }
 export const mapDispatchToProps = {
-  setReferralVoucher
+  setReferralVoucher,
+  setPublicVoucher,
+  setEmailInvitationVoucher,
 };
 
 export default withRouter(connect(null, mapDispatchToProps)(SignupPage));

@@ -16,6 +16,9 @@ import { SubHeaderInvoices } from "../../../../app/pages/admin/Invoices";
 import { SubHeaderInvoicePrint } from "../../../../app/pages/admin/InvoicePrint";
 import { SubHeaderCoupons } from "../../../../app/pages/admin/Coupons";
 import { SubHeaderCouponCreate } from "../../../../app/pages/admin/CouponCreate";
+import { SubHeaderLinkCoupons } from "../../../../app/pages/admin/LinkCoupons";
+import { SubHeaderLinkCouponCreate } from "../../../../app/pages/admin/LinkCouponCreate";
+import { SubHeaderLinkCouponShow } from "../../../../app/pages/admin/LinkCouponShow";
 import { SubHeaderSubscriptionManager } from "../../../../app/pages/admin/SubscriptionManager";
 import { SubHeaderSubscriptionManagerEdit } from "../../../../app/pages/admin/SubscriptionManagerEdit";
 import { SubHeaderSubscriptionCMS } from "../../../../app/pages/admin/SubscriptionCms";
@@ -26,6 +29,8 @@ import { SubHeaderEvents } from "../../../../app/pages/admin/Events";
 import { SubHeaderEventCreate } from "../../../../app/pages/admin/EventCreate";
 import { SubHeaderShortcodes } from "../../../../app/pages/admin/Shortcodes";
 import { SubHeaderShortcodeCreate } from "../../../../app/pages/admin/ShortcodeCreate";
+import { SubHeaderKeywords } from "../../../../app/pages/admin/Keywords";
+import { SubHeaderKeywordCreate } from "../../../../app/pages/admin/KeywordCreate";
 import { SubHeaderWeeklyEditor } from "../../../../app/pages/admin/WeeklyEditor";
 import { SubHeaderBenchmarks } from "../../../../app/pages/admin/Benchmark";
 import { SubHeaderBenchmarkCreate } from "../../../../app/pages/admin/BenchmarkCreate";
@@ -106,6 +111,9 @@ class SubHeader extends React.Component {
               path="/admin/coupons/:id"
               component={SubHeaderCouponCreate}
             />
+            <Route exact path="/admin/link-coupons" component={SubHeaderLinkCoupons} />
+            <Route exact path="/admin/link-coupons/create" component={SubHeaderLinkCouponCreate}/>
+            <Route exact path="/admin/link-coupons/:id" component={SubHeaderLinkCouponShow}/>
             <Route
               exact
               path="/admin/subscription-manager"
@@ -145,21 +153,12 @@ class SubHeader extends React.Component {
               path="/admin/events/:id"
               component={SubHeaderEventCreate}
             />
-            <Route
-              exact
-              path="/admin/shortcodes"
-              component={SubHeaderShortcodes}
-            />
-            <Route
-              exact
-              path="/admin/shortcodes/create"
-              component={SubHeaderShortcodeCreate}
-            />
-            <Route
-              exact
-              path="/admin/shortcodes/:id"
-              component={SubHeaderShortcodeCreate}
-            />
+            <Route exact path="/admin/shortcodes" component={SubHeaderShortcodes}/>
+            <Route exact path="/admin/shortcodes/create" component={SubHeaderShortcodeCreate}/>
+            <Route exact path="/admin/shortcodes/:id" component={SubHeaderShortcodeCreate}/>
+            <Route exact path="/admin/keywords" component={SubHeaderKeywords}/>
+            <Route exact path="/admin/keywords/create" component={SubHeaderKeywordCreate}/>
+            <Route exact path="/admin/keywords/:id" component={SubHeaderKeywordCreate}/>
             <Route
               exact
               path="/admin/benchmarks"

@@ -54,7 +54,19 @@ export default {
         root: true,
         icon: "flaticon2-open-box",
         can:["coupons"],
-        page: "admin/coupons"
+        page: "admin/coupons",
+        submenu:[
+          {
+            title: "Coupon Code",
+            can:["coupons"],
+            page: "admin/coupons"    
+          },
+          {
+            title: "Link Code",
+            can:["coupons"],
+            page: "admin/link-coupons"    
+          }
+        ]
       },
       {
         title: "Subscription Manager",
@@ -76,6 +88,13 @@ export default {
         icon: "flaticon2-sort-alphabetically",
         can:["shortcodes"],
         page: "admin/shortcodes"
+      },
+      {
+        title: "Keywords",
+        root: true,
+        icon: "flaticon2-sort-alphabetically",
+        can:["shortcodes"],
+        page: "admin/keywords"
       },
       {
         title: "Benchmarks",

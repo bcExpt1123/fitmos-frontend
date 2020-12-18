@@ -70,7 +70,7 @@ const Block = ({ block,renderLine,setAll })=>{
       />      
       {renderImage(block.image_path)}
       {block.timer_type&&(
-        <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} setIsRunning={setIsRunning}/>
+        <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} description={block.timer_description} setIsRunning={setIsRunning}/>
       )}
       {
         step===0?(

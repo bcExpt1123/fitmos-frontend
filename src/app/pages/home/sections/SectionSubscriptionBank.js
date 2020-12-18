@@ -10,7 +10,7 @@ import {
   $updateInterval,
   $changeType,
 } from "../../../../modules/subscription/service";
-import { $changeItem } from "../../../../modules/subscription/service";
+//import { $findUserDetails } from "../../../../modules/subscription/service";
 import { setCheckoutKind, sendBankRequest } from "../redux/checkout/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
 import { CHECKOUT_KIND } from "../constants/checkout-kind";
@@ -106,7 +106,10 @@ export default function SubscriptionBank() {
   const activePlan = useSelector(({service})=>service.activePlan);
   const frequency = useSelector(({service})=>service.frequency);
   const type = useSelector(({service})=>service.type);
+  const checkoutDone = useSelector(({checkout})=>checkout.status);
   const [hasWorkoutSubscription, setHasWorkoutSubscription] = useState(false);
+  let duration = frequency;
+  if(!hasWorkoutSubscription)duration++; 
   const [changed, setChanged] = useState(false);
   const history = useHistory();
   const dispatch = useDispatch();
@@ -114,11 +117,16 @@ export default function SubscriptionBank() {
     dispatch(setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE_WITH_TRIAL}));
     history.push("/checkout");
   }
+  const handlePaidMembership = ()=>{
+    // dispatch(setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE}));
+    history.push("/checkout");
+  }
   const handleBankRequest = ()=>{
     dispatch(sendBankRequest(frequency));
     history.push("/checkout");
   }
   useEffect(() => {
+    if(type === 'bank' && checkoutDone === 'done')history.push("/checkout");
     if( couponId == null && currentUser && currentUser.defaultCouponId && !currentUser.has_workout_subscription){
       setCouponId(currentUser.defaultCouponId);
       reactLocalStorage.set('publicCouponId', currentUser.defaultCouponId);
@@ -131,34 +139,6 @@ export default function SubscriptionBank() {
   const handleCloseForm = () => {
     setShowForm(false);
   }
-  // const changeMembership = (key)=> {
-  //   let monthlyFee = serviceItem[key];
-  //   let frequency = 1;
-  //   const activePlan = key;
-  //   switch (key) {
-  //     case "quarterly":
-  //       monthlyFee = monthlyFee / 3;
-  //       frequency = 3;
-  //       break;
-  //     case "semiannual":
-  //       monthlyFee = monthlyFee / 6;
-  //       frequency = 6;
-  //       break;
-  //     case "yearly":
-  //       monthlyFee = monthlyFee / 12;
-  //       frequency = 12;
-  //       break;
-  //     default:
-  //   }
-  //   monthlyFee = roundToMoney(monthlyFee);
-  //   dispatch($updateInterval(frequency, activePlan));
-  //   setMonthlyFee(monthlyFee);
-  //   setActivePlan(activePlan);
-  //   setFrequency(frequency);
-  //   setChanged(true);
-  //   // console.log(activePlan)
-  //   setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
-  // }
   const getActivePlan = (key, plan)=> {
     if (activePlan !== "") {
       return key === activePlan;
@@ -225,19 +205,21 @@ export default function SubscriptionBank() {
             <div className="col-12 col-md-12">
               <div className="plan-card">
                 <div className="plan-header text-left">
-                  <h3 className="plan-title mbr-fonts-style">Plan Fitemos</h3>
+                  <h3 className="plan-title mbr-fonts-style">Programa Fitemos</h3>
                 </div>
                 <div className="plan-body">
                   <div className="plan-list align-center row">
-                    <ul className="col-12 col-md-6 pl-5">
-                        <li className="text-left">Programa Personalizado</li>
-                        <li className="text-left">Tutorial de Cada Movimiento</li>
-                        <li className="text-left">Blog Nutricional y Tips</li>
+                    <ul className="col-12 col-md-6 pl-5 mb-0">
+                        <li className="text-left">Programa con pesas</li>
+                        <li className="text-left">Programa sin pesas</li>
+                        <li className="text-left">Programa orientado a objetivos</li>
+                        <li className="text-left">Tutorial de cada movimiento</li>
                       </ul>
                       <ul className="col-12 col-md-6 pl-5">
+                        <li className="text-left">Blog Nutricional y Tips</li>
                         <li className="text-left">Acceso a Entrenadores</li>
                         <li className="text-left">Interacción con Miembros</li>
-                        <li className="text-left">Actividades del Team Fi</li>
+                        <li className="text-left">Entrenamientos al Aire Libre</li>
                       </ul>
                   </div>
                 </div>
@@ -261,21 +243,36 @@ export default function SubscriptionBank() {
                           Compra ahora
                         </NavLink>                        
                       ):(
-                        type === 'nmi'?
-                          <button
-                            className="btn-md btn-primary fs-btn"
-                            onClick={handleFreeMembership}
-                          >
-                            PRUEBA {serviceItem && serviceItem.free_duration} DÍAS GRATIS
-                            <br/>
-                            <small>Podrás cancelar en cualquier momento.</small>
-                          </button>
+                        type === 'nmi'?(
+                          couponId?
+                            <button
+                              className="btn-md btn-primary fs-btn"
+                              onClick={handlePaidMembership}
+                            >
+                              OBTENER OFERTA
+                              <br/>
+                              <small>Podrás cancelar en cualquier momento.</small>
+                            </button>
+                            :
+                            <button
+                              className="btn-md btn-primary fs-btn"
+                              onClick={handleFreeMembership}
+                            >
+                              PRUEBA {serviceItem && serviceItem.free_duration} DÍAS GRATIS
+                              <br/>
+                              <small>Podrás cancelar en cualquier momento.</small>
+                            </button>
+                          )
                           :
                           <button
                             className="btn-md btn-primary fs-btn"
                             onClick={handleBankRequest}
                           >
-                            ADQUIERE {frequency} MESES POR USD {roundToMoney(parseFloat(serviceItem[activePlan])+parseFloat(serviceItem.bank_fee))}
+                            ADQUIERE {duration} 
+                            &nbsp;
+                            {duration>1?<>MESES</>:<>MES</>} 
+                            &nbsp;
+                            POR USD {roundToMoney(parseFloat(serviceItem[activePlan])+parseFloat(serviceItem.bank_fee))}
                             <br/>
                             <small>Podrás cambiar de plan o método de pago en el futuro.</small>
                           </button>

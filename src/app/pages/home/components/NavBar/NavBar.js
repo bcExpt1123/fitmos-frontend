@@ -16,6 +16,8 @@ import {
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
+import { start } from "../../redux/checkout/actions";
+import ProofButton from "../../components/ProofButton";
 import { $changeItem } from "../../../../../modules/subscription/service";
 
 //import styles from './NavBar.module.css';
@@ -101,7 +103,7 @@ class NavBarVariantFull extends React.Component {
               />
             }
             {this.props.checkout&&(
-              <button type="button" className={"back-button"} onClick={() => this.props.history.goBack()}>
+              <button type="button" className={"back-button"} onClick={() => {this.props.start();this.props.history.goBack()}}>
                 <Icon name="arrowLeft" className="arrow-left" />
               </button>
             )}
@@ -216,7 +218,7 @@ class NavBarVariantFull extends React.Component {
                           className={"btn btn-sm btn-primary display-4 fs-home-btn"}
                           exact
                         >
-                          Prueba {this.props.serviceItem && this.props.serviceItem.free_duration} días
+                          <ProofButton/>
                         </NavLink>
                       </div>
                       <div className="navbar-buttons mbr-section-btn  d-none d-md-block">
@@ -287,6 +289,7 @@ export const mapDispatchToProps = {
   regenerateAuthAction,
   setPrivateVoucher,
   $changeItem,
+  start
 };
 
 export default withRouter(NavBarWrapper);

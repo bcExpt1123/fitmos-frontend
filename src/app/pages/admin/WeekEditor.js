@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
@@ -18,6 +18,7 @@ import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
 import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
 import WorkoutNoteEditDialog from "./dialog/WorkoutNoteEditDialog";
 import WorkoutPreviewDialog from "./dialog/WorkoutPreviewDialog";
+import {timeType} from "../../../_metronic/utils/utils";
   
 const weekdates = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];  
 const useStyles = makeStyles(theme => ({
@@ -42,6 +43,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "auto",
     width: "30px"
   },
+  timer: {
+    marginRight: "auto",
+    width: "100px",
+    fontWeight:"600"
+  },
   blog: {
     backgroundColor: "grey"
   }
@@ -63,6 +69,7 @@ function Main({
   const work  = useSelector(({ weekWorkout }) => weekWorkout.timerWork);
   const round  = useSelector(({ weekWorkout }) => weekWorkout.timerRound);
   const rest  = useSelector(({ weekWorkout }) => weekWorkout.timerRest);
+  const description = useSelector(({ weekWorkout }) => weekWorkout.timerDescription);
   const day = useSelector(({ weekWorkout }) => weekWorkout.day);
   const previewContent = useSelector(({ weekWorkout }) => weekWorkout.previewContent);
   const dispatch = useDispatch();
@@ -103,6 +110,7 @@ function Main({
   const [openBlock, setOpenBlock] = React.useState(false);
   const [openBlog, setOpenBlog] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
+  const [weekDate, setWeekDate] = useState(false);
   const handleClickOpen = (day, column) => {
     if (activateWorkout(day, column)) {
       if(column === 'comentario'){
@@ -112,6 +120,7 @@ function Main({
       }else{
         setOpenBlock(true);
       }
+      setWeekDate(day);
       dispatch($openCell(weekDay, column, day));
     }
   };
@@ -177,6 +186,9 @@ function Main({
   };
   const handleTimerRestChange = event => {
     dispatch($updateItemValue('timerRest',event.target.value));
+  };
+  const handleTimerDescriptionChange = event => {
+    dispatch($updateItemValue('timerDescription',event.target.value));
   };
   return (
     <Paper className={classes.root}>
@@ -272,6 +284,27 @@ function Main({
                     })}
                   >
                     {data[weekDay]&&data[weekDay][col] !== undefined &&
+                      data[weekDay][col][row+'_timer_type'] !== undefined && data[weekDay][col][row+'_timer_type'] !== "" && data[weekDay][col][row+'_timer_type'] !== null && (
+                        <div className={classes.timer}>
+                          {data[weekDay][col][row+'_timer_type']!='tabata'?
+                            <>
+                              {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_work']}
+                            </>
+                          :
+                            <>
+                              {data[weekDay][col][row+'_timer_rest']?
+                              <>
+                                {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_round']}:{data[weekDay][col][row+'_timer_work']}:{data[weekDay][col][row+'_timer_rest']}
+                              </>
+                              :
+                              <>
+                                {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_round']}:{data[weekDay][col][row+'_timer_work']}
+                              </>}
+                            </>
+                          }
+                        </div>
+                      )}
+                    {data[weekDay]&&data[weekDay][col] !== undefined &&
                       data[weekDay][col][row] !== undefined && data[weekDay][col][row] !== "" && data[weekDay][col][row] !== null && (
                         <div className={classes.preview}>
                           <IconButton
@@ -325,16 +358,21 @@ function Main({
         handleClose={handleClose} 
         title={weekdates[weekDay] + "'s " + weekdates[day]}
         subTitle={column && columnLabels[column]} 
+        imageEnable={weekDate==3 || weekDate==6}
+        image={image}
+        updateImage={updateImage}
         content={content}
         timerType={timerType}
         work={work}
         round={round}
         rest={rest}
+        description={description}
         handleChange={handleChange}
         handleTimerTypeChange={handleTimerTypeChange}
         handleTimerWorkChange={handleTimerWorkChange}
         handleTimerRoundChange={handleTimerRoundChange}
         handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
         handleSave={handleSave}
       />
       <WorkoutNoteEditDialog 
@@ -348,12 +386,14 @@ function Main({
         work={work}
         round={round}
         rest={rest}
+        description={description}
         handleChange={handleChange}
         handleNoteChange={handleNoteChange}
         handleTimerTypeChange={handleTimerTypeChange}
         handleTimerWorkChange={handleTimerWorkChange}
         handleTimerRoundChange={handleTimerRoundChange}
         handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
         handleSave={handleSave}
       />
       <WorkoutPreviewDialog

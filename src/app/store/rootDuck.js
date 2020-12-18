@@ -8,8 +8,10 @@ import * as service from "../../modules/subscription/service";
 import * as transaction from "../../modules/subscription/transaction";
 import * as bankTransferRequest from "../../modules/subscription/bankTransferRequest";
 import * as coupon from "../../modules/subscription/coupon";
+import * as linkCoupon from "../../modules/subscription/linkCoupons";
 import * as subscription from "../../modules/subscription/subscription";
 import * as shortcode from "../../modules/subscription/shortcode";
+import * as keyword from "../../modules/subscription/keyword";
 import * as invoice from "../../modules/subscription/invoice";
 import * as cms from "../../modules/subscription/cms";
 import * as weekWorkout from "../../modules/subscription/weekWorkout";
@@ -83,8 +85,10 @@ export const rootReducer = combineReducers({
   transaction: transaction.reducer,
   bankTransferRequest:bankTransferRequest.reducer,
   coupon: coupon.reducer,
+  linkCoupon: linkCoupon.reducer,
   subscription: subscription.reducer,
   shortcode: shortcode.reducer,
+  keyword: keyword.reducer,
   invoice: invoice.reducer,
   cms: cms.reducer,
   weekWorkout:weekWorkout.reducer,
@@ -119,8 +123,10 @@ export function* rootSaga() {
     transaction.saga(),
     bankTransferRequest.saga(),
     coupon.saga(),
+    linkCoupon.saga(),
     subscription.saga(),
     shortcode.saga(),
+    keyword.saga(),
     invoice.saga(),
     cms.saga(),
     weekWorkout.saga(),

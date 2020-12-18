@@ -10,7 +10,7 @@
   }
   .payment-card {
     margin: 0 auto;
-    max-width: 77.77777%;
+    max-width: 94.77777%;
     &.card {
       border-bottom: 0;
     }
@@ -28,7 +28,11 @@
     color: #156376;
     font-weight: 500;
     margin: 0 auto 10px auto;
-    max-width: 77.77777%;    
+    max-width: 94.77777%;    
+  }
+  .checkout-page-subtitle{
+    color: #156376;
+    font-weight: 500;
   }
   .redirect-pricing{
     float: right;
@@ -36,6 +40,7 @@
     margin-right: 30px;
     color: #156376;
     font-weight: 500;
+    cursor: pointer;
   }
   .product,
   .discounted {
@@ -62,6 +67,35 @@
   .no-margin-bottom {
     margin-bottom: 0;
   }
+  .yappy-meta{
+    display:inline-block;
+    width:50%;
+  }
+  .yappy-image{
+    display:inline-block;
+    width:50%;
+    vertical-align:bottom;
+  }
+  .bank-amount{
+    border-radius: 5px;
+    background-color: #156376;
+    color:white;
+    font-size: 30px;
+    padding:5px 15px;
+    margin-right: 400px;
+    font-weight: 600;
+  }
+  .bank-redirect-pricing{
+    border-radius: 5px;
+    border:2px solid #156376;
+    padding:3px 15px;
+    font-size: 30px;
+    font-weight: 600;
+    margin-left: auto;
+    margin-right: 0;
+    cursor: pointer;
+  }
+
   aside {
     h5 {
       font-size: 17px;
@@ -291,7 +325,7 @@
   }
   .credit-card-number {
     display: inline-block;
-    width: 360px;
+    width: 346px;
   }
   .credit-card-exp {
     display: inline-block;
@@ -375,6 +409,21 @@
       &.second{
         padding: 16px;
       }
+    }
+    .yappy-meta{
+      display:block;
+    }
+    .yappy-image{
+      display:block;
+      width: 200px;
+      margin: auto;
+    } 
+    .bank-amount{
+      font-size: 20px;
+      margin-right: 120px;
+    } 
+    .bank-redirect-pricing{
+      font-size: 20px;
     }
   }
   .credit-card-form.auth-form {

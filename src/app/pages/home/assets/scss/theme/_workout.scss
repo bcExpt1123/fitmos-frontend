@@ -89,6 +89,15 @@
     .blog,&>.actions{
       padding:0 60px;
     }
+    .blog{
+      .image{
+        margin: 10px 0 20px;
+        img{
+          width: 100%;
+          border-radius: 10px;
+        }
+      }
+    }
     .actions{
       display: flex; 
       justify-content: flex-end;

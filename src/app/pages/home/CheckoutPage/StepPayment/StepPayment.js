@@ -1,9 +1,11 @@
 import React from "react";
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import Sidebar from "./Sidebar";
 import PaymentForm from "./PaymentForm";
+import BankPayment from "./BankPayment";
 //import { CHECKOUT_KIND } from "../../constants/checkout-kind";
 //import { productBrand } from "../../../../../lib/productBrand";
 
@@ -30,7 +32,8 @@ const StepPayment = ({
   };
 
   const couponId = reactLocalStorage.get('publicCouponId');
-
+  const history = useHistory();
+  const dispatch = useDispatch();
   return (
     <>
       {couponId&&
@@ -46,23 +49,27 @@ const StepPayment = ({
             <div>
               {paymentType==='bank'?
                 <>
-                  <h2 className="checkout-page-title d-none d-md-block">INSTRUCCIONES DE PAGO</h2>
-                  <NavLink
-                    to={`/pricing`}
-                    className="redirect-pricing  d-none d-md-block"
-                  >
-                    Cambiar método de pago
-                  </NavLink>
+                  <BankPayment 
+                    service={service}
+                    currency={currency}
+                    pricing={pricing}
+                    selectedProduct={selectedProduct}
+                    activeVoucher={enteredVoucher}
+                    referrer={referrer}
+                  />
                 </>:
-                <h2 className="checkout-page-title display-3 d-none d-md-block">Checkout</h2>}
-              <PaymentForm
-                service={service}
-                currency={currency}
-                pricing={pricing}
-                selectedProduct={selectedProduct}
-                activeVoucher={enteredVoucher}
-                referrer={referrer}
-              />
+                <>
+                  <h2 className="checkout-page-title display-3 d-none d-md-block">Checkout</h2>
+                  <PaymentForm
+                    service={service}
+                    currency={currency}
+                    pricing={pricing}
+                    selectedProduct={selectedProduct}
+                    activeVoucher={enteredVoucher}
+                    referrer={referrer}
+                  />
+                </>
+              }
             </div>
           </div>
 

@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-import { useSelector } from "react-redux";
-
 import { jarallax } from "jarallax";
 import { NavLink } from "react-router-dom";
+import ProofButton from "../components/ProofButton";
 
 
 const BannerContent = ()=>{
-  const serviceItem = useSelector(({service})=>service.item);
   return(
   <div className="container align-center">
     <div className="row justify-content-md-center">
@@ -29,7 +27,7 @@ const BannerContent = ()=>{
             className={"btn btn-md btn-primary fs-home-btn"}
             exact
           >
-            PRUEBA {serviceItem && serviceItem.free_duration} DÍAS
+            <ProofButton/>
           </NavLink>
         </div>
       </div>

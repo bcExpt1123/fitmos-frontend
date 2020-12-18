@@ -49,7 +49,7 @@ const findDetails = () =>
   );
 function* onFindUserDetails(){
   try {
-    const { user } = yield call(findDetails());
+    const { user } = yield call(findDetails);
     yield put(
       updateUserDetails({
         user
@@ -57,6 +57,7 @@ function* onFindUserDetails(){
     );
     yield put(authenticationSucceeded());
   } catch (error) {
+    console.log(error)
     yield put(authenticationFailed());
   }
 }

@@ -8,6 +8,7 @@ import {
   generateFirstPayVoucher,
   setPublicVoucher,
   setReferralVoucher,
+  setEmailInvitationVoucher,
   checkVoucher,
   createRenewalVoucher,
   initialVoucher,
@@ -113,6 +114,27 @@ function* onSetPublicCoucher({ payload }) {
         code: payload,
       });
       reactLocalStorage.set('publicCoupon', payload);
+    } catch (error) {
+      yield put(validateVoucherFailed({ payload }));
+    }
+  }
+}
+const validateEmailInvitationRequest = ({ id }) =>
+  http({
+    path: "coupons/email",
+    method: "POST",
+    data: {
+      id
+    }
+  }).then(response => response.data.voucher);
+function* onSetEmailInvitationVoucher({ payload }) {
+  const currentUser = yield select(store => store.auth.currentUser);
+  if (currentUser === undefined) {
+    try {
+      yield call(validateEmailInvitationRequest, {
+        id: payload,
+      });
+      reactLocalStorage.set('invitationEmail', payload);
     } catch (error) {
       yield put(validateVoucherFailed({ payload }));
     }
@@ -252,6 +274,7 @@ export default function* rootSaga() {
   yield takeLeading(setPrivateVoucher, onSetPrivateCoucher);
   yield takeLeading(setPublicVoucher, onSetPublicCoucher);
   yield takeLeading(setReferralVoucher,onSetReferralVoucher);
+  yield takeLeading(setEmailInvitationVoucher,onSetEmailInvitationVoucher);
   yield takeLeading(checkVoucher, onCheckVoucer);
   yield takeLeading(createRenewalVoucher, onCreateRenewalVoucher);
   yield takeLeading(generateFirstPayVoucher,onGenerateFirstPayVoucher);

@@ -1,4 +1,6 @@
+import { persistReducer } from "redux-persist";
 import { handleActions } from "redux-actions";
+import storage from "redux-persist/lib/storage";
 import {
   paymentRequested,
   paymentSucceeded,
@@ -11,7 +13,9 @@ import {
   clearChangePlan,
   setPayPalPlanId,
   setKeyValue,
-  setCheckoutKind
+  setCheckoutKind,
+  done,
+  start
 } from "./actions";
 
 const initialState = {
@@ -29,10 +33,17 @@ const initialState = {
   paypal: {
     planId: undefined,
     startTime: undefined
-  }
+  },
+  status:false,
 };
 
-export default handleActions(
+export default persistReducer(
+  {
+    storage,
+    key: "checkout",
+    whitelist: ["status"]
+  },
+  handleActions(
   {
     [paymentRequested]: state => {
       return {
@@ -113,7 +124,19 @@ export default handleActions(
         ...state,
         [key]: value
       };
-    }
+    },
+    [start]:state => {
+      return {
+        ...state,
+        status: false
+      };
+    },
+    [done]:state => {
+      return {
+        ...state,
+        status: 'done'
+      };
+    },
   },
   initialState
-);
+));

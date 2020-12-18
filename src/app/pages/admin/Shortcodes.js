@@ -251,7 +251,7 @@ function Sub({ searchCondition, $changeConditionValue }) {
             title="Create"
             to={"/admin/shortcodes/create"}
           >
-            <span class="MuiButton-label">Create &nbsp;</span>
+            <span className="MuiButton-label">Create &nbsp;</span>
           </NavLink>
         </div>
       </div>

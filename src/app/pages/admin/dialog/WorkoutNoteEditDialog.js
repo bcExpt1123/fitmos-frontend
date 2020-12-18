@@ -1,8 +1,13 @@
-import React from "react";
+import React,{useState,useEffect, useRef} from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Dialog, DialogActions, DialogContentText, DialogContent, DialogTitle, TextField, Button, InputLabel, MenuItem, FormControl, Select} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core";
-import {Row} from "react-bootstrap";
-import {Col} from "react-bootstrap";
+import {Row, Col} from "react-bootstrap";
+import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
+import "@webscopeio/react-textarea-autocomplete/style.css";
+import {actionTypes} from "../../../../modules/subscription/shortcode";
+import {actionTypes as actions} from "../../../../modules/subscription/keyword";
+
 const useStyles = ()=>{
   return makeStyles(theme => ({
     root: {
@@ -20,6 +25,32 @@ const useStyles = ()=>{
 }
 export default function WorkoutEditDialog(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [textareaEl,setTextAreaEl] = useState(false);
+  useEffect(()=>{
+    if(!items){
+      dispatch({type:actionTypes.SHORTCODE_UPDATE_LIST});
+    }
+    if(!keywords){
+      dispatch({type:actions.KEYWORD_UPDATE_LIST});
+    }
+  },[]);
+  useEffect(()=>{
+    if(textareaEl)textareaEl.focus();
+  },[textareaEl]);
+  const Item = ({ entity: { name} }) => <div>{`${name}`}</div>;
+  const items = useSelector(({shortcode})=>shortcode.all);
+  const keywords = useSelector(({keyword})=>keyword.all);
+  const autocomplete = (token)=>{
+    return items.filter((item,index)=>{
+      return item.name.toLowerCase().startsWith(token.substr(0).toLowerCase());
+    }).slice(0,10);
+  }
+  const autocompleteKeyword = (token)=>{
+    return keywords.filter((item,index)=>{
+      return item.name.toLowerCase().startsWith(token.substr(0).toLowerCase());
+    }).slice(0,10);
+  }
   return(
     <Dialog
       open={props.open}
@@ -35,33 +66,61 @@ export default function WorkoutEditDialog(props) {
         <DialogContentText>
           Please write down workout content and note, timer
         </DialogContentText>
-        <Row>
+        <Row className="mb-5 pb-5">
           <Col sm={5}>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="content"
-              label="Workout"
-              multiline={true}
-              rows={26}
-              rowsMax={28}
-              value={props.content}
+            <label>Workout</label>
+            <ReactTextareaAutocomplete
+              className="content"
               onChange={props.handleChange}
-              fullWidth
-            />
+              loadingComponent={() => <span>Loading</span>}
+              value={props.content}
+              innerRef = {textarea=>{
+                setTextAreaEl(textarea)
+              }}
+              minChar={0}
+              trigger={{
+                "@": {
+                  dataProvider: token => {
+                    return autocomplete(token);
+                  },
+                  component: Item,
+                  output: (item, trigger) => "{"+item.name+"}"
+                },
+                "(": {
+                  dataProvider: token => {
+                    return autocompleteKeyword(token);
+                  },
+                  component: Item,
+                  output: (item, trigger) => item.name
+                }                
+              }}
+            />            
           </Col>
           <Col sm={5}>
-            <TextField
-              margin="dense"
-              id="node"
-              label="Note"
-              multiline={true}
-              rows={26}
-              rowsMax={28}
-              value={props.note}
+            <label>Note</label>
+            <ReactTextareaAutocomplete
+              className="note"
               onChange={props.handleNoteChange}
-              fullWidth
-            />
+              loadingComponent={() => <span>Loading</span>}
+              value={props.note}
+              minChar={0}
+              trigger={{
+                "@": {
+                  dataProvider: token => {
+                    return items;
+                  },
+                  component: Item,
+                  output: (item, trigger) => item.name
+                },
+                "(": {
+                  dataProvider: token => {
+                    return autocompleteKeyword(token);
+                  },
+                  component: Item,
+                  output: (item, trigger) => item.name
+                }
+              }}
+            />            
           </Col>
           <Col sm={2}>
             <FormControl className={classes.formControl}>
@@ -81,7 +140,8 @@ export default function WorkoutEditDialog(props) {
               </Select>
             </FormControl>            
             {props.timerType&&(
-              props.timerType === "tabata"?(
+              <>{
+                props.timerType === "tabata"?(
                 <div>
                   <TextField
                     autoFocus
@@ -124,7 +184,21 @@ export default function WorkoutEditDialog(props) {
                   />
                 </div>
               )
-            )}  
+              }
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="description"
+                  label="Timer Description"
+                  multiline={true}
+                  rows={6}
+                  rowsMax={10}
+                  value={props.description}
+                  onChange={props.handleTimerDescriptionChange}
+                  fullWidth
+                /> 
+              </>              
+            )} 
           </Col>
         </Row>
       </DialogContent>

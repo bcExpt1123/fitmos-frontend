@@ -28,7 +28,9 @@ export const {
   inside,
   outside,
   validCartId,
-  sendBankRequest
+  sendBankRequest,
+  done,
+  start
 } = createActions(
   "PAY_WITH_NMI",
   "PAY_WITH_PAY_PAL",
@@ -58,5 +60,7 @@ export const {
   "OUTSIDE",
   "VALID_CART_ID",
   "SEND_BANK_REQUEST",
+  "DONE",
+  "START",
   { prefix: "CHECKOUT" }
 );

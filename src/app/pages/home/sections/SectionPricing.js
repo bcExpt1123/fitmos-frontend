@@ -6,13 +6,13 @@ import * as qs from 'query-string';
 import { $findWorkoutSerive } from "../../../../modules/subscription/service";
 import { setPublicVoucher } from "../redux/vouchers/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
+import ProofButton from "../components/ProofButton";
 
 class Pricing extends React.Component {
   componentDidMount() {
     this.props.$findWorkoutSerive();
     const parsed = qs.parse(window.location.search);
     if (parsed.codigo) {
-      //console.log(parsed.coupon);
       this.props.setPublicVoucher(parsed.codigo);
     }
   }
@@ -72,7 +72,7 @@ class Pricing extends React.Component {
                       className={"btn btn-md btn-primary fs-home-btn"}
                       exact
                     >
-                      PRUEBA {serviceItem && serviceItem.free_duration} DÍAS
+                      <ProofButton/>
                     </NavLink>
                   </div>
                 </div>

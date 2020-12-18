@@ -139,7 +139,7 @@ function Main({
                     <TableCell align="left">{row.paid}</TableCell>
                     <TableCell align="left">{row.discount}{row.form}</TableCell>
                     <TableCell align="left">
-                      {row.renewal === 1 ? <>yes</> : <>no</>}
+                      {(row.renewal === 1 || row.renewal === '1') ? <>yes</> : <>no</>}
                     </TableCell>
                     <TableCell align="left">
                       <span

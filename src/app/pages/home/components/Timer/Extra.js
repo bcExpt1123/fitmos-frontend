@@ -27,9 +27,17 @@ class Extra extends ForTime {
       <>
       <div className="amrap-timer-start-height">&nbsp;</div>
         <div className="w-100">
-          <div className="timer--settingField mb3">
-            <span className="tr">Iniciar Extra Workout.</span>
-          </div>
+          {(!this.props.description || this.props.description==='')?
+            <>
+              <div className="timer--settingField mb3">
+                <span className="tr">Iniciar Extra Workout.</span>
+              </div>
+            </>
+            :
+            <div style={{whiteSpace: "pre-wrap"}}>
+              {this.props.description}
+            </div>
+          }
         </div>
         <div className="amrap-timer-start-height">&nbsp;</div>
           <Button

@@ -136,3 +136,18 @@ export function isSafari(){
   }  
   return false;
 }
+export function timeType(type){
+  switch(type){
+    case 'amrap':
+    return 'A';
+    case 'tabata':
+    return 'T';
+    case 'for_time':
+    return 'F';
+    case 'calentamiento':
+    return 'C';
+    case 'extra':
+    return 'E';
+  }
+  return '';
+}

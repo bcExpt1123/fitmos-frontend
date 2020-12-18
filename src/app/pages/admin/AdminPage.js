@@ -15,12 +15,17 @@ import { SubscriptionManagerEdit } from "./SubscriptionManagerEdit";
 import { SubscriptionCMS } from "./SubscriptionCms";
 import { SubscriptionWeekCMS } from "./SubscriptionWeekCMS";
 import { CouponCreate } from "./CouponCreate";
+import { LinkCoupons } from "./LinkCoupons";
+import { LinkCouponCreate } from "./LinkCouponCreate";
+import { LinkCouponShow } from "./LinkCouponShow";
 import { Categories} from "./Categories";
 import { CategoryCreate } from "./CategoryCreate";
 import { Events } from "./Events";
 import { EventCreate } from "./EventCreate";
 import { Shortcodes } from "./Shortcodes";
 import { ShortcodeCreate } from "./ShortcodeCreate";
+import { Keywords } from "./Keywords";
+import { KeywordCreate } from "./KeywordCreate";
 import { WeeklyEditor } from "./WeeklyEditor";
 import { Benchmarks } from "./Benchmark";
 import { BenchmarkCreate } from "./BenchmarkCreate";
@@ -68,6 +73,9 @@ export default function AdminPage() {
         <Route exact path="/admin/coupons" component={Coupons} />
         <Route exact path="/admin/coupons/create" component={CouponCreate} />
         <Route exact path="/admin/coupons/:id" component={CouponCreate} />
+        <Route exact path="/admin/link-coupons" component={LinkCoupons} />
+        <Route exact path="/admin/link-coupons/create" component={LinkCouponCreate} />
+        <Route exact path="/admin/link-coupons/:id" component={LinkCouponShow} />
         <Route
           exact
           path="/admin/subscription-manager"
@@ -87,12 +95,11 @@ export default function AdminPage() {
         <Route exact path="/admin/events/create" component={EventCreate} />
         <Route exact path="/admin/events/:id" component={EventCreate} />
         <Route exact path="/admin/shortcodes" component={Shortcodes} />
-        <Route
-          exact
-          path="/admin/shortcodes/create"
-          component={ShortcodeCreate}
-        />
+        <Route exact path="/admin/shortcodes/create" component={ShortcodeCreate} />
         <Route exact path="/admin/shortcodes/:id" component={ShortcodeCreate} />
+        <Route exact path="/admin/keywords" component={Keywords} />
+        <Route exact path="/admin/keywords/create" component={KeywordCreate} />
+        <Route exact path="/admin/keywords/:id" component={KeywordCreate} />
         <Route exact path="/admin/benchmarks" component={Benchmarks} />
         <Route
           exact

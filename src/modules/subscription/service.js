@@ -59,7 +59,7 @@ export const reducer = persistReducer(
   {
     storage,
     key: "services",
-    whitelist: ["meta", "item", "activePlan", "frequency"]
+    whitelist: ["meta", "item", "activePlan", "frequency","type"]
   },
   (state = initialState, action) => {
     switch (action.type) {

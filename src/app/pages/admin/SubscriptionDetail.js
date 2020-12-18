@@ -3,9 +3,10 @@ import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { makeStyles } from "@material-ui/core";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, Grid }from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, Grid, Button }from "@material-ui/core";
 import {
-  $show
+  $show,
+  $cancel,
 } from "../../../modules/subscription/subscription";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
 import {
@@ -182,6 +183,15 @@ function SubscriptionDetail() {
 }
 function SubHeaderSubscriptionDetail() {
   const subscription = useSelector(({ subscription }) => subscription.item);
+  const dispatch = useDispatch();
+  const handleCancel = ()=>{
+    if(window.confirm("Are you sure to cancel this subscription?")){
+      dispatch($cancel(subscription.id));
+      setTimeout(()=>{
+        dispatch($show(subscription.id));
+      },200);
+    }
+  }
   return (
     <>
       <div className="kt-subheader__main">
@@ -206,6 +216,14 @@ function SubHeaderSubscriptionDetail() {
 
       <div className="kt-subheader__toolbar">
         <div className="kt-subheader__wrapper">
+          {subscription && subscription.status === 'Active'&&
+            <Button
+              className="btn kt-subheader__btn-primary btn-primary"
+              onClick={handleCancel}
+            >
+              Cancel &nbsp;
+            </Button>
+          }
           <button className="btn btn-primary">
             {subscription && subscription.status}
           </button>

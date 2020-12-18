@@ -18,7 +18,7 @@ export default function WorkoutPreviewDialog(props) {
       </DialogTitle>
       <DialogContent>
         <Row>
-          <Col sm={6}>
+          <Col sm={12}>
             <h4>Email Preview</h4>
             <div style={{ whiteSpace: "pre-wrap" }}>
               {props.content && (
@@ -26,12 +26,12 @@ export default function WorkoutPreviewDialog(props) {
               )}
             </div>
           </Col>
-          <Col sm={6}>
+          {/* <Col sm={6}>
             <h4>Whatsapp Preview</h4>
             <div style={{ whiteSpace: "pre-wrap" }}>
               {props.whatsapp && props.whatsapp[0]}
             </div>
-          </Col>
+          </Col> */}
         </Row>
       </DialogContent>
       <DialogActions>

@@ -10,6 +10,7 @@ import Blocks from "./Blocks";
 import Block from "./Block";
 
 const Body = ()=>{
+  const workout = process.env.REACT_APP_WORKOUT;
   const [show,setShow] = useState(false);
   const [vid,setVid] = useState(false);
   const [all,setAll] = useState(false);
@@ -71,7 +72,11 @@ const Body = ()=>{
         )
       )
     }
+    {workout === 'update'?
     <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)} />
+    :<>
+    
+    </>}
   </div>
 )}
 export default Body;

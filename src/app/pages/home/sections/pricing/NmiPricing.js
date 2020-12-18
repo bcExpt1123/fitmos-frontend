@@ -1,8 +1,12 @@
 import React,{useState,useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
+import { reactLocalStorage } from 'reactjs-localstorage';
 import { roundToMoney } from "../../../../../_metronic/utils/utils.js";
 import { $initialPayment, $changeMembership } from "../../../../../modules/subscription/service";
+import { checkVoucher } from "../../redux/vouchers/actions";
+import FormattedPrice from "../../components/FormattedPrice";
+import { calculatePriceWithCoupon } from '../../../../../lib/calculatePrice';
 
 export const getFrequency = (currentUser, serviceItem)=>{
   let count = 0;
@@ -84,8 +88,12 @@ export const getFrequency = (currentUser, serviceItem)=>{
   return [count,frequency,monthlyFee,activePlan];
 }
 export default function NmiPricing({getActivePlan}) {
+  const [couponId, setCouponId] = useState(reactLocalStorage.get('publicCouponId'));
+  const [coupon, setCoupon] = useState(false);
+  const vouchers = useSelector(({vouchers})=>vouchers);
   const [count, setCount] = useState(4);
   const [classes, setClasses] = useState('');
+  const currency = {code:"USD", exponent: 2};
   const activePlan = useSelector(({service})=>service.activePlan);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
@@ -112,6 +120,20 @@ export default function NmiPricing({getActivePlan}) {
     }  
     setClasses(classes);
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(()=>{
+    if(couponId){
+      const coupons = Object.values(vouchers);
+      if (coupons[0] && coupons[0].discount) {
+        if(coupons[0].id == couponId){
+          setCoupon(coupons[0]);
+        }else{
+          dispatch(checkVoucher());
+        }
+      }else{
+        dispatch(checkVoucher());
+      }
+    }
+  },[couponId,vouchers]);
   return (
     <div className="row mt-2">
       {serviceItem.monthly !== "" && currentUser.customer.currentWorkoutPlan !=='monthly'&&(
@@ -122,10 +144,19 @@ export default function NmiPricing({getActivePlan}) {
           <div
             className={classnames("membership", {
               active: getActivePlan("monthly", activePlan),
+              discount:coupon
             })}
           >
             <h2>Mensual</h2>
-            <h4>${serviceItem.monthly}</h4>
+            <h4>
+              {coupon?<><span className="strikeout">${serviceItem.monthly}</span>&nbsp;&nbsp;&nbsp;
+                        <FormattedPrice
+                          price={calculatePriceWithCoupon('bank',serviceItem['monthly'],0,coupon)[0]}
+                          currency={currency}
+                          locale="en"
+                        />
+                      </>:<span>${serviceItem.monthly}</span>}
+            </h4>
             <h5>al concluir los {serviceItem.free_duration} días</h5>
           </div>
         </div>
@@ -138,10 +169,19 @@ export default function NmiPricing({getActivePlan}) {
           <div
             className={classnames("membership", {
               active: getActivePlan("quarterly", activePlan),
+              discount:coupon
             })}
           >
             <h2>Trimestral</h2>
-            <h4>${serviceItem.quarterly}</h4>
+            <h4>
+              {coupon?<><span className="strikeout">${serviceItem.quarterly}</span>&nbsp;&nbsp;&nbsp;
+                        <FormattedPrice
+                          price={calculatePriceWithCoupon('bank',serviceItem['quarterly'],0,coupon)[0]}
+                          currency={currency}
+                          locale="en"
+                        />
+                      </>:<span>${serviceItem.quarterly}</span>}
+            </h4>
             <h5>al concluir los {serviceItem.free_duration} días</h5>
           </div>
         </div>
@@ -153,11 +193,20 @@ export default function NmiPricing({getActivePlan}) {
         >
           <div
             className={classnames("membership", {
-              active: getActivePlan("semiannual", activePlan)
+              active: getActivePlan("semiannual", activePlan),
+              discount:coupon
             })}
           >
             <h2>Semestral</h2>
-            <h4>${serviceItem.semiannual}</h4>
+            <h4>
+              {coupon?<><span className="strikeout">${serviceItem.semiannual}</span>&nbsp;&nbsp;&nbsp;
+                        <FormattedPrice
+                          price={calculatePriceWithCoupon('bank',serviceItem['semiannual'],0,coupon)[0]}
+                          currency={currency}
+                          locale="en"
+                        />
+                        </>:<span>${serviceItem.semiannual}</span>}
+            </h4>
             <h5>al concluir los {serviceItem.free_duration} días</h5>
           </div>
         </div>
@@ -169,11 +218,20 @@ export default function NmiPricing({getActivePlan}) {
         >
           <div
             className={classnames("membership", {
-              active: getActivePlan("yearly", activePlan)
+              active: getActivePlan("yearly", activePlan),
+              discount:coupon
             })}
           >
             <h2>Anual</h2>
-            <h4>${serviceItem.yearly}</h4>
+            <h4>
+              {coupon?<><span className="strikeout">${serviceItem.yearly}</span>&nbsp;&nbsp;&nbsp;
+                        <FormattedPrice
+                          price={calculatePriceWithCoupon('bank',serviceItem['yearly'],0,coupon)[0]}
+                          currency={currency}
+                          locale="en"
+                        />
+                        </>:<span>${serviceItem.yearly}</span>}
+            </h4>
             <h5>al concluir los {serviceItem.free_duration} días</h5>
           </div>
         </div>

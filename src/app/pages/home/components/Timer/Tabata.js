@@ -78,28 +78,36 @@ class Tabata extends Base {
       <>
         <div className="tabata-timer-start-height">&nbsp;</div>
         <div className="w-100">
-          <div className="timer--settingField mb3">
-            <span className="tr">Completar {this.state.rounds}&nbsp;</span>
-            <span className="mh4">
-              rondas de:
-            </span>
-          </div>  
-          <div className="timer--settingField mb3">
-            <span className="tl">&nbsp;{this.state.work>=60?(this.state.work==60?formatMinSecOther(this.state.work)+" minuto":formatMinSecOther(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
-            <span className="tr">&nbsp;de actividad. &nbsp;</span>
-          </div>
-          {this.state.rest>0&&(
-            <div className="timer--settingField mb3">
-              <span>{this.state.rest>=60?(this.state.rest==60?formatMinSecOther(this.state.rest)+" minuto":formatMinSecOther(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
-            </div>  
-          )}
-          <div className="timer--settingField mb3">
-            <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
-            <span className="mh4">
-              {formatMinSecOther(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
-            </span>
-            <span className="tl">&nbsp;minutos.</span>
-          </div>
+          {(!this.props.description || this.props.description==='')?
+            <>
+              <div className="timer--settingField mb3">
+                <span className="tr">Completar {this.state.rounds}&nbsp;</span>
+                <span className="mh4">
+                  rondas de:
+                </span>
+              </div>  
+              <div className="timer--settingField mb3">
+                <span className="tl">&nbsp;{this.state.work>=60?(this.state.work==60?formatMinSecOther(this.state.work)+" minuto":formatMinSecOther(this.state.work)+" minutos"):(this.state.work + " segundos")}&nbsp;</span>
+                <span className="tr">&nbsp;de actividad. &nbsp;</span>
+              </div>
+              {this.state.rest>0&&(
+                <div className="timer--settingField mb3">
+                  <span>{this.state.rest>=60?(this.state.rest==60?formatMinSecOther(this.state.rest)+" minuto":formatMinSecOther(this.state.rest)+" minutos"):(this.state.rest + " segundos")} de descanso entre rondas.</span>
+                </div>  
+              )}
+              <div className="timer--settingField mb3">
+                <span className="tr">&nbsp;Tiempo Total:&nbsp;</span>
+                <span className="mh4">
+                  {formatMinSecOther(parseInt(this.state.rounds) * (parseInt(this.state.work) + parseInt(this.state.rest)))}
+                </span>
+                <span className="tl">&nbsp;minutos.</span>
+              </div>
+            </>
+            :
+            <div style={{whiteSpace: "pre-wrap"}}>
+              {this.props.description}
+            </div>
+          }
         </div>
         <div className="tabata-timer-start-height">&nbsp;</div>
         <Button

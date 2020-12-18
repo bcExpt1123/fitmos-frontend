@@ -47,6 +47,7 @@ const initialState = {
   timerRound:"",
   timerWork:"",
   timerRest:"",
+  timerDescription:"",
   previewContent: ""
 };
 
@@ -80,6 +81,7 @@ export const reducer = persistReducer(
         let timerWork = "";
         let timerRound = "";
         let timerRest = "";
+        let timerDescription = "";
         /*if (clonedData[action.day])
           content = clonedData[action.day][action.column];*/
         if (clonedData[action.column])
@@ -97,6 +99,9 @@ export const reducer = persistReducer(
             if(timerRest == null)timerRest = "";
             timerRound = clonedData[action.column+'_timer_round'][action.day];
             if(timerRound == null)timerRound = "";
+            timerDescription = clonedData[action.column+'_timer_description'][action.day];
+            if(timerDescription == null)timerDescription = "";
+            if(action.day === 3 || action.day===6)image = clonedData['image_path'][action.day];
             break;
           default:
             note = clonedData[action.column+'_note'][action.day];
@@ -109,6 +114,8 @@ export const reducer = persistReducer(
             if(timerRest == null)timerRest = "";
             timerRound = clonedData[action.column+'_timer_round'][action.day];
             if(timerRound == null)timerRound = "";
+            timerDescription = clonedData[action.column+'_timer_description'][action.day];
+            if(timerDescription == null)timerDescription = "";
           }  
         return {
           ...state,
@@ -120,7 +127,8 @@ export const reducer = persistReducer(
           timerType,
           timerWork,
           timerRest,
-          timerRound
+          timerRound,
+          timerDescription
         };
       case actionTypes.CMS_SET_CONTENT:
         return { ...state, content: action.content };
@@ -344,7 +352,7 @@ function* fetchNextWeekly() {
     }
   }
 }
-const saveWorkout = (date, column, content,note,timerType,work,round,rest,uploadImage) => {
+const saveWorkout = (date, column, content,note,timerType,work,round,rest,description,uploadImage) => {
   const formData = new FormData();
   formData.append("date", date.toLocaleDateString("en", options));
   formData.append("column", column);
@@ -354,6 +362,7 @@ const saveWorkout = (date, column, content,note,timerType,work,round,rest,upload
   if ( work )formData.append("timer_work", work);
   if ( round )formData.append("timer_round", round);
   if ( rest )formData.append("timer_rest", rest);
+  if ( description )formData.append("timer_description", description);
   if ( uploadImage ) {
     const files = Array.from(uploadImage);
     files.forEach((file, i) => {
@@ -384,6 +393,7 @@ function* saveContent() {
       cms.timerWork,
       cms.timerRound,
       cms.timerRest,
+      cms.timerDescription,
       cms.uploadImage
     );
     if (result.id) {
@@ -425,6 +435,13 @@ function* saveContent() {
             type: actionTypes.CMS_TAKE_VALUE,
             name: 'timer_rest',
             value: result[cms.column+'_timer_rest']
+          });
+        }
+        if(result[cms.column+'_timer_description']){
+          yield put({
+            type: actionTypes.CMS_TAKE_VALUE,
+            name: 'timer_description',
+            value: result[cms.column+'_timer_description']
           });
         }
         if(result['image_path']){

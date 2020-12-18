@@ -86,7 +86,19 @@ const Subscription = () => {
       </Card.Header>
       <Card.Body>
         <label>Membresía Fitness</label>
-        <div className="value">{renderSubscriptionStatus(currentUser.customer.services[1])}</div>
+        <div className="row">
+          <div className="value col-10">{renderSubscriptionStatus(currentUser.customer.services[1])}</div>
+          {currentUser.customer.currentWorkoutPaymentType === 'bank'&&(
+            <div className="col-2 edit">
+              <NavLink
+                to={"/pricing"}
+                exact              
+              >
+                <i className="fa fa-edit"></i>
+              </NavLink>
+            </div>
+          )}
+        </div>
         <label>Tarjeta de Pago</label>
         <div className="value">{paymentToken&&`**** **** **** ${paymentToken}`}</div>
         <label>Plan Adquirido</label>

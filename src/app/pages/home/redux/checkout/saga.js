@@ -16,6 +16,7 @@ import {
   outside,
   validCartId,
   sendBankRequest,
+  done
 } from "./actions";
 import {
   onPayWithPayPal,
@@ -30,7 +31,7 @@ import { onPayWithNmi } from "./saga/nmi";
 import { trackError } from "../error/actions";
 import { addAlertMessage } from "../alert/actions";
 import { $findWorkoutSerive,$updateInterval} from "../../../../../modules/subscription/service";
-import { initialVoucher,validateVoucherSucceeded} from '../vouchers/actions'
+import { initialVoucher,validateVoucherSucceeded} from '../vouchers/actions';
 
 function getPaymentTestMode() {
   return http({
@@ -214,7 +215,13 @@ function sendBankRequestApi(frequency,service_id,coupon_id){
 }
 function* onSendBankRequest({payload}){
   const serviceId = yield select(store => store.service.item.id);
-  const result = yield call(sendBankRequestApi,payload,serviceId,null);
+  try {
+    const result = yield call(sendBankRequestApi,payload,serviceId,null);
+    yield put(done());
+    
+  }catch (error) {
+    yield put(trackError(error));
+  }
 }
 export default function* rootSaga() {
   yield all([

@@ -6,6 +6,7 @@ import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 
 import LazyImage from "../components/LazyImage";
+import ProofButton from "../components/ProofButton";
 import { http } from "../services/api";
 //import { imgixUrl } from "../../../../lib/imgixUrl";
 import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
@@ -306,7 +307,6 @@ const SectionInstagram = () => {
   const handleHide = ()=>{
     setShow(false);
   }
-  const serviceItem = useSelector(({service})=>service.item);
   return (
     <section id="section-instagram" className={"instagram pt-5"} style={{backgroundColor:"white"}}>
       <div>
@@ -367,7 +367,7 @@ const SectionInstagram = () => {
         </div>
         <div className="community-btn">
           <NavLink to="/signup" className={"btn btn-md btn-primary fs-home-btn"} exact>
-            PRUEBA { serviceItem && serviceItem.free_duration} DÍAS
+            <ProofButton/>
           </NavLink>
         </div>
       </div>

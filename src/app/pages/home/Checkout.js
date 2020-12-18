@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect,useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import MetaTags from "react-meta-tags";
 import { useHistory } from "react-router-dom";
@@ -8,8 +8,10 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import StepPayment from "./CheckoutPage/StepPayment";
 import { initialVoucher,checkVoucher,generateFirstPayVoucher } from "./redux/vouchers/actions";
-import { checkPaymentMode, changeVoucher,inside,outside } from "./redux/checkout/actions";
-import {reactLocalStorage} from 'reactjs-localstorage';
+import { checkPaymentMode, changeVoucher,inside,outside, start } from "./redux/checkout/actions";
+import { findUserDetails } from "./redux/auth/actions";
+import { reactLocalStorage } from 'reactjs-localstorage';
+import { calculatePriceWithCoupon } from '../../../lib/calculatePrice';
 
 const styles = {};
 const CheckoutPage = () => {
@@ -40,6 +42,7 @@ const CheckoutPage = () => {
   },[coupons]);
   const dispatch = useDispatch();
   useEffect(() => {
+    if(paymentType==="bank")dispatch(findUserDetails());
     reactLocalStorage.set('checkout', true);
     dispatch(inside({activePlan}));
     dispatch(checkVoucher());
@@ -48,7 +51,12 @@ const CheckoutPage = () => {
       dispatch(outside());
     };
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
-  
+  useEffect(() => {
+    if(currentUser.has_workout_subscription && currentUser.has_active_workout_subscription){
+      history.push("/");
+      dispatch(start());
+    }
+  },[currentUser]);
 
   // Voucher entered manually by user via voucher form, or from query params,
   if (activePlan === null) {
@@ -89,13 +97,13 @@ const CheckoutPage = () => {
   let pricing;
   if(paymentType === 'bank'){
     pricing = {
-      initialPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
+      initialPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
       originalPrices: undefined,
-      discountedPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
-      recurringPrices: { total: (serviceItem[activePlan]+bankFee) * 100 },
+      discountedPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
+      recurringPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
       refundAmountCents: undefined,
       currentSubscriptionsAmountCents: undefined,
-      bundlePrices: { total: (serviceItem[activePlan]+bankFee) * 100 }
+      bundlePrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 }
     };    
   }else{
     pricing = {
@@ -112,27 +120,9 @@ const CheckoutPage = () => {
   if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && (enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1))) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(paymentType === 'bank'){
-      if(enteredVoucher.form === '%'){
-        pricing.discountedPrices.total = Math.round(((serviceItem[activePlan]+bankFee) * 100 * (100 - pricing.savingsInPercent)) / 100);
-        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round(((serviceItem[activePlan]+bankFee) * 100 * (100 - pricing.savingsInPercent)) / 100);
-      }
-      else {
-        pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
-        if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
-        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
-      }
-    }else{
-      if(enteredVoucher.form === '%'){
-        pricing.discountedPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
-        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = Math.round((pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100);
-      }
-      else {
-        pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
-        if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
-        if(enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1)pricing.recurringPrices.total = pricing.discountedPrices.total;
-      }
-    }
+    const pricingWithCoupon = calculatePriceWithCoupon(paymentType,serviceItem[activePlan],bankFee,enteredVoucher);
+    pricing.discountedPrices.total = pricingWithCoupon[0];
+    if(pricingWithCoupon[1])pricing.recurringPrices.total = pricingWithCoupon[1];
   }
   // in case of user is navigating to some other page PE-14498 fix
   // this part of the fix prevents rendering of checkout 1st step

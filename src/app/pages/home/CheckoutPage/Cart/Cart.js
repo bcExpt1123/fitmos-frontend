@@ -1,14 +1,15 @@
 import React from "react";
 import { FormattedMessage, FormattedHTMLMessage } from "react-intl";
 import addMonths from "date-fns/addMonths";
-import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { useSelector,useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+
 
 import Card from "../../components/Card";
 import FormattedPrice, {
   formatPrice
 } from "../../components/FormattedPrice";
-
+import {start} from "../../redux/checkout/actions";
 import { CHECKOUT_KIND } from "../../constants/checkout-kind";
 
 const ChargingInfo = ({
@@ -60,7 +61,7 @@ const Cart = ({
 }) => {
   const paymentType = useSelector(({service})=>service.type);
   const currentUser = useSelector(({auth})=>auth.currentUser);
-  const activePlan = useSelector(({service})=>service.activePlan);
+  const frequency = useSelector(({service})=>service.frequency);
   const currency = {
     code: selectedProduct.currency,
     exponent: selectedProduct.currency_exponent
@@ -75,16 +76,23 @@ const Cart = ({
   };
   const checkoutKind = useSelector(({checkout})=>checkout.checkoutKind);
   const serviceItem = useSelector(({service})=>service.item);
+  const bankFee = useSelector(({service})=>service.item.bank_fee);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const goBackPricing = ()=>{
+    dispatch(start());
+    history.push('/pricing');
+  }
   return (
     <section className={"cart"} data-cy="cart section">
       {paymentType==='bank'?<>
-          <h2 className="checkout-page-title d-block d-md-none pt-3">INSTRUCCIONES DE PAGO</h2>
-          <NavLink
-            to={`/pricing`}
+          <h2 className="checkout-page-title d-block d-md-none pt-3">¡Tu membresía está lista!</h2>
+          {/* <span
+            onClick={goBackPricing}
             className="redirect-pricing  d-block d-md-none "
           >
             Cambiar método de pago
-          </NavLink>
+          </span> */}
         </>:
         <h2 className="checkout-page-title display-3 d-block d-md-none pt-3">Checkout</h2>}
       
@@ -100,7 +108,7 @@ const Cart = ({
           <div className={"product-details"}>
           {paymentType==='nmi'?
             <>
-              <h5>PLAN FITEMOS</h5>
+              <h5>PROGRAMA FITEMOS</h5>
               <p>
                 <ChargingInfo
                   activeVoucher={activeVoucher}
@@ -114,9 +122,10 @@ const Cart = ({
             </>
             :
             <>
-              <h5>Plan {activePlan} {currentUser.has_workout_subscription === false&&<>+ 1 mes gratis</>}</h5>
-              <p>
-                Manejo ACH    <FormattedPrice
+              <h5>Programa Fitemos</h5>
+              {/* <h5>Plan {activePlan} {currentUser.has_workout_subscription === false&&<>+ 1 mes gratis</>}</h5> */}
+              {/* <p>
+                  Manejo ACH    <FormattedPrice
                   price={prices.initial}
                   currency={currency}
                   locale="en"
@@ -124,7 +133,7 @@ const Cart = ({
               </p>
               <p>
                 {currentUser.has_workout_subscription === false&&<>+ 1 mes gratis</>}
-              </p>
+              </p> */}
             </>
           }
           </div>
@@ -154,10 +163,38 @@ const Cart = ({
             )))
           }
         </div>
+        {
+          paymentType==='bank'&&<>
+            <div className={"product mb-0"}>
+              <h6>
+                {frequency}&nbsp; {frequency>1?<>Meses</>:<>Mes</>}&nbsp;{currentUser.has_workout_subscription === false&&<>+ 1 Mes Gratis</>}
+              </h6>
+              <div class="discount-price">
+                <FormattedPrice
+                  price={prices.initial - bankFee*100}
+                  currency={currency}
+                  locale="en"
+                />
+              </div>  
+            </div>
+            <div className={"product mb-0"}>
+              <h6>
+                Manejo ACH
+              </h6>
+              <div class="discount-price">
+                <FormattedPrice
+                  price={bankFee*100}
+                  currency={currency}
+                  locale="en"
+                />
+              </div>  
+            </div>
+          </>
+        }
         {hasDiscountedPrice && (
           <>
             <div className="discounted">
-              <h5>{activeVoucher.name}</h5>
+              <h6>Cupón {activeVoucher.name}</h6>
               <div className="discount-price">
                 <FormattedPrice
                   price={prices.different}

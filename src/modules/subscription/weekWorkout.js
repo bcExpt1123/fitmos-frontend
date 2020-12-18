@@ -34,6 +34,7 @@ const initialState = {
   timerRound:"",
   timerWork:"",
   timerRest:"",
+  timerDescription:"",
   previewContent: ""
 };
 
@@ -65,6 +66,7 @@ export const reducer = persistReducer(
         let timerWork = "";
         let timerRound = "";
         let timerRest = "";
+        let timerDescription = "";
         if (clonedData[action.weekDay] && clonedData[action.weekDay][action.day])
           content = clonedData[action.weekDay][action.day][action.column];
         switch(action.column){
@@ -80,6 +82,9 @@ export const reducer = persistReducer(
             if(timerRest == null)timerRest = "";
             timerRound = clonedData[action.weekDay][action.day][action.column+'_timer_round'];
             if(timerRound == null)timerRound = "";
+            timerDescription = clonedData[action.weekDay][action.day][action.column+'_timer_description'];
+            if(timerDescription == null)timerDescription = "";
+            if(action.day === 3 || action.day===6)image = clonedData[action.weekDay][action.day]['image_path'];
             break;
           default:
             note = clonedData[action.weekDay][action.day][action.column+'_note'];
@@ -92,6 +97,8 @@ export const reducer = persistReducer(
             if(timerRest == null)timerRest = "";
             timerRound = clonedData[action.weekDay][action.day][action.column+'_timer_round'];
             if(timerRound == null)timerRound = "";
+            timerDescription = clonedData[action.weekDay][action.day][action.column+'_timer_description'];
+            if(timerDescription == null)timerDescription = "";
           }  
         return {
           ...state,
@@ -103,7 +110,8 @@ export const reducer = persistReducer(
           timerType,
           timerWork,
           timerRest,
-          timerRound
+          timerRound,
+          timerDescription
         };
       case actionTypes.WEEKWORKOUT_SET_CONTENT:
         return { ...state, content: action.content };
@@ -202,7 +210,7 @@ function* fetchRequest({ history,id }) {
     }
   }
 }
-const saveWorkout = (fromDate,weekDate, column, content,note,timerType,work,round,rest,uploadImage) => {
+const saveWorkout = (fromDate,weekDate, column, content,note,timerType,work,round,rest,description,uploadImage) => {
   const formData = new FormData();
   formData.append("from_date", fromDate);
   formData.append("weekdate", weekDate);
@@ -213,6 +221,7 @@ const saveWorkout = (fromDate,weekDate, column, content,note,timerType,work,roun
   if ( work )formData.append("timer_work", work);
   if ( round )formData.append("timer_round", round);
   if ( rest )formData.append("timer_rest", rest);
+  if ( description )formData.append("timer_description", description);
   if ( uploadImage ) {
     const files = Array.from(uploadImage);
     files.forEach((file, i) => {
@@ -244,6 +253,7 @@ function* saveContent({weekDay}) {
       weekWorkout.timerWork,
       weekWorkout.timerRound,
       weekWorkout.timerRest,
+      weekWorkout.timerDescription,
       weekWorkout.uploadImage
     );
     
@@ -292,6 +302,14 @@ function* saveContent({weekDay}) {
             weekDay,
             name: 'timer_rest',
             value: result[weekWorkout.column+'_timer_rest']
+          });
+        }
+        if(result[weekWorkout.column+'_timer_description']){
+          yield put({
+            type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+            weekDay,
+            name: 'timer_description',
+            value: result[weekWorkout.column+'_timer_description']
           });
         }
         if(result['image_path']){

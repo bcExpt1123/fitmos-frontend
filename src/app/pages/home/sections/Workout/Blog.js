@@ -20,6 +20,15 @@ const Blog = ({ renderLine })=>{
     if(running)dispatch(setRunning());
     else dispatch(stopRunning());
   }
+  const renderImage = (url)=>{
+    if(url){
+      return (
+        <div className="image">
+          <img src = {url} alt="workout blog" />
+        </div>  
+      )                        
+    }
+  }
   return (
     <div className="blog">
       <Prompt
@@ -31,8 +40,9 @@ const Blog = ({ renderLine })=>{
       {
         workouts&&workouts.current&&workouts.current.blocks.map( (block, index)=>(
           <React.Fragment key={index}>
+            {renderImage(block.image_path)}
             {block.timer_type&&(
-              <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest}  setIsRunning={setIsRunning}/>
+              <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} description={block.timer_description} setIsRunning={setIsRunning}/>
             )}
             {
               block.content&&block.content.map( (render,index1)=>(

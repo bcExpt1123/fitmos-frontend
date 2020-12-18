@@ -38,8 +38,10 @@ export const Routes = withRouter(({ history }) => {
     menuConfig,
     userLastLocation,
     currentUser,
+    checkoutDone,
+    paymentType
   } = useSelector(
-    ({ auth, urls, builder: { menuConfig } }) => ({
+    ({ auth, checkout,service, builder: { menuConfig } }) => ({
       menuConfig,
       isAuthorized: auth.currentUser != null,
       isAdmin:
@@ -49,6 +51,8 @@ export const Routes = withRouter(({ history }) => {
         : false,
       userLastLocation: routerHelpers.getLastLocation(),
       currentUser:auth.currentUser,
+      checkoutDone:checkout.status,
+      paymentType:service.type
     }),
     shallowEqual
   );
@@ -98,6 +102,9 @@ export const Routes = withRouter(({ history }) => {
     "/admin/coupons",
     "/admin/coupons/create",
     "/admin/coupons/:id",
+    "/admin/link-coupons",
+    "/admin/link-coupons/create",
+    "/admin/link-coupons/:id",
     "/admin/subscription-manager",
     "/admin/subscription-manager/:id",
     "/admin/subscription-cms/:id",
@@ -111,6 +118,9 @@ export const Routes = withRouter(({ history }) => {
     "/admin/shortcodes",
     "/admin/shortcodes/create",
     "/admin/shortcodes/:id",
+    "/admin/keywords",
+    "/admin/keywords/create",
+    "/admin/keywords/:id",
     "/admin/benchmarks",
     "/admin/benchmarks/create",
     "/admin/benchmarks/:id",
@@ -216,6 +226,11 @@ export const Routes = withRouter(({ history }) => {
               <Redirect from="/auth" to="/" />
             </>
           ) : (
+            checkoutDone === "done" && paymentType === "bank"?
+            <>
+              <Redirect from="/" to="/checkout" />
+            </>
+            :
             <>
               <Redirect from="/" to="/pricing" />
             </>
