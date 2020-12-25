@@ -4,12 +4,17 @@ import {  useSelector, useDispatch } from "react-redux";
 import BlockSection from "./BlockSection";
 import { nextBlock } from "../../redux/done/actions";
 
-const Blocks = ({ renderLine,setAll })=>{
+const Blocks = ({ renderLine,setAll,handleOpen })=>{
+  const workout = process.env.REACT_APP_WORKOUT;
   const workouts = useSelector(({done})=>done.workouts);
   const dispatch = useDispatch();
   const startWorkout = ()=>{
-    setAll(false);
-    dispatch(nextBlock());
+    if(workout === 'update'){
+      handleOpen();
+    }else {
+      setAll(false);
+      dispatch(nextBlock());
+    }
   }
   return (
     <>

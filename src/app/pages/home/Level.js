@@ -116,6 +116,7 @@ const LevelPage = () => {
     setRecordingDate(new Date());
     setActivePage(1);
     fetchRecords(activePage);
+    dispatch(regenerateAuthAction());
   }
   return (
   <>

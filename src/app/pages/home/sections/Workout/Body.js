@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ModalVideo from 'react-modal-video';
 import 'react-modal-video/scss/modal-video.scss';
 
@@ -8,6 +8,8 @@ import { http } from "../../services/api";
 import Blog from "./Blog";
 import Blocks from "./Blocks";
 import Block from "./Block";
+import ModalView from "./ModalView";
+import { initialModalBlock } from "../../redux/workout/actions";
 
 const Body = ()=>{
   const workout = process.env.REACT_APP_WORKOUT;
@@ -16,6 +18,7 @@ const Body = ()=>{
   const [all,setAll] = useState(false);
   const workouts = useSelector(({done})=>done.workouts);
   const step  = useSelector(({done})=>done.step);
+  const dispatch = useDispatch();
   const renderLine = (line,index)=>{
     switch(line.tag){
       case 'h1':
@@ -44,10 +47,31 @@ const Body = ()=>{
               {line.youtube.name}
             </button>
           )}
+          {line.video&&(
+            <button onClick={()=>{
+                setVid(line.video.id);
+                setShow(true);
+                http({
+                  method: "POST",
+                  app: "user",
+                  path: "customers/activity",
+                  data:{
+                    column:'video_count'
+                  }
+                });                                
+              }
+            }>
+              {line.video.name}
+            </button>
+          )}          
           {line.after_content}
           </p>;
       default:
     }
+  }
+  const openModal = ()=>{
+    setShow(true);
+    dispatch(initialModalBlock());
   }
   return (
     <div className="workout-body">
@@ -57,26 +81,39 @@ const Body = ()=>{
           <Blog renderLine={renderLine}/>
         ):(
           all?(
-            <Blocks renderLine={renderLine} setAll={setAll}/>
+            <Blocks renderLine={renderLine} setAll={setAll} handleOpen = {openModal}/>
           ):(
-            workouts.current.blocks.map( (block,index)=>(
-              step===index&&(
-                <Block key={index} 
-                  block={block} 
-                  renderLine={renderLine} 
-                  setAll={setAll}
-                />
-              )                    
-            )
+            (workout !== 'update')?
+              <>{workouts.current.blocks.map( (block,index)=>(
+                step===index&&(
+                  <Block key={index} 
+                    block={block} 
+                    renderLine={renderLine} 
+                    setAll={setAll}
+                  />
+                )                    
+              ))}
+              </>
+            :
+              (workouts.current.blocks.map( (block,index)=>(
+                step===index&&(
+                  <Block key={index} 
+                    block={block} 
+                    renderLine={renderLine} 
+                    handleOpen = {openModal}
+                    setAll={setAll}
+                  />
+                )                    
+              ))
           ))
         )
       )
     }
-    {workout === 'update'?
-    <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)} />
-    :<>
-    
-    </>}
+    {workout === 'update'?(
+      <ModalView isOpen={show} step={step} onClose={() => {setShow(false)}} />
+    ):(
+      <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)} />
+    )}
   </div>
 )}
 export default Body;

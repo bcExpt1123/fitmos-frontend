@@ -42,6 +42,17 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "comment", numeric: false, disablePadding: false, label: "Comment" }
 ];
+const displayPaymentType = (type)=>{
+  switch(type){
+    case 0:
+      return "Paypal";
+    case 1:
+      return "Nmi Credit Card";
+    case 2:
+      return "Bank"
+  }
+  return '';
+}
 function SubscriptionDetail() {
   const classes = useStyles();
   const { id } = useParams();
@@ -133,9 +144,9 @@ function SubscriptionDetail() {
                       <TableCell component="th" scope="row">
                         {row.id}
                       </TableCell>
-                      <TableCell align="left">{row.type===1?('PayPal'):('Nmi Credit Card')}</TableCell>
+                      <TableCell align="left">{displayPaymentType(row.type)}</TableCell>
                       <TableCell align="left">{row.created_at}</TableCell>
-                      <TableCell align="left">{row.total}</TableCell>
+                      <TableCell align="left">{parseFloat(row.total).toFixed(2)}</TableCell>
                       <TableCell align="left">{row.frequency}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left" style={{ padding: "0" }}>

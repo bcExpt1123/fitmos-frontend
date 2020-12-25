@@ -1,0 +1,236 @@
+.workouts-modal{
+  &.video{
+    &.trans{
+      .modal-dialog{
+        .modal-content{
+          background-color: transparent;
+          border: 0;
+          .modal-header{
+            border: 0;
+          }
+        }
+      }  
+    }
+    .modal-dialog{
+      width: 550px;
+    }
+  }
+  .modal-dialog{
+    margin:0 auto;
+    .modal-content{
+      min-height: 100vh;
+    }
+  }
+  .modal-header{
+    .back-button {
+      @include back-button;
+      color:black;
+      height: auto;
+    }
+  }
+  .modal-body{
+    .block{
+      padding:0 60px;
+      .image{
+        margin: 10px 0 20px;
+        img{
+          width: 100%;
+          border-radius: 10px;
+        }
+      }
+      button{
+        background-color: #DDDDD7;
+        border-radius: 3px;
+        border: 0;
+      }
+      .nav.nav-tabs{
+        width: calc(100% + 120px);
+        margin-left: -60px;
+        padding-left: calc(50% - 15px);
+        border-bottom: 2px solid #DDDDD7;        
+        .nav-link{
+          font-size:21px;
+          color:#B9B7B7;
+          &.active{
+            margin-bottom: -2px;
+            border: 0;
+            border-bottom: 2px solid #BED533;
+            color:$basic-text-color;
+            font-weight: 400;
+          }
+        }
+      }
+      .view-notes{
+        width:180px;
+        border: 1px solid #B9B7B7!important;
+        background-color: #ffffff!important;
+        color:$basic-text-color!important;
+      }
+    }
+    .blog,&>.actions{
+      padding:0 60px;
+    }
+    .blog{
+      .image{
+        margin: 10px 0 20px;
+        img{
+          width: 100%;
+          border-radius: 10px;
+        }
+      }
+    }
+    .actions{
+      display: flex; 
+      justify-content: flex-end;
+      button{
+        border-radius: 3px;
+        box-sizing: border-box;
+        font-size: 16px;
+        margin: 10px;
+        padding: 12px 40px;
+        &.next{
+          border: 1px solid #1A7998;
+          background-color: #1A7998;          
+          color:white;
+          padding: 12px 80px;
+        }
+        &.previous{
+          border: 1px solid #B9B7B7;
+          background-color: #ffffff;                  
+          color:$basic-text-color;
+          margin: 10px auto 10px 0;
+        }
+      }
+    }
+    .workout-video{
+      margin:auto;
+      width:362px;
+    }
+    .video-react{
+      background-color: transparent;
+      .video-react-video{
+        position: fixed;
+        z-index: -1;
+      }
+    }
+    .video-react-has-started .video-react-control-bar{
+      visibility: hidden!important;
+    }
+    .workout-footer{
+      text-align: center;
+      .back-button{
+        @include back-button;
+        color:black;
+        height: auto;
+        .arrow-right{
+          height: 1.5em !important;
+        }  
+      }
+    }
+  }
+}
+@media (max-width: 550px) {
+  .workouts-modal{
+    &.video{
+      .modal-dialog{
+        width: auto;
+        .help{
+          width:0;
+          color:transparent;
+          &::before{
+            content:"?";
+            color:black;
+          }
+        }
+      }
+      .workout-video{
+        width:auto;
+      }  
+    }
+    .modal-dialog{
+      .modal-content .modal-header{
+        .modal-title{
+          font-size:15px;
+        }
+      }
+    }
+    .modal-body{
+      .block{
+        padding:0 20px;  
+        .tab-content{
+          padding:0px;  
+        }
+        .image{
+          margin-left: -20px;
+          margin-right: -20px;
+          width: calc(100% + 40px);
+          img{
+            border-radius: 0px;
+          }
+        }
+        #timer-clock{
+          width:calc(100% + 40px)!important;
+          margin-left: -20px;
+        }
+      }
+      .blog{
+        padding:0 20px;
+        #timer-clock{
+          margin-left: -20px;
+          margin-right: -20px;
+          width: calc(100% + 40px)!important;
+        }
+      }  
+      #timer-clock{
+        height:212px;
+        border-radius: 0px;
+        .timer--button-start1{
+          margin-bottom: 20px;
+        }
+        .buttons{
+          .timer--button-start1{
+            margin-bottom: 0px;
+          }
+        }
+      }
+      .actions{
+        display: flex; 
+        justify-content: flex-end;
+        button{
+          padding: 3px 10px;
+          &.next{
+            padding: 3px 20px;
+          }
+        }
+      }  
+      .workout-footer{
+        text-align: center;
+        .back-button{
+          .arrow-right,.arrow-left{
+            height: 1em !important;
+          }  
+        }
+      }  
+    }
+    &.timer{
+      position: absolute;
+      z-index: 1;
+      top:-84px;
+      width:calc( 100% + 20px );
+      border-radius: 0;
+      .workout-header{
+        span{
+          &:first-child,&:nth-child(4){
+            display:none;
+          }
+          &.mobile-full-screen{
+            display:inline;
+            i{
+              opacity: 1;
+            }
+          }
+        }
+      }
+    }
+  }  
+}

@@ -5,13 +5,15 @@ import {  useDispatch,useSelector } from "react-redux";
 import { Prompt } from 'react-router';
 
 import Timer from "./Timer";
-import { nextBlock,previousBlock,doneWorkout,startWorkout,initialBlock,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
+import { doneWorkout,startWorkout,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
+import { nextModalBlock,previousModalBlock,initialModalBlock } from "../../redux/workout/actions";
 
-const Block = ({ block,renderLine,setAll, handleOpen })=>{
+const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
+  console.log(block)
   const workout = process.env.REACT_APP_WORKOUT;
   const workouts = useSelector(({done})=>done.workouts);
   const isRunning = useSelector(({done})=>done.isRunning);
-  const step = useSelector(({done})=>done.step);
+  const step = useSelector(({workout})=>workout.step);
   const [show, setShow] = useState(false);
   const renderImage = (url)=>{
     if(url){
@@ -34,11 +36,10 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
     if(workout === 'update'){
       if(slug === 'comentario'){
         handleOpen();
-        return;
       }
     }
     if( changeConfirm() ){
-      dispatch(nextBlock());
+      dispatch(nextModalBlock());
       if(slug === 'con_content' || slug === 'sin_content'){
         if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
         else dispatch(startWorkout({date:workouts.current.today}));
@@ -49,13 +50,13 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
   }
   const previousStep = ()=>{
     if( changeConfirm() ){
-      dispatch(previousBlock());
+      dispatch(previousModalBlock());
     }
   }
   const handleComplete = (item)=>{
     if( changeConfirm() ){
       if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
-      dispatch(initialBlock());
+      dispatch(initialModalBlock());
     }
   }
   const setIsRunning = (running)=>{
@@ -68,7 +69,6 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
       dispatch(removeTimer());
     }
   },[block]);// eslint-disable-line react-hooks/exhaustive-deps
-  if(!block)return null;
   return (
     <div className="block">
       <Prompt
@@ -82,24 +82,18 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
         <Timer type={block.timer_type} work={block.timer_work} round={block.timer_round} rest={block.timer_rest} description={block.timer_description} setIsRunning={setIsRunning}/>
       )}
       {
-        step===0?(
-          block.content&&block.content.map( (render,index1)=>(
-            renderLine(render, index1)
-          ))
-        ):(
-          <Tabs defaultActiveKey="workout" id="workout">
-            <Tab eventKey="workout" title="Workout">
-              {block.content&&block.content.map( (render,index1)=>(
-                renderLine(render, index1)
-              ))}
-            </Tab>
-            <Tab eventKey="note" title="Notas">
-              {block.note&&block.note.map( (render,index1)=>(
-                renderLine(render, index1)
-              ))}
-            </Tab>
-          </Tabs>                        
-        )
+        <Tabs defaultActiveKey="workout" id="workout">
+          <Tab eventKey="workout" title="Workout">
+            {block.content&&block.content.map( (render,index1)=>(
+              renderLine(render, index1)
+            ))}
+          </Tab>
+          <Tab eventKey="note" title="Notas">
+            {block.note&&block.note.map( (render,index1)=>(
+              renderLine(render, index1)
+            ))}
+          </Tab>
+        </Tabs>                        
       }
       {
         step!==0 && step===workouts.current.blocks.length-1?(
@@ -134,4 +128,4 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
     </div>
   )
 }
-export default Block;
+export default ModalBlock;

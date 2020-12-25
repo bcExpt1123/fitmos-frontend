@@ -6,6 +6,7 @@ import { useDispatch } from "react-redux";
 import Sidebar from "./Sidebar";
 import PaymentForm from "./PaymentForm";
 import BankPayment from "./BankPayment";
+import AboutFitemos from "../About/AboutFitemos";
 //import { CHECKOUT_KIND } from "../../constants/checkout-kind";
 //import { productBrand } from "../../../../../lib/productBrand";
 
@@ -45,6 +46,10 @@ const StepPayment = ({
       }
       <section className={"container"} id="checkout" data-service={service}>
         <div className="row">
+          <div className="col-12 d-md-none sm-aside">
+            <AboutFitemos />
+          </div>  
+
           <div className={"col-12 col-md-7 pt-4"}>
             <div>
               {paymentType==='bank'?

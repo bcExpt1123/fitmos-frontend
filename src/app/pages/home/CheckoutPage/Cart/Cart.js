@@ -51,7 +51,19 @@ const ChargingInfo = ({
       return null;
   }
 };
-
+const displayMenthName = (frequency)=>{
+  switch(frequency){
+    case 1:case "1":
+    return "Mensual";
+    case 3:case "3":
+    return "Trimestral";
+    case 6:case "6":
+    return "Semestral";
+    case 12:case "12":
+    return "Anual";
+  }
+  return "";
+}
 const Cart = ({
   activeVoucher,
   service,
@@ -108,7 +120,7 @@ const Cart = ({
           <div className={"product-details"}>
           {paymentType==='nmi'?
             <>
-              <h5>PROGRAMA FITEMOS</h5>
+              <h5>Programa Fitemos</h5>
               <p>
                 <ChargingInfo
                   activeVoucher={activeVoucher}
@@ -163,6 +175,22 @@ const Cart = ({
             )))
           }
         </div>
+        {
+          paymentType==='nmi'&&<>
+            <div className={"product mb-0"}>
+              <h6 className="mt-2">
+                Plan {displayMenthName(frequency)} (Prueba Gratis)
+              </h6>
+              <div class="discount-price">
+                <FormattedPrice
+                  price={prices.initial}
+                  currency={currency}
+                  locale="en"
+                />
+              </div>  
+            </div>
+          </>
+        }
         {
           paymentType==='bank'&&<>
             <div className={"product mb-0"}>

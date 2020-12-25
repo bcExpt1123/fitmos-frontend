@@ -54,9 +54,6 @@
           line-height: 2.3;
           ul{
             list-style: none;
-            li::before{
-              content: '✓';
-            }
           }
         }
       }
@@ -222,6 +219,9 @@
           .plan-list {
             font-size: 1rem;
             line-height: 2.3;
+            ul{
+              margin-left: calc( 25% - 40px);
+            }
           }
         }
         .plan-footer {

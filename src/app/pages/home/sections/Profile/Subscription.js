@@ -1,10 +1,11 @@
 import React,{ useState, useEffect } from "react";
 import { Card } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { NavLink, useHistory } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 
 import { http } from "../../services/api";
 import { currentWorkoutPlan } from "../../services/convert";
+import { startBankRenewal } from "../../redux/checkout/actions";
 import SectionRenewal from "../../DashboardPage/SectionRenewal";
 
 const Subscription = () => {
@@ -12,6 +13,12 @@ const Subscription = () => {
   const [showRenewal, setShowRenewal] = useState(false);
   const handleShowRenewal = () => setShowRenewal(true);
   const handleCloseRenewal = () => setShowRenewal(false);
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const goPricingPage = ()=>{
+    dispatch(startBankRenewal());
+    history.push('/pricing');
+  }
   useEffect(()=>{
     async function fetchData(){
       const res = await http({
@@ -87,15 +94,11 @@ const Subscription = () => {
       <Card.Body>
         <label>Membresía Fitness</label>
         <div className="row">
-          <div className="value col-10">{renderSubscriptionStatus(currentUser.customer.services[1])}</div>
+          <div className="value col-8">{renderSubscriptionStatus(currentUser.customer.services[1])}</div>
           {currentUser.customer.currentWorkoutPaymentType === 'bank'&&(
-            <div className="col-2 edit">
-              <NavLink
-                to={"/pricing"}
-                exact              
-              >
-                <i className="fa fa-edit"></i>
-              </NavLink>
+            <div className="col-4 extender">
+              {/* <i className="fa fa-edit"></i> */}
+              <button className="btn btn-fs-blue" onClick={goPricingPage}>Extender</button>
             </div>
           )}
         </div>

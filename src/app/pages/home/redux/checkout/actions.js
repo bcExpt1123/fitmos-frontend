@@ -29,6 +29,8 @@ export const {
   outside,
   validCartId,
   sendBankRequest,
+  startBankRenewal,
+  doneBankRenewal,
   done,
   start
 } = createActions(
@@ -60,6 +62,8 @@ export const {
   "OUTSIDE",
   "VALID_CART_ID",
   "SEND_BANK_REQUEST",
+  "START_BANK_RENEWAL",
+  "DONE_BANK_RENEWAL",
   "DONE",
   "START",
   { prefix: "CHECKOUT" }

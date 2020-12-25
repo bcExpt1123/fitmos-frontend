@@ -48,6 +48,7 @@ import registrationReducer from "../pages/home/redux/registration/reducer";
 //import userSettings from './userSettings/reducer';
 import vouchersReducer from "../pages/home/redux/vouchers/reducer";
 import doneReducer from "../pages/home/redux/done/reducer";
+import workoutReducer from "../pages/home/redux/workout/reducer";
 //import { clearState } from './actions';
 //import { getStateFromCookies } from '../middlewares/cookie';
 
@@ -73,6 +74,7 @@ import registration from "../pages/home/redux/registration/saga";
 import userSettings from "../pages/home/redux/userSettings/saga";
 import vouchers from "../pages/home/redux/vouchers/saga";
 import done from "../pages/home/redux/done/saga";
+import workout from "../pages/home/redux/workout/saga";
 
 
 export const rootReducer = combineReducers({
@@ -109,6 +111,7 @@ export const rootReducer = combineReducers({
   checkout: checkoutReducer,
   vouchers: vouchersReducer,
   done: doneReducer,
+  workout: workoutReducer,
   survey: survey.reducer,
   company: company.reducer,
   product: product.reducer,
@@ -150,6 +153,7 @@ export function* rootSaga() {
     checkout(),
     vouchers(),
     done(),
+    workout(),
     survey.saga(),
     company.saga(),
     product.saga(),

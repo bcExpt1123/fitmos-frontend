@@ -97,6 +97,7 @@ export default function NmiPricing({getActivePlan}) {
   const activePlan = useSelector(({service})=>service.activePlan);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
+  const [hasWorkoutSubscription, setHasWorkoutSubscription] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     const data = getFrequency(currentUser, serviceItem);
@@ -119,6 +120,7 @@ export default function NmiPricing({getActivePlan}) {
       default:  
     }  
     setClasses(classes);
+    if(currentUser)setHasWorkoutSubscription(currentUser.has_workout_subscription);
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(()=>{
     if(couponId){
@@ -157,7 +159,15 @@ export default function NmiPricing({getActivePlan}) {
                         />
                       </>:<span>${serviceItem.monthly}</span>}
             </h4>
-            <h5>al concluir los {serviceItem.free_duration} días</h5>
+            {hasWorkoutSubscription?
+            (
+              <h5>en cada renovación</h5>
+            ):(
+              coupon?(
+                coupon.renewal?<h5>en cada renovación</h5>
+                :<h5>Por los {serviceItem.free_duration} días</h5>)
+              :<h5>al concluir los {serviceItem.free_duration} días</h5>
+            )}
           </div>
         </div>
       )}
@@ -182,7 +192,16 @@ export default function NmiPricing({getActivePlan}) {
                         />
                       </>:<span>${serviceItem.quarterly}</span>}
             </h4>
-            <h5>al concluir los {serviceItem.free_duration} días</h5>
+            {hasWorkoutSubscription?
+            (
+              <h5>en cada renovación</h5>
+            ):(
+              coupon?(
+                coupon.renewal?<h5>en cada renovación</h5>
+                :<h5>Por los primeros 3 meses</h5>
+              )
+                :<h5>al concluir los {serviceItem.free_duration} días</h5>
+            )}
           </div>
         </div>
       )}
@@ -207,7 +226,15 @@ export default function NmiPricing({getActivePlan}) {
                         />
                         </>:<span>${serviceItem.semiannual}</span>}
             </h4>
-            <h5>al concluir los {serviceItem.free_duration} días</h5>
+            {hasWorkoutSubscription?
+            (
+              <h5>en cada renovación</h5>
+            ):(
+              coupon?(coupon.renewal?<h5>en cada renovación</h5>
+                :<h5>Por los primeros 6 meses</h5>
+              )
+                :<h5>al concluir los {serviceItem.free_duration} días</h5>
+            )}
           </div>
         </div>
       )}
@@ -232,7 +259,16 @@ export default function NmiPricing({getActivePlan}) {
                         />
                         </>:<span>${serviceItem.yearly}</span>}
             </h4>
-            <h5>al concluir los {serviceItem.free_duration} días</h5>
+            {hasWorkoutSubscription?
+            (
+              <h5>en cada renovación</h5>
+            ):(
+              coupon?(
+                coupon.renewal?<h5>en cada renovación</h5>
+                :<h5>Por el primer año</h5>
+              )
+              :<h5>al concluir los {serviceItem.free_duration} días</h5>
+            )}
           </div>
         </div>
       )}

@@ -37,7 +37,7 @@ const Sidebar = ({
         />
       </Card>
     )}
-    <div className="">
+    <div className="d-md-block d-none">
       <AboutFitemos />
     </div>  
   </>

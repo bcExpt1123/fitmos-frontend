@@ -216,7 +216,7 @@ function sendBankRequestApi(frequency,service_id,coupon_id){
 function* onSendBankRequest({payload}){
   const serviceId = yield select(store => store.service.item.id);
   try {
-    const result = yield call(sendBankRequestApi,payload,serviceId,null);
+    const result = yield call(sendBankRequestApi,payload,serviceId,reactLocalStorage.get('publicCouponId'));
     yield put(done());
     
   }catch (error) {

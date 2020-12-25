@@ -15,6 +15,7 @@
 @import "./_blog.scss";
 @import "./pament_methods";
 @import "./_layout";
+@import "./_workout-modal.scss";
 @import "./_workout";
 @import "./_timer";
 @import "./_benchmark";
@@ -44,6 +45,14 @@
   &:hover {
     background: linear-gradient(90deg, #d62302,#D36F23);
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+.btn-fs-blue{
+  background-color: #1A7998;
+  color:white;
+  &:hover {
+    background-color: #1A7998;
+    color:white;
   }
 }
 .header-title {

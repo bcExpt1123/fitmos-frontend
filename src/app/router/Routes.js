@@ -26,6 +26,7 @@ import { setReferralVoucher } from "../pages/home/redux/vouchers/actions";
 export const Routes = withRouter(({ history }) => {
   const lastLocation = useLastLocation();
   routerHelpers.saveLastLocation(lastLocation);
+  console.log(window.location.pathname);
   if (window.location.host === 'fitemos.com'){
     window.location = window.location.protocol + "//www." + window.location.host + window.location.pathname;
   }
@@ -87,7 +88,10 @@ export const Routes = withRouter(({ history }) => {
       reactLocalStorage.set('redirect','/settings/notifications');
     }
   }
-  //const checkout = reactLocalStorage.get('checkout');
+  const redirect = reactLocalStorage.get('redirect');
+  if(currentUser){
+    reactLocalStorage.remove('redirect');
+  }
   const urls = [
     "/admin",
     "/admin/dashboard",
@@ -223,7 +227,10 @@ export const Routes = withRouter(({ history }) => {
             <Redirect from="/" to="/admin" />
           ) : hasWorkoutSubscription ? (
             <>
-              <Redirect from="/auth" to="/" />
+              {redirect?<Redirect from="/auth" to={`/${redirect}`} />
+                :
+                <Redirect from="/auth" to="/" />
+              }
             </>
           ) : (
             checkoutDone === "done" && paymentType === "bank"?

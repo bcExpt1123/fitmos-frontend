@@ -258,7 +258,6 @@ class StepInfo extends React.Component {
               seguimiento a tu progreso y medir tus resultados.
             </div>
           </header>
-
           <form
             onSubmit={this.handleSubmit}
             ref={this.formRef}
@@ -371,23 +370,49 @@ class StepInfo extends React.Component {
             >
               {isMobile()?(
                 isIOS()?(
-                  <input
-                  ref={this.inputRefs.birthday}
-                  className={"form-input"}
-                  id="birthday"
-                  type="date"
-                  required
-                  min={birthdayRange.min}
-                  max={birthdayRange.max}
-                  pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
-                  placeholder="yyyy-mm-dd"
-                  name="birthday"
-                  value={this.state.birthday}
-                  onChange={this.handleChange}
-                  onFocus={this.handleFocus}
-                  onBlur={this.handleBlur}
-                />
-                ):(
+                //   <input
+                //   ref={this.inputRefs.birthday}
+                //   className={"form-input"}
+                //   id="birthday"
+                //   type="date"
+                //   required
+                //   min={birthdayRange.min}
+                //   max={birthdayRange.max}
+                //   pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                //   placeholder="yyyy-mm-dd"
+                //   name="birthday"
+                //   value={this.state.birthday}
+                //   onChange={this.handleChange}
+                //   onFocus={this.handleFocus}
+                //   onBlur={this.handleBlur}
+                // />
+<>
+                  {!this.state.isOpen&&
+                    <input
+                      ref={this.inputRefs.birthday}
+                      className={"form-input"}
+                      id="birthday"
+                      type="input"
+                      required
+                      pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}" // in case date field is not supported
+                      placeholder="yyyy-mm-dd"
+                      name="birthday"
+                      value={this.state.birthday}
+                      onFocus={this.handleOpenDatePicker}
+                      onChange={this.handleChange}
+                    />
+                  }
+                  <DatePicker
+                    value={this.state.time}
+                    isOpen={this.state.isOpen}
+                    confirmText={'Confirmar'}
+                    min={new Date(1900, 0, 1)}
+                    value={new Date(2000, 0, 1)} 
+                    cancelText={'Cancelar'}
+                    dateConfig={dateConfig}
+                    onSelect={this.handleSelect}
+                    onCancel={this.handleCancel} />
+                </>                ):(
                   <>
                   {!this.state.isOpen&&
                     <input
@@ -410,6 +435,8 @@ class StepInfo extends React.Component {
                     value={this.state.time}
                     isOpen={this.state.isOpen}
                     confirmText={'Confirmar'}
+                    min={new Date(1900, 0, 1)}
+                    value={new Date(2000, 0, 1)} 
                     cancelText={'Cancelar'}
                     dateConfig={dateConfig}
                     onSelect={this.handleSelect}

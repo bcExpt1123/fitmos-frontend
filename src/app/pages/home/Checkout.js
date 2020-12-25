@@ -23,6 +23,7 @@ const CheckoutPage = () => {
   const bankFee = useSelector(({service})=>service.item.bank_fee);
   const coupons = useSelector(({vouchers})=>vouchers);
   const paymentType = useSelector(({service})=>service.type);
+  const bankRenewal = useSelector(({checkout})=>checkout.bank.renewal);
   // referrer or campaign.
   const [enteredVoucher, setEnteredVoucher] = useState(() => {
     const values = Object.values(coupons);
@@ -52,7 +53,8 @@ const CheckoutPage = () => {
     };
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
-    if(currentUser.has_workout_subscription && currentUser.has_active_workout_subscription){
+    if(currentUser.has_workout_subscription && currentUser.has_active_workout_subscription &&  !bankRenewal ){
+      console.log(bankRenewal)
       history.push("/");
       dispatch(start());
     }

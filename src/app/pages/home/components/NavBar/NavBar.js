@@ -102,7 +102,7 @@ class NavBarVariantFull extends React.Component {
                 }
               />
             }
-            {this.props.checkout&&(
+            {(this.props.checkout || window.location.pathname === "/pricing" && this.props.currentUser && this.props.currentUser.has_active_workout_subscription && (this.props.bankRenewal || true)) &&(
               <button type="button" className={"back-button"} onClick={() => {this.props.start();this.props.history.goBack()}}>
                 <Icon name="arrowLeft" className="arrow-left" />
               </button>
@@ -171,16 +171,30 @@ class NavBarVariantFull extends React.Component {
                         className="navbar-nav nav-dropdown"
                         data-app-modern-menu="true"
                       >
-                        <li className="nav-item">
-                          <NavLink
-                            to="/logout"
-                            className={"nav-link link text-white display-4"}
-                            activeClassName="active"
-                            exact
-                          >
-                            Cerrar Sesión
-                          </NavLink>
-                        </li>
+                        {
+                          (this.props.currentUser && this.props.currentUser.has_active_workout_subscription && (this.props.bankRenewal || true))?
+                          <li className="nav-item">
+                            <NavLink
+                              to="/profile"
+                              className={"nav-link link text-white display-4"}
+                              activeClassName="active"
+                              exact
+                            >
+                              Ir a mi cuenta
+                            </NavLink>
+                          </li>
+                        :
+                          <li className="nav-item">
+                            <NavLink
+                              to="/logout"
+                              className={"nav-link link text-white display-4"}
+                              activeClassName="active"
+                              exact
+                            >
+                              Cerrar Sesión
+                            </NavLink>
+                          </li>
+                        }
                       </ul>
                     )}
                   </>
@@ -282,6 +296,7 @@ export const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
   expires_at: state.auth.expires_at,
   serviceItem: state.service.item,
+  bankRenewal:state.checkout.bank.renewal,
 });
 
 export const mapDispatchToProps = {

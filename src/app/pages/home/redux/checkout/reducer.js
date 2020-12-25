@@ -14,6 +14,8 @@ import {
   setPayPalPlanId,
   setKeyValue,
   setCheckoutKind,
+  startBankRenewal,
+  doneBankRenewal,
   done,
   start
 } from "./actions";
@@ -33,6 +35,9 @@ const initialState = {
   paypal: {
     planId: undefined,
     startTime: undefined
+  },
+  bank:{
+    renewal:false,
   },
   status:false,
 };
@@ -135,6 +140,20 @@ export default persistReducer(
       return {
         ...state,
         status: 'done'
+      };
+    },
+    [startBankRenewal]:state => {
+      let bank = {renewal:true}
+      return {
+        ...state,
+        bank
+      };
+    },
+    [doneBankRenewal]:state => {
+      let bank = {renewal:false}
+      return {
+        ...state,
+        bank
       };
     },
   },

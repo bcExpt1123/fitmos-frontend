@@ -5,17 +5,20 @@ import classnames from "classnames";
 import { Modal, Button } from "react-bootstrap";
 import { NavLink, useHistory } from "react-router-dom";
 import { reactLocalStorage } from 'reactjs-localstorage';
+import * as qs from 'query-string';
 import {
   $findWorkoutSerive,
   $updateInterval,
   $changeType,
 } from "../../../../modules/subscription/service";
-//import { $findUserDetails } from "../../../../modules/subscription/service";
+import { findUserDetails } from "../redux/auth/actions";
 import { setCheckoutKind, sendBankRequest } from "../redux/checkout/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
 import { CHECKOUT_KIND } from "../constants/checkout-kind";
 import NmiPricing,{getFrequency} from "./pricing/NmiPricing";
 import BankPricing,{getBankFrequency} from "./pricing/BankPricing";
+import { calculatePriceWithCoupon } from '../../../../lib/calculatePrice';
+
 const renderSubtitle = (hasWorkoutSubscription, activePlan)=>{
   let content = "Primer mes gratis’";
   if(hasWorkoutSubscription){
@@ -97,8 +100,10 @@ const renderPrice = (currentUser,monthlyFee,hasWorkoutSubscription,activePlan,co
     </>
   )
 }
-export default function SubscriptionBank() {
+export default function SubscriptionBank({match}) {
   const [couponId, setCouponId] = useState(reactLocalStorage.get('publicCouponId'));
+  const [coupon, setCoupon] = useState(false);
+  const vouchers = useSelector(({vouchers})=>vouchers);
   const [showForm, setShowForm] = useState(showForm);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
@@ -135,7 +140,27 @@ export default function SubscriptionBank() {
     // if(serviceItem == null || serviceItem&&serviceItem.bank_fee == undefined)$changeItem(1);  
     dispatch($findWorkoutSerive());
     setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
+    dispatch(findUserDetails());
+    if(!currentUser){
+      const parsed = qs.parse(window.location.search);
+      if(parsed.renewal && parsed.renewal==='bank'){
+        reactLocalStorage.set('redirect', "pricing");
+        history.push("/auth/login");
+      }
+    }else{
+      reactLocalStorage.remove('redirect');
+    }
   },[]);
+  useEffect(()=>{
+    if(couponId){
+      const coupons = Object.values(vouchers);
+      if (coupons[0] && coupons[0].discount) {
+        if(coupons[0].id == couponId){
+          setCoupon(coupons[0]);
+        }
+      }
+    }
+  },[couponId,vouchers]);
   const handleCloseForm = () => {
     setShowForm(false);
   }
@@ -179,7 +204,8 @@ export default function SubscriptionBank() {
                     })}
                   >
                     <h2>Tarjeta de Crédito</h2>
-                    <h5>1 mes de prueba sin compromiso</h5>
+                    {(hasWorkoutSubscription || coupon)?<h5>Sin gasto de Manejo</h5>
+                    :<h5>1 mes de prueba sin compromiso</h5>}
                   </div>
                 </div>
                 <div
@@ -192,7 +218,7 @@ export default function SubscriptionBank() {
                     })}
                   >
                     <h2>Transferencia ACH</h2>
-                    <h5>1 mes extra + USD {serviceItem.bank_fee} Gasto de Manejo</h5>
+                    <h5>{!hasWorkoutSubscription &&<>1 mes extra +</>} USD {serviceItem.bank_fee} Gasto de Manejo</h5>
                   </div>
                 </div>
               </div>
@@ -210,16 +236,16 @@ export default function SubscriptionBank() {
                 <div className="plan-body">
                   <div className="plan-list align-center row">
                     <ul className="col-12 col-md-6 pl-5 mb-0">
-                        <li className="text-left">Programa con pesas</li>
-                        <li className="text-left">Programa sin pesas</li>
-                        <li className="text-left">Programa orientado a objetivos</li>
-                        <li className="text-left">Tutorial de cada movimiento</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Programa con pesas</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Programa sin pesas</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Programa orientado a objetivos</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Tutorial de cada movimiento</li>
                       </ul>
                       <ul className="col-12 col-md-6 pl-5">
-                        <li className="text-left">Blog Nutricional y Tips</li>
-                        <li className="text-left">Acceso a Entrenadores</li>
-                        <li className="text-left">Interacción con Miembros</li>
-                        <li className="text-left">Entrenamientos al Aire Libre</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Blog Nutricional y Tips</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Acceso a Entrenadores</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Interacción con Miembros</li>
+                        <li className="text-left"><i className="fas fa-check"/>&nbsp;&nbsp;Entrenamientos al Aire Libre</li>
                       </ul>
                   </div>
                 </div>
@@ -236,12 +262,20 @@ export default function SubscriptionBank() {
                       </NavLink>
                     ) : (
                       hasWorkoutSubscription?(
-                        <NavLink
-                          to={`/checkout`}
-                          className="btn btn-md btn-primary fs-btn"
-                        >
-                          Compra ahora
-                        </NavLink>                        
+                        type === 'nmi'?
+                          <NavLink
+                            to={`/checkout`}
+                            className="btn btn-md btn-primary fs-btn"
+                          >
+                            Compra ahora
+                          </NavLink>                        
+                        :  
+                          <button
+                            className="btn-md btn-primary fs-btn"
+                            onClick={handleBankRequest}
+                          >
+                            Compra ahora
+                          </button>
                       ):(
                         type === 'nmi'?(
                           couponId?
@@ -272,7 +306,13 @@ export default function SubscriptionBank() {
                             &nbsp;
                             {duration>1?<>MESES</>:<>MES</>} 
                             &nbsp;
-                            POR USD {roundToMoney(parseFloat(serviceItem[activePlan])+parseFloat(serviceItem.bank_fee))}
+                            POR USD {
+                              coupon?
+                                serviceItem&&roundToMoney(calculatePriceWithCoupon('bank',serviceItem[activePlan],serviceItem.bank_fee,coupon)[0]/100)  
+                              :
+                                <>
+                                  {roundToMoney(parseFloat(serviceItem[activePlan])+parseFloat(serviceItem.bank_fee))}
+                                </>}
                             <br/>
                             <small>Podrás cambiar de plan o método de pago en el futuro.</small>
                           </button>

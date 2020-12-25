@@ -5,7 +5,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { roundToMoney } from "../../../../../_metronic/utils/utils.js";
 import FormattedPrice from "../../components/FormattedPrice";
 import { $initialPayment, $changeMembership } from "../../../../../modules/subscription/service";
-import { checkVoucher } from "../../redux/vouchers/actions";
+import { checkVoucher, initialVoucher } from "../../redux/vouchers/actions";
 import { calculatePriceWithCoupon } from '../../../../../lib/calculatePrice';
 
 export const getBankFrequency = (currentUser, serviceItem)=>{
@@ -67,6 +67,7 @@ export default function BankPricing({getActivePlan}) {
   const activePlan = useSelector(({service})=>service.activePlan);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const serviceItem = useSelector(({service})=>service.item);
+  const [hasWorkoutSubscription, setHasWorkoutSubscription] = useState(false);
   const dispatch = useDispatch();
   useEffect(() => {
     const data = getBankFrequency(currentUser, serviceItem);
@@ -89,6 +90,14 @@ export default function BankPricing({getActivePlan}) {
       default:  
     }  
     setClasses(classes);
+    if(vouchers){
+      // const coupons = Object.values(vouchers);
+      // if (coupons[0] && coupons[0].discount) {
+      //   setCoupon(coupons[0]);
+      // }
+      if(!couponId)dispatch(initialVoucher());
+    }
+    if(currentUser)setHasWorkoutSubscription(currentUser.has_workout_subscription);
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(()=>{
     if(couponId){
@@ -116,7 +125,7 @@ export default function BankPricing({getActivePlan}) {
               active: getActivePlan("monthly", activePlan),
             })}
           >
-            <h2>1 Mes + 1 Gratis</h2>
+            <h2>1 Mes {!hasWorkoutSubscription &&<>+ 1 Gratis</>}</h2>
             <h4>
               {coupon?<><span className="strikeout">${serviceItem.monthly}</span>&nbsp;&nbsp;&nbsp;                      
                         <FormattedPrice
@@ -140,7 +149,7 @@ export default function BankPricing({getActivePlan}) {
               active: getActivePlan("quarterly", activePlan),
             })}
           >
-            <h2>3 Meses + 1 Gratis</h2>
+            <h2>3 Meses {!hasWorkoutSubscription &&<>+ 1 Gratis</>}</h2>
             <h4>
               {coupon?<><span className="strikeout">${serviceItem.quarterly}</span>&nbsp;&nbsp;&nbsp;
               <FormattedPrice
@@ -164,7 +173,7 @@ export default function BankPricing({getActivePlan}) {
               active: getActivePlan("semiannual", activePlan)
             })}
           >
-            <h2>6 Meses + 1 Gratis</h2>
+            <h2>6 Meses {!hasWorkoutSubscription &&<>+ 1 Gratis</>}</h2>
             <h4>
               {coupon?<><span className="strikeout">${serviceItem.semiannual}</span>&nbsp;&nbsp;&nbsp;
                         <FormattedPrice
@@ -188,7 +197,7 @@ export default function BankPricing({getActivePlan}) {
               active: getActivePlan("yearly", activePlan)
             })}
           >
-            <h2>12 Meses + 1 Gratis</h2>
+            <h2>12 Meses  {!hasWorkoutSubscription &&<>+ 1 Gratis</>}</h2>
             <h4>
               {coupon?<><span className="strikeout">${serviceItem.yearly}</span>&nbsp;&nbsp;&nbsp;
                         <FormattedPrice
