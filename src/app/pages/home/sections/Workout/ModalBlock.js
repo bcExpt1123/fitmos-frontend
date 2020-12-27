@@ -9,7 +9,6 @@ import { doneWorkout,startWorkout,setRunning, stopRunning, setTimer, removeTimer
 import { nextModalBlock,previousModalBlock,initialModalBlock } from "../../redux/workout/actions";
 
 const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
-  console.log(block)
   const workout = process.env.REACT_APP_WORKOUT;
   const workouts = useSelector(({done})=>done.workouts);
   const isRunning = useSelector(({done})=>done.isRunning);
@@ -56,7 +55,8 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
   const handleComplete = (item)=>{
     if( changeConfirm() ){
       if(!item.read)dispatch(doneWorkout({date:item.today,blog:item.blog}));
-      dispatch(initialModalBlock());
+      // dispatch(initialModalBlock());
+      dispatch(nextModalBlock());
     }
   }
   const setIsRunning = (running)=>{

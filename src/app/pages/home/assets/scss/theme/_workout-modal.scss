@@ -7,12 +7,23 @@
           border: 0;
           .modal-header{
             border: 0;
+            .modal-title{
+              color:white;
+              text-shadow: 3px 3px 8px gray;
+            }
+            .help{
+              i{
+                font-size: 25px;
+                color:white;
+                text-shadow: -1px 1px 5px grey;
+              }
+            }
           }
         }
       }  
     }
     .modal-dialog{
-      width: 550px;
+      width: 500px;
     }
   }
   .modal-dialog{
@@ -105,6 +116,7 @@
     .workout-video{
       margin:auto;
       width:362px;
+      height: 33vh;
     }
     .video-react{
       background-color: transparent;
@@ -116,15 +128,35 @@
     .video-react-has-started .video-react-control-bar{
       visibility: hidden!important;
     }
-    .workout-footer{
+    .workout-alternate{
       text-align: center;
       .back-button{
         @include back-button;
         color:black;
         height: auto;
-        .arrow-right{
-          height: 1.5em !important;
-        }  
+        &.alternate_a{
+          float:left;
+        }
+        &.alternate_b{
+          float:right;
+        }
+        i{
+          font-size: 30px;
+          color:white;
+          text-shadow: -1px 1px 5px grey
+        }
+      }
+    }
+    .workout-footer{
+      position: fixed;
+      bottom: 30px;
+      .back{
+        background-color: white;
+        color: #333333;
+      }
+      .swap{
+        background-color: #1A7998;
+        color:white;
       }
     }
   }
@@ -135,16 +167,14 @@
       .modal-dialog{
         width: auto;
         .help{
-          width:0;
-          color:transparent;
-          &::before{
-            content:"?";
-            color:black;
+          i{
+            font-size: 20px!important;
           }
         }
       }
       .workout-video{
         width:auto;
+        height: 27vh;
       }  
     }
     .modal-dialog{
@@ -203,7 +233,7 @@
           }
         }
       }  
-      .workout-footer{
+      .workout-alternate{
         text-align: center;
         .back-button{
           .arrow-right,.arrow-left{

@@ -31,6 +31,7 @@ export const actionTypes = {
   SHORTCODE_SET_LIST: "SHORTCODE_SET_LIST",
   SHORTCODE_DELETE_LIST: "SHORTCODE_DELETE_LIST",
   SHORTCODE_UPDATE_LIST: "SHORTCODE_UPDATE_LIST",
+  SHORTCODE_UPLOAD_VIDEO: "SHORTCODE_UPLOAD_VIDEO",
   //for pagination
   SHORTCODE_INDEX_META: "SHORTCODE_INDEX_META",
   SHORTCODE_PAGE_CHANGED: "SHORTCODE_PAGE_CHANGED",
@@ -111,6 +112,10 @@ export const reducer = persistReducer(
         return {...state,all:action.list};  
       case actionTypes.SHORTCODE_DELETE_LIST:
         return {...state,all:false};  
+      case actionTypes.SHORTCODE_UPLOAD_VIDEO:
+        const clonedItem1 = Object.assign({}, state.item);
+        const item1 = { ...clonedItem1, uploadVideo: action.video };
+        return { ...state, item:item1 };
       default:
         return state;
     }
@@ -176,6 +181,7 @@ export function $setNewItem() {
       multipler_b:"",
       instruction:"",
       video_url:"",
+      uploadVideo:"",
     };
   }else{
     item = {
@@ -192,6 +198,10 @@ export function $saveItem(history) {
 
 export function $updateItemValue(name, value) {
   return { type: actionTypes.SHORTCODE_SET_ITEM_VALUE, name, value };
+}
+
+export function $updateItemVideo(video){
+  return { type: actionTypes.SHORTCODE_UPLOAD_VIDEO, video };
 }
 
 const shortcodesRequest = (meta, searchCondition) =>
@@ -360,6 +370,12 @@ const saveShortcode = shortcode => {
     formData.append("instruction", shortcode.item.instruction);
   }else{
     formData.append("link", shortcode.item.link);
+  }
+  if (shortcode.item.uploadVideo) {
+    const files = Array.from(shortcode.item.uploadVideo);
+    files.forEach((file, i) => {
+      formData.append("video", file);
+    });
   }
   if (shortcode.item.id) {
     formData.append("_method", "put");

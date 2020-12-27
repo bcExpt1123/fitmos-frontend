@@ -4,6 +4,7 @@ import classnames from "classnames";
 import { Button, Modal } from "react-bootstrap";
 import ModalBlock from "./ModalBlock";
 import VideoView from "./VideoView";
+import CompleteView from "./CompleteView";
 import SectionNote from '../../DashboardPage/SectionNote';
 import Icon from "../../components/Icon";
 import { convertContent,convertVideo,convertIntroduction, setVideo } from "../../redux/workout/actions";
@@ -62,42 +63,47 @@ const ModalView = ({ isOpen, onClose }) => {
         :
         <Modal.Header>
           {view==='video'&&(
-            <button type="button" className={"back-button"} onClick={() => { dispatch(convertContent())}}>
-              <Icon name="arrowLeft" className="arrow-left" />
-            </button>              
+            <>
+              {/* <button type="button" className={"back-button"} onClick={() => { dispatch(convertContent())}}>
+                <Icon name="arrowLeft" className="arrow-left" />
+              </button>               */}
+              <Modal.Title className="w-100"> 
+                {video.name}
+              </Modal.Title>
+              <button type="button" className={"back-button help"} onClick={() => { dispatch(convertIntroduction())}}>
+                <i className="fas fa-book"/>
+              </button>              
+            </>
           )}
           {view==='instruction'&&(
-            <button type="button" className={"back-button"} onClick={() => { dispatch(convertVideo())}}>
-              <Icon name="arrowLeft" className="arrow-left" />
-            </button>              
-          )}
-          <Modal.Title className="text-center w-100"> 
-            {view==='video'&&(
-              video.name
-            )}
-            {view==='instruction'&&(
-              <>Instrucciones</>
-            )}
-          </Modal.Title>
-          {view==='video'&&(
-            <button type="button" className={"back-button help"} onClick={() => { dispatch(convertIntroduction())}}>
-              Instrucciones
-            </button>              
+            <>
+              <button type="button" className={"back-button"} onClick={() => { dispatch(convertVideo())}}>
+                <Icon name="arrowLeft" className="arrow-left" />
+              </button>              
+              <Modal.Title className="text-center w-100"> 
+                <>Instrucciones</>
+              </Modal.Title>
+            </>
           )}
       </Modal.Header>
       }
       <Modal.Body>
         <div className={classnames({'d-none':view!=='content'})}>{
-          workouts&&workouts.current.blocks.map((block, index) => (
-            step!==0 && step === index && (
-              <ModalBlock key={index}
-                block={block}
-                renderLine={renderLine}
-              />
+            workouts&&workouts.current.blocks.map((block, index) => (
+              step!==0 && step === index && (
+                <ModalBlock key={index}
+                  block={block}
+                  renderLine={renderLine}
+                />
+              )
             )
-          )
-          )
-        }
+            )
+          }
+          {workouts && step!==0 && step === workouts.current.blocks.length&&
+            <>
+              <CompleteView onClose={onClose}/>
+            </> 
+          }
         </div>
         {view==='video'&&
           <VideoView />

@@ -8,6 +8,8 @@ export const {
   convertIntroduction,
   convertContent,
   setVideo,
+  alternateVideo,
+  confirmAlternate,
 } = createActions(
   "INITIAL_MODAL_BLOCK",
   "NEXT_MODAL_BLOCK",
@@ -16,5 +18,7 @@ export const {
   "CONVERT_INTRODUCTION",
   "CONVERT_CONTENT",
   "SET_VIDEO",
+  "ALTERNATE_VIDEO",
+  "CONFIRM_ALTERNATE",
   { prefix: "WORKOUT" }
 );

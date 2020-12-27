@@ -9,11 +9,13 @@ import {
   convertIntroduction,
   convertContent,
   setVideo,
+  alternateVideo,
 } from "./actions";
 
 const initialState = {
   step:1,
   view:"content",
+  originalVideo:false,
   video:false,
   timer:false,
 };
@@ -55,8 +57,25 @@ const reducer = persistReducer(
       }),
       [setVideo]:(state,actions) =>({
         ...state,
-        video:actions.payload
+        video:actions.payload,
+        originalVideo:actions.payload
       }),
+      [alternateVideo]:(state,actions) =>{{
+        const changedVideo = {...state.video[actions.payload]};
+        let changeVideo = {...state.video,...changedVideo};
+        changeVideo[actions.payload] = {
+          name:state.video.name,
+          id:state.video.id,
+          instruction:state.video.instruction,
+          url:state.video.url,
+          time:state.video.time,
+          level:state.video.level
+        }
+        return {
+          ...state,
+          video:changeVideo,
+        }
+      }}
     },
     initialState
   )

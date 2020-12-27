@@ -7,7 +7,7 @@ import FavoriteIcon from '@material-ui/icons/Brightness1';
 import { Player } from 'video-react';
 import "video-react/dist/video-react.css";
 import Icon from "../../components/Icon";
-import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import { alternateVideo, convertContent, confirmAlternate } from "../../redux/workout/actions";
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -20,15 +20,14 @@ const StyledRating = withStyles({
 const VideoView = () => {
   const dispatch = useDispatch();
   const video = useSelector(({workout})=>workout.video);
-  const index = parseInt(Math.random() * 100) % 3 + 2;
-  const url = process.env.REACT_APP_API_URL; 
-  const file = url.substr(0,url.length-4) + `storage/media/mov/vid${index}.mp4`;
+  const originalVideo = useSelector(({workout})=>workout.originalVideo);
   const videoRef = useRef();
   const [wideVideo, setWideVideo] = useState(false);
   useEffect(()=>{
     if(videoRef.current){
       setTimeout(()=>{
         if(videoRef.current.videoWidth>0){
+          // console.log(videoRef.current.videoHeight/videoRef.current.videoWidth)
           if(videoRef.current.videoHeight/videoRef.current.videoWidth >1.25){
             setWideVideo(true);
           }else{
@@ -38,9 +37,12 @@ const VideoView = () => {
       },100)
     }
   },[video]);
+  const changeVideo = (slug)=>{
+    dispatch(alternateVideo(slug));
+  }
   return (
     <>
-      <div className="text-center">
+      {/* <div className="text-center">
         <StyledRating
           name="customized-color"
           value={video.level}
@@ -49,31 +51,40 @@ const VideoView = () => {
           precision={1}
           icon={<FavoriteIcon fontSize="inherit" />}
         />                    
-      </div>
-      <div className={classnames({'workout-video':wideVideo})}>
+      </div> */}
+      <div className={'workout-video'}>
         <Player
           ref={videoRef}
           autoPlay
           loop
+          src={video.url}
         >
-          <source src={video.url?video.url:file} />
         </Player>      
       </div>
       {(video.alternate_a || video.alternate_b)&&
-        <div className="workout-footer mt-5">
+        <div className="workout-alternate mt-5">
           {video.alternate_a&&
-            <button type="button" className={"back-button"} onClick={() => {}}>
-              <Icon name="arrowLeft" className="arrow-left" />
+            <button type="button" className={"back-button alternate_a"} onClick={() => changeVideo('alternate_a')}>
+              <i className="fas fa-chevron-left" />
             </button>              
           }
-          <span>Alternar Movimiento</span>
           {video.alternate_b&&
-            <button type="button" className={"back-button"} onClick={() => { }}>
-              <Icon name="arrowRight" className="arrow-right" />
+            <button type="button" className={"back-button alternate_b"} onClick={() => changeVideo('alternate_b')}>
+              <i className="fas fa-chevron-right" />
             </button>              
           }
         </div>
       }
+      <div className="actions workout-footer">
+        <button type="button" className={"btn back"} onClick={() => { dispatch(convertContent())}}>
+          Regresar
+        </button>           
+        {originalVideo.id != video.id&&(
+          <button type="button" className={"btn swap"} onClick={() => { dispatch(confirmAlternate())}}>
+            Escoger
+          </button>              
+        )}   
+      </div>
     </>
   );
 }

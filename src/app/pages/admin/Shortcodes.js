@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
 }));
 const headRows = [
   { id: "name", numeric: false, disablePadding: false, label: "Name" },
-  { id: "link", numeric: false, disablePadding: false, label: "Link" },
+  { id: "level", numeric: false, disablePadding: false, label: "Level" },
   { id: "action", numeric: false, disablePadding: false, label: "Actions" }
 ];
 function Main({
@@ -102,7 +102,7 @@ function Main({
                     <TableCell component="th" scope="row">
                       {row.name}
                     </TableCell>
-                    <TableCell align="left">{row.link}</TableCell>
+                    <TableCell align="left">{row.level}</TableCell>
                     <TableCell align="left" style={{ padding: "0" }}>
                       {row.status === "Active" ? (
                         <>

@@ -17,7 +17,8 @@ import {
   $saveItem,
   $updateItemValue,
   $changeItem,
-  actionTypes
+  actionTypes,
+  $updateItemVideo
 } from "../../../modules/subscription/shortcode";
 import { set } from "lodash";
 const StyledRating = withStyles({
@@ -76,7 +77,7 @@ function Main() {
       const video = URL.createObjectURL(target.files[0]);
       setFile(video);
     },1)
-    // dispatch($updateItemImage(target.files));
+    dispatch($updateItemVideo(target.files));
   }
   const onSelect = (name,item) => {
     if(item && item.id){
@@ -266,6 +267,7 @@ function Main() {
                     ) : item.video_url ? (
                       <Player
                         autoPlay
+                        loop
                       >
                         <source src={item.video_url} />
                       </Player>
