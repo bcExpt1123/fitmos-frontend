@@ -141,7 +141,7 @@ export function calculatePricesForProduct(
 
   const [
     initialPrices,
-    initialPricesWithInstallmentFee
+    //initialPricesWithInstallmentFee
   ] = calculatePricesPerIntervals(
     product.amount_cents * appliedPriceRatio,
     product.interval,
@@ -167,7 +167,7 @@ export function calculatePricesForProduct(
   }
   const [
     discountedPrices,
-    discountedPricesWithInstallmentFee
+    //discountedPricesWithInstallmentFee
   ] = calculatePricesPerIntervals(
     product.amount_cents * visualPriceRatio,
     product.interval,
@@ -175,7 +175,7 @@ export function calculatePricesForProduct(
   );
   const [
     recurringPrices,
-    recurringPricesWithInstallmentFee
+    //recurringPricesWithInstallmentFee
   ] = calculatePricesPerIntervals(
     product.recurring_amount_cents || product.amount_cents,
     product.interval,

@@ -1,5 +1,5 @@
 import React,{useState} from "react";
-import Modal from "react-bootstrap/Modal";
+import {Modal } from "react-bootstrap";
 import { Markup } from "interweave";
 
 const SectionNote = ({line}) => {

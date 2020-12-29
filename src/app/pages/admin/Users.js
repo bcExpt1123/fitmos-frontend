@@ -1,25 +1,10 @@
 import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect, useDispatch } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import FlagIcon from "@material-ui/icons/Flag";
+import { makeStyles } from "@material-ui/styles";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, FormControl,MenuItem,
+  IconButton, TextField, InputLabel, Select } from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import EditIcon from "@material-ui/icons/Edit";
 import RedoIcon from "@material-ui/icons/Redo";
@@ -101,8 +86,8 @@ function Main({ admins, meta, $page, $pageSize }) {
                       className={classnames(
                         " btn btn-bold btn-xs btn-font-sm normal",
                         {
-                          "btn-label-success": row.status == "Active",
-                          "btn-label-danger": row.status == "Inactive"
+                          "btn-label-success": row.status === "Active",
+                          "btn-label-danger": row.status === "Inactive"
                         }
                       )}
                     >
@@ -125,7 +110,7 @@ function Main({ admins, meta, $page, $pageSize }) {
                           <EditIcon />
                         </IconButton>
                       </NavLink>  
-                      {row.status == "Inactive" ? (
+                      {row.status === "Inactive" ? (
                         <>
                           <IconButton
                             color="secondary"

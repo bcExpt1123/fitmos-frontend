@@ -1,12 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import {Button, Modal, Row, Col, Table} from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import FormGroup from "../components/FormGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
@@ -64,7 +60,7 @@ class EditBenchmark extends React.Component {
     });
   };
   handleShow() {
-    const result = this.getBenchmarks();
+    this.getBenchmarks();
   }
   async getBenchmarks() {
     const res = await http({
@@ -243,7 +239,7 @@ class EditBenchmark extends React.Component {
                   </Col>
                   <Col xs={12} md={1}></Col>
                   <Col xs={12} md={3}>
-                    <Button type="submit" variant="edit">
+                    <Button type="submit" variant="edit" className="mb-5">
                       Guardar
                     </Button>
                   </Col>

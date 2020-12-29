@@ -1,6 +1,5 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest, takeEvery, select } from "redux-saga/effects";
+import { put, call, takeLatest,  select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -9,7 +8,7 @@ import {
 } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
-
+import { roundToMoney } from "../../_metronic/utils/utils.js";
 export const actionTypes = {
   SERVICE_INDEX_REQUEST: "SERVICE_INDEX_REQUEST",
   SERVICE_INDEX_SUCCESS: "SERVICE_INDEX_SUCCESS",
@@ -25,6 +24,9 @@ export const actionTypes = {
   SERVICE_SAVE_ITEM: "SERVICE_SAVE_ITEM",
   SERVICE_CHANGE_SAVE_STATUS: "SERVICE_CHANGE_SAVE_STATUS",
   SERVICE_FIND_ITEM: "SERVICE_FIND_ITEM",
+  SERVICE_CHANGE_TYPE: "SERVICE_CHANGE_TYPE",
+  SERVICE_CHANGE_MEMBERSHIP: "SERVICE_CHANGE_MEMBERSHIP",
+  SERVICE_INITIAL_PAYMENT: "SERVICE_INITIAL_PAYMENT",
   //for pagination
   SERVICE_INDEX_META: "SERVICE_INDEX_META",
   SERVICE_PAGE_CHANGED: "SERVICE_PAGE_CHANGED",
@@ -44,6 +46,8 @@ const initialState = {
   },
   item: null,
   frequency: null,
+  type:'nmi',
+  monthlyFee:0,
   activePlan: null,
   updatedItem: null,
   uploadImage: null,
@@ -55,7 +59,7 @@ export const reducer = persistReducer(
   {
     storage,
     key: "services",
-    whitelist: ["meta", "item", "activePlan", "frequency"]
+    whitelist: ["meta", "item", "activePlan", "frequency","type"]
   },
   (state = initialState, action) => {
     switch (action.type) {
@@ -97,6 +101,43 @@ export const reducer = persistReducer(
         return { ...state, uploadImage: action.image };
       case actionTypes.SERVICE_CHANGE_SAVE_STATUS:
         return { ...state, isSaving: action.status };
+      case actionTypes.SERVICE_CHANGE_TYPE:
+        return { ...state,type:action.payment};
+      case actionTypes.SERVICE_INITIAL_PAYMENT:
+        return {
+          ...state,
+          frequency:action.frequency,
+          activePlan:action.activePlan,
+          monthlyFee:action.monthlyFee,
+        }    
+      case actionTypes.SERVICE_CHANGE_MEMBERSHIP:
+        let monthlyFee = state.item[action.key];
+        let frequency = 1;
+        const activePlan = action.key;
+        switch (action.key) {
+          case "quarterly":
+            monthlyFee = monthlyFee / 3;
+            frequency = 3;
+            break;
+          case "semiannual":
+            monthlyFee = monthlyFee / 6;
+            frequency = 6;
+            break;
+          case "yearly":
+            monthlyFee = monthlyFee / 12;
+            frequency = 12;
+            break;
+          default:
+        }
+        monthlyFee = roundToMoney(monthlyFee);
+        // setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
+        return {
+          ...state,
+          frequency,
+          activePlan,
+          monthlyFee,
+        };
+
       default:
         return state;
     }
@@ -155,6 +196,15 @@ export function $findWorkoutSerive() {
   const id = 1;
   return { type: actionTypes.SERVICE_CHANGE_ITEM, id: id };
 }
+export function $changeType(type){
+  return { type: actionTypes.SERVICE_CHANGE_TYPE, payment:type };
+}
+export function $changeMembership(key){
+  return { type:actionTypes.SERVICE_CHANGE_MEMBERSHIP,key}
+}
+export function $initialPayment(frequency,monthlyFee,activePlan){
+  return { type:actionTypes.SERVICE_INITIAL_PAYMENT,frequency,monthlyFee,activePlan}
+}
 const servicesRequest = meta =>
   http({
     path: `services?${serializeQuery({
@@ -172,7 +222,7 @@ function* fetchService() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });
@@ -205,7 +255,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.SERVICE_LOADING_REQUEST });
   if (services != null) {
     const filterServices = services.filter(service => {
-      return service.id == id;
+      return service.id === id;
     });
     if (filterServices.length > 0) {
       yield put({
@@ -221,7 +271,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.SERVICE_SET_ITEM, item: result });
     else yield put({ type: actionTypes.SERVICE_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });
@@ -229,7 +279,7 @@ function* changeItem({ id }) {
   }
 }
 const saveService = service => {
-  const formData = new FormData();
+  let formData = new FormData();
   if (service.uploadImage) {
     const files = Array.from(service.uploadImage);
     files.forEach((file, i) => {
@@ -243,6 +293,12 @@ const saveService = service => {
   formData.append("semiannual", service.item.semiannual);
   formData.append("yearly", service.item.yearly);
   formData.append("frequency", service.item.frequency);
+  formData.append("free_duration", service.item.free_duration);
+  formData.append("bank_1", service.item.bank_1);
+  formData.append("bank_3", service.item.bank_3);
+  formData.append("bank_6", service.item.bank_6);
+  formData.append("bank_12", service.item.bank_12);
+  formData.append("bank_fee", service.item.bank_fee);
   formData.append("_method", "PUT");
   return http({
     path: `services/${service.item.id}`,
@@ -260,7 +316,7 @@ function* saveItem() {
       alert("Saving success.");
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.SERVICE_INDEX_FAILURE, error: e.message });

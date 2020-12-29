@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import Card from "react-bootstrap/Card";
-import Button from "react-bootstrap/Button";
+import { Card, Button, ProgressBar } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import { FormattedMessage } from "react-intl";
 import classnames from "classnames";
-import ProgressBar from 'react-bootstrap/ProgressBar';
 import { useSelector } from "react-redux";
 import SectionEditWeight from "./SectionEditWeight";
 
@@ -33,7 +31,7 @@ const Profile = ({ currentUser }) => {
                 " " +
                 currentUser.customer.last_name}
               {done.fromWorkoutImage&&(
-                <img src={done.fromWorkoutImage} />
+                <img src={done.fromWorkoutImage} alt="from-workout-alt"/>
               )}
             </Card.Title>
             <div className="row">
@@ -43,7 +41,7 @@ const Profile = ({ currentUser }) => {
               <div className="col-6" style={{textAlign:'right'}}>
                 <span>{done.workoutCount}/{done.toWorkout}</span>
                 {done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} />
+                  <img src={done.toWorkoutImage} alt="to-workout-alt"/>
                 )}
               </div>
               <div className="col-12 mb-4">

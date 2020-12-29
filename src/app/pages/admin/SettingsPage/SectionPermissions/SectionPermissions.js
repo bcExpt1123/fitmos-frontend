@@ -1,13 +1,7 @@
 import React, { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import { Checkbox, FormControlLabel, TextField } from "@material-ui/core";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core";
+import { MenuItem, FormControl, InputLabel, Select, Grid, Button, Checkbox, FormControlLabel } from "@material-ui/core";
 import SectionRoles from "./SectionRoles";
 import {
   $saveItem,
@@ -40,7 +34,7 @@ const Permissions = () => {
   const [show,setShow] = useState(false);
   useEffect(() => {
     dispatch($fetchSetting());
-  },[]);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleReset = ()=>{
     dispatch($fetchSetting());
   }
@@ -64,7 +58,7 @@ const Permissions = () => {
       const length = permission.item.permissions.length;
       let i = 0;
       for(i=0;i<length;i++){
-        if(permission.item.permissions[i].id == id){
+        if(permission.item.permissions[i].id === id){
           return true;
         }
       }
@@ -142,7 +136,6 @@ const Permissions = () => {
             <Grid item xs={12} sm={2}></Grid>
             <Grid item xs={10}>
               <Button
-                type="button"
                 className="btn kt-subheader__btn-primary btn-primary mr-5"
                 form="permission-settings-form"
                 type="submit"
@@ -151,7 +144,6 @@ const Permissions = () => {
                 Submit &nbsp;
               </Button>
               <Button
-                type="button"
                 className="btn kt-subheader__btn-primary btn-primary ml-5"
                 form="permission-settings-form"
                 type="button"

@@ -21,7 +21,7 @@
   .mbr-section-btn {
     text-align: left;
   }
-  .fs-btn {
+  .fs-home-btn,.fs-btn {
     font-size: 1.75rem;
     padding: 14px 72px;
   }
@@ -43,7 +43,7 @@
 @media (max-width: 767px) {
   #SectionBanner {
     min-height: 100vh;
-    .fs-btn {
+    .fs-home-btn,.fs-btn {
       font-size: 1.25rem !important;
       padding: 7px 36px;
     }

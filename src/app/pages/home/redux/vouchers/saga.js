@@ -7,6 +7,8 @@ import {
   setPrivateVoucher,
   generateFirstPayVoucher,
   setPublicVoucher,
+  setReferralVoucher,
+  setEmailInvitationVoucher,
   checkVoucher,
   createRenewalVoucher,
   initialVoucher,
@@ -108,10 +110,31 @@ function* onSetPublicCoucher({ payload }) {
   const currentUser = yield select(store => store.auth.currentUser);
   if (currentUser === undefined) {
     try {
-      const voucher = yield call(validatePublicVoucherRequest, {
+      yield call(validatePublicVoucherRequest, {
         code: payload,
       });
       reactLocalStorage.set('publicCoupon', payload);
+    } catch (error) {
+      yield put(validateVoucherFailed({ payload }));
+    }
+  }
+}
+const validateEmailInvitationRequest = ({ id }) =>
+  http({
+    path: "coupons/email",
+    method: "POST",
+    data: {
+      id
+    }
+  }).then(response => response.data.voucher);
+function* onSetEmailInvitationVoucher({ payload }) {
+  const currentUser = yield select(store => store.auth.currentUser);
+  if (currentUser === undefined) {
+    try {
+      yield call(validateEmailInvitationRequest, {
+        id: payload,
+      });
+      reactLocalStorage.set('invitationEmail', payload);
     } catch (error) {
       yield put(validateVoucherFailed({ payload }));
     }
@@ -128,9 +151,21 @@ const validatePublicVoucherRequestWithUser = ({ couponId,userId, service }) =>
     }
   }).then(response => response.data.voucher);
 function* onCheckVoucer() {
-  const token = reactLocalStorage.get('privateCoupon');
   const currentUser = yield select(store => store.auth.currentUser);
   const currentUserId = currentUser.id;
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode){
+    try { 
+      const voucher = yield call(validateReferralVoucherRequest, {
+        code: referralCode
+      });
+      yield put(validateVoucherSucceeded(voucher));
+      reactLocalStorage.remove('referralCode');
+    } catch (error) {
+      //yield put(validateVoucherFailed({ token }));
+    }
+  }
+  const token = reactLocalStorage.get('privateCoupon');
   if (token) {
     try { 
       const voucher = yield call(validatePrivateVoucherRequest, {
@@ -142,6 +177,7 @@ function* onCheckVoucer() {
     } catch (error) {
       //yield put(validateVoucherFailed({ token }));
     }
+    return;
   }
   const couponId = reactLocalStorage.get('publicCouponId');
   if(couponId){
@@ -154,6 +190,7 @@ function* onCheckVoucer() {
     } catch (error) {
       //yield put(validateVoucherFailed({ token }));
     }
+    return;
   }
 }
 const createRenewalVoucherRequest = () =>
@@ -191,10 +228,53 @@ function* onGenerateFirstPayVoucher(){
     //yield put(validateVoucherFailed({ token }));
   }
 }
+const validateReferralVoucherRequest = ({ code, service }) =>
+  http({
+    path: "coupons/referral",
+    method: "POST",
+    data: {
+      voucher: {
+        code,
+      }
+    }
+  }).then(response => response.data.voucher);
+function* onSetReferralVoucher({ payload }) {
+  const currentUser = yield select(store => store.auth.currentUser);
+  if (currentUser === undefined) {
+    try {
+      yield call(validateReferralVoucherRequest, {
+        code: payload,
+      });
+      reactLocalStorage.set('referralCode', payload);
+    } catch (error) {
+      yield put(validateVoucherFailed({ payload }));
+    }
+  } else {
+    const currentUserId = currentUser.id;
+    const vouchers = yield select(({vouchers}) => vouchers);
+    const filterVouchers = Object.values(vouchers).filter((voucher)=>{
+      if( voucher.code ) return voucher;
+      return null;
+    });
+    if( filterVouchers.length > 0 ) return;
+    try {
+      const voucher = yield call(validateReferralVoucherRequest, {
+        code: payload,
+        userId: currentUserId,
+      });
+      yield put(validateVoucherSucceeded(voucher));
+    } catch (error) {
+      yield put(validateVoucherFailed({ payload }));
+    }
+  }
+
+}
 export default function* rootSaga() {
   yield takeEvery(validateVoucher, onValidateVoucher);
   yield takeLeading(setPrivateVoucher, onSetPrivateCoucher);
   yield takeLeading(setPublicVoucher, onSetPublicCoucher);
+  yield takeLeading(setReferralVoucher,onSetReferralVoucher);
+  yield takeLeading(setEmailInvitationVoucher,onSetEmailInvitationVoucher);
   yield takeLeading(checkVoucher, onCheckVoucer);
   yield takeLeading(createRenewalVoucher, onCreateRenewalVoucher);
   yield takeLeading(generateFirstPayVoucher,onGenerateFirstPayVoucher);

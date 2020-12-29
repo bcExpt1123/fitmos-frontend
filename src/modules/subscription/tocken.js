@@ -1,10 +1,8 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLeading,
-  takeLatest,
   select,
 } from "redux-saga/effects";
 import get from "lodash/get";
@@ -138,7 +136,7 @@ function* fetchTocken() {
       items: result.items,
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.TOCKEN_INDEX_FAILURE, error: e.message });
@@ -148,7 +146,7 @@ function* fetchTocken() {
 const findTocken = id =>
   http({ path: `tockens/${id}` }).then(response => response.data);
 function* changeItem({ id }) {
-  if(id == 'new'){
+  if(id === 'new'){
     const item = {
       holder:"",
       last4:"",
@@ -163,7 +161,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.TOCKEN_LOADING_REQUEST });
   if (tockens != null) {
     const filterTockens = tockens.filter(tocken => {
-      return tocken.id == id;
+      return tocken.id === id;
     });
     if (filterTockens.length > 0) {
       yield put({ type: actionTypes.TOCKEN_SET_ITEM, item: filterTockens[0] });
@@ -176,7 +174,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.TOCKEN_SET_ITEM, item: result });
     else yield put({ type: actionTypes.TOCKEN_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.TOCKEN_INDEX_FAILURE, error: e.message });
@@ -221,7 +219,7 @@ function* saveItem({creditCard,setErrors}) {
     }
   } catch (e) {
     console.log(e)
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.TOCKEN_INDEX_FAILURE, error: e.message });
@@ -236,10 +234,10 @@ function* saveItem({creditCard,setErrors}) {
 }
 function* deleteItem({ id }) {
   try {
-    const result = yield call(tockenActionRequest, 'delete', id);
+    yield call(tockenActionRequest, 'delete', id);
     yield put({ type: actionTypes.TOCKEN_INDEX_REQUEST });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.TOCKEN_INDEX_FAILURE, error: e.message });
@@ -247,7 +245,7 @@ function* deleteItem({ id }) {
   }
 }
 const tockenActionRequest = (action, id)=>{
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `tockens/${id}`, method: "delete" }).then(
       response => response.data
     );

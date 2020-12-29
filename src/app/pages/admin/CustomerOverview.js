@@ -1,13 +1,7 @@
 import React from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
-import Grid from "@material-ui/core/Grid";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-
+import { Table, TableHead, TableBody, TableCell, TableRow, Grid } from "@material-ui/core";
 const headRows = [
   { id: "name", numeric: false, disablePadding: false, label: "Subscription" },
   {
@@ -158,7 +152,7 @@ function Main({ item }) {
                   <TableCell scope="row">
                     {row.service_name}
                     <br />
-                    {row.service_id == 1 && "+" + item.objective}
+                    {row.service_id === 1 && "+" + item.objective}
                   </TableCell>
                   <TableCell align="left">{row.frequency_name}</TableCell>
                   <TableCell align="left">{row.start_date}</TableCell>

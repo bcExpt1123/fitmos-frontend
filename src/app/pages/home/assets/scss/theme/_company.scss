@@ -1,0 +1,87 @@
+section.company{
+  background-color: $main-background-color;
+    .item{
+      font-size: 16px;
+      .image{
+        .background-container {
+          max-width: 100%;
+          overflow: hidden;
+          pointer-events: none;
+          .background {
+            background-position: 50% 50%;
+            background-size: cover;
+            background-repeat: no-repeat;
+            border-radius: 7px;
+            width: 100%;
+            padding-bottom: 78%;
+            overflow: hidden;
+            pointer-events: none;
+          }
+        }      
+      }
+      h3{
+        font-size: 21px;
+      }
+    }
+    .pagination-wrapper{
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      width: 270px;
+    }
+}
+section.company, section.product{
+  article{
+    .content{
+      background-color: white;
+      margin: 30px 0px;
+      border-radius: 7px;
+      .image{
+        img{
+          width: 100%;
+          height: 239px;
+          object-fit: cover;          
+          border-radius: 7px;
+        }
+      }
+      .body{
+        margin:15px;
+        padding-bottom: 20px;
+        .name{
+          font-size: 20px;
+          font-weight: 600;
+          height:24px;
+          display: block;/* or inline-block */
+          text-overflow: ellipsis;
+          word-wrap: break-word;
+          overflow: hidden;
+          color: #333333;
+        }
+      }
+    }
+  }
+}
+@media (max-width:570px){
+  section.company, section.product{
+    article{
+      .content{
+        .image{
+          img{
+            height: 369px;
+          }
+        }  
+      }
+  }
+}
+}
+
+@media (max-width:480px){
+  .blog-page header{
+    .blog-login{
+      font-size: 1rem;
+    }
+    h1.title{
+      font-size: 24px;
+    }
+  }
+}

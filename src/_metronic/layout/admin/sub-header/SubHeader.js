@@ -3,9 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import objectPath from "object-path";
 import { withRouter } from "react-router-dom";
-import { QuickActions } from "./components/QuickActions";
-import { LayoutContextConsumer } from "../LayoutContext";
-import { ReactComponent as SortNum1Icon } from "../../../../_metronic/layout/admin/assets/layout-svg-icons/SortNum1.svg";
 import * as builder from "../../../ducks/builder";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { SubHeaderDashboard } from "../../../../app/pages/admin/Dashboard";
@@ -14,10 +11,14 @@ import { SubHeaderCustomerDetail } from "../../../../app/pages/admin/CustomerDet
 import { SubHeaderSubscriptions } from "../../../../app/pages/admin/Subscriptions";
 import { SubHeaderSubscriptionDetail } from "../../../../app/pages/admin/SubscriptionDetail";
 import { SubHeaderTransactions } from "../../../../app/pages/admin/Transactions";
+import { SubHeaderBankTransferRequests } from "../../../../app/pages/admin/BankTransferRequests";
 import { SubHeaderInvoices } from "../../../../app/pages/admin/Invoices";
 import { SubHeaderInvoicePrint } from "../../../../app/pages/admin/InvoicePrint";
 import { SubHeaderCoupons } from "../../../../app/pages/admin/Coupons";
 import { SubHeaderCouponCreate } from "../../../../app/pages/admin/CouponCreate";
+import { SubHeaderLinkCoupons } from "../../../../app/pages/admin/LinkCoupons";
+import { SubHeaderLinkCouponCreate } from "../../../../app/pages/admin/LinkCouponCreate";
+import { SubHeaderLinkCouponShow } from "../../../../app/pages/admin/LinkCouponShow";
 import { SubHeaderSubscriptionManager } from "../../../../app/pages/admin/SubscriptionManager";
 import { SubHeaderSubscriptionManagerEdit } from "../../../../app/pages/admin/SubscriptionManagerEdit";
 import { SubHeaderSubscriptionCMS } from "../../../../app/pages/admin/SubscriptionCms";
@@ -28,6 +29,8 @@ import { SubHeaderEvents } from "../../../../app/pages/admin/Events";
 import { SubHeaderEventCreate } from "../../../../app/pages/admin/EventCreate";
 import { SubHeaderShortcodes } from "../../../../app/pages/admin/Shortcodes";
 import { SubHeaderShortcodeCreate } from "../../../../app/pages/admin/ShortcodeCreate";
+import { SubHeaderKeywords } from "../../../../app/pages/admin/Keywords";
+import { SubHeaderKeywordCreate } from "../../../../app/pages/admin/KeywordCreate";
 import { SubHeaderWeeklyEditor } from "../../../../app/pages/admin/WeeklyEditor";
 import { SubHeaderBenchmarks } from "../../../../app/pages/admin/Benchmark";
 import { SubHeaderBenchmarkCreate } from "../../../../app/pages/admin/BenchmarkCreate";
@@ -38,6 +41,16 @@ import { SubHeaderMedalCreate } from "../../../../app/pages/admin/MedalCreate";
 import { SubHeaderUserCreate } from "../../../../app/pages/admin/UserCreate";
 import { SubHeaderPermissions } from "../../../../app/pages/admin/SettingsPage/SectionPermissions";
 import { SubHeaderCartSettings } from "../../../../app/pages/admin/SettingsPage/SectionCartSettings";
+import { SubHeaderReferralSettings } from "../../../../app/pages/admin/SettingsPage/SectionReferral";
+import { SubHeaderTagLineSettings } from "../../../../app/pages/admin/SettingsPage/SectionTagLine";
+import { SubHeaderSurvey } from "../../../../app/pages/admin/Survey";
+import { SubHeaderSurveyCreate } from "../../../../app/pages/admin/SurveyCreate";
+import { SubHeaderCompanies } from "../../../../app/pages/admin/Companies";
+import { SubHeaderCompanyCreate } from "../../../../app/pages/admin/CompanyCreate";
+import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
+import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
+import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
+import { SubHeaderSurveyReports } from "../../../../app/pages/admin/SurveyReports";
 
 // import BreadCrumbs from "./components/BreadCrumbs";
 
@@ -46,7 +59,6 @@ class SubHeader extends React.Component {
     const {
       subheaderCssClasses,
       subheaderContainerCssClasses,
-      subheaderMobileToggle
     } = this.props;
     return (
       <div
@@ -84,11 +96,8 @@ class SubHeader extends React.Component {
               path="/admin/subscriptions/:id"
               component={SubHeaderSubscriptionDetail}
             />
-            <Route
-              exact
-              path="/admin/transactions"
-              component={SubHeaderTransactions}
-            />
+            <Route exact path="/admin/transactions" component={SubHeaderTransactions}/>
+            <Route exact path="/admin/bank-transfer-requests" component={SubHeaderBankTransferRequests}/>
             <Route exact path="/admin/invoices" component={SubHeaderInvoices} />
             <Route exact path="/admin/invoices/:id" component={SubHeaderInvoicePrint} />
             <Route exact path="/admin/coupons" component={SubHeaderCoupons} />
@@ -102,6 +111,9 @@ class SubHeader extends React.Component {
               path="/admin/coupons/:id"
               component={SubHeaderCouponCreate}
             />
+            <Route exact path="/admin/link-coupons" component={SubHeaderLinkCoupons} />
+            <Route exact path="/admin/link-coupons/create" component={SubHeaderLinkCouponCreate}/>
+            <Route exact path="/admin/link-coupons/:id" component={SubHeaderLinkCouponShow}/>
             <Route
               exact
               path="/admin/subscription-manager"
@@ -141,21 +153,12 @@ class SubHeader extends React.Component {
               path="/admin/events/:id"
               component={SubHeaderEventCreate}
             />
-            <Route
-              exact
-              path="/admin/shortcodes"
-              component={SubHeaderShortcodes}
-            />
-            <Route
-              exact
-              path="/admin/shortcodes/create"
-              component={SubHeaderShortcodeCreate}
-            />
-            <Route
-              exact
-              path="/admin/shortcodes/:id"
-              component={SubHeaderShortcodeCreate}
-            />
+            <Route exact path="/admin/shortcodes" component={SubHeaderShortcodes}/>
+            <Route exact path="/admin/shortcodes/create" component={SubHeaderShortcodeCreate}/>
+            <Route exact path="/admin/shortcodes/:id" component={SubHeaderShortcodeCreate}/>
+            <Route exact path="/admin/keywords" component={SubHeaderKeywords}/>
+            <Route exact path="/admin/keywords/create" component={SubHeaderKeywordCreate}/>
+            <Route exact path="/admin/keywords/:id" component={SubHeaderKeywordCreate}/>
             <Route
               exact
               path="/admin/benchmarks"
@@ -201,8 +204,73 @@ class SubHeader extends React.Component {
             />
             <Route
               exact
+              path="/admin/settings/referral"
+              component={SubHeaderReferralSettings}
+            />
+            <Route
+              exact
+              path="/admin/settings/tag-line"
+              component={SubHeaderTagLineSettings}
+            />
+            <Route
+              exact
               path="/admin/profile"
               component={SubHeaderUserProfile}
+            />
+            <Route
+              exact
+              path="/admin/survey"
+              component={SubHeaderSurvey}
+            />
+            <Route
+              exact
+              path="/admin/survey/create"
+              component={SubHeaderSurveyCreate}
+            />
+            <Route
+              exact
+              path="/admin/survey/:id"
+              component={SubHeaderSurveyCreate}
+            />
+            <Route
+              exact
+              path="/admin/survey/:id/view"
+              component={SubHeaderSurveyReports}
+            />
+            <Route
+              exact
+              path="/admin/companies"
+              component={SubHeaderCompanies}
+            />
+            <Route
+              exact
+              path="/admin/companies/create"
+              component={SubHeaderCompanyCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id"
+              component={SubHeaderCompanyCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products"
+              component={SubHeaderProducts}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/create"
+              component={SubHeaderProductCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/:id"
+              component={SubHeaderProductCreate}
+            />
+            <Route
+              exact
+              path="/admin/companies/:id/products/viewImages/:id"
+              component={SubHeaderViewImages}
             />
           </Switch>
         </div>

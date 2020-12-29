@@ -29,7 +29,7 @@ export default function LayoutInitializer({
 
   useEffect(() => {
     let menuConfig = JSON.parse(JSON.stringify(MenuConfig));
-    if(currentUser.type=='admin'&&currentUser.role!='super'){
+    if(currentUser.type==='admin'&&currentUser.role!=='super'){
       let items = menuConfig.aside.items;
       let assignItems = [];
       for(let i=0;i<items.length;i++){

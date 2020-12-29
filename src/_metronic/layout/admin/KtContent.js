@@ -13,7 +13,7 @@ function KtContent({ children, contentContainerClasses }) {
 
     ref.current.classList.remove("kt-grid--animateContent-finished");
     setTimeout(() => {
-      ref.current.classList.add("kt-grid--animateContent-finished");
+      if(ref && ref.current)ref.current.classList.add("kt-grid--animateContent-finished");
     }, 1);
   }, [location]);
 

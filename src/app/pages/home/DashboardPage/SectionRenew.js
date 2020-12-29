@@ -1,5 +1,5 @@
 import React from "react";
-import Card from "react-bootstrap/Card";
+import { Card } from "react-bootstrap";
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 
@@ -24,14 +24,5 @@ const SectionRenew = () => {
     </Card>
   );
 };
-
-const mapStateToProps = state => ({
-  // TODO: should be converted in api call, we're using kebab-case for bundles everywhere,
-  // should be refactored later
-  // TODO: should be converted in api call
-  currentUser: state.auth.currentUser
-});
-
-const mapDispatchToProps = {};
 
 export default SectionRenew;

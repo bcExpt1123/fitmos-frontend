@@ -1,27 +1,18 @@
-import React, { Component, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import Grid from "@material-ui/core/Grid";
+import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, Grid, Button }from "@material-ui/core";
 import {
-  $show
+  $show,
+  $cancel,
 } from "../../../modules/subscription/subscription";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
 import {
   $pageSize,
   $page,
-  $fetchIndex,
   $changeConditionValue,
-  $export
 } from "../../../modules/subscription/transaction";
 
 
@@ -51,6 +42,17 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "comment", numeric: false, disablePadding: false, label: "Comment" }
 ];
+const displayPaymentType = (type)=>{
+  switch(type){
+    case 0:
+      return "Paypal";
+    case 1:
+      return "Nmi Credit Card";
+    case 2:
+      return "Bank"
+  }
+  return '';
+}
 function SubscriptionDetail() {
   const classes = useStyles();
   const { id } = useParams();
@@ -58,7 +60,7 @@ function SubscriptionDetail() {
   useEffect(() => {
     dispatch($show(id));
     dispatch($changeConditionValue("subscription_id", id));
-  }, [id]);
+  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
   const subscription = useSelector(({ subscription }) => subscription.item);
   const transaction = useSelector(({ transaction }) => transaction);
   const meta = transaction.meta;
@@ -142,9 +144,9 @@ function SubscriptionDetail() {
                       <TableCell component="th" scope="row">
                         {row.id}
                       </TableCell>
-                      <TableCell align="left">{row.type==1?('PayPal'):('Nmi Credit Card')}</TableCell>
+                      <TableCell align="left">{displayPaymentType(row.type)}</TableCell>
                       <TableCell align="left">{row.created_at}</TableCell>
-                      <TableCell align="left">{row.total}</TableCell>
+                      <TableCell align="left">{parseFloat(row.total).toFixed(2)}</TableCell>
                       <TableCell align="left">{row.frequency}</TableCell>
                       <TableCell align="left">{row.status}</TableCell>
                       <TableCell align="left" style={{ padding: "0" }}>
@@ -192,6 +194,15 @@ function SubscriptionDetail() {
 }
 function SubHeaderSubscriptionDetail() {
   const subscription = useSelector(({ subscription }) => subscription.item);
+  const dispatch = useDispatch();
+  const handleCancel = ()=>{
+    if(window.confirm("Are you sure to cancel this subscription?")){
+      dispatch($cancel(subscription.id));
+      setTimeout(()=>{
+        dispatch($show(subscription.id));
+      },200);
+    }
+  }
   return (
     <>
       <div className="kt-subheader__main">
@@ -216,6 +227,14 @@ function SubHeaderSubscriptionDetail() {
 
       <div className="kt-subheader__toolbar">
         <div className="kt-subheader__wrapper">
+          {subscription && subscription.status === 'Active'&&
+            <Button
+              className="btn kt-subheader__btn-primary btn-primary"
+              onClick={handleCancel}
+            >
+              Cancel &nbsp;
+            </Button>
+          }
           <button className="btn btn-primary">
             {subscription && subscription.status}
           </button>

@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
+import {Button} from "react-bootstrap";
+import {Modal } from "react-bootstrap";
 import { Formik, Form, Field } from "formik";
 import FormGroup from "../components/FormGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
+import {Table} from "react-bootstrap";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
@@ -68,6 +68,8 @@ class EditWeight extends React.Component {
     this.getWeights();
   }
   async getWeights() {
+    const environment = process.env.NODE_ENV;
+    console.log(environment)
     try {
       const res = await http({
         method: "GET",
@@ -77,7 +79,9 @@ class EditWeight extends React.Component {
       let { data } = res;
       this.setState({ weights: data });
     } catch (e) {
-      this.props.deleteAuthAction();
+      if (e.response.status === 401) {
+        if(environment!=='development')this.props.deleteAuthAction();
+      }
       console.log(e);
     }
   }
@@ -206,7 +210,6 @@ class EditWeight extends React.Component {
                       htmlFor="date"
                       label={""}
                       focused={this.state.focused.date}
-                      touched={touched.date}
                       valid={Boolean(values.date && !errors.date)}
                     >
                       <DatePicker
@@ -272,7 +275,7 @@ class EditWeight extends React.Component {
                 )
               ) : (
                 <tr>
-                  <td colSpan="4">Sin pesas</td>
+                  <td colSpan="4">Sin mancuernas</td>
                 </tr>
               )}
             </tbody>

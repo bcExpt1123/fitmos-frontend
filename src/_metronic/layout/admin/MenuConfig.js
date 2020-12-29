@@ -36,6 +36,13 @@ export default {
         page: "admin/transactions"
       },
       {
+        title: "Bank Transfer Requests",
+        root: true,
+        icon: "flaticon2-checking",
+        can:["transactions"],
+        page: "admin/bank-transfer-requests"
+      },
+      {
         title: "Invoices",
         root: true,
         icon: "flaticon2-list",
@@ -47,7 +54,19 @@ export default {
         root: true,
         icon: "flaticon2-open-box",
         can:["coupons"],
-        page: "admin/coupons"
+        page: "admin/coupons",
+        submenu:[
+          {
+            title: "Coupon Code",
+            can:["coupons"],
+            page: "admin/coupons"    
+          },
+          {
+            title: "Link Code",
+            can:["coupons"],
+            page: "admin/link-coupons"    
+          }
+        ]
       },
       {
         title: "Subscription Manager",
@@ -69,6 +88,13 @@ export default {
         icon: "flaticon2-sort-alphabetically",
         can:["shortcodes"],
         page: "admin/shortcodes"
+      },
+      {
+        title: "Keywords",
+        root: true,
+        icon: "flaticon2-sort-alphabetically",
+        can:["shortcodes"],
+        page: "admin/keywords"
       },
       {
         title: "Benchmarks",
@@ -100,9 +126,23 @@ export default {
       {
         title: "Settings",
         root: true,
-        icon: "flaticon2-shopping-cart-1",
+        icon: "flaticon2-settings",
         can:["settings"],
         page: "admin/settings/cart"
+      },
+      {
+        title: "Surveys",
+        root: true,
+        icon: "flaticon2-search",
+        can:["survey"],
+        page: "admin/survey"
+      },
+      {
+        title: "Shop",
+        root: true,
+        icon: "flaticon2-shopping-cart-1",
+        can:["shop"],
+        page: "admin/companies"
       },
     ]
   }

@@ -1,0 +1,119 @@
+.profile-image{
+  margin-top: 20px;
+  .avatar{
+    display: flex;
+    justify-content: center;  
+    cursor: pointer;
+  }
+  .name{
+    margin-top: 20px;
+    .username{
+      font-size: 24px;
+      cursor: pointer;
+    }
+    div{
+      display: flex;
+      justify-content: center;    
+    }        
+    .level{
+      margin-top:10px;
+      a{
+        font-size:16px;
+        color:$basic-text-color;
+        opacity: 0.5;
+      }
+    }
+    .objective-label{
+      margin-top:40px;
+      font-size:21px;
+      cursor: pointer;
+    }
+    .objective-value{
+      margin-top:10px;
+      font-size:16px;
+      font-weight: 400;
+      color:$basic-text-color;
+      opacity: 0.5;
+      cursor: pointer;
+    }
+  }
+}
+.imc{
+  margin-top: 30px;
+  .col-4:first-child{
+    border-right: 2px solid rgba(51,51,51,0.6);
+    cursor: pointer;
+  }
+  .col-4:nth-child(2){
+    cursor: pointer;
+  }
+  .col-4:last-child{
+    border-left: 2px solid rgba(51,51,51,0.6);
+    cursor: pointer;
+  }
+  .label{
+    margin-top: 10px;
+    font-size: 16px;
+    text-align: center;
+  }
+  .value{
+    font-size:24px;
+    font-weight: 600;
+    text-align: center;
+    .unit{
+      font-size: 14px;
+    }
+  }
+}
+.workout{
+  margin-top: 40px;
+  &>h3{
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .progress-bar-wrapper{
+    .medal-image{
+      float:left;
+      width:48px;
+      img{
+        height: 32px;
+      }
+    }
+    .progress-bar-body{
+      span{
+        padding:0;
+      }
+      .progress{
+        margin-top: 5px;
+        height: 8px;
+        background-color: rgba(175,202,50,0.4);
+        .progress-bar{
+          background-color: #AFCA32;
+          opacity: 1!important;
+        }
+      }
+    }
+  }
+}
+.workout-progress{
+  margin-top: 30px;
+  .kt-widget26__content{
+    flex-direction: row-reverse;
+    .kt-widget26__number{
+      display: inline-block;
+      width: 50%;
+      font-size: 16px;
+      font-weight: 600;
+      color:rgba($color: $basic-text-color, $alpha: 0.5);
+      padding: 15px 0;
+      text-align: right;
+    }
+    .kt-widget26__desc{
+      display: inline-block;
+      width: 50%;
+      font-size: 24px;
+      font-weight: 600;
+      color:$basic-text-color;
+    }
+  }
+}

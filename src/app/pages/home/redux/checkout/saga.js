@@ -11,11 +11,12 @@ import {
   changeVoucher,
   canceledPayPal,
   errorPayPal,
-  checkoutInitial,
   reactivateSubscription,
   inside,
   outside,
   validCartId,
+  sendBankRequest,
+  done
 } from "./actions";
 import {
   onPayWithPayPal,
@@ -30,11 +31,8 @@ import { onPayWithNmi } from "./saga/nmi";
 import { trackError } from "../error/actions";
 import { addAlertMessage } from "../alert/actions";
 import { $findWorkoutSerive,$updateInterval} from "../../../../../modules/subscription/service";
-import { initialVoucher,validateVoucherSucceeded} from '../vouchers/actions'
+import { initialVoucher,validateVoucherSucceeded} from '../vouchers/actions';
 
-function* onCheckoutInitial() {
-  // get service, coupons,
-}
 function getPaymentTestMode() {
   return http({
     path: "subscriptions/checkout", // get paymentTest and createOrUpdate paypal plan
@@ -64,7 +62,7 @@ function findPaypalPlan(frequency, couponId) {
 }
 function* onChangePaymentProvider({ payload }) {
   yield put(setKeyValue({ key: "selectedPaymentProvider", value: payload }));
-  if (payload == "paypal") {
+  if (payload === "paypal") {
     const frequency = yield select(store => store.service.frequency);
     const vouchers = yield select(store => store.vouchers);
     const coupons = Object.values(vouchers);
@@ -87,7 +85,7 @@ function* onChangeVoucher() {
   const selectedPaymentProvider = yield select(
     store => store.checkout.selectedPaymentProvider
   );
-  if (selectedPaymentProvider == "paypal") {
+  if (selectedPaymentProvider === "paypal") {
     const frequency = yield select(store => store.service.frequency);
     const vouchers = yield select(store => store.vouchers);
     const coupons = Object.values(vouchers);
@@ -100,6 +98,31 @@ function* onChangeVoucher() {
         startTime: result.startTime
       };
       yield put(setKeyValue({ key: "paypal", value: paypal }));
+    } catch (error) {
+      yield put(trackError(error));
+    }
+  }
+  const paymentType = yield select(({service})=>service.type);
+  if(paymentType === 'bank'){
+    const frequency = yield select(store => store.service.frequency);
+    const vouchers = yield select(store => store.vouchers);
+    const coupons = Object.values(vouchers);
+    const serviceId = yield select(store => store.service.item.id);
+    let couponId;
+    if (coupons[0] && coupons[0].discount) couponId = coupons[0].id;
+    try {
+      const result = yield call(sendBankRequestApi,frequency,serviceId,couponId);
+      if(couponId){
+        yield put(addAlertMessage({
+          type: "success",
+          message: {id:"CheckoutPage.Bank.Add.Coupon"} 
+        }));    
+      }else{
+        yield put(addAlertMessage({
+          type: "success",
+          message: {id:"CheckoutPage.Bank.Remove.Coupon"} 
+        }));    
+      }
     } catch (error) {
       yield put(trackError(error));
     }
@@ -117,7 +140,7 @@ function subscriptionRenewal(id,frequency){
 function* onReactivateSubscription({payload}) {
   const currentUser = yield select(store => store.auth.currentUser);
   try {
-    const result = yield call(subscriptionRenewal, currentUser.customer.workoutSubscriptionId, payload.frequency);
+    yield call(subscriptionRenewal, currentUser.customer.workoutSubscriptionId, payload.frequency);
     yield put(addAlertMessage({
       type: "success",
       message: {id:"Subscription.Renewal.Success"} 
@@ -139,7 +162,7 @@ function checkoutInSide(frequency){
 }
 function* onCheckoutInSide({payload}){
   try {
-    const result = yield call(checkoutInSide, payload.activePlan);
+    yield call(checkoutInSide, payload.activePlan);
   }catch (error) {
     console.log(error);
     yield put(trackError(error));
@@ -153,7 +176,7 @@ function checkoutOutSide(){
 }
 function* onCheckoutOutSide(){
   try {
-    const result = yield call(checkoutOutSide);
+    yield call(checkoutOutSide);
   }catch (error) {
     console.log(error);
     yield put(trackError(error));
@@ -179,6 +202,27 @@ function* onValidCartId({payload}){
     yield put(trackError(error));
   }
 }
+function sendBankRequestApi(frequency,service_id,coupon_id){
+  return http({
+    path: "bank/checkout", // get paymentTest and createOrUpdate paypal plan
+    method: "POST",
+    data: {
+      frequency,
+      service_id,
+      coupon_id
+    }
+  }).then(response => response.data);  
+}
+function* onSendBankRequest({payload}){
+  const serviceId = yield select(store => store.service.item.id);
+  try {
+    const result = yield call(sendBankRequestApi,payload,serviceId,reactLocalStorage.get('publicCouponId'));
+    yield put(done());
+    
+  }catch (error) {
+    yield put(trackError(error));
+  }
+}
 export default function* rootSaga() {
   yield all([
     takeLeading(payWithPayPal, onPayWithPayPal),
@@ -194,5 +238,6 @@ export default function* rootSaga() {
     takeLeading(inside,onCheckoutInSide),
     takeLeading(outside,onCheckoutOutSide),
     takeLeading(validCartId,onValidCartId),
+    takeLeading(sendBankRequest, onSendBankRequest),
   ]);
 }

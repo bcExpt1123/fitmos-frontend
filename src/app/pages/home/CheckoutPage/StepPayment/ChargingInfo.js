@@ -28,7 +28,7 @@ const ChargingInfo = ({
             price: (
               <FormattedPrice
                 currency={currency}
-                price={pricing.initialPrices.total}
+                price={0}
               />
             ),
             interval: (

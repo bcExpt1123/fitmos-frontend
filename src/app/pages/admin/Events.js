@@ -1,23 +1,13 @@
-import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField, colors }from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
@@ -47,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -59,19 +49,26 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "action", numeric: false, disablePadding: false, label: "Actions" }
 ];
-function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
-  const rowsPerPage = meta.pageSize;
-  const dispatch = useDispatch();
+  const dispatch=useDispatch();
+  const event = useSelector(({ event }) => event);
+  const events = event.data;
+  const meta = event.meta;
+  useEffect(() => {
+    dispatch($fetchIndex())
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+
+  const page = event.meta.page - 1;
+  const rowsPerPage = event.meta.pageSize;
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, event.meta.total - page * rowsPerPage);
   const handleChangePage = (event, newPage) => {
-    $page(newPage + 1);
+    dispatch($page(newPage + 1));
   };
 
   const handleChangeRowsPerPage = event => {
-    $pageSize(parseInt(event.target.value, 10));
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
   const actionDisable = id => event => {
     dispatch($disable(id));
@@ -80,7 +77,7 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
     dispatch($restore(id));
   };
   const actionDelete = id => event => {
-    if (window.confirm("Are you sure to delete this item?")) $delete(id);
+    if (window.confirm("Are you sure to delete this item?")) dispatch($delete(id));
   };
   return (
     <>
@@ -118,8 +115,8 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Publish",
-                            "btn-label-brand": row.status == "Draft"
+                            "btn-label-success": row.status === "Publish",
+                            "btn-label-brand": row.status === "Draft"
                           }
                         )}
                       >
@@ -127,7 +124,7 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
                       </span>
                     </TableCell>
                     <TableCell align="left" style={{ padding: "0" }}>
-                      {row.status == "Publish" ? (
+                      {row.status === "Publish" ? (
                         <>
                           <NavLink
                             className=""
@@ -208,41 +205,13 @@ function Main({ events, meta, $page, $pageSize, $disable, $restore, $delete }) {
     </>
   );
 }
-const mapStateToProps = state => ({
-  events: state.event.data,
-  meta: state.event.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-};
-const EventConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class EventWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <EventConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Events = injectIntl(connect(null, mapDispatchToProps1)(EventWrapper));
-function Sub({ searchCondition, $changeConditionValue }) {
+const Events = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ event }) => event.searchCondition);
   const handleChange = name => event => {
-    $changeConditionValue(name, event.target.value);
+    dispatch($changeConditionValue(name, event.target.value));
   };
   return (
     <>
@@ -292,13 +261,5 @@ function Sub({ searchCondition, $changeConditionValue }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.event.searchCondition
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue
-};
-const SubHeaderEvents = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+const SubHeaderEvents = injectIntl(Sub);
 export { Events, SubHeaderEvents };

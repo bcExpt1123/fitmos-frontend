@@ -1,0 +1,340 @@
+#timer-clock{
+  height: 335px;
+  border-radius: 10px;
+  margin: 10px 0;
+  .buttons{
+    margin-bottom: 20px;
+  }
+  .center{
+    margin-right: auto;
+    margin-left: auto;        
+  }
+  .timer--button-start1 {
+    background-color:#51ab80;
+    border:1px solid #51ab80;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:16px;
+    font-weight: 600;
+    padding: 6px 20px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, #0f9956 5%, #51ab80 100%);
+      background-color:#0f9956;
+    }
+  }
+  .timer--button-pause1 {
+    background-color:rgba($color: #eb5757, $alpha: 0.5);
+    border:1px solid rgba($color: #eb5757, $alpha: 0.5);
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:16px;
+    font-weight: 600;
+    padding: 6px 18.05px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, rgba($color: #f53b3b, $alpha: 0.5) 5%, rgba($color: #eb5757, $alpha: 0.5) 100%);
+      background-color:rgba($color: #f53b3b, $alpha: 0.5);
+    }
+  }
+  .timer--button-resume1 {
+    background-color:rgba($color: #eb5757, $alpha: 0.5);
+    border:1px solid rgba($color: #eb5757, $alpha: 0.5);
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:16px;
+    font-weight: 600;
+    padding: 6px 22.3px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover{
+      background:linear-gradient(to bottom, rgba($color: #f53b3b, $alpha: 0.5) 5%, rgba($color: #eb5757, $alpha: 0.5) 100%);
+      background-color:rgba($color: #f53b3b, $alpha: 0.5);
+    }
+  }
+  .timer--button-restart1 {
+    margin-left:30px;
+    background-color:#888885;
+    border:1px solid #888885;
+    display:inline-block;
+    cursor:pointer;
+    color:#ffffff;
+    font-size:16px;
+    font-weight: 600;
+    padding: 6px 12.55px;
+    text-decoration:none;
+    text-shadow:-1px 0px 0px #333333;
+    &:hover {
+      background:linear-gradient(to bottom, #787865 5%, #888885 100%);
+      background-color:#c2c2be;
+    }
+  }
+  >div1{
+    position: relative;
+    .timer--button1{
+      position: absolute;
+      bottom: 16px;
+      &:active{
+        bottom: 15px;
+      }  
+    }
+  }
+  .timer--button{
+    color:white;
+  }
+  .b--white1 {
+    border-color: #fff;
+  }
+  .ba {
+    border-style: solid;
+    border-width: 1px;
+  }  
+  .bw21 {
+    border-width: .25rem;
+  }  
+  .amrap-timer-start-height{
+    height:85px;
+  }
+  .tabata-timer-start-height{
+    height:52px;
+  }
+  .tabata-restart-height{
+    height:106px;
+  }
+  .timer--settingField{
+    font-size:20px;
+  }
+}
+.bg-black{
+  background-color: $basic-text-color;
+  color:#ffffff;
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.flex{
+  display: flex;
+}
+.tc{
+  text-align: center;  
+}
+.items-center {
+  align-items: center;
+}
+.flex-auto {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+}
+.justify-center {
+  justify-content: center;
+}
+.timer--settingField{
+  label{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    align-items: center;    
+  }
+}
+.timer--clock{
+  font-weight: 900;
+  span.red{
+    display: inline-block;
+    vertical-align: middle;
+    .top{
+      vertical-align: top;
+      display: inline-block;
+    }
+    .middle{
+      font-style: italic;
+      vertical-align: middle;
+    }
+    .bottom{
+      vertical-align: bottom;
+      display: inline-block;
+    }
+  }
+}
+.restart-modal{
+  .title{
+    font-size:24px;
+    text-align: center;
+  }
+  .restart-yes{
+    background-color: #1A7998!important;
+    border: 1px solid #1A7998;
+    border-radius: 3px;
+    margin-right: auto;
+    width: 69px;
+    font-size: 16px;
+    color:white;
+    padding:11px 0;
+  }
+  .restart-no{
+    border-radius: 3px;
+    border: 1px solid #B9B7B7;
+    margin-left: auto;    
+    width: 69px;
+    font-size: 16px;
+    padding:11px 0;
+  }
+}
+@media screen and (min-width: 1640px){
+  .timer--button-start, .timer--input {
+    width: 10rem !important;
+  }
+}
+@media only screen and (min-width: 769px){
+  .timer--clock {
+    font-size: 132px;
+    span.red{
+      font-size: 90px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -30px;        
+      }
+      .middle{
+        font-size: 132px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 25px;
+  }
+}
+@media only screen and (min-width: 1024px){
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 30px;
+  }
+}
+@media only screen and (max-width: 768px){
+  .timer--clock {
+    font-size: 96px;
+    span.red{
+      font-size: 60px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -25px;        
+      }
+      .middle{
+        font-size: 96px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+  .timer--label, .timer--input, .timer--button, .timer--header {
+    font-size: 20px;
+  }
+  #timer-clock{
+    .timer--settingField{
+      font-size:14px;
+    }
+  }
+}
+@media only screen and (max-width: 568px){
+  .timer--clock {
+    font-size: 88px;
+    span.red{
+      font-size: 55px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 88px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+  .amrap-timer-start-height{
+    height:46px!important;
+  }
+  .tabata-timer-start-height{
+    height:22px!important;
+  }
+}
+
+@media only screen and (max-width: 468px){
+  .timer--clock {
+    font-size: 83px;
+    span.red{
+      font-size: 52px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 83px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 448px){
+  .timer--clock {
+    font-size: 80px;
+    span.red{
+      font-size: 47px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 80px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 408px){
+  .timer--clock {
+    font-size: 70px;
+    span.red{
+      font-size: 42px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -20px;        
+      }
+      .middle{
+        font-size: 70px;
+      }
+      .bottom{
+        margin-left: -20px;        
+      }
+    }
+  }
+}
+@media only screen and (max-width: 378px){
+  .timer--clock {
+    font-size: 60px;
+    span.red{
+      font-size: 38px;
+      margin-bottom: 10px;
+      .top{
+        margin-right: -10px;        
+      }
+      .middle{
+        font-size: 60px;
+      }
+      .bottom{
+        margin-left: -10px;        
+      }
+    }
+  }
+}

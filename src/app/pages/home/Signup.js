@@ -1,5 +1,7 @@
 /* eslint import/no-named-as-default: off */
 import React from "react";
+import * as qs from 'query-string';
+import { connect } from "react-redux";
 
 import NavBar from "./components/Signup/NavBar";
 import ProgressBar from "./components/Signup/ProgressBar";
@@ -11,17 +13,13 @@ import StepGoal from "./components/Signup/StepGoal";
 import StepInfo from "./components/Signup/StepInfo";
 import StepTrainingPlace from "./components/Signup/StepTrainingPlace";
 import StepRegisteration from "./components/Signup/StepRegisteration";
+import { setReferralVoucher, setPublicVoucher, setEmailInvitationVoucher } from "./redux/vouchers/actions";
 //import MetaTags from '../../components/MetaTags';
 import * as Cookies from "./services/storage";
 
 //import { getNavigation } from '../../navigation';
 import { withRouter } from "react-router";
 import "./assets/scss/theme/signup.scss";
-
-const preloadImage = url => {
-  const image = new Image();
-  image.src = url;
-};
 
 class SignupPage extends React.Component {
   state = {
@@ -43,6 +41,18 @@ class SignupPage extends React.Component {
     // Scroll to the top after changing step
     if (this.state.currentStep !== prevState.currentStep) {
       window.scrollTo(0, 0);
+    }
+  }
+  componentDidMount() {
+    const parsed = qs.parse(window.location.search);
+    if (parsed.referral) {
+      this.props.setReferralVoucher(parsed.referral);
+    }
+    if (parsed.codigo) {
+      this.props.setPublicVoucher(parsed.codigo);
+    }
+    if(parsed.ein){
+      this.props.setEmailInvitationVoucher(parsed.ein);
     }
   }
 
@@ -74,7 +84,6 @@ class SignupPage extends React.Component {
     const {
       gender,
       level,
-      place,
       goal,
       info: { birthday, weight, weightUnit, height, heightUnit }
     } = this.state;
@@ -151,5 +160,10 @@ class SignupPage extends React.Component {
     );
   }
 }
+export const mapDispatchToProps = {
+  setReferralVoucher,
+  setPublicVoucher,
+  setEmailInvitationVoucher,
+};
 
-export default withRouter(SignupPage);
+export default withRouter(connect(null, mapDispatchToProps)(SignupPage));

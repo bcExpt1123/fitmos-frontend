@@ -1,22 +1,21 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Card from "react-bootstrap/Card";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Button from "react-bootstrap/Button";
+import { useDispatch } from "react-redux";
+import { Card } from "react-bootstrap";
+import {Row} from "react-bootstrap";
+import {Col} from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import { connect } from "react-redux";
 import { NavLink } from "react-router-dom";
 import SectionNextLevel from "./SectionNextLevel";
-import SectionChangeLevel from "./SectionChangeLevel";
 import SectionChangeGoal from "./SectionChangeGoal";
 import SectionRenewal from "./SectionRenewal";
 import { http } from "../services/api";
+import { currentCustomerWeights } from "../services/convert";
 import { updateCustomerAttribute as updateWeightsAction } from "../redux/auth/actions";
 import { $resetPublished } from "../../../../modules/subscription/benchmark";
 
 const Subscription = ({ currentUser, updateWeightsAction }) => {
   const [showNext, setShowNext] = useState(false);
-  const [showChange, setShowChange] = useState(false);
   const [showChangeGoal, setShowChangeGoal] = useState(false);
   const [showRenewal, setShowRenewal] = useState(false);
 
@@ -24,15 +23,13 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
 
   const handleCloseNext = () => setShowNext(false);
   const handleShowNext = () => setShowNext(true);
-  const handleCloseChange = () => setShowChange(false);
-  const handleShowChange = () => setShowChange(true);
   const handleCloseChangeGoal = () => setShowChangeGoal(false);
   const handleShowChangeGoal = () => setShowChangeGoal(true);
   const handleShowRenewal = () => setShowRenewal(true);
   const handleCloseRenewal = () => setShowRenewal(false);
   const findObjective = (objective) => {
     let label;
-    if (objective == 'auto') {
+    if (objective === 'auto') {
       if (currentUser.customer.imc >= 25) objective = 'cardio';
       else if (currentUser.customer.imc <= 18.5) objective = 'strong';
       else objective = 'fit';
@@ -45,9 +42,10 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
         label = 'Ponerte en forma';
         break;
       case 'strong':
-        label = currentUser.customer.gender == "Male"
+        label = currentUser.customer.gender === "Male"
           ? "Ganar musculatura" : "Tonificar"
         break;
+      default:  
     }
     return label;
   }
@@ -64,14 +62,12 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
               )}
             </div>
           );
-          break;
         case 'Cancelled':
           return (
             <div style={{ color: "#c32121", fontWeight: 500 }}>
               Cancelado
             </div>
           )
-          break;
         case 'Active':
           if (currentUser.customer.services[1].expire_at && currentUser.customer.services[1].expire_at > 0) {
             return (
@@ -84,6 +80,7 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
             )
           }
           break;
+        default:
       }
       return (
         <div style={{ color: "transparent" }}>
@@ -99,8 +96,8 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
   }
   const handleClick = async event => {
     if (window.confirm("Por favor confirmar para hacer el cambio.")) {
-      const weights = currentUser.customer.weights=='con pesas'?'sin pesas':'con pesas';
-      const res = await http({
+      const weights = currentUser.customer.weights==='con pesas'?'sin pesas':'con pesas';
+      await http({
         method: "POST",
         app: "user",
         path: "customers/changeWeights",
@@ -165,7 +162,7 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
                     <Card.Title>
                       {findObjective(currentUser.customer.objective)}
                     </Card.Title>
-                    {currentUser.customer.objective == "auto" ? (
+                    {currentUser.customer.objective === "auto" ? (
                       <div>Recomendado segun IMC</div>
                     ) : (
                         <div style={{ color: "transparent" }}>
@@ -180,7 +177,7 @@ const Subscription = ({ currentUser, updateWeightsAction }) => {
                 <Col xs={12} md={6}>
                   <div className="sub-body">
                     <div className="sub-head">Entrenando</div>
-                    <Card.Title>{currentUser.customer.weights}</Card.Title>
+                    <Card.Title>{currentCustomerWeights(currentUser.customer.weights)}</Card.Title>
                     <br />
                     <Button
                       variant="alink"

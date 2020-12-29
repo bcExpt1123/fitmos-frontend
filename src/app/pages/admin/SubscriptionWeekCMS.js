@@ -1,15 +1,10 @@
-import React, { useEffect,useState } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
-import { makeStyles,useTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-import AppBar from '@material-ui/core/AppBar';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
+import { makeStyles, useTheme } from "@material-ui/styles";
+import { Paper, AppBar, Tabs, Tab,Typography } from "@material-ui/core";
 import SwipeableViews from 'react-swipeable-views';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import {
   $changeItem
@@ -88,7 +83,7 @@ function Sub({history,match}) {
       console.log('id not exist');
       console.log(match.params.id)
     }
-  }, []);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>

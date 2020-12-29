@@ -3,9 +3,6 @@ import {
   call,
   delay,
   put,
-  select,
-  spawn,
-  takeLatest,
   takeLeading
 } from "redux-saga/effects";
 //import { cid, analytics } from '@freeletics/web-package-tracking';
@@ -231,7 +228,7 @@ function* onLogIn({ type, payload }) {
   const result = yield call(requestFunction, { payload });
   const { response, error } = result;
   if (error) {
-    if(error == registerError){
+    if(error === registerError){
       yield put(logInFailed());
       payload.history.push('/signup');
       return;
@@ -267,7 +264,7 @@ function* onLogIn({ type, payload }) {
     })
   );
   yield put(initialAlerts());
-  if (user.type == "admin") {
+  if (user.type === "admin") {
     yield put(actions.setLanguage("en"));
   } else {
     yield put(actions.setLanguage("es"));

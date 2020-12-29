@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import { put, call, takeLatest, takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
@@ -22,6 +21,8 @@ export const actionTypes = {
   CUSTOMER_EXPORT_REQUEST: "CUSTOMER_EXPORT_REQUEST",
   CUSTOMER_EXPORT_START: "CUSTOMER_EXPORT_START",
   CUSTOMER_EXPORT_END: "CUSTOMER_EXPORT_END",
+  CUSTOMER_DASHBOARD_EXPORT_REQUEST: "CUSTOMER_DASHBOARD_EXPORT_REQUEST",
+  CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST:"CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST",
   //for pagination
   CUSTOMER_INDEX_META: "CUSTOMER_INDEX_META",
   CUSTOMER_PAGE_CHANGED: "CUSTOMER_PAGE_CHANGED",
@@ -126,6 +127,12 @@ export function $changeConditionValue(name, value) {
 export function $export(searchCondition) {
   return { type: actionTypes.CUSTOMER_EXPORT_REQUEST,searchCondition};
 }
+export function $exportReport(from,to) {
+  return { type: actionTypes.CUSTOMER_DASHBOARD_EXPORT_REQUEST,from,to};
+}
+export function $exportReportUsage(from, to){
+  return { type: actionTypes.CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST,from,to};
+}
 export function $disable(id) {
   return { type: actionTypes.CUSTOMER_ACTION_REQUEST, action: "disable", id };
 }
@@ -158,7 +165,7 @@ function* fetchCustomer() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -180,7 +187,7 @@ function* searchCustomer({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -208,10 +215,10 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(customerActionRequest, action, id);
+    yield call(customerActionRequest, action, id);
     yield put({ type: actionTypes.CUSTOMER_INDEX_REQUEST });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -243,7 +250,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.CUSTOMER_SET_ITEM, item: result });
     else yield put({ type: actionTypes.CUSTOMER_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CUSTOMER_INDEX_FAILURE, error: e.message });
@@ -275,6 +282,44 @@ function* exportCustomers({searchCondition}){
     yield put({type:actionTypes.CUSTOMER_EXPORT_END});
   }
 }
+function downloadReport(path,from,to, name){
+  fileDownload({path}).then((response)=>{
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', name); //or any other extension
+    document.body.appendChild(link);
+    link.click();
+  });
+}
+function* exportReport({from,to}){
+  const path = `reports/export-customers?${serializeQuery({
+    from,
+    to
+  })}`;
+  yield put({type:actionTypes.CUSTOMER_EXPORT_START});
+  try{
+    yield call(downloadReport,path,from,to,'Report-'+from+'-'+to+'.xlsx');
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }catch(e){
+    console.log(e)
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }
+}
+function* exportReportUsage({from,to}){
+  const path = `reports/export-usage?${serializeQuery({
+    from,
+    to
+  })}`;
+  yield put({type:actionTypes.CUSTOMER_EXPORT_START});
+  try{
+    yield call(downloadReport,path,from,to,'Report-Usage-'+from+'-'+to+'.xlsx');
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }catch(e){
+    console.log(e)
+    yield put({type:actionTypes.CUSTOMER_EXPORT_END});
+  }
+}
 export function* saga() {
   yield takeLatest(actionTypes.CUSTOMER_INDEX_REQUEST, fetchCustomer);
   yield takeLatest(actionTypes.CUSTOMER_PAGE_CHANGED, changePage);
@@ -283,4 +328,6 @@ export function* saga() {
   yield takeLatest(actionTypes.CUSTOMER_ACTION_REQUEST, callAction);
   yield takeLatest(actionTypes.CUSTOMER_CHANGE_ITEM, changeItem);
   yield takeLeading(actionTypes.CUSTOMER_EXPORT_REQUEST, exportCustomers);
+  yield takeLeading(actionTypes.CUSTOMER_DASHBOARD_EXPORT_REQUEST,exportReport);
+  yield takeLeading(actionTypes.CUSTOMER_DASHBOARD_EXPORT_USAGE_REQUEST,exportReportUsage);
 }

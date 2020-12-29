@@ -1,16 +1,14 @@
 import React, { useState,useEffect } from "react";
-import Table from "react-bootstrap/Table";
-import Button from "react-bootstrap/Button";
 import { useDispatch,useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import Modal from "react-bootstrap/Modal";
+import {Modal,Table, Button } from "react-bootstrap";
 
-import NavBar from "../../components/NavBar";
-import Footer from "../../components/Footer";
-import SectionCancelSubscription from "../../SectionCancelSubscription";
+import SectionCancelSubscription from "../../sections/SectionCancelSubscription";
 import SectionRenewal from "../../DashboardPage/SectionRenewal";
 import SectionCreditCard from "./SectionCreditCard";
+import SectionCancelledConfirm from "./SectionCancelledConfirm";
 import { $fetchIndex } from "../../../../../modules/subscription/tocken";
+import { $cancelActionCompleted } from "../../../../../modules/subscription/subscription";
 import "../../assets/scss/theme/style.scss";
 import "../../assets/scss/theme/mbr-additional.css";
 import "../../assets/scss/dropdown/style.css";
@@ -21,9 +19,10 @@ const SubscriptionsPage = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($fetchIndex());
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const items = useSelector(({ tocken }) => tocken.items);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
+  const cancelledCompleted = useSelector(({ subscription }) => subscription.cancelled.completed);
   const [showCancel, setShowCancel] = useState(false);
   const [showRenewal, setShowRenewal] = useState(false);
   const [showPayment, setShowPayment] = useState(false);
@@ -31,7 +30,7 @@ const SubscriptionsPage = () => {
   const handleCloseCancel = () => setShowCancel(false);
   const handleShowCancel = () => setShowCancel(true);
   const handleShowRenewal = () => {
-    if(items == null || items.length==0){
+    if(items === null || items.length===0){
       setShowPayment(true);
     }else{
       setShowRenewal(true);
@@ -42,8 +41,14 @@ const SubscriptionsPage = () => {
     setShowCredit(true);
     setShowPayment(false);
   }
-  const handleCloseCredit = ()=>setShowCredit(false);
+  const handleCloseCredit = ()=>{
+    setShowCredit(false);
+    setTimeout(()=>{setShowRenewal(true);},300);
+  }
   const handleCloseRenewal = () => setShowRenewal(false);
+  const handleCloseCancelledConfirm = ()=>{
+    dispatch($cancelActionCompleted());
+  }
   const renderStatus = (subscription)=>{
     let status = '';
     switch(subscription.status){
@@ -60,6 +65,8 @@ const SubscriptionsPage = () => {
       case 'Cancelled':
         status = 'Cancelado';
       break;
+      default:
+        status = 'Activo';
     }
     return status;
   }
@@ -74,44 +81,32 @@ const SubscriptionsPage = () => {
       break;
       case 'Cancelled':
       break;
+      default:
     }
     return '';
   }
   const renderAction = (subscription)=>{
     switch(subscription.status){
       case 'Active':
-        if(subscription.paid){
-          if(subscription.end_date){
-            return (
-              <>
-                <button className={"button renew"} onClick={handleShowRenewal}>
-                  Reactivar
-                </button>
-              </>
-            )
-            }else{
-            return (
-              <>
-                <button className={"button renew"} onClick={handleShowRenewal}>
-                  Actualizar
-                </button>
-                -
-                <Button variant="cancel" onClick={handleShowCancel}>Cancelar</Button>
-              </>
-            )
-          }
-        }else{
+        if(subscription.end_date){
           return (
-            <NavLink
-              to={'/pricing'}
-              className={"button renew"}
-              exact
-            >
-              Renovar
-            </NavLink>
+            <>
+              <button className={"button renew"} onClick={handleShowRenewal}>
+                Reactivar
+              </button>
+            </>
+          )
+          }else{
+          return (
+            <>
+              <button className={"button renew"} onClick={handleShowRenewal}>
+                Actualizar
+              </button>
+              -
+              <Button variant="cancel" onClick={handleShowCancel}>Cancelar</Button>
+            </>
           )
         }
-      break;
       default:
         return (
           <NavLink
@@ -140,6 +135,7 @@ const SubscriptionsPage = () => {
       case 'Cancelled':
         className = 'red';
       break;
+      default:
     }
     return className;
   }
@@ -247,6 +243,7 @@ const SubscriptionsPage = () => {
     <SectionCancelSubscription  handleClose={handleCloseCancel} show={showCancel}  credit={false}/>
     <SectionRenewal handleClose={handleCloseRenewal} show={showRenewal} />
     <SectionCreditCard handleClose={handleCloseCredit} show={showCredit} />
+    <SectionCancelledConfirm  handleClose={handleCloseCancelledConfirm} show={cancelledCompleted}/>
   </>)
 };
 

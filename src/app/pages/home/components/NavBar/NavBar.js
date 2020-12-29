@@ -5,19 +5,20 @@ import Avatar from "../Avatar";
 import Icon from "../Icon";
 import Logo from "../Logo";
 import CookieConsent from "../CookieConsent";
-import Navbar from "react-bootstrap/Navbar";
-import Container from "react-bootstrap/Container";
+import { Navbar, Container } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import * as qs from 'query-string';
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
 import { withRouter } from "react-router";
 
 import {
-  logOut as logOutAction,
   deleteAuthData as deleteAuthAction,
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
+import { start } from "../../redux/checkout/actions";
+import ProofButton from "../../components/ProofButton";
+import { $changeItem } from "../../../../../modules/subscription/service";
 
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
@@ -53,6 +54,7 @@ class NavBarVariantFull extends React.Component {
       //console.log(parsed.coupon);
       this.props.setPrivateVoucher(parsed.coupon);
     }
+    if(this.props.serviceItem == null)this.props.$changeItem(1);
   }
 
   toggleisDrawerOpen = () => {
@@ -66,10 +68,7 @@ class NavBarVariantFull extends React.Component {
     //const navbarClassnames = "navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm transparent ";
     const navbarClassnames =
       " align-items-center navbar-fixed-top navbar-toggleable-sm ";
-    const { currentUser, logOut, hideOn, transparent, isScroll } = this.props;
-    const hasSubscription = currentUser
-      ? currentUser.has_active_workout_subscription
-      : false;
+    const { currentUser, transparent, isScroll } = this.props;
     return (
       <>
         <div style={{ textAlign: 'center', fontSize: '12px', padding: '0px', color: 'brown', position: 'fixed', zIndex: '1000', width: '100%', background: 'white',display:'none' }}>
@@ -89,20 +88,22 @@ class NavBarVariantFull extends React.Component {
           onToggle={this.toggleisDrawerOpen}
         >
           <Container>
-            <Navbar.Toggle
-              aria-controls="responsive-navbar-nav"
-              className={"navbar-toggler-right"}
-              children={
-                <div className="hamburger">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              }
-            />
-            {this.props.checkout&&(
-              <button type="button" className={"back-button"} onClick={() => this.props.history.goBack()}>
+            {(this.props.checkout===undefined && this.props.checkout !== true)&&
+              <Navbar.Toggle
+                aria-controls="responsive-navbar-nav"
+                className={"navbar-toggler-right"}
+                children={
+                  <div className="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                  </div>
+                }
+              />
+            }
+            {(this.props.checkout || window.location.pathname === "/pricing" && this.props.currentUser && this.props.currentUser.has_active_workout_subscription && (this.props.bankRenewal || true)) &&(
+              <button type="button" className={"back-button"} onClick={() => {this.props.start();this.props.history.goBack()}}>
                 <Icon name="arrowLeft" className="arrow-left" />
               </button>
             )}
@@ -113,11 +114,11 @@ class NavBarVariantFull extends React.Component {
                 </span>
               </div>
             </div>
-            {(this.props.checkout==undefined && this.props.checkout != true)&&(
+            {(this.props.checkout===undefined && this.props.checkout !== true)&&(
               <Navbar.Collapse id="responsive-navbar-nav">
                 {currentUser ? (
                   <>
-                    {currentUser.has_workout_subscription?(
+                    {currentUser.has_workout_subscription && false?(
                       <>
                         <ul
                           className="mr-auto navbar-nav nav-dropdown"
@@ -170,16 +171,30 @@ class NavBarVariantFull extends React.Component {
                         className="navbar-nav nav-dropdown"
                         data-app-modern-menu="true"
                       >
-                        <li className="nav-item">
-                          <NavLink
-                            to="/logout"
-                            className={"nav-link link text-white display-4"}
-                            activeClassName="active"
-                            exact
-                          >
-                            Cerrar Sesión
-                          </NavLink>
-                        </li>
+                        {
+                          (this.props.currentUser && this.props.currentUser.has_active_workout_subscription && (this.props.bankRenewal || true))?
+                          <li className="nav-item">
+                            <NavLink
+                              to="/profile"
+                              className={"nav-link link text-white display-4"}
+                              activeClassName="active"
+                              exact
+                            >
+                              Ir a mi cuenta
+                            </NavLink>
+                          </li>
+                        :
+                          <li className="nav-item">
+                            <NavLink
+                              to="/logout"
+                              className={"nav-link link text-white display-4"}
+                              activeClassName="active"
+                              exact
+                            >
+                              Cerrar Sesión
+                            </NavLink>
+                          </li>
+                        }
                       </ul>
                     )}
                   </>
@@ -214,10 +229,10 @@ class NavBarVariantFull extends React.Component {
                       <div className="navbar-buttons mbr-section-btn">
                         <NavLink
                           to="/signup"
-                          className={"btn btn-sm btn-primary display-4 fs-btn"}
+                          className={"btn btn-sm btn-primary display-4 fs-home-btn"}
                           exact
                         >
-                          Comenzar
+                          <ProofButton/>
                         </NavLink>
                       </div>
                       <div className="navbar-buttons mbr-section-btn  d-none d-md-block">
@@ -250,7 +265,7 @@ const NavBarWrapper = ({ ...props }) => {
 
   useScrollPosition(
     ({ prevPos, currPos }) => {
-      const isShow = currPos.y == 0;
+      const isShow = currPos.y === 0;
       if (isShow !== hideOnNavbar && props.isScroll!==false) setHideOnNavbar(isShow);
     },
     [hideOnNavbar],
@@ -279,13 +294,17 @@ const NavBarWrapper = ({ ...props }) => {
 
 export const mapStateToProps = state => ({
   currentUser: state.auth.currentUser,
-  expires_at: state.auth.expires_at
+  expires_at: state.auth.expires_at,
+  serviceItem: state.service.item,
+  bankRenewal:state.checkout.bank.renewal,
 });
 
 export const mapDispatchToProps = {
   deleteAuthAction: deleteAuthAction,
   regenerateAuthAction,
-  setPrivateVoucher
+  setPrivateVoucher,
+  $changeItem,
+  start
 };
 
 export default withRouter(NavBarWrapper);

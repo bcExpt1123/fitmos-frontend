@@ -1,6 +1,6 @@
-import { all, call, put, select, spawn, takeLatest } from "redux-saga/effects";
+import { all, call, put, takeLatest } from "redux-saga/effects";
 //import { cid, analytics, GATracker } from '@freeletics/web-package-tracking';
-import Cookie from "js-cookie";
+//import Cookie from "js-cookie";
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { http } from "../../services/api";
 import apiErrorMatcher from "../../../../../lib/apiErrorMatcher";
@@ -15,11 +15,11 @@ import {
   registerWithPassword,
   registerWithFacebook,
   registerWithGoogle,
-  setStep
 } from "./actions";
 import { addAlertMessage } from "../alert/actions";
 import { signInUser } from "../auth/actions";
 import { trackError } from "../error/actions";
+import { start } from "../checkout/actions";
 //import { grantMarketingConsent } from '../marketingConsent/actions';
 
 /* Common functions */
@@ -88,18 +88,18 @@ const getApiErrorMessage = error => {
   const errors =
     error && error.response ? error.response.data.errors : undefined;
   const result = mapApiErrors(errors);
-  if (result.id == "RegistrationForm.Error.Api.error") {
+  if (result.id === "RegistrationForm.Error.Api.error") {
     if (
       errors &&
       errors.email &&
-      errors.email[0] == "The email has already been taken."
+      errors.email[0] === "The email has already been taken."
     )
       return { id: "RegistrationForm.Error.Api.error.email.taken" };
   }
   return result;
 };
 
-const getGenderFromAthleteProfile = () => {
+/*const getGenderFromAthleteProfile = () => {
   try {
     const cookie = Cookie.get("athlete_profile");
     const athleteProfile = cookie && JSON.parse(cookie);
@@ -125,7 +125,7 @@ const createPersonalizedTrainingPlan = (slug, idToken = undefined) =>
     app: "bodyweight",
     path: `/v5/coach/training_plans/${slug}/personalized_plans.json`,
     authToken: idToken
-  });
+  });*/
 
 /* Password */
 
@@ -147,7 +147,8 @@ const passwordRequest = ({
   weightUnit,
   height,
   heightUnit,
-  couponCode
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -173,6 +174,7 @@ const passwordRequest = ({
       platform_source: "web",
       application_source: applicationSource,
       couponCode,
+      invitationEmail,
       //      },
       return_to: returnTo,
       referral_id: referralId
@@ -218,6 +220,7 @@ const passwordRequest = ({
 function* onRegisterWithPassword({ payload }) {
   try {
     const response = yield call(passwordRequest, payload);
+    yield put(start());
     return { response };
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -240,7 +243,8 @@ const facebookRequest = ({
   weightUnit,
   height,
   heightUnit,
-  couponCode
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -262,6 +266,7 @@ const facebookRequest = ({
       terms_acceptance: true,
       platform_source: "web",
       couponCode,
+      invitationEmail,
       application_source: applicationSource,
       //      },
       return_to: returnTo,
@@ -337,7 +342,10 @@ function* onRegisterWithFacebook({ payload }) {
   }
 
   let response;
-  const couponCode = reactLocalStorage.get('publicCoupon');
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
   //const locale = yield select((store) => store.i18n.lang);
   //const gender = getGenderFromAthleteProfile();
   try {
@@ -353,7 +361,8 @@ function* onRegisterWithFacebook({ payload }) {
       weightUnit,
       height,
       heightUnit,
-      couponCode
+      couponCode,
+      invitationEmail
     });
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -379,7 +388,9 @@ const googleRequest = ({
   weight,
   weightUnit,
   height,
-  heightUnit
+  heightUnit,
+  couponCode,
+  invitationEmail
 }) =>
   http({
     method: "POST",
@@ -404,6 +415,8 @@ const googleRequest = ({
       terms_acceptance: true,
       platform_source: "web",
       application_source: applicationSource,
+      couponCode,
+      invitationEmail,
       //      },
       return_to: returnTo,
       referral_id: referralId
@@ -438,7 +451,11 @@ function* onRegisterWithGoogle({ payload }) {
   } catch (error) {
     return { error: getGoogleErrorMessage(error) };
   }
-  const couponCode = reactLocalStorage.get('publicCoupon');
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
+  payload.invitationEmail = invitationEmail;
   let response;
   try {
     response = yield call(googleRequest, {
@@ -453,7 +470,8 @@ function* onRegisterWithGoogle({ payload }) {
       weightUnit,
       height,
       heightUnit,
-      couponCode
+      couponCode,
+      invitationEmail
     });
   } catch (error) {
     return { error: getApiErrorMessage(error) };
@@ -480,7 +498,7 @@ const registrationTypes = {
   }
 };
 
-function* getDataFromCookie(name, callback) {
+/*function* getDataFromCookie(name, callback) {
   try {
     const value = yield call([Cookie, "get"], name);
     if (value) {
@@ -490,20 +508,24 @@ function* getDataFromCookie(name, callback) {
   } catch (error) {
     yield put(trackError(error));
   }
-}
+}*/
 
 function* onRegister({ type, payload }) {
-  const locale = yield select(store => store.i18n.lang);
+  //const locale = yield select(store => store.i18n.lang);
 
   yield put(registrationRequested());
   //yield put(grantMarketingConsent());
 
   // Extract provider and request function from action type
-  const { provider, requestFunction, trackingProvider } = registrationTypes[
+  const { provider, requestFunction } = registrationTypes[
     type
   ];
-  const couponCode = reactLocalStorage.get('publicCoupon');
-  payload.couponCode = couponCode;
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
+  if(couponCode)payload.couponCode = couponCode;
+  if(invitationEmail)payload.invitationEmail = invitationEmail;
   try {
     const result = yield call(requestFunction, { payload });
     const { response, error } = result;
@@ -517,7 +539,6 @@ function* onRegister({ type, payload }) {
     const { user, authentication } = response.data;
 
     const standardAuthentication = true; //authentication.audience === 'standard';
-    const idToken = authentication.id_token;
 
     yield put(
       registrationSucceeded({
@@ -531,6 +552,10 @@ function* onRegister({ type, payload }) {
       if(couponCode){
         reactLocalStorage.set('publicCouponId', user.customer.coupon_id);
         reactLocalStorage.remove('publicCoupon');
+      }
+      const invitationEmail = reactLocalStorage.get('invitationEmail');
+      if(invitationEmail){
+        reactLocalStorage.remove('invitationEmail');
       }
     }  
     if (standardAuthentication) {
@@ -567,7 +592,7 @@ function* onRegister({ type, payload }) {
     // Switch to 2nd step
     // If user is fully authenthicated just redirect to desired page
     if (standardAuthentication) {
-      const { returnTo } = payload;
+      //const { returnTo } = payload;
       // redirect to pricing page or customer dashboard
     } else {
       //yield put(setStep(REGISTRATION_STEPS.CONFIRMATION));

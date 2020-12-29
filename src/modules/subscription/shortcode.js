@@ -1,14 +1,10 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLatest,
-  takeEvery,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -32,6 +28,10 @@ export const actionTypes = {
   SHORTCODE_SET_ITEM_VALUE: "SHORTCODE_SET_ITEM_VALUE",
   SHORTCODE_CHANGE_SAVE_STATUS: "SHORTCODE_CHANGE_SAVE_STATUS",
   SHORTCODE_SET_ITEM_ERROR: "SHORTCODE_SET_ITEM_ERROR",
+  SHORTCODE_SET_LIST: "SHORTCODE_SET_LIST",
+  SHORTCODE_DELETE_LIST: "SHORTCODE_DELETE_LIST",
+  SHORTCODE_UPDATE_LIST: "SHORTCODE_UPDATE_LIST",
+  SHORTCODE_UPLOAD_VIDEO: "SHORTCODE_UPLOAD_VIDEO",
   //for pagination
   SHORTCODE_INDEX_META: "SHORTCODE_INDEX_META",
   SHORTCODE_PAGE_CHANGED: "SHORTCODE_PAGE_CHANGED",
@@ -52,6 +52,7 @@ const initialState = {
   item: null,
   updatedItem: null,
   action: "",
+  all:false,
   searchCondition: {
     search: ""
   },
@@ -66,7 +67,7 @@ export const reducer = persistReducer(
   {
     storage,
     key: "shortcodes",
-    whitelist: []
+    whitelist: ['all']
   },
   (state = initialState, action) => {
     const clonedErrors = Object.assign({}, state.errors);
@@ -107,7 +108,14 @@ export const reducer = persistReducer(
       case actionTypes.SHORTCODE_SET_ITEM_ERROR:
         const errors = { ...clonedErrors, [action.name]: action.value };
         return { ...state, errors };
-
+      case actionTypes.SHORTCODE_SET_LIST:
+        return {...state,all:action.list};  
+      case actionTypes.SHORTCODE_DELETE_LIST:
+        return {...state,all:false};  
+      case actionTypes.SHORTCODE_UPLOAD_VIDEO:
+        const clonedItem1 = Object.assign({}, state.item);
+        const item1 = { ...clonedItem1, uploadVideo: action.video };
+        return { ...state, item:item1 };
       default:
         return state;
     }
@@ -160,14 +168,28 @@ export function $changeItem(id) {
   return { type: actionTypes.SHORTCODE_CHANGE_ITEM, id: id };
 }
 export function $setNewItem() {
-  const item = {
-    id: null,
-    code: "",
-    name: "",
-    mail: "",
-    discount: "",
-    renewal: 0
-  };
+  let item;
+  if(process.env.REACT_APP_WORKOUT === "update"){
+    item = {
+      id: null,
+      name: "",
+      time: "",
+      level: 1,
+      alternate_a: "",
+      multipler_a:"",
+      alternate_b: "",
+      multipler_b:"",
+      instruction:"",
+      video_url:"",
+      uploadVideo:"",
+    };
+  }else{
+    item = {
+      id: null,
+      name: "",
+      link: "",
+    };
+  }
   return { type: actionTypes.SHORTCODE_SET_ITEM, item };
 }
 export function $saveItem(history) {
@@ -176,6 +198,10 @@ export function $saveItem(history) {
 
 export function $updateItemValue(name, value) {
   return { type: actionTypes.SHORTCODE_SET_ITEM_VALUE, name, value };
+}
+
+export function $updateItemVideo(video){
+  return { type: actionTypes.SHORTCODE_UPLOAD_VIDEO, video };
 }
 
 const shortcodesRequest = (meta, searchCondition) =>
@@ -200,7 +226,7 @@ function* fetchShortcode() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -225,7 +251,7 @@ function* searchShortcode({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -256,15 +282,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(shortcodeActionRequest, action, id);
+    yield call(shortcodeActionRequest, action, id);
     const shortcode = yield select(store => store.shortcode);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.SHORTCODE_INDEX_REQUEST });
     } else {
       let data = shortcode.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Disabled";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Disabled";
           else item.status = "Active";
         }
       });
@@ -275,7 +301,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -284,9 +310,10 @@ function* callAction({ action, id }) {
       });
     }
   }
+  yield put({ type: actionTypes.SHORTCODE_DELETE_LIST});  
 }
 function shortcodeActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `shortcodes/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -303,7 +330,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.SHORTCODE_LOADING_REQUEST });
   if (shortcodes != null) {
     const filterShortcodes = shortcodes.filter(shortcode => {
-      return shortcode.id == id;
+      return shortcode.id === id;
     });
     if (filterShortcodes.length > 0) {
       yield put({
@@ -319,7 +346,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.SHORTCODE_SET_ITEM, item: result });
     else yield put({ type: actionTypes.SHORTCODE_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -330,23 +357,34 @@ function* changeItem({ id }) {
   }
 }
 const saveShortcode = shortcode => {
-  const data = {
-    name: shortcode.item.name,
-    link: shortcode.item.link
-  };
+  const formData = new FormData();
+  const workout = process.env.REACT_APP_WORKOUT;
+  formData.append("name", shortcode.item.name);
+  if(workout === 'update'){
+    formData.append("time", shortcode.item.time);
+    formData.append("level", shortcode.item.level);
+    formData.append("alternate_a", shortcode.item.alternate_a);
+    formData.append("multipler_a", shortcode.item.multipler_a);
+    formData.append("alternate_b", shortcode.item.alternate_b);
+    formData.append("multipler_b", shortcode.item.multipler_b);
+    formData.append("instruction", shortcode.item.instruction);
+  }else{
+    formData.append("link", shortcode.item.link);
+  }
+  if (shortcode.item.uploadVideo) {
+    const files = Array.from(shortcode.item.uploadVideo);
+    files.forEach((file, i) => {
+      formData.append("video", file);
+    });
+  }
   if (shortcode.item.id) {
+    formData.append("_method", "put");
     return http({
       path: `shortcodes/${shortcode.item.id}`,
-      method: "PUT",
-      data: JSON.stringify(data),
-      headers: {
-        "Content-Type": "application/json"
-      }
+      method: "POST",
+      data: formData
     }).then(res => res.data);
   } else {
-    const formData = new FormData();
-    formData.append("name", shortcode.item.name);
-    formData.append("link", shortcode.item.link);
     return http({ path: `shortcodes`, method: "POST", data: formData }).then(
       res => res.data
     );
@@ -355,6 +393,7 @@ const saveShortcode = shortcode => {
 function* saveItem({ history }) {
   const shortcode = yield select(store => store.shortcode);
   yield put({ type: actionTypes.SHORTCODE_CHANGE_SAVE_STATUS, status: true });
+  yield put({ type: actionTypes.SHORTCODE_DELETE_LIST});
   try {
     const result = yield call(saveShortcode, shortcode);
     if (result.shortcode) {
@@ -375,20 +414,28 @@ function* saveItem({ history }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
         type: actionTypes.SHORTCODE_INDEX_FAILURE,
         error: e.message
       });
-      alert("Saving failed.");
+      if(e.response.status === 422){
+        if(e.response.data.errors.video)alert(e.response.data.errors.video[0])
+        else alert("Saving failed.");
+      }else  alert("Saving failed.");
       yield put({
         type: actionTypes.SHORTCODE_CHANGE_SAVE_STATUS,
         status: false
       });
     }
   }
+}
+const getList = ()=>http({ path: `shortcodes/all` }).then(response => response.data);
+function* getAllItems(){
+  const result = yield call(getList);
+  yield put({type:actionTypes.SHORTCODE_SET_LIST,list:result})
 }
 export function* saga() {
   yield takeLatest(actionTypes.SHORTCODE_INDEX_REQUEST, fetchShortcode);
@@ -398,4 +445,5 @@ export function* saga() {
   yield takeLatest(actionTypes.SHORTCODE_ACTION_REQUEST, callAction);
   yield takeLatest(actionTypes.SHORTCODE_CHANGE_ITEM, changeItem);
   yield takeLatest(actionTypes.SHORTCODE_SAVE_ITEM, saveItem);
+  yield takeLatest(actionTypes.SHORTCODE_UPDATE_LIST,getAllItems)
 }

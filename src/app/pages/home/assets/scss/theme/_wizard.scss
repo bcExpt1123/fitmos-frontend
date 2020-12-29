@@ -492,7 +492,7 @@
     form {
       width: 284px;
       .fs-btn{
-        margin: 60px auto;
+        margin: 40px auto;
         font-size: 16px;
       }
     }
@@ -628,5 +628,10 @@
   }
   section.login{
     padding-bottom:30px;
+  }
+  .Modal-Portal{
+    .datepicker-modal{
+      bottom: 72px;
+    }
   }
 }

@@ -1,27 +1,10 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Formik } from "formik";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import PropTypes from "prop-types";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField, MenuItem, FormControl, InputLabel, Select, CircularProgress,  }from "@material-ui/core";
+import { makeStyles } from "@material-ui/core";
 import ListAltIcon from "@material-ui/icons/ListAlt";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import FlagIcon from "@material-ui/icons/Flag";
 import DisableIcon from "@material-ui/icons/Clear";
 import ViewIcon from "@material-ui/icons/Visibility";
@@ -66,23 +49,27 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" },
   { id: "action", numeric: false, disablePadding: false, label: "Actions" }
 ];
-function Main({ customers, meta, $page, $pageSize }) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
+  useEffect(() => {
+    dispatch($fetchIndex())
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  const customer = useSelector(({ customer }) => customer);
+  const page=customer.meta.page-1;
+  const customers= customer.data;
+  const meta=customer.meta;
   const rowsPerPage = meta.pageSize;
-
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
   const dispatch = useDispatch();
   const handleChangePage = (event, newPage) => {
-    $page(newPage + 1);
+    dispatch($page(newPage + 1));
   };
-
   const handleChangeRowsPerPage = event => {
-    $pageSize(parseInt(event.target.value, 10));
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
   const actionDisable = id => event => {
-    dispatch($disable(id));
+    if (window.confirm("Are you sure to disable this item?"))  dispatch($disable(id));
   };
   const actionRestore = id => event => {
     dispatch($restore(id));
@@ -121,13 +108,13 @@ function Main({ customers, meta, $page, $pageSize }) {
                       className={classnames(
                         " btn btn-bold btn-xs btn-font-sm normal",
                         {
-                          "btn-label-success": row.status == "Active",
-                          "btn-label-danger": row.status == "Inactive"
+                          "btn-label-success": row.status === "Active",
+                          "btn-label-danger": row.status === "Inactive"
                         }
                       )}
                     >
                       {row.status}
-                      {row.trial == 1 && <FlagIcon color="primary" />}
+                      {row.trial === 1 && <FlagIcon color="primary" />}
                     </span>
                   </TableCell>
                   <TableCell align="left" style={{ padding: "0" }}>
@@ -144,7 +131,7 @@ function Main({ customers, meta, $page, $pageSize }) {
                         <ViewIcon />
                       </IconButton>
                     </NavLink>  
-                    {row.status == "Disabled" ? (
+                    {row.status === "Disabled" ? (
                       <>
                         <IconButton
                           color="secondary"
@@ -201,45 +188,17 @@ function Main({ customers, meta, $page, $pageSize }) {
     </Paper>
   );
 }
-const mapStateToProps = state => ({
-  customers: state.customer.data,
-  meta: state.customer.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore
-};
-const CustomersConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class CustomersWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <CustomersConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Customers = injectIntl(
-  connect(null, mapDispatchToProps1)(CustomersWrapper)
-);
-function Sub({ searchCondition, $changeConditionValue,exportLoading,$export }) {
+const Customers = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ customer }) => customer.searchCondition);
+  const exportLoading = useSelector(({ customer }) => customer.exportLoading);
   const handleChange = name => event => {
-    $changeConditionValue(name, event.target.value);
+    dispatch($changeConditionValue(name, event.target.value));
   };
   const handleClick = () => {
-    $export(searchCondition);
+    dispatch($export(searchCondition));
   };
   return (
     <>
@@ -303,15 +262,6 @@ function Sub({ searchCondition, $changeConditionValue,exportLoading,$export }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.customer.searchCondition,
-  exportLoading:state.customer.exportLoading
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue,
-  $export
-};
-const SubHeaderCustomers = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+
+const SubHeaderCustomers = injectIntl(Sub);
 export { Customers, SubHeaderCustomers };

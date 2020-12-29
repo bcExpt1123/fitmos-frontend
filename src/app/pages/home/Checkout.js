@@ -1,77 +1,64 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { useCurrentRoute, useNavigation } from "react-navi";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import { connect,useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import MetaTags from "react-meta-tags";
-import { withRouter } from "react-router";
-
+import { useHistory } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import StepPayment from "./CheckoutPage/StepPayment";
 import { initialVoucher,checkVoucher,generateFirstPayVoucher } from "./redux/vouchers/actions";
-import { checkPaymentMode, changeVoucher,inside,outside } from "./redux/checkout/actions";
-import {reactLocalStorage} from 'reactjs-localstorage';
+import { checkPaymentMode, changeVoucher,inside,outside, start } from "./redux/checkout/actions";
+import { findUserDetails } from "./redux/auth/actions";
+import { reactLocalStorage } from 'reactjs-localstorage';
+import { calculatePriceWithCoupon } from '../../../lib/calculatePrice';
 
 const styles = {};
-
-const mapStateToProps = state => ({
-  currentUser: state.auth.currentUser,
-  countryCode: state.countryCode,
-  serviceItem: state.service.item,
-  frequency: state.service.frequency,
-  activePlan: state.service.activePlan,
-  coupons: state.vouchers
-});
-const mapDispatchToProps = {
-  initialVoucher,
-  checkPaymentMode,
-  checkVoucher,
-  changeVoucher,
-  generateFirstPayVoucher
-};
-
-const CheckoutPage = ({
-  currentUser,
-  countryCode,
-  serviceItem,
-  frequency,
-  activePlan,
-  coupons,
-  initialVoucher,
-  checkPaymentMode,
-  changeVoucher,
-  checkVoucher,
-  generateFirstPayVoucher,
-  history
-}) => {
+const CheckoutPage = () => {
+  const history = useHistory();
+  const currentUser = useSelector(({auth})=>auth.currentUser);
+  const serviceItem = useSelector(({service})=>service.item);
+  const frequency = useSelector(({service})=>service.frequency);
+  const activePlan = useSelector(({service})=>service.activePlan)
+  const bankFee = useSelector(({service})=>service.item.bank_fee);
+  const coupons = useSelector(({vouchers})=>vouchers);
+  const paymentType = useSelector(({service})=>service.type);
+  const bankRenewal = useSelector(({checkout})=>checkout.bank.renewal);
   // referrer or campaign.
   const [enteredVoucher, setEnteredVoucher] = useState(() => {
     const values = Object.values(coupons);
     if (values[0] && values[0].discount) return values[0];
     return false;
   });
-  const [removeCoupon,setRemoveCoupon] = useState(false);
+  //const [removeCoupon,setRemoveCoupon] = useState(false);
   useEffect(() => {
     const values = Object.values(coupons);
     if (values[0] && values[0].discount) {
       setEnteredVoucher(values[0]);
     }else{
-      if(!currentUser.has_workout_subscription){
+      //if(!currentUser.has_workout_subscription){
         //if(!removeCoupon)generateFirstPayVoucher();
-      }  
+      //}  
     }
   },[coupons]);
   const dispatch = useDispatch();
   useEffect(() => {
+    if(paymentType==="bank")dispatch(findUserDetails());
     reactLocalStorage.set('checkout', true);
     dispatch(inside({activePlan}));
-    checkVoucher();
+    dispatch(checkVoucher());
+    dispatch(checkPaymentMode());// check testing or production on payment
     return () => {
       dispatch(outside());
     };
-  },[]);
-  checkPaymentMode();
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => {
+    if(currentUser.has_workout_subscription && currentUser.has_active_workout_subscription &&  !bankRenewal ){
+      console.log(bankRenewal)
+      history.push("/");
+      dispatch(start());
+    }
+  },[currentUser]);
 
   // Voucher entered manually by user via voucher form, or from query params,
   if (activePlan === null) {
@@ -81,6 +68,7 @@ const CheckoutPage = ({
 
   const service = "workout";
   let checkoutType = 1;
+  if(activePlan)checkoutType = 2;
   const vouchers = {
     workout: {
       "3-months": ""
@@ -95,8 +83,8 @@ const CheckoutPage = ({
   const selectedProduct = {
     id: "1",
     platform: "web",
-    amount_cents: 209850,
-    recurring_amount_cents: 209850,
+    //amount_cents: 209850,
+    //recurring_amount_cents: 209850,
     currency: "USD",
     currency_exponent: 2,
     interval: activePlan,
@@ -108,23 +96,35 @@ const CheckoutPage = ({
     free_trial_length: 0
   };
 
-  let pricing = {
-    initialPrices: { total: serviceItem[activePlan] * 100 },
-    originalPrices: undefined,
-    discountedPrices: { total: serviceItem[activePlan] * 100 },
-    recurringPrices: { total: serviceItem[activePlan] * 100 },
-    refundAmountCents: undefined,
-    currentSubscriptionsAmountCents: undefined,
-    bundlePrices: { total: serviceItem[activePlan] * 100 }
-  };
-  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && enteredVoucher.renewal == '1')) {
+  let pricing;
+  if(paymentType === 'bank'){
+    pricing = {
+      initialPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
+      originalPrices: undefined,
+      discountedPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
+      recurringPrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 },
+      refundAmountCents: undefined,
+      currentSubscriptionsAmountCents: undefined,
+      bundlePrices: { total: (parseFloat(serviceItem[activePlan])+parseFloat(bankFee)) * 100 }
+    };    
+  }else{
+    pricing = {
+      initialPrices: { total: serviceItem[activePlan] * 100 },
+      originalPrices: undefined,
+      discountedPrices: { total: serviceItem[activePlan] * 100 },
+      recurringPrices: { total: serviceItem[activePlan] * 100 },
+      refundAmountCents: undefined,
+      currentSubscriptionsAmountCents: undefined,
+      bundlePrices: { total: serviceItem[activePlan] * 100 }
+    };
+  }
+  /*eslint-disable no-mixed-operators*/
+  if (enteredVoucher && (!currentUser.has_workout_subscription || currentUser.has_workout_subscription && (enteredVoucher.renewal === '1' || enteredVoucher.renewal === 1))) {
     pricing.appliedVoucher = enteredVoucher;
     pricing.savingsInPercent = enteredVoucher.discount;
-    if(enteredVoucher.form == '%')pricing.discountedPrices.total = (pricing.initialPrices.total * (100 - pricing.savingsInPercent)) / 100;
-    else {
-      pricing.discountedPrices.total = parseFloat(pricing.discountedPrices.total) - parseFloat(enteredVoucher.discount)*100;
-      if(pricing.discountedPrices.total<0)pricing.discountedPrices.total = 0;
-    }
+    const pricingWithCoupon = calculatePriceWithCoupon(paymentType,serviceItem[activePlan],bankFee,enteredVoucher);
+    pricing.discountedPrices.total = pricingWithCoupon[0];
+    if(pricingWithCoupon[1])pricing.recurringPrices.total = pricingWithCoupon[1];
   }
   // in case of user is navigating to some other page PE-14498 fix
   // this part of the fix prevents rendering of checkout 1st step
@@ -133,14 +133,14 @@ const CheckoutPage = ({
 
   const onEnteredVoucherChange = newEnteredVoucher => {
     setEnteredVoucher(newEnteredVoucher);
-    changeVoucher();
+    dispatch(changeVoucher());
   };
 
   const resetActiveVoucher = () => {
-    initialVoucher();
+    dispatch(initialVoucher());
     setEnteredVoucher(undefined);
-    setRemoveCoupon(true);
-    changeVoucher();
+    //setRemoveCoupon(true);
+    dispatch(changeVoucher());
   };
 
   return (
@@ -155,11 +155,11 @@ const CheckoutPage = ({
         <StepPayment
           service={service}
           checkoutType={checkoutType}
-          countryCode={countryCode}
           pricing={pricing}
           enteredVoucher={enteredVoucher}
           selectedProduct={selectedProduct}
           vouchers={vouchers}
+          paymentType={paymentType}
           onEnteredVoucherChange={onEnteredVoucherChange}
           resetActiveVoucher={resetActiveVoucher}
         />
@@ -169,16 +169,4 @@ const CheckoutPage = ({
   );
 };
 
-CheckoutPage.defaultProps = {
-  currentUser: { gender: "Male" }
-};
-
-CheckoutPage.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  currentUser: PropTypes.object
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(injectIntl(CheckoutPage)));
+export default CheckoutPage;

@@ -14,6 +14,7 @@ export const {
   setStripeIntent,
   clearStripeIntent,
   checkoutInitial,
+  setCheckoutKind,
   checkPaymentMode,
   setPaymentMode,
   setChangePlan,
@@ -26,7 +27,12 @@ export const {
   reactivateSubscription,
   inside,
   outside,
-  validCartId
+  validCartId,
+  sendBankRequest,
+  startBankRenewal,
+  doneBankRenewal,
+  done,
+  start
 } = createActions(
   "PAY_WITH_NMI",
   "PAY_WITH_PAY_PAL",
@@ -41,6 +47,7 @@ export const {
   "SET_STRIPE_INTENT",
   "CLEAR_STRIPE_INTENT",
   "CHECKOUT_INITIAL",
+  "SET_CHECKOUT_KIND",
   "CHECK_PAYMENT_MODE",
   "SET_PAYMENT_MODE",
   "SET_CHANGE_PLAN",
@@ -54,5 +61,10 @@ export const {
   "INSIDE",
   "OUTSIDE",
   "VALID_CART_ID",
+  "SEND_BANK_REQUEST",
+  "START_BANK_RENEWAL",
+  "DONE_BANK_RENEWAL",
+  "DONE",
+  "START",
   { prefix: "CHECKOUT" }
 );

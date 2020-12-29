@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Pagination from "react-js-pagination";
 import { useDispatch, useSelector } from "react-redux";
-import Table from "react-bootstrap/Table";
-import IconButton from "@material-ui/core/IconButton";
+import {Table} from "react-bootstrap";
+import {IconButton} from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
 import SplashScreen from "../../../../../app/partials/layout/SplashScreen";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
@@ -14,10 +14,10 @@ const SectionInvoices = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($changeConditionValue("customer_id", currentUser.customer.id));
-  }, [currentUser]);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => {
     if(id>0)dispatch($showInvoice(id));
-  }, [id]);
+  }, [id]);// eslint-disable-line react-hooks/exhaustive-deps
 
   const invoice = useSelector(({ invoice }) => invoice.item);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -28,7 +28,7 @@ const SectionInvoices = () => {
     dispatch($page(number));
   }
   
-  const splashScreenVisible = (invoice&&invoice.id==id)===false;
+  const splashScreenVisible = (invoice&&invoice.id===id)===false;
   console.log(splashScreenVisible)
   /*useEffect(() => {
     const splashScreen = document.getElementById("splash-screen");
@@ -42,7 +42,7 @@ const SectionInvoices = () => {
 
   return (
     <div className='container mt-5 mb-5'>
-      {(id==0) ? (
+      {(id===0) ? (
         <>
           <Table responsive className='invoices'>
             <thead>
@@ -90,14 +90,14 @@ const SectionInvoices = () => {
           </div>
         </>
       ):(
-        (invoice&&invoice.id==id)?(
+        (invoice&&invoice.id===id)?(
         <div className="kt-invoice-2">
           <div className="kt-invoice__head">
             <div className="kt-invoice__container">
               <div className="kt-invoice__brand">
                 <h1 className="kt-invoice__title">FACTURA</h1>
-                <div href="#" className="kt-invoice__logo">
-                  <a href="#"><img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} style={{height:'50px'}} /></a>
+                <div className="kt-invoice__logo">
+                  <img src={toAbsoluteUrl('/media/logos/Fitmose-logo.png')} style={{height:'50px'}} alt="fitemos-logo"/>
                   <span className="kt-invoice__desc">
                     <span></span>
                     <span></span>

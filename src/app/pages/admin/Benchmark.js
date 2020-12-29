@@ -1,24 +1,13 @@
-import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField, colors }from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
@@ -47,7 +36,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -64,36 +53,34 @@ const headRows = [
   { id: "status", numeric: false, disablePadding: false, label: "Status" ,width:"150"},
   { id: "action", numeric: false, disablePadding: false, label: "Actions" ,width:"100"}
 ];
-function Main({
-  benchmarks,
-  meta,
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-}) {
+function Main() {
   const classes = useStyles();
-  const page = meta.page - 1;
-  const rowsPerPage = meta.pageSize;
+  const dispatch=useDispatch();
+  const benchmark = useSelector(({ benchmark }) => benchmark);
+  useEffect(() => { dispatch($fetchIndex()) }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const benchmarks = benchmark.data;
+  const meta = benchmark.meta;
+  const page = benchmark.meta.page - 1;
+  const rowsPerPage = benchmark.meta.pageSize;
 
   const emptyRows =
     rowsPerPage - Math.min(rowsPerPage, meta.total - page * rowsPerPage);
-  const handleChangePage = (benchmark, newPage) => {
-    $page(newPage + 1);
+  const handleChangePage = (event, newPage) => {
+    dispatch($page(newPage + 1));
   };
 
-  const handleChangeRowsPerPage = benchmark => {
-    $pageSize(parseInt(benchmark.target.value, 10));
+  const handleChangeRowsPerPage = event => {
+    dispatch($pageSize(parseInt(event.target.value, 10)));
   };
-  const actionDisable = id => benchmark => {
-    $disable(id);
+  const actionDisable = id => event => {
+    console.log(1111);
+    dispatch($disable(id));
   };
-  const actionRestore = id => benchmark => {
-    $restore(id);
+  const actionRestore = id => event => {
+    dispatch($restore(id));
   };
-  const actionDelete = id => benchmark => {
-    if (window.confirm("Are you sure to delete this item?")) $delete(id);
+  const actionDelete = id => event => {
+    if (window.confirm("Are you sure to delete this item?")) dispatch($delete(id));
   };
   return (
     <>
@@ -130,8 +117,8 @@ function Main({
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Publish",
-                            "btn-label-brand": row.status == "Draft"
+                            "btn-label-success": row.status === "Publish",
+                            "btn-label-brand": row.status === "Draft"
                           }
                         )}
                       >
@@ -139,7 +126,7 @@ function Main({
                       </span>
                     </TableCell>
                     <TableCell align="left" style={{ padding: "0" }}>
-                      {row.status == "Publish" ? (
+                      {row.status === "Publish" ? (
                         <>
                           <IconButton
                             className={classes.button}
@@ -215,43 +202,13 @@ function Main({
     </>
   );
 }
-const mapStateToProps = state => ({
-  benchmarks: state.benchmark.data,
-  meta: state.benchmark.meta
-});
-const mapDispatchToProps = {
-  $page,
-  $pageSize,
-  $disable,
-  $restore,
-  $delete
-};
-const BenchmarkConnct = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(Main)
-);
-class BenchmarkWrapper extends Component {
-  componentDidMount() {
-    this.props.$fetchIndex();
-  }
-  render() {
-    return (
-      <>
-        <BenchmarkConnct />
-      </>
-    );
-  }
-}
-const mapDispatchToProps1 = {
-  $fetchIndex
-};
-
-const Benchmarks = injectIntl(
-  connect(null, mapDispatchToProps1)(BenchmarkWrapper)
-);
-function Sub({ searchCondition, $changeConditionValue }) {
+const Benchmarks = injectIntl(Main);
+function Sub() {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const searchCondition = useSelector(({ benchmark }) => benchmark.searchCondition);
   const handleChange = name => benchmark => {
-    $changeConditionValue(name, benchmark.target.value);
+    dispatch($changeConditionValue(name, benchmark.target.value));
   };
   return (
     <>
@@ -293,13 +250,5 @@ function Sub({ searchCondition, $changeConditionValue }) {
     </>
   );
 }
-const mapStateToPropsSub = state => ({
-  searchCondition: state.benchmark.searchCondition
-});
-const mapDispatchToPropsSub = {
-  $changeConditionValue
-};
-const SubHeaderBenchmarks = injectIntl(
-  connect(mapStateToPropsSub, mapDispatchToPropsSub)(Sub)
-);
+const SubHeaderBenchmarks = injectIntl(Sub);
 export { Benchmarks, SubHeaderBenchmarks };

@@ -1,21 +1,10 @@
-import React, { Component, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { makeStyles } from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, TextField }from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TableRow from "@material-ui/core/TableRow";
-import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import TextField from "@material-ui/core/TextField";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
 import {
@@ -35,7 +24,7 @@ function Categories() {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($fetchIndex())
-  }, []);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const category = useSelector(({ category }) => category);
   const page = category.meta.page - 1;
   const rowsPerPage = category.meta.pageSize;

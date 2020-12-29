@@ -9,7 +9,6 @@ import Icon from "../Icon";
 
 //import styles from './CookieConsent.module.css';
 const styles = {};
-const states = {};
 const SCROLL_THRESHOLD = 48;
 const CONSENT_TIMEOUT = 20000;
 

@@ -1,13 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import { Formik, Form, Field } from "formik";
-import FormGroup from "../components/FormGroup";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
-import { Markup } from "interweave";
+import {Modal } from "react-bootstrap";
 import ModalVideo from 'react-modal-video';
 import { http } from "../services/api";
 import {
@@ -46,8 +39,8 @@ class NextLevel extends React.Component {
       value: data.condition
     });
     let item = this.state.conditions.find(item => {
-      if (item.id == data.condition)
-        return item;
+      if (item.id === data.condition) return item;
+      return null;
     });
     this.setState({ condition: item });
     this.setState({confirm:false});
@@ -66,8 +59,8 @@ class NextLevel extends React.Component {
       value: data.condition
     });
     let item = this.state.conditions.find(item => {
-      if (item.id == data.condition)
-        return item;
+      if (item.id === data.condition) return item;
+      return null;
     });
     this.setState({ condition: item });
     this.props.$resetPublished();
@@ -82,8 +75,8 @@ class NextLevel extends React.Component {
       });
       const { data } = res;
       let item = data.find(item => {
-        if (item.id == this.props.currentUser.customer.current_condition)
-          return item;
+        if (item.id === this.props.currentUser.customer.current_condition)return item;
+        return null;
       });
       this.setState({ condition: item,conditions:data });
     } catch (e) {
@@ -121,7 +114,6 @@ class NextLevel extends React.Component {
                   <div className="btn-level-increase">
                     <button onClick={this.handleNextLevel}>Prueba Superada</button>
                   </div>
-                  )}
                 </div>
               </Modal.Body>
             </>
@@ -150,7 +142,7 @@ class NextLevel extends React.Component {
                                 <button onClick={()=>{
                                     this.setState({vid:line.youtube.vid});
                                     this.setState({show:true});
-                                    const res = http({
+                                    http({
                                       method: "POST",
                                       app: "user",
                                       path: "customers/activity",

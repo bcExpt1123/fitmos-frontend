@@ -1,24 +1,16 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect } from "react-redux";
 import { withRouter } from "react-router";
 import { Calendar, CalendarControls } from "react-yearly-calendar";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { injectIntl } from "react-intl";
 import {
   $datePicked,
   $prevYear,
   $nextYear,
   $changeItem
 } from "../../../modules/subscription/cms";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core";
+import {Paper} from "@material-ui/core";
 const useStyles = makeStyles(theme => ({}));
 
 function Main({ year, dates, history, $datePicked, $prevYear, $nextYear }) {

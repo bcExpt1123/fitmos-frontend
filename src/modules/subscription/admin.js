@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
@@ -6,9 +5,7 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
@@ -219,7 +216,7 @@ function* fetchAdmin() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.ADMIN_INDEX_FAILURE, error: e.message });
@@ -241,7 +238,7 @@ function* searchAdmin({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.ADMIN_INDEX_FAILURE, error: e.message });
@@ -269,15 +266,15 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(adminActionRequest, action, id);
+    yield call(adminActionRequest, action, id);
     const admin = yield select(store => store.admin);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.ADMIN_INDEX_REQUEST });
     } else {
       let data = admin.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Inactive";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Inactive";
           else item.status = "Active";
         }
       });
@@ -288,7 +285,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.ADMIN_INDEX_FAILURE, error: e.message });
@@ -296,7 +293,7 @@ function* callAction({ action, id }) {
   }
 }
 function adminActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `admins/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -311,9 +308,9 @@ const findAdmin = id =>
 function* changeItem({ id }) {
   const admins = yield select(store => store.admin.data);
   yield put({ type: actionTypes.ADMIN_LOADING_REQUEST });
-  if (admins != null) {
+  if (admins !== null) {
     const filterAdmins = admins.filter(admin => {
-      return admin.id == id;
+      return admin.id === id;
     });
     if (filterAdmins.length > 0) {
       yield put({ type: actionTypes.ADMIN_SET_ITEM, item: filterAdmins[0] });
@@ -326,7 +323,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.ADMIN_SET_ITEM, item: result });
     else yield put({ type: actionTypes.ADMIN_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.ADMIN_INDEX_FAILURE, error: e.message });
@@ -366,11 +363,11 @@ function* saveItem({ history }) {
   const admin = yield select(store => store.admin);
   yield put({ type: actionTypes.ADMIN_CHANGE_SAVE_STATUS, status: true });
   try {
-    const result = yield call(saveAdmin, admin);
+    yield call(saveAdmin, admin);
     alert("Saving success.");
     history.push("/admin/users");
   } catch (e) {
-    if (e.response.status == 403) {
+    if (e.response.status === 403) {
       yield put({
         type: actionTypes.ADMIN_SET_ITEM_ERROR,
         name: "email",
@@ -378,7 +375,7 @@ function* saveItem({ history }) {
       });
       yield put({ type: actionTypes.ADMIN_CHANGE_SAVE_STATUS, status: false });
     }
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.ADMIN_INDEX_FAILURE, error: e.message });
@@ -389,7 +386,7 @@ function* saveItem({ history }) {
 }
 function* requestRolesAction(){
   const admin = yield select(store=>store.admin)
-  if(admin.roles.length==0){
+  if(admin.roles.length===0){
     try{
       const roles = yield call(roleRequest);
       console.log(roles)

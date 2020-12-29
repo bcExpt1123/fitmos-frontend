@@ -212,6 +212,9 @@ div.calendar-controls {
       cursor: auto;
     }
   }
+  .imperfect{
+    border: 1px solid red;
+  }
 }
 .btn.normal {
   margin: auto;
@@ -242,5 +245,13 @@ td span.btn {
         border-bottom: 2px solid #0abb87;
       }
     }
+  }
+}
+.report-border{
+  border: 1px solid rgba($color: #000000, $alpha: 0.3);
+}
+.MuiDialog-paper{
+  .rta{
+    height: 250px;
   }
 }

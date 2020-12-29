@@ -1,26 +1,11 @@
 import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import DisableIcon from "@material-ui/icons/Clear";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
+import { makeStyles } from "@material-ui/core";
+import { Table, TableHead, TableBody, TableCell, Paper, IconButton, TableRow, colors} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
-import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
-import classnames from "classnames";
 import { NavLink } from "react-router-dom";
-import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
 import {
   $fetchIndex,
   $delete
@@ -42,7 +27,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -89,7 +74,7 @@ function Main({ medals, $delete }) {
                       {row.count}
                     </TableCell>
                     <TableCell align="left">
-                      <img src={row.image} />
+                      <img src={row.image} alt='img' />
                     </TableCell>
                     <TableCell align="left" style={{ padding: "0" }}>
                       <NavLink
@@ -153,7 +138,6 @@ const mapDispatchToProps1 = {
 
 const Medals = injectIntl(connect(null, mapDispatchToProps1)(MedalWrapper));
 function Sub() {
-  const classes = useStyles();
   return (
     <>
       <div className="kt-subheader__main">

@@ -264,6 +264,7 @@
     .modal-header {
       .modal-title {
         font-size: 23px;
+        font-weight: bold;
       }
     }
     .modal-body{
@@ -383,6 +384,13 @@
   label[for="active_email"] {
     font-size: 17px;
     font-weight: 500;
+  }
+}
+@media (max-width: 769px) {
+  .edit-benchbark{
+    .btn-edit{
+      margin-top: 19px;
+    }
   }
 }
 @media (max-width: 380px) {

@@ -1,35 +1,25 @@
-import React, { useEffect } from "react";
-import { connect,useSelector,useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector,useDispatch } from "react-redux";
 import { withRouter } from "react-router";
 import { injectIntl } from "react-intl";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableRow from "@material-ui/core/TableRow";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import TextField from "@material-ui/core/TextField";
-import classnames from "classnames";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/styles";
+import {Table, TableHead, TableBody, TableCell, TableRow, Paper, IconButton } from "@material-ui/core";
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import { Markup } from "interweave";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
+import classnames from "classnames";
 import {
     $fetchRequestCms,
     $openCell,
     $openPreviewCell,
     $updateItemValue,
-    $submitContent
+    $submitContent,
+    $updateImage
   } from "../../../modules/subscription/weekWorkout";
+import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
+import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
+import WorkoutNoteEditDialog from "./dialog/WorkoutNoteEditDialog";
+import WorkoutPreviewDialog from "./dialog/WorkoutPreviewDialog";
+import {timeType} from "../../../_metronic/utils/utils";
+  
 const weekdates = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];  
 const useStyles = makeStyles(theme => ({
   border: {
@@ -53,6 +43,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: "auto",
     width: "30px"
   },
+  timer: {
+    marginRight: "auto",
+    width: "100px",
+    fontWeight:"600"
+  },
   blog: {
     backgroundColor: "grey"
   }
@@ -68,12 +63,22 @@ function Main({
   const data = useSelector(({ weekWorkout }) => weekWorkout.data);
   const column = useSelector(({ weekWorkout }) => weekWorkout.column);
   const content = useSelector(({ weekWorkout }) => weekWorkout.content);
+  const image  = useSelector(({ weekWorkout }) => weekWorkout.image);
+  const note  = useSelector(({ weekWorkout }) => weekWorkout.note);
+  const timerType  = useSelector(({ weekWorkout }) => weekWorkout.timerType);
+  const work  = useSelector(({ weekWorkout }) => weekWorkout.timerWork);
+  const round  = useSelector(({ weekWorkout }) => weekWorkout.timerRound);
+  const rest  = useSelector(({ weekWorkout }) => weekWorkout.timerRest);
+  const description = useSelector(({ weekWorkout }) => weekWorkout.timerDescription);
   const day = useSelector(({ weekWorkout }) => weekWorkout.day);
   const previewContent = useSelector(({ weekWorkout }) => weekWorkout.previewContent);
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch($fetchRequestCms(history,match.params.id));
-  }, []);
+  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  const updateImage = (image)=>{
+    dispatch($updateImage(image));
+  }
   const columnLabels = {
     comentario: "Comentario del día",
     calentamiento: "A. Calentamiento",
@@ -101,11 +106,21 @@ function Main({
     "activo",
     "blog"
   ];
-  const [open, setOpen] = React.useState(false);
+  const [openFirst, setOpenFirst] = React.useState(false);
+  const [openBlock, setOpenBlock] = React.useState(false);
+  const [openBlog, setOpenBlog] = React.useState(false);
   const [openPreview, setOpenPreview] = React.useState(false);
+  const [weekDate, setWeekDate] = useState(false);
   const handleClickOpen = (day, column) => {
     if (activateWorkout(day, column)) {
-      setOpen(true);
+      if(column === 'comentario'){
+        setOpenFirst(true);
+      }else if(column === 'blog'){
+        setOpenBlog(true);
+      }else{
+        setOpenBlock(true);
+      }
+      setWeekDate(day);
       dispatch($openCell(weekDay, column, day));
     }
   };
@@ -116,41 +131,64 @@ function Main({
   const activateWorkout = (dayNumber, column) => {
     switch (dayNumber) {
       case 0:
-        if (column == "blog" || column == "activo" || weekDay>dayNumber) return false;
+        if (column === "blog" || column === "activo" || weekDay>dayNumber) return false;
         break;
       case 1:
-        if (column == "blog" || weekDay>dayNumber) return false;
+        if (column === "blog" || weekDay>dayNumber) return false;
         break;
       case 2:
-        if (column == "blog" || column == "activo" || weekDay>dayNumber) return false;
+        if (column === "blog" || column === "activo" || weekDay>dayNumber) return false;
         break;
       case 3:
-        if (column != "blog" || weekDay>dayNumber) return false;
+        if (column !== "blog" || weekDay>dayNumber) return false;
         break;
       case 4:
-        if (column == "blog" || weekDay>dayNumber) return false;
+        if (column === "blog" || weekDay>dayNumber) return false;
         break;
       case 5:
-        if (column == "activo" || weekDay>dayNumber) return false;
+        if (column === "activo" || weekDay>dayNumber) return false;
         break;
       case 6:
-        if (column != "blog" || weekDay>dayNumber) return false;
+        if (column !== "blog" || weekDay>dayNumber) return false;
         break;
+      default:  
     }
     return true;
   };
   const handleClose = () => {
-    setOpen(false);
+    setOpenFirst(false);
+    setOpenBlock(false);
+    setOpenBlog(false);
   };
   const handleClosePreview = () => {
     setOpenPreview(false);
   };
   const handleSave = () => {
-    setOpen(false);
+    setOpenFirst(false);
+    setOpenBlock(false);
+    setOpenBlog(false);
     dispatch($submitContent(weekDay));
   };
   const handleChange = event => {
-    dispatch($updateItemValue(event.target.value));
+    dispatch($updateItemValue('content',event.target.value));
+  };
+  const handleNoteChange = event => {
+    dispatch($updateItemValue('note',event.target.value));
+  };
+  const handleTimerTypeChange = event => {
+    dispatch($updateItemValue('timerType',event.target.value));
+  };
+  const handleTimerWorkChange = event => {
+    dispatch($updateItemValue('timerWork',event.target.value));
+  };
+  const handleTimerRoundChange = event => {
+    dispatch($updateItemValue('timerRound',event.target.value));
+  };
+  const handleTimerRestChange = event => {
+    dispatch($updateItemValue('timerRest',event.target.value));
+  };
+  const handleTimerDescriptionChange = event => {
+    dispatch($updateItemValue('timerDescription',event.target.value));
   };
   return (
     <Paper className={classes.root}>
@@ -242,11 +280,32 @@ function Main({
                     align="left"
                     key={index}
                     className={classnames({
-                      blog: activateWorkout(col, row) == false
+                      blog: activateWorkout(col, row) === false
                     })}
                   >
-                    {data[weekDay]&&data[weekDay][col] != undefined &&
-                      data[weekDay][col][row] != undefined && data[weekDay][col][row] != "" && (
+                    {data[weekDay]&&data[weekDay][col] !== undefined &&
+                      data[weekDay][col][row+'_timer_type'] !== undefined && data[weekDay][col][row+'_timer_type'] !== "" && data[weekDay][col][row+'_timer_type'] !== null && (
+                        <div className={classes.timer}>
+                          {data[weekDay][col][row+'_timer_type']!='tabata'?
+                            <>
+                              {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_work']}
+                            </>
+                          :
+                            <>
+                              {data[weekDay][col][row+'_timer_rest']?
+                              <>
+                                {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_round']}:{data[weekDay][col][row+'_timer_work']}:{data[weekDay][col][row+'_timer_rest']}
+                              </>
+                              :
+                              <>
+                                {timeType(data[weekDay][col][row+'_timer_type'])} {data[weekDay][col][row+'_timer_round']}:{data[weekDay][col][row+'_timer_work']}
+                              </>}
+                            </>
+                          }
+                        </div>
+                      )}
+                    {data[weekDay]&&data[weekDay][col] !== undefined &&
+                      data[weekDay][col][row] !== undefined && data[weekDay][col][row] !== "" && data[weekDay][col][row] !== null && (
                         <div className={classes.preview}>
                           <IconButton
                             className={classes.button}
@@ -264,8 +323,8 @@ function Main({
                         className={classes.cell}
                         onClick={() => handleClickOpen(col, row)}
                       >
-                        {data[weekDay]&&data[weekDay][col] != undefined &&
-                          data[weekDay][col][row] != undefined &&
+                        {data[weekDay]&&data[weekDay][col] !== undefined &&
+                          data[weekDay][col][row] !== undefined &&
                           data[weekDay][col][row]}
                       </div>
                     ) : (
@@ -283,79 +342,68 @@ function Main({
           </TableBody>
         </Table>
       </div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="form-dialog-workout-edit-title"
-        fullWidth={true}
-        maxWidth="lg"
-      >
-        <DialogTitle id="form-dialog-workout-edit-title">
-          {weekdates[weekDay]}'s {weekdates[day]} &nbsp;&nbsp;
-          {column && columnLabels[column]}
-        </DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please write down workout content.
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label=""
-            type="email"
-            multiline={true}
-            rows={26}
-            rowsMax={28}
-            value={content}
-            onChange={handleChange}
-            fullWidth
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleSave} color="primary">
-            Save
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={openPreview}
-        onClose={handleClosePreview}
-        aria-labelledby="form-dialog-workout-preview-title"
-        fullWidth={true}
-        maxWidth="lg"
-      >
-        <DialogTitle id="form-dialog-workout-preview-title">
-          {weekdates[weekDay]}'s {weekdates[day]}&nbsp;&nbsp;
-          {column && columnLabels[column]}
-        </DialogTitle>
-        <DialogContent>
-          <Row>
-            <Col sm={6}>
-              <h4>Email Preview</h4>
-              <div style={{ whiteSpace: "pre-wrap" }}>
-                {previewContent.content && (
-                  <Markup content={previewContent.content[0]} />
-                )}
-              </div>
-            </Col>
-            <Col sm={6}>
-              <h4>Whatsapp Preview</h4>
-              <div style={{ whiteSpace: "pre-wrap" }}>
-                {previewContent.whatsapp && previewContent.whatsapp[0]}
-              </div>
-            </Col>
-          </Row>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClosePreview} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <WorkoutImageEditDialog 
+        open={openFirst} 
+        handleClose={handleClose} 
+        title={weekdates[weekDay] + "'s " + weekdates[day]}
+        subTitle={column && columnLabels[column]} 
+        content={content}
+        image={image}
+        updateImage={updateImage}
+        handleChange={handleChange}
+        handleSave={handleSave}
+      />
+      <WorkoutEditDialog 
+        open={openBlog} 
+        handleClose={handleClose} 
+        title={weekdates[weekDay] + "'s " + weekdates[day]}
+        subTitle={column && columnLabels[column]} 
+        imageEnable={weekDate==3 || weekDate==6}
+        image={image}
+        updateImage={updateImage}
+        content={content}
+        timerType={timerType}
+        work={work}
+        round={round}
+        rest={rest}
+        description={description}
+        handleChange={handleChange}
+        handleTimerTypeChange={handleTimerTypeChange}
+        handleTimerWorkChange={handleTimerWorkChange}
+        handleTimerRoundChange={handleTimerRoundChange}
+        handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
+        handleSave={handleSave}
+      />
+      <WorkoutNoteEditDialog 
+        open={openBlock} 
+        handleClose={handleClose} 
+        title={weekdates[weekDay] + "'s " + weekdates[day]}
+        subTitle={column && columnLabels[column]} 
+        content={content}
+        note={note}
+        timerType={timerType}
+        work={work}
+        round={round}
+        rest={rest}
+        description={description}
+        handleChange={handleChange}
+        handleNoteChange={handleNoteChange}
+        handleTimerTypeChange={handleTimerTypeChange}
+        handleTimerWorkChange={handleTimerWorkChange}
+        handleTimerRoundChange={handleTimerRoundChange}
+        handleTimerRestChange={handleTimerRestChange}
+        handleTimerDescriptionChange={handleTimerDescriptionChange}
+        handleSave={handleSave}
+      />
+      <WorkoutPreviewDialog
+        open={openPreview} 
+        handleClose={handleClosePreview} 
+        title={weekdates[weekDay] + "'s " + weekdates[day]}
+        subTitle={column && columnLabels[column]} 
+        content={previewContent.content}
+        whatsapp={previewContent.whatsapp}
+      />
     </Paper>
   );
 }

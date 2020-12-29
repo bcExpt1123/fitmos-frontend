@@ -1,8 +1,7 @@
 import React,{useState} from "react";
 import { bindActionCreators } from "redux";
 import { useDispatch } from "react-redux";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import {Modal,Button } from "react-bootstrap";
 
 import { addAlertMessage } from "../redux/alert/actions";
 //import { updateMessagingProfile } from '../redux/messagingProfile/actions';
@@ -11,20 +10,17 @@ import { addAlertMessage } from "../redux/alert/actions";
   updateProfile,
 } from '../redux/userSettings/actions';*/
 import { camelizeResponse } from "../services/api";
-import MetaTags from "react-meta-tags";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import ThreeColumn from "../layouts/Three";
+import PageHeader from "../layouts/PageHeader";
 import SubNav from "../components/SubNav";
 import { logOut as logOutAction } from "../redux/auth/actions";
 
 const SettingsPage = ({ actions, currentUser, profile, section }) => {
   const [showForm,setShowForm] = useState(false);
   const profileLinks = [
-    { name: "profile", url: "profile", label: "Perfil" },
     { name: "payments", url: "payments", label: "Métodos de Pago" },
     { name: "invoices", url: "bills", label: "Facturas" },
     { name: "subscriptions", url: "subscriptions", label: "Suscripciones" },
-    { name: "logout", url: "/logout", label: "Cerrar Sesión" }
   ];
   const handleShowLogoutModal = ()=>{
     setShowForm(true);
@@ -38,11 +34,9 @@ const SettingsPage = ({ actions, currentUser, profile, section }) => {
     setShowForm(false);
   }
   return (
-    <>
-      <MetaTags></MetaTags>
-      <NavBar />
-
-      <section className={"settings dashborad-backgorund pt-5 pb-5"}>
+    <ThreeColumn>
+      <PageHeader title={`Suscripciones`}/>
+      <section className={"settings"}>
         <div className="body container mb-5 ">
           <SubNav links={profileLinks} handleLogout={handleShowLogoutModal}/>
 
@@ -56,8 +50,6 @@ const SettingsPage = ({ actions, currentUser, profile, section }) => {
           </div>
         </div>
       </section>
-
-      <Footer />
       <Modal
         size="md"
         dialogClassName="logout-modal"
@@ -80,7 +72,7 @@ const SettingsPage = ({ actions, currentUser, profile, section }) => {
         </Button>
         </Modal.Footer>          
       </Modal>
-    </>
+    </ThreeColumn>
   );
 };
 

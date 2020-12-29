@@ -38,14 +38,12 @@
       padding: 30px;
       position: relative;
       border-radius: 7px;
-      margin: 0 38px;
       .plan-header {
         .plan-title {
           font-size: 2.3rem;
           font-style: italic;
           color: #333330;
           padding-bottom: 23px;
-          font-weight: 500;
         }
       }
       .plan-body {
@@ -54,6 +52,9 @@
           font-weight: 400;
           color: #333333;
           line-height: 2.3;
+          ul{
+            list-style: none;
+          }
         }
       }
       .plan-footer {
@@ -82,6 +83,7 @@
           }
         }
         .plan-subtitle{
+          display:none;
           color:#156376;
           font-size: 2.3rem;
           margin-top: -20px;
@@ -97,11 +99,25 @@
           font-weight: 500;
           margin-bottom: 20px;
         }
-        .plan-btn .fs-btn {
-          font-size: 1.75rem;
-          font-weight: 500;
-          padding-left: 75px;
-          padding-right: 75px;
+        .plan-btn {
+          .fs-home-btn,.fs-btn {
+            font-weight: 500;
+            padding-left: 75px;
+            padding-right: 75px;
+          }
+          .fs-btn{
+            font-size: 16px;
+            width: 97%;
+            padding-left: 0px;
+            padding-right: 0px;
+          }
+          a{
+            color:#156376;
+            padding-left:0px;
+            padding-right:0px;
+            margin-left:0!important;
+            margin-right:0!important;
+          }
         }
       }
       .border-line-container {
@@ -148,8 +164,6 @@
     height: 100%;
     overflow: hidden;
     pointer-events: none;
-    .background {
-    }
   }
 }
 .free-plan{
@@ -164,6 +178,11 @@
     color:white;
   }
 }
+#cancel-subscription-form{
+  .MuiRating-label{
+    font-size: 3rem;
+  }
+}
 @media (max-width: 767px) {
   .section-subscription {
     padding-top: 80px;
@@ -174,77 +193,81 @@
       .membership {
         border-radius: 3px;
         padding: 6px 0;
-        margin: 20px 0;
         h2 {
           font-size: 1.3rem;
+        }
+        h4{
+          font-size: 1rem;
         }
         h5 {
           font-size: 0.8rem;
           height: 13px;
         }
       }
-      .media-container-row {
-        flex-direction: column-reverse;
-        .free-plan .fs-btn {
-          font-size: 1.25rem !important;
+      .free-plan .fs-btn {
+        font-size: 1.25rem !important;
+      }
+      .plan-card {
+        padding: 20px;
+        .plan-header {
+          .plan-title {
+            font-size: 1.5rem;
+            padding-bottom: 5px;
+          }
         }
-        .plan-card {
-          padding: 20px;
-          .plan-header {
-            .plan-title {
-              font-size: 1.5rem;
-              padding-bottom: 5px;
+        .plan-body {
+          .plan-list {
+            font-size: 1rem;
+            line-height: 2.3;
+            ul{
+              margin-left: calc( 25% - 40px);
             }
           }
-          .plan-body {
-            .plan-list {
+        }
+        .plan-footer {
+          .plan-price {
+            margin-bottom: 12px;
+            .price-value,
+            .price-figure {
+              font-size: 1.65rem;
+            }
+            .price-term {
               font-size: 1rem;
-              line-height: 2.3;
             }
           }
-          .plan-footer {
-            .plan-price {
-              margin-bottom: 12px;
-              .price-value,
-              .price-figure {
-                font-size: 1.65rem;
-              }
-              .price-term {
-                font-size: 1rem;
-              }
-            }
-            .helper {
-              font-size: 0.81rem;
-              margin-bottom: 10px;
-            }
-            .plan-btn .fs-btn {
-              font-size: 1.25rem !important;
+          .helper {
+            font-size: 0.81rem;
+            margin-bottom: 10px;
+          }
+          .plan-btn{
+            .fs-home-btn,.fs-btn {
+              font-size: 0.75rem !important;
               font-weight: 500;
               padding: 7px 36px;
               margin: 0;
             }
-          }
-          .border-line-container {
-            .border-line {
-              border-top: solid 15px #c8dc50;
-              border-right: solid 15px #c8dc50;
-              float: right;
-              width: 56px;
-              height: 94px;
-              margin-top: -7.5px;
-              margin-right: -7.5px;
-            }
+          } 
+        }
+        .border-line-container {
+          .border-line {
+            border-top: solid 15px #c8dc50;
+            border-right: solid 15px #c8dc50;
+            float: right;
+            width: 56px;
+            height: 94px;
+            margin-top: -7.5px;
+            margin-right: -7.5px;
           }
         }
-        .text-label {
-          margin-top: 8px;
-          text-align: center;
-          .title,
-          .sub-title {
-            font-size: 1.5rem;
-            padding-left: 5px;
-            display: inline-block;
-          }
+      }
+      .text-label {
+        margin-top: 8px;
+        text-align: center;
+        .title,
+        .sub-title {
+          font-size: 1.5rem;
+          padding-left: 5px;
+          display: inline-block;
         }
       }
     }

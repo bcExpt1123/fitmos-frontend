@@ -3,8 +3,9 @@ import React from "react";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 
-import SectionSubscription from "./SectionSubscription";
-import SectionFaq from "./SectionFaq";
+import SectionSubscription from "./sections/SectionSubscription";
+import SectionSubscriptionBank from "./sections/SectionSubscriptionBank";
+import SectionFaq from "./sections/SectionFaq";
 
 import "./assets/scss/theme/style.scss";
 import "./assets/scss/theme/mbr-additional.css";
@@ -14,7 +15,8 @@ const PricingPage = () => (
   <>
     <NavBar transparent={true} />
 
-    <SectionSubscription />
+    {/* <SectionSubscription /> */}
+    <SectionSubscriptionBank />
 
     <SectionFaq />
 

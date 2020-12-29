@@ -1,19 +1,10 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/styles";
+import { Button, Paper, TextField, Grid, IconButton, Select, InputLabel, MenuItem, FormControl,Checkbox, FormControlLabel } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import IconButton from "@material-ui/core/IconButton";
-import Select from "@material-ui/core/Select";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
 import {
   $changeItem,
   $saveItem,
@@ -37,6 +28,7 @@ class Main extends Component {
     return false;
   };
   handleCapture({ target }) {
+    console.log(target)
     let file = URL.createObjectURL(target.files[0]);
     this.setState({ file });
     this.props.$updateItemImage(target.files);
@@ -44,6 +36,13 @@ class Main extends Component {
   handleChange(name) {
     return event => {
       this.props.$updateItemValue(name, event.target.value);
+    };
+  }
+  handleChangeCheckbox(name) {
+    return event => {
+      let value = 'yes';
+      if(this.props.item[name] === 'yes')value = 'no'
+      this.props.$updateItemValue(name, value);
     };
   }
   useStyles() {
@@ -131,10 +130,19 @@ class Main extends Component {
                           margin="normal"
                         />
                       </Grid>
-                      <Grid item sm={8}>
+                      <Grid item sm={2}>
+                        <TextField
+                          id="free-duration"
+                          label="Free duration"
+                          className={this.classes.textField}
+                          type="number"
+                          value={this.props.item.free_duration}
+                          onChange={this.handleChange("free_duration")}
+                          margin="normal"
+                        />
                       </Grid>
-                      <Grid item sm={4}>
-                        <FormControl className={this.classes.formControl}>
+                      <Grid item sm={2}>
+                        <FormControl className={this.classes.formControl} style={{marginTop:'16px'}}>
                           <InputLabel id="new-customer-coupon-label">Default Frequency</InputLabel>
                           <Select
                             labelId="new-customer-coupon-label"
@@ -144,20 +152,81 @@ class Main extends Component {
                             style={{width:'200px'}}
                           >
                             <MenuItem value="">None</MenuItem>
-                            {this.props.item.monthly!=null && this.props.item.monthly!=""&&(
+                            {this.props.item.monthly!==null && this.props.item.monthly!==""&&(
                               <MenuItem value="1">Monthly</MenuItem>
                             )}
-                            {this.props.item.quarterly!=null && this.props.item.quarterly!=""&&(
+                            {this.props.item.quarterly!==null && this.props.item.quarterly!==""&&(
                               <MenuItem value="3">Quarterly</MenuItem>
                             )}
-                            {this.props.item.semiannual!=null && this.props.item.semiannual!=""&&(
+                            {this.props.item.semiannual!==null && this.props.item.semiannual!==""&&(
                               <MenuItem value="6">Semiannual</MenuItem>
                             )}
-                            {this.props.item.yearly!=null && this.props.item.yearly!=""&&(
+                            {this.props.item.yearly!==null && this.props.item.yearly!==""&&(
                               <MenuItem value="12">Yearly</MenuItem>
                             )}
                           </Select>
                         </FormControl>
+                      </Grid>
+                      <Grid item sm={6}>
+                        {this.props.item.monthly!==null && this.props.item.monthly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_1"
+                            checked={this.props.item.bank_1==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Monthly"
+                            onChange={this.handleChangeCheckbox("bank_1")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.quarterly!==null && this.props.item.quarterly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_3"
+                            checked={this.props.item.bank_3==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Quarterly"
+                            onChange={this.handleChangeCheckbox("bank_3")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.semiannual!==null && this.props.item.semiannual!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_6"
+                            checked={this.props.item.bank_6==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Semiannual"
+                            onChange={this.handleChangeCheckbox("bank_6")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                        {this.props.item.yearly!==null && this.props.item.yearly!==""&&(
+                          <FormControlLabel
+                            className={this.classes.formControl}
+                            value="bank_11"
+                            checked={this.props.item.bank_12==='yes'}
+                            control={<Checkbox color="primary" />}
+                            label="Yearly"
+                            onChange={this.handleChangeCheckbox("bank_12")}
+                            style={{marginTop:'27px', marginLeft:"10px"}}
+                            labelPlacement="end"
+                          />
+                        )}
+                      </Grid>
+                      <Grid item sm={2}>
+                        <TextField
+                          id="bank_fee"
+                          label="Bank Fee"
+                          className={this.classes.textField}
+                          type="number"
+                          value={this.props.item.bank_fee}
+                          onChange={this.handleChange("bank_fee")}
+                          margin="normal"
+                        />
                       </Grid>
                       <Grid item sm={12}>
                         <TextField
@@ -191,9 +260,9 @@ class Main extends Component {
                     </label>
                     <div>
                       {this.state.file ? (
-                        <img src={this.state.file} width="200px" />
+                        <img src={this.state.file} width="200px" alt="state file alt"/>
                       ) : (
-                        <img src={this.props.item.photo_path} width="200px" />
+                        <img src={this.props.item.photo_path} width="200px"  alt="props file alt"/>
                       )}
                     </div>
                   </Grid>
@@ -230,7 +299,6 @@ const SubscriptionManagerEdit = injectIntl(
 class Sub extends Component {
   componentDidMount() {
     const id = this.props.match.params.id;
-    const item = this.props.item;
     this.props.$changeItem(id);
   }
   render() {
@@ -263,7 +331,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="subscroption-manager-form"
               type="submit"

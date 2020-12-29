@@ -9,7 +9,7 @@ const styles = {};
 
 class StepTrainingPlans extends React.Component {
   componentDidMount() {
-    const { gender, goal } = this.props;
+    //const { gender, goal } = this.props;
 
     //trackVirtualPageImpression(      'training-plans',      `?gender=${gender}&goal=${goal}`,    );
   }

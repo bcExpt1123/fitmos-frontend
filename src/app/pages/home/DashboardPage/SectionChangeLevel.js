@@ -1,12 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import Button from "react-bootstrap/Button";
-import Modal from "react-bootstrap/Modal";
-import { Formik } from "formik";
-import Form from "react-bootstrap/Form";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Table from "react-bootstrap/Table";
+import {Button, Modal, Form } from "react-bootstrap";
 import { http } from "../services/api";
 import { updateCustomerAttribute as updateConditionAction } from "../../home/redux/auth/actions";
 import { $resetPublished } from "../../../../modules/subscription/benchmark";
@@ -43,7 +37,7 @@ class ChangeLevel extends React.Component {
     }
   }
   handleLevel = async () => {
-    const res = await http({
+    await http({
       method: "POST",
       app: "user",
       path: "customers/changeCondition",

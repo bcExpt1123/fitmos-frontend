@@ -1,4 +1,6 @@
+import { persistReducer } from "redux-persist";
 import { handleActions } from "redux-actions";
+import storage from "redux-persist/lib/storage";
 import {
   paymentRequested,
   paymentSucceeded,
@@ -10,7 +12,12 @@ import {
   setChangePlan,
   clearChangePlan,
   setPayPalPlanId,
-  setKeyValue
+  setKeyValue,
+  setCheckoutKind,
+  startBankRenewal,
+  doneBankRenewal,
+  done,
+  start
 } from "./actions";
 
 const initialState = {
@@ -18,6 +25,7 @@ const initialState = {
   idempotencyKey: undefined,
   paymentTestMode: null,
   changePlan: true,
+  checkoutKind:null,
   selectedPaymentProvider: null,
   stripe: {
     intent: undefined,
@@ -27,10 +35,20 @@ const initialState = {
   paypal: {
     planId: undefined,
     startTime: undefined
-  }
+  },
+  bank:{
+    renewal:false,
+  },
+  status:false,
 };
 
-export default handleActions(
+export default persistReducer(
+  {
+    storage,
+    key: "checkout",
+    whitelist: ["status"]
+  },
+  handleActions(
   {
     [paymentRequested]: state => {
       return {
@@ -85,6 +103,12 @@ export default handleActions(
         changePlan: true
       };
     },
+    [setCheckoutKind]: (state, {payload}) => {
+      return {
+        ...state,
+        checkoutKind: payload.checkoutKind
+      };
+    },
     [clearChangePlan]: state => {
       return {
         ...state,
@@ -105,7 +129,33 @@ export default handleActions(
         ...state,
         [key]: value
       };
-    }
+    },
+    [start]:state => {
+      return {
+        ...state,
+        status: false
+      };
+    },
+    [done]:state => {
+      return {
+        ...state,
+        status: 'done'
+      };
+    },
+    [startBankRenewal]:state => {
+      let bank = {renewal:true}
+      return {
+        ...state,
+        bank
+      };
+    },
+    [doneBankRenewal]:state => {
+      let bank = {renewal:false}
+      return {
+        ...state,
+        bank
+      };
+    },
   },
   initialState
-);
+));

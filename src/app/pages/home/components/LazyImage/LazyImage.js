@@ -5,7 +5,7 @@ import classnames from "classnames";
 
 import Image from "../Image";
 
-const generateBlurredUrl = url => {
+/*const generateBlurredUrl = url => {
   const [src, query] = url.split("?");
   const params = new URLSearchParams(query);
 
@@ -16,7 +16,7 @@ const generateBlurredUrl = url => {
 
   return `${src}?${params.toString()}`;
   //return '../../assets/media/blur.png';
-};
+};*/
 
 class LazyImage extends React.Component {
   state = { isLoaded: false, isVisible: false };

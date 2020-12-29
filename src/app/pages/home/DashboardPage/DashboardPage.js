@@ -16,7 +16,7 @@ const SettingsPage = ({ currentUser }) => {
           <div className="col-12 col-md-6">
             {currentUser.has_active_workout_subscription ? (
               <>
-                {currentUser.customer.email_update==0&&(
+                {currentUser.customer.email_update===0&&(
                   <SectionEmail />
                 )}
                 <SectionWorkout />

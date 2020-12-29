@@ -4,36 +4,28 @@ import { injectIntl} from "react-intl";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import { Formik, Form } from "formik";
-import get from "lodash/get";
 import usePaymentInputs from "react-payment-inputs/es/usePaymentInputs";
 import { withRouter } from "react-router";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 import Button from "../../components/Button";
 import Card from "../../components/Card";
 import FormattedPrice from "../../components/FormattedPrice";
 import Spinner from "../../components/Spinner";
-import { PaypalButton } from "../../components/PaymentButton";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
-import ChargingInfo from "./ChargingInfo";
 import CreditCardForm from "./CreditCardForm";
 //import CreditCardLogo from './CreditCardLogo';
 //import { usePayPal } from './usePayPal';
 
 import {
-  payWithPayPal,
   payWithNmi,
   setIdempotencyKey,
   changePaymentProvider,
   paymentRequested,
-  canceledPayPal,
-  errorPayPal
 } from "../../redux/checkout/actions";
-import { $fetchIndex, } from "../../../../../modules/subscription/tocken";
+import { $fetchIndex } from "../../../../../modules/subscription/tocken";
 import { uuidv4 } from "../../../../../lib/uuidv4";
 import { PAYMENT_PROVIDER } from "../../constants/payment-provider";
-
-const paypalImgUrl = require("../../assets/img/paypal-sm.png");
 
 const BRANDS = {};
 // These need to be defined outside of the component. Otherwise, it will cause infinite render loop.
@@ -88,65 +80,45 @@ const creditCardInitialValues = {
   zipCode: ""
 };
 
-const mapStateToProps = state => ({
-  countryCode: state.countryCode,
-  frequency: state.service.frequency,
-  isProcessingPayment: state.checkout.isProcessingPayment,
-  paymentTestMode: state.checkout.paymentTestMode,
-  paypalInfo: state.checkout.paypal
-});
-
-const mapDispatchToProps = dispatch => ({
-  actions: bindActionCreators(
-    {
-      payWithPayPal,
-      payWithNmi,
-      setIdempotencyKey,
-      changePaymentProvider,
-      paymentRequested,
-      canceledPayPal,
-      errorPayPal
-    },
-    dispatch
-  )
-});
-
 const PaymentForm = ({
-  actions,
   service,
-  frequency,
-  checkoutKind,
   currency,
-  isProcessingPayment,
   pricing,
   selectedProduct,
   activeVoucher,
   referrer,
-  paymentTestMode,
-  paypalInfo,
-  history
 }) => {
+  const frequency = useSelector(({service})=>service.frequency);
+  const isProcessingPayment = useSelector(({checkout})=>checkout.isProcessingPayment);
+  const paymentType = useSelector(({service})=>service.type);
+  const paymentTestMode = useSelector(({checkout})=>checkout.paymentTestMode);
+  const history = useHistory();
+  const actions = {
+    payWithNmi,
+    setIdempotencyKey,
+    changePaymentProvider,
+    paymentRequested,
+  }
+  const checkoutKind = useSelector(({checkout})=>checkout.checkoutKind);
   // Set idempotency key, used to prevent submitting the payment form more
   // than once with the same data, when visiting the page. It's required by
   // backend to process the payment request. It's regenerated in saga, whenever
   // there's an error during payment, to allow submitting the form again.
-  useEffect(() => {
-    actions.setIdempotencyKey({ idempotencyKey: uuidv4() });
-    actions.changePaymentProvider(PAYMENT_PROVIDER.NMI);
-    dispatch($fetchIndex());
-    setClicked(true);
-    console.log(clicked);
-  }, [actions]);
   // PayPal JS library opens its payment flow in a popup, so we need to load it
   // upfront to make sure that the time from user's click on the submit button,
   // till the popup shows up is less than 2 seconds. Otherwise, some browser,
   // like e.g. Firefox, can block the popup.
-  const payPal = true; //usePayPal();
   const dispatch = useDispatch();
-  const canUsePaypal = false;//PAYPAL_CURRENCIES.includes(currency.code);
+  useEffect(() => {
+    dispatch(actions.setIdempotencyKey({ idempotencyKey: uuidv4() }));
+    dispatch(actions.changePaymentProvider(PAYMENT_PROVIDER.NMI));
+    dispatch($fetchIndex());
+    setClicked(true);
+  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const canUseNmi = true; //NMI_COUNTRIES.includes(countryCode);
   const creditCardProvider = PAYMENT_PROVIDER.NMI;
   const cards = useSelector(({ tocken }) => tocken.items);
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   const initialValues = {
     creditCard: creditCardInitialValues,
     nmiPaymentToken:''
@@ -168,18 +140,12 @@ const PaymentForm = ({
   });
   const theme = service === BRANDS.NUTRITION ? "nutrition" : "training";
   let clientId;
-  const {
-    REACT_APP_PAYPAL_SANDBOX_CLIENT_ID,
-    REACT_APP_PAYPAL_CLIENT_ID
-  } = process.env;
-  if (paymentTestMode) clientId = REACT_APP_PAYPAL_SANDBOX_CLIENT_ID;
-  else clientId = REACT_APP_PAYPAL_CLIENT_ID;
 
   const onSubmit = (values, { setErrors }) => {
     console.log('submit')
     switch (selectedPaymentProvider) {
       case PAYMENT_PROVIDER.NMI:
-        actions.payWithNmi({
+        dispatch(actions.payWithNmi({
           checkoutKind,
           creditCard: {
             ...values.creditCard,
@@ -191,17 +157,9 @@ const PaymentForm = ({
           frequency,
           setErrors,
           history
-        });
+        }));
         break;
-      case PAYMENT_PROVIDER.PAYPAL:
-        /*actions.payWithPayPal({
-                    service,
-                    checkoutKind,
-                    selectedProduct,
-                    activeVoucher,
-                    pricing,
-                    referrer,
-                });*/
+      case PAYMENT_PROVIDER.BANK:
         break;
       default:
         break;
@@ -223,7 +181,7 @@ const PaymentForm = ({
                     values,
                     countryCode,
                 });*/
-        if(values.nmiPaymentToken =='' || values.nmiPaymentToken=='new'){
+        if(values.nmiPaymentToken === '' || values.nmiPaymentToken === 'new'){
           if (Object.keys(creditCardErrors).length) {
             errors.creditCard = creditCardErrors;
           }
@@ -245,8 +203,8 @@ const PaymentForm = ({
       initialValues={initialValues}
       onSubmit={onSubmit}
       validate={validate}
-      isInitialValid={false}
-      render={({ isValid, errors, touched, values,setFieldValue }) => (
+    >  
+      {({ isValid, errors, touched, values,setFieldValue }) => (
         <Form noValidate>
           <Card noMarginBottom className="payment-card">
             <fieldset
@@ -262,7 +220,7 @@ const PaymentForm = ({
                 checked={selectedPaymentProvider === creditCardProvider}
                 onChange={() => {
                   setSelectedPaymentProvider(creditCardProvider);
-                  actions.changePaymentProvider(creditCardProvider);
+                  dispatch(actions.changePaymentProvider(creditCardProvider));
                 }}
               />
               <label
@@ -284,7 +242,7 @@ const PaymentForm = ({
                     </NavLink>
                     {cards.map((card,index)=>
                       <div key={card.id}>
-                        {index==0?(
+                        {index===0?(
                           <>
                             <input
                               className={"expandableTokenToggle"}
@@ -293,7 +251,7 @@ const PaymentForm = ({
                               ref={ref}
                               name="nmiSavedCard"
                               value={card.id}
-                              checked={values.nmiPaymentToken!=''&&values.nmiPaymentToken ==card.id}
+                              checked={values.nmiPaymentToken!==''&&values.nmiPaymentToken === card.id}
                               onChange={() => {
                                 setFieldValue('nmiPaymentToken',card.id);
                               }}          
@@ -303,7 +261,7 @@ const PaymentForm = ({
                               htmlFor={`credit-card-token-radio-button${card.id}`}
                             >
                               {card.holder} 
-                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} />
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
                               &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
                             </label>
                           </>
@@ -315,7 +273,7 @@ const PaymentForm = ({
                               type="radio"
                               name="nmiSavedCard"
                               value={card.id}
-                              checked={values.nmiPaymentToken!=''&&values.nmiPaymentToken ==card.id}
+                              checked={values.nmiPaymentToken !== '' && values.nmiPaymentToken === card.id}
                               onChange={() => {
                                 console.log("nmi payment")
                                 setFieldValue('nmiPaymentToken',card.id);
@@ -326,7 +284,7 @@ const PaymentForm = ({
                               htmlFor={`credit-card-token-radio-button${card.id}`}
                             >
                               {card.holder} 
-                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} />
+                              <img src={toAbsoluteUrl(`/media/cards/${card.type}.png`)} alt="card-type-alt"/>
                               &#9679;&#9679;&#9679;{card.last4} {card.expiry_month+'/'+card.expiry_year}
                             </label>
                           </>
@@ -341,7 +299,7 @@ const PaymentForm = ({
                         type="radio"
                         name="nmiSavedCard"
                         value="new"
-                        checked={values.nmiPaymentToken =='new'}
+                        checked={values.nmiPaymentToken === 'new'}
                         onChange={() => {
                           setFieldValue('nmiPaymentToken','new');
                         }}          
@@ -352,7 +310,7 @@ const PaymentForm = ({
                       >
                         Use a new Card
                       </label>
-                      {values['nmiPaymentToken'] =='new'&&(
+                      {values['nmiPaymentToken'] === 'new' &&(
                         <CreditCardForm
                           errors={errors}
                           touched={touched}
@@ -375,38 +333,17 @@ const PaymentForm = ({
               </section>
             </fieldset>
 
-            {canUsePaypal && (
-              <fieldset className={"expandable"} data-cy="paypal-radio-button">
-                <input
-                  className={"expandableToggle"}
-                  id="paypal-radio-button"
-                  name="paymentOption"
-                  type="radio"
-                  value="paypal"
-                  checked={selectedPaymentProvider === PAYMENT_PROVIDER.PAYPAL}
-                  onChange={() => {
-                    setSelectedPaymentProvider(PAYMENT_PROVIDER.PAYPAL);
-                    actions.changePaymentProvider(PAYMENT_PROVIDER.PAYPAL);
-                  }}
-                />
-                <label
-                  className={"expandableHeader"}
-                  htmlFor="paypal-radio-button"
-                >
-                  Paypal
-                  <img src={paypalImgUrl} alt="PayPal" />
-                </label>
-              </fieldset>
-            )}
           </Card>
 
           <Card className="payment-card second">
             <div className={"notes mt-4"}>
-              <p>
-                La suscripción se renovará automáticamente una vez transcurrido
-                el término del plan. Usted podrá cancelar la misma en cualquier
-                momento, libre de cargos.
-              </p>
+              {paymentType!=='bank'&&
+                <p>
+                  La suscripción se renovará automáticamente una vez transcurrido
+                  el término del plan. Usted podrá cancelar la misma en cualquier
+                  momento, libre de cargos.
+                </p>
+              }
               <p>
                 Al suscribirse estará aceptando nuestros &nbsp;
                   <a
@@ -428,7 +365,7 @@ const PaymentForm = ({
               </p>
             </div>
 
-            {selectedPaymentProvider === PAYMENT_PROVIDER.NMI ? (
+            {paymentType!=='bank' && selectedPaymentProvider === PAYMENT_PROVIDER.NMI && (
               <Button
                 theme={theme}
                 type="submit"
@@ -437,9 +374,10 @@ const PaymentForm = ({
                   // all providers - disable button while processing payment
                   isProcessingPayment ||
                   // Nmi - disable button if Nmi credit card and/or personal info fields are invalid
+                  /*eslint-disable no-mixed-operators*/
                   (selectedPaymentProvider === PAYMENT_PROVIDER.NMI && 
                     ((!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)) && (cards && cards.length>0)===false || 
-                    (cards && cards.length>0)&&(values.nmiPaymentToken=='new' && (!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)))))
+                    (cards && cards.length>0)&&(values.nmiPaymentToken==='new' && (!Boolean(values.creditCard.holder) || !Boolean(values.creditCard.number) || !Boolean(values.creditCard.exp) || !Boolean(values.creditCard.cvc) || !Boolean(values.creditCard.cvc.length>2)))))
                 }
                 data-cy="submit button"
                 className="fs-btn"
@@ -461,73 +399,12 @@ const PaymentForm = ({
                   </>
                 )}
               </Button>
-            ) : (
-              <>
-                <span className="hidden">
-                  PAGAR AHORA -{" "}
-                  <FormattedPrice
-                    price={pricing.discountedPrices.total}
-                    currency={currency}
-                    locale="en"
-                  />{" "}
-                  / {frequency} {frequency > 1 ? <>MESES</> : <>MES</>}
-                </span>
-                <PaypalButton
-                  createSubscription={(data, paypalActions) => {
-                    actions.paymentRequested();
-                    let paypalData;
-                    if(paypalInfo.startTime){
-                      const startTime = new Date(paypalInfo.startTime);
-                      const today = new Date();
-                      let startDateTime;
-                      if (today > startTime) {
-                        startTime.setTime(today.getTime() + 30 * 60 * 1000);
-                        startDateTime = startTime.toISOString();
-                      } else {
-                        startDateTime = paypalInfo.startTime;
-                      }
-                      paypalData = {
-                        plan_id: paypalInfo.planId,
-                        start_time: startDateTime
-                      }
-                    }else{
-                      paypalData = {
-                        plan_id: paypalInfo.planId
-                      }
-                    }
-                    return paypalActions.subscription.create(paypalData);
-                  }}
-                  onApprove={(data, paypalActions) => {
-                    actions.payWithPayPal({data, history});
-                  }}
-                  onCancel={data => {
-                    // Show a cancel page, or return to cart
-                    actions.canceledPayPal();
-                  }}
-                  onError={err => {
-                    // Show an error page here, when an error occurs
-                    console.log(err);
-                    actions.errorPayPal(err);
-                  }}
-                  options={{
-                    clientId: clientId,
-                    disableFunding: "credit,card",
-                    vault: true
-                  }}
-                  style={{
-                    color: "blue"
-                  }}
-                />
-              </>
-            )}
+            )} 
           </Card>
         </Form>
       )}
-    />
+    </Formik>  
   );
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withRouter(injectIntl(PaymentForm)));
+export default PaymentForm;

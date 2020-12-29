@@ -12,7 +12,7 @@ const PasswordResetPage = ({ intl }) => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(initialAlerts());
-  }, []);
+  });
 
   useBodyClass(`page-auth`);
   return (

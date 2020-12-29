@@ -6,9 +6,12 @@ import * as customer from "../../modules/subscription/customer";
 import * as admin from "../../modules/subscription/admin";
 import * as service from "../../modules/subscription/service";
 import * as transaction from "../../modules/subscription/transaction";
+import * as bankTransferRequest from "../../modules/subscription/bankTransferRequest";
 import * as coupon from "../../modules/subscription/coupon";
+import * as linkCoupon from "../../modules/subscription/linkCoupons";
 import * as subscription from "../../modules/subscription/subscription";
 import * as shortcode from "../../modules/subscription/shortcode";
+import * as keyword from "../../modules/subscription/keyword";
 import * as invoice from "../../modules/subscription/invoice";
 import * as cms from "../../modules/subscription/cms";
 import * as weekWorkout from "../../modules/subscription/weekWorkout";
@@ -19,6 +22,9 @@ import * as tocken from "../../modules/subscription/tocken";
 import * as cartSetting from "../../modules/subscription/cartSetting";
 import * as permission from "../../modules/subscription/permission";
 import * as medal from "../../modules/subscription/medal";
+import * as survey from "../../modules/subscription/survey";
+import * as company from "../../modules/subscription/company";
+import * as product from "../../modules/subscription/product";
 import { metronic } from "../../_metronic";
 import alertReducer from "../pages/home/redux/alert/reducer";
 import authReducer from "../pages/home/redux/auth/reducer";
@@ -42,6 +48,7 @@ import registrationReducer from "../pages/home/redux/registration/reducer";
 //import userSettings from './userSettings/reducer';
 import vouchersReducer from "../pages/home/redux/vouchers/reducer";
 import doneReducer from "../pages/home/redux/done/reducer";
+import workoutReducer from "../pages/home/redux/workout/reducer";
 //import { clearState } from './actions';
 //import { getStateFromCookies } from '../middlewares/cookie';
 
@@ -67,6 +74,7 @@ import registration from "../pages/home/redux/registration/saga";
 import userSettings from "../pages/home/redux/userSettings/saga";
 import vouchers from "../pages/home/redux/vouchers/saga";
 import done from "../pages/home/redux/done/saga";
+import workout from "../pages/home/redux/workout/saga";
 
 
 export const rootReducer = combineReducers({
@@ -77,9 +85,12 @@ export const rootReducer = combineReducers({
   admin:admin.reducer,
   service: service.reducer,
   transaction: transaction.reducer,
+  bankTransferRequest:bankTransferRequest.reducer,
   coupon: coupon.reducer,
+  linkCoupon: linkCoupon.reducer,
   subscription: subscription.reducer,
   shortcode: shortcode.reducer,
+  keyword: keyword.reducer,
   invoice: invoice.reducer,
   cms: cms.reducer,
   weekWorkout:weekWorkout.reducer,
@@ -99,7 +110,11 @@ export const rootReducer = combineReducers({
   auth: authReducer,
   checkout: checkoutReducer,
   vouchers: vouchersReducer,
-  done: doneReducer
+  done: doneReducer,
+  workout: workoutReducer,
+  survey: survey.reducer,
+  company: company.reducer,
+  product: product.reducer,
 });
 
 export function* rootSaga() {
@@ -109,9 +124,12 @@ export function* rootSaga() {
     admin.saga(),
     service.saga(),
     transaction.saga(),
+    bankTransferRequest.saga(),
     coupon.saga(),
+    linkCoupon.saga(),
     subscription.saga(),
     shortcode.saga(),
+    keyword.saga(),
     invoice.saga(),
     cms.saga(),
     weekWorkout.saga(),
@@ -134,6 +152,10 @@ export function* rootSaga() {
     userSettings(),
     checkout(),
     vouchers(),
-    done()
+    done(),
+    workout(),
+    survey.saga(),
+    company.saga(),
+    product.saga(),
   ]);
 }

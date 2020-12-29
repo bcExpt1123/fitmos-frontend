@@ -1,4 +1,3 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
@@ -6,9 +5,7 @@ import {
   takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
-import { push } from "react-router-redux";
 import storage from "redux-persist/lib/storage";
 import { http,fileDownload } from "../../app/pages/home/services/api";
 import {
@@ -37,6 +34,8 @@ export const actionTypes = {
   SUBSCRIPTION_SET_ITEM_ERROR: "SUBSCRIPTION_SET_ITEM_ERROR",
   SUBSCRIPTION_TAKE_FREE_MEMBERSHIP: "SUBSCRIPTION_TAKE_FREE_MEMBERSHIP",
   SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP: "SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP",
+  SUBSCRIPTION_CANCEL_ACTION_CONFIRM:"SUBSCRIPTION_CANCEL_ACTION_CONFIRM",
+  SUBSCRIPTION_CANCEL_ACTION_COMPLETED:"SUBSCRIPTION_CANCEL_ACTION_COMPLETED",
   //for pagination
   SUBSCRIPTION_INDEX_META: "SUBSCRIPTION_INDEX_META",
   SUBSCRIPTION_PAGE_CHANGED: "SUBSCRIPTION_PAGE_CHANGED",
@@ -55,6 +54,11 @@ const initialState = {
     total: 0
   },
   item: null,
+  cancelled:{
+    just:null,
+    endDate:null,
+    completed:false,
+  },
   updatedItem: null,
   action: "",
   searchCondition: {
@@ -116,7 +120,8 @@ export const reducer = persistReducer(
         return { ...state, errors };
       case actionTypes.SUBSCRIPTION_SET_VALUE:
         return { ...state, [action.key]: action.value };    
-  
+      case actionTypes.SUBSCRIPTION_CANCEL_ACTION_CONFIRM:
+        return { ...state, cancelled:action.cancelled}
       default:
         return state;
     }
@@ -194,11 +199,14 @@ export function $export(searchCondition) {
 export function $takeFreeMembership(history) {
   return { type: actionTypes.SUBSCRIPTION_TAKE_FREE_MEMBERSHIP, history };
 }
-export function $cancelActiveSubscription(enableEnd,reason,credit){
-  return { type:actionTypes.SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP,enableEnd,reason,credit};
+export function $cancelActiveSubscription(qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit){
+  return { type:actionTypes.SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP,qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit};
 }
 export function $show(id){
   return { type:actionTypes.SUBSCRIPTION_SHOW_ITEM,id}
+}
+export function $cancelActionCompleted(){
+  return { type:actionTypes.SUBSCRIPTION_CANCEL_ACTION_COMPLETED}
 }
 const subscriptionsRequest = (meta, searchCondition) =>
   http({
@@ -226,7 +234,7 @@ function* fetchSubscription() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -255,7 +263,7 @@ function* searchSubscription({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -289,12 +297,12 @@ function* changePageSize({ pageSize }) {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(subscriptionActionRequest, action, id);
-    const subscription = yield select(store => store.subscription);
+    yield call(subscriptionActionRequest, action, id);
+    yield select(store => store.subscription);
     yield put({ type: actionTypes.SUBSCRIPTION_INDEX_REQUEST });
   } catch (e) {
     console.log(e);
-    if (e.response && e.response.status == 401) {
+    if (e.response && e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -305,7 +313,7 @@ function* callAction({ action, id }) {
   }
 }
 function subscriptionActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `subscriptions/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -333,7 +341,7 @@ function* showItem({ id }) {
       key: "item",
       value: null
     });
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -359,7 +367,7 @@ function* takeFreeWorkflowSubscription({ history }) {
     }
   } catch (e) {
     console.log(e);
-    if (e.response && e.response.status == 401) {
+    if (e.response && e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -370,21 +378,29 @@ function* takeFreeWorkflowSubscription({ history }) {
   }
   yield put({ type: actionTypes.SUBSCRIPTION_LOADING_COMPLETE });
 }
-const cancelActiveWorkoutSubscription = (enableEnd,reason,credit)=>
-  http({ path: `subscriptions/cancel`, method: "POST",data:{serviceId:1,enableEnd,reason,credit} }).then(
+const cancelActiveWorkoutSubscription = (qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit)=>
+  http({ path: `subscriptions/cancel`, method: "POST",data:{serviceId:1,qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit} }).then(
     response => response.data
   );  
 
-function* takeCancelActiveWorkoutSubscription({enableEnd,reason,credit}){
+function* takeCancelActiveWorkoutSubscription({qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit}){
   try{
-    const result = yield call(cancelActiveWorkoutSubscription,enableEnd,reason,credit);
-    yield put(regenerateAuthAction());
-    yield put(
+    const result = yield call(cancelActiveWorkoutSubscription,qualityLevel,radioReason,reasonText,recommendation,enableEnd,credit);
+    //yield put(regenerateAuthAction());
+    /*yield put(
       addAlertMessage({
         type: "success",
         message: { id: "Subscription.Cancel.Success" }
       })
-    );
+    );*/
+    yield put({
+      type:actionTypes.SUBSCRIPTION_CANCEL_ACTION_CONFIRM,
+      cancelled:{
+        just:enableEnd,
+        endDate:result.endDate,
+        completed:true,
+      }
+    });
     yield put($fetchTokensIndex());
   } catch (e){
     yield put(
@@ -394,6 +410,19 @@ function* takeCancelActiveWorkoutSubscription({enableEnd,reason,credit}){
       })
     );
   }
+}
+function* takeCancelActionCompleted(){
+  const just = yield select(({subscription}) => subscription.cancelled.just);
+  yield put({
+    type:actionTypes.SUBSCRIPTION_CANCEL_ACTION_CONFIRM,
+    cancelled:{
+      just:null,
+      endDate:null,
+      completed:false,
+    }
+  });
+  if(just === "no")yield put(logOut());
+  if(just === "yes")yield put(regenerateAuthAction());
 }
 export function* saga() {
   yield takeLatest(actionTypes.SUBSCRIPTION_INDEX_REQUEST, fetchSubscription);
@@ -406,5 +435,6 @@ export function* saga() {
     actionTypes.SUBSCRIPTION_TAKE_FREE_MEMBERSHIP,
     takeFreeWorkflowSubscription
   );
-  yield takeLeading(actionTypes.SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP,takeCancelActiveWorkoutSubscription)
+  yield takeLeading(actionTypes.SUBSCRIPTION_CANCEL_ACTIVE_MEMBERSHIP,takeCancelActiveWorkoutSubscription);
+  yield takeLeading(actionTypes.SUBSCRIPTION_CANCEL_ACTION_COMPLETED,takeCancelActionCompleted);
 }

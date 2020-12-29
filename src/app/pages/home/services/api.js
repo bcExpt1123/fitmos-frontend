@@ -3,7 +3,6 @@
 import axios from "axios";
 import camelCase from "lodash/camelCase";
 import snakeCase from "lodash/snakeCase";
-import { createRef } from 'react';
 import store from "../../../store/store";
 
 export const API_URLS = {
@@ -22,6 +21,7 @@ export function http({
   method = "GET",
   app,
   path = "/",
+  httpUrl,
   headers = { Accept: "application/json" },
   data,
   params,
@@ -34,7 +34,8 @@ export function http({
     data,
     params
   };
-  config.url = url(app, path);
+  if(path===false)config.url = httpUrl;
+  else config.url = url(app, path);
 
   if (!skipAuthentication) {
     const idToken = authToken || store.getState().auth.accessToken;

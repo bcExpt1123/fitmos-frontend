@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-import { useParams } from "react-router-dom";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect } from "react-redux";
+import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import {
   $setNewItem,
@@ -12,15 +11,8 @@ import {
   $setErrorEmail
 } from "../../../modules/subscription/admin";
 import { validateEmail } from "../../../modules/validate.js";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "@material-ui/styles";
+import { Button, Paper, InputLabel, MenuItem, FormControl, TextField, Select, Grid } from "@material-ui/core";
 
 class Main extends Component {
   //function Main({item,isloading})
@@ -37,10 +29,10 @@ class Main extends Component {
   handleOnSubmit = e => {
     e.preventDefault();
     let validate = true;
-    if(this.props.item.id == null && this.props.item.password == ""){
+    if(this.props.item.id === null && this.props.item.password === ""){
       validate = false;
       this.setState({ password: "Password is required" });
-    }else if( this.props.item.password != this.props.item.confirm_password){
+    }else if( this.props.item.password !== this.props.item.confirm_password){
       validate = false;
       this.setState({ password: "Password is unmatched" });
     }else{
@@ -224,7 +216,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="user-form"
               type="submit"

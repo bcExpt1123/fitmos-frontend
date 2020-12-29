@@ -1,26 +1,35 @@
-import React, { Component } from "react";
-import { useParams } from "react-router-dom";
+import React, { Component, useState, useEffect } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
 import { withRouter } from "react-router";
+import { useHistory } from "react-router-dom";
+import { injectIntl } from "react-intl";
+import { makeStyles, withStyles } from "@material-ui/core";
+import { Button, Paper, TextField, Grid, InputLabel, IconButton } from "@material-ui/core";
+import LocalMovies from "@material-ui/icons/LocalMovies";
+import {Rating,Autocomplete} from '@material-ui/lab';
+import FavoriteIcon from '@material-ui/icons/Brightness1';
+import CKEditor from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { Player } from 'video-react';
+import "video-react/dist/video-react.css";
 import {
   $setNewItem,
   $saveItem,
   $updateItemValue,
-  $changeItem
+  $changeItem,
+  actionTypes,
+  $updateItemVideo
 } from "../../../modules/subscription/shortcode";
-import { validateEmail } from "../../../modules/validate.js";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import InputLabel from "@material-ui/core/InputLabel";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Select from "@material-ui/core/Select";
-import Grid from "@material-ui/core/Grid";
-
-const useStyles = () => {
+import { set } from "lodash";
+const StyledRating = withStyles({
+  iconFilled: {
+    color: 'red',
+  },
+  iconHover: {
+    color: '#ff3d47',
+  },
+})(Rating);
+const useStyles = ()=> {
   return makeStyles(theme => ({
     root: {
       display: "block",
@@ -32,64 +41,258 @@ const useStyles = () => {
     },
     margin: {
       margin: theme.spacing(1)
-    }
+    },
+    input: {
+      width: 200,
+    },  
   }));
-};
-
-class Main extends Component {
-  //function Main({item,isloading})
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleOnSubmit = this.handleOnSubmit.bind(this);
-    this.classes = this.useStyles();
-  }
-  handleOnSubmit = e => {
+}
+function Main() {
+  const item = useSelector(({ shortcode }) => shortcode.item);
+  const errors = useSelector(({ shortcode }) => shortcode.errors);
+  const isloading = useSelector(({ shortcode }) => shortcode.isloading);
+  const shortcodeList = useSelector(({ shortcode }) => shortcode.all);
+  const dispatch=useDispatch();
+  const history = useHistory();
+  const [file, setFile] = useState(false);
+  const [alternateA, setAlternateA] = useState("");
+  const [alternateB, setAlternateB] = useState("");
+  const classes = useStyles();
+  const handleOnSubmit = e => {
     e.preventDefault();
-    this.props.$saveItem(this.props.history);
+    dispatch($saveItem(history));
     return false;
   };
-  handleChange(name) {
+  const handleChange = (name)=> {
     return event => {
-      this.props.$updateItemValue(name, event.target.value);
+      if(name=="alternate_a")console.log(event.target.value)
+      dispatch($updateItemValue(name, event.target.value));
     };
   }
-  useStyles() {
-    return makeStyles(theme => ({
-      root: {
-        display: "block",
-        flexWrap: "wrap"
-      },
-      textField: {
-        marginLeft: theme.spacing(2),
-        marginRight: theme.spacing(2)
-      },
-      margin: {
-        margin: theme.spacing(1)
-      }
-    }));
+  const handleCapture = ({ target }) => {
+    if(file){
+      setFile(false);  
+    }
+    setTimeout(()=>{
+      const video = URL.createObjectURL(target.files[0]);
+      setFile(video);
+    },1)
+    dispatch($updateItemVideo(target.files));
   }
-  render() {
-    return (
-      <Paper className={this.classes.root} style={{ padding: "25px" }}>
-        {this.props.item ? (
-          <form
-            id="shortcode-form"
-            onSubmit={this.handleOnSubmit}
-            className={this.classes.root}
-            autoComplete="off"
-          >
-            <Grid container spacing={3}>
+  const onSelect = (name,item) => {
+    if(item && item.id){
+      dispatch($updateItemValue(name, item.id));
+    }else{
+    }
+  }
+  const filterLabel = (id)=>{
+    let shortcode;
+    if(shortcodeList) shortcode = shortcodeList.find((item)=>parseInt(item.id) === parseInt(id))
+    if(shortcode)return shortcode.name;
+    return "";
+  }
+  useEffect(()=>{
+    dispatch({type:actionTypes.SHORTCODE_UPDATE_LIST});
+  },[])
+  useEffect(()=>{
+    if(item&&item.alternate_a)setAlternateA(filterLabel(item.alternate_a));
+    else setAlternateA(filterLabel(""));
+    if(item&&item.alternate_b)setAlternateB(filterLabel(item.alternate_b));
+    else setAlternateB(filterLabel(""));
+  },[shortcodeList])
+  const workout = process.env.REACT_APP_WORKOUT;
+  return (
+    <Paper className={classes.root} style={{ padding: "25px" }}>
+      {item ? (
+        <form
+          id="shortcode-form"
+          onSubmit={handleOnSubmit}
+          className={classes.root}
+          autoComplete="off"
+        >
+          <Grid container spacing={3}>
+          {workout==='update'?
+            <>
+              <Grid container item xs={8} spacing={2}>
+                <Grid item xs={4}>
+                  <TextField
+                    required
+                    id="name"
+                    label="Name"
+                    error={errors.name.length === 0 ? false : true}
+                    helperText={errors.name}
+                    className={classes.textField}
+                    value={item.name}
+                    onChange={handleChange("name")}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={4}>
+                  <TextField
+                    required
+                    id="time"
+                    label="Time"
+                    type="number"
+                    className={classes.textField}
+                    value={item.time}
+                    onChange={handleChange("time")}
+                    margin="normal"
+                  />
+                </Grid>
+                {/* <Grid item xs={3}>
+                  <InputLabel id="instruction-label" className="mt-4">Difficultty</InputLabel>
+                  <StyledRating
+                    name="customized-color"
+                    value={item.level}
+                    onChange={handleChange("level")}
+                    getLabelText={(value) => `${value} Heart${value !== 1 ? 's' : ''}`}
+                    precision={1}
+                    icon={<FavoriteIcon fontSize="inherit" />}
+                  />                    
+                </Grid> */}
+                <Grid item xs={4}>
+                  <TextField
+                    required
+                    id="level"
+                    label="Level"
+                    select
+                    className={classes.textField}
+                    value={item.level}
+                    onChange={handleChange("level")}
+                    margin="normal"
+                  >
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </TextField>
+                </Grid>
+                <Grid item xs={3}>
+                  {shortcodeList&&
+                    <Autocomplete
+                      id="alternate_a"
+                      inputValue={alternateA}
+                      onInputChange={(event, newInputValue) => {
+                        setAlternateA(newInputValue)
+                      }}
+                      options={shortcodeList}
+                      onChange={(evt,value)=>{onSelect('alternate_a',value)}}
+                      getOptionLabel={(option) => option.name}
+                      getOptionSelected={(option) => option.id === item.alternate_a}
+                      renderInput={(params) => <TextField {...params} label="Alternate Mov. A" margin="normal" />}
+                    />                  
+                  }
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    id="multiplier_a"
+                    label="Multiplier"
+                    type="number"
+                    className={classes.textField}
+                    value={item.multipler_a}
+                    onChange={handleChange("multipler_a")}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={3}>
+                  {shortcodeList&&
+                    <Autocomplete
+                      id="alternate_b"
+                      inputValue={alternateB}
+                      onInputChange={(event, newInputValue) => {
+                        setAlternateB(newInputValue)
+                      }}
+                      options={shortcodeList}
+                      onChange={(evt,value)=>{onSelect('alternate_b',value)}}
+                      getOptionLabel={(option) => option.name}
+                      renderInput={(params) => <TextField {...params} label="Alternate Mov. B" margin="normal" />}
+                    />            
+                  }      
+                </Grid>
+                <Grid item xs={3}>
+                  <TextField
+                    id="multiplier_b"
+                    label="Multiplier"
+                    type="number"
+                    className={classes.textField}
+                    value={item.multipler_b}
+                    onChange={handleChange("multipler_b")}
+                    margin="normal"
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <InputLabel id="instruction-label">Instructions</InputLabel>
+                  <CKEditor
+                    editor={ClassicEditor}
+                    data={item.instruction}
+                    onInit={editor => {
+                      // You can store the "editor" and use when it is needed.
+                      editor.setData( item.instruction );
+                      //console.log("Editor is ready to use!", editor);
+                    }}
+                    onChange={(event, editor) => {
+                      const data = editor.getData();
+                      dispatch($updateItemValue('instruction', data));
+                    }}
+                  />
+                </Grid>
+              </Grid>
+              <Grid item xs={4}>
+                <input
+                  accept="video/*"
+                  className={classes.input}
+                  style={{ display: "none" }}
+                  id="raised-button-file"
+                  multiple
+                  type="file"
+                  onChange={handleCapture}
+                />
+                <div className="admin-upload-video">
+                  {(item.video_url || file) && (
+                    <label htmlFor="raised-button-file">
+                      <IconButton color="primary" component="span">
+                        <LocalMovies />
+                      </IconButton>
+                    </label>
+                  )}
+
+                  <div className="uploaded-photo">
+                    {file ? (
+                      <Player
+                        autoPlay
+                        src={file}
+                      >
+                      </Player>
+                    ) : item.video_url ? (
+                      <Player
+                        autoPlay
+                        src={item.video_url}
+                      >
+                      </Player>
+                    ) : (
+                          <label htmlFor="raised-button-file">
+                            <IconButton color="primary" component="span">
+                              <LocalMovies />
+                            </IconButton>
+                          </label>
+                        )}
+                  </div>
+                </div>                
+              </Grid>
+            </>
+            :
+            <>
               <Grid item xs={6}>
                 <TextField
                   required
                   id="name"
                   label="Name"
-                  error={this.props.errors.name.length === 0 ? false : true}
-                  helperText={this.props.errors.name}
-                  className={this.classes.textField}
-                  value={this.props.item.name}
-                  onChange={this.handleChange("name")}
+                  error={errors.name.length === 0 ? false : true}
+                  helperText={errors.name}
+                  className={classes.textField}
+                  value={item.name}
+                  onChange={handleChange("name")}
                   margin="normal"
                 />
               </Grid>
@@ -98,41 +301,31 @@ class Main extends Component {
                   required
                   id="link"
                   label="Link"
-                  error={this.props.errors.link.length === 0 ? false : true}
-                  helperText={this.props.errors.link}
-                  className={this.classes.textField}
-                  value={this.props.item.link}
-                  onChange={this.handleChange("link")}
+                  error={errors.link.length === 0 ? false : true}
+                  helperText={errors.link}
+                  className={classes.textField}
+                  value={item.link}
+                  onChange={handleChange("link")}
                   margin="normal"
                 />
               </Grid>
-            </Grid>
+            </>
+          }
+          </Grid>
           </form>
-        ) : this.props.isloading ? (
-          <h3 className="kt-subheader__title" style={{ padding: "25px" }}>
-            Loading...
-          </h3>
-        ) : (
-          <h3 className="kt-subheader__title" style={{ padding: "25px" }}>
-            The Item doesn't exist
-          </h3>
-        )}
-      </Paper>
-    );
-  }
+      ) : isloading ? (
+        <h3 className="kt-subheader__title" style={{ padding: "25px" }}>
+          Loading...
+        </h3>
+      ) : (
+        <h3 className="kt-subheader__title" style={{ padding: "25px" }}>
+          The Item doesn't exist
+        </h3>
+      )}
+    </Paper>
+  );
 }
-const mapStateToProps = state => ({
-  item: state.shortcode.item,
-  errors: state.shortcode.errors,
-  isloading: state.shortcode.isloading
-});
-const mapDispatchToProps = {
-  $updateItemValue,
-  $saveItem
-};
-const ShortcodeCreate = injectIntl(
-  connect(mapStateToProps, mapDispatchToProps)(withRouter(Main))
-);
+const ShortcodeCreate = injectIntl(Main);
 
 class Sub extends Component {
   componentDidMount() {
@@ -172,7 +365,6 @@ class Sub extends Component {
         <div className="kt-subheader__toolbar">
           <div className="kt-subheader__wrapper">
             <Button
-              type="button"
               className="btn kt-subheader__btn-primary btn-primary"
               form="shortcode-form"
               type="submit"

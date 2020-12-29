@@ -293,10 +293,10 @@ var KTPortlet = function(elementId, options) {
             template:
               '<div class="tooltip tooltip-portlet tooltip bs-tooltip-' +
               placement +
-              '" role="tooltip">\
-                            <div class="tooltip-arrow arrow"></div>\
-                            <div class="tooltip-inner"></div>\
-                        </div>'
+              '" role="tooltip">\n'+
+                            '<div class="tooltip-arrow arrow"></div>\n'+
+                            '<div class="tooltip-inner"></div>\n'+
+                        '</div>'
           });
 
           KTUtil.data(remove).set("tooltip", tip);
@@ -314,10 +314,10 @@ var KTPortlet = function(elementId, options) {
             template:
               '<div class="tooltip tooltip-portlet tooltip bs-tooltip-' +
               placement +
-              '" role="tooltip">\
-                            <div class="tooltip-arrow arrow"></div>\
-                            <div class="tooltip-inner"></div>\
-                        </div>'
+              '" role="tooltip">\n'+
+                            '<div class="tooltip-arrow arrow"></div>\n'+
+                            '<div class="tooltip-inner"></div>\n'+
+                        '</div>'
           });
 
           KTUtil.data(reload).set("tooltip", tip);
@@ -337,10 +337,10 @@ var KTPortlet = function(elementId, options) {
             template:
               '<div class="tooltip tooltip-portlet tooltip bs-tooltip-' +
               placement +
-              '" role="tooltip">\
-                            <div class="tooltip-arrow arrow"></div>\
-                            <div class="tooltip-inner"></div>\
-                        </div>'
+              '" role="tooltip">\n'+
+                            '<div class="tooltip-arrow arrow"></div>\n'+
+                            '<div class="tooltip-inner"></div>\n'+
+                        '</div>'
           });
 
           KTUtil.data(toggle).set("tooltip", tip);
@@ -363,10 +363,10 @@ var KTPortlet = function(elementId, options) {
             template:
               '<div class="tooltip tooltip-portlet tooltip bs-tooltip-' +
               placement +
-              '" role="tooltip">\
-                            <div class="tooltip-arrow arrow"></div>\
-                            <div class="tooltip-inner"></div>\
-                        </div>'
+              '" role="tooltip">\n'+
+                            '<div class="tooltip-arrow arrow"></div>\n'+
+                            '<div class="tooltip-inner"></div>\n'+
+                        '</div>'
           });
 
           KTUtil.data(fullscreen).set("tooltip", tip);

@@ -1,8 +1,6 @@
-import React,{useState} from "react";
-import { useDispatch } from "react-redux";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import Paper from "@material-ui/core/Paper";
-
+import React from "react";
+import { makeStyles } from "@material-ui/core";
+import {Paper} from "@material-ui/core";
 import SubMenu from "../../../../app/components/SubMenu";
 
 const useStyles = () => {
@@ -25,7 +23,10 @@ const SettingsPage = ({ section }) => {
   const classes = useStyles();
   const profileLinks = [
     { name: "cart", url: "cart", label: "Abandon Cart Settings" },
-    { name: "permissions", url: "permissions", label: "Roles & Permissions" }
+    { name: "permissions", url: "permissions", label: "Roles & Permissions" },
+    { name: "referral", url: "referral", label: "Referral Discount" },
+    { name: "tagLine", url: "tag-line", label: "Tag Line" },
+    { name: "reports", url: "reports", label: "Reports" }
   ];
   return (
     <>

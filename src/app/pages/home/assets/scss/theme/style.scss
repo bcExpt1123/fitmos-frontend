@@ -2,13 +2,11 @@
  * Mobirise v4 theme ()
  * Copyright 2017 Mobirise
  */
-section {
-  background-color: #ffffff;
-}
 
 body {
   font-style: normal;
   line-height: 1.5;
+  font-weight: normal;
 }
 
 section,
@@ -76,6 +74,20 @@ body {
   color: #232323;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  font-weight:bold;
+}
 h1,
 h2,
 h3,
@@ -351,7 +363,7 @@ figure[mbr-media-size] {
 }
 /*! Buttons */
 .btn {
-  font-weight: 500;
+  font-weight: normal;
   border-width: 2px;
   font-style: normal;
   letter-spacing: 1px;

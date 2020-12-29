@@ -1,20 +1,15 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
-  takeLatest,
   takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
 import {
   INDEX_PAGE_SIZE_DEFAULT,
-  INDEX_PAGE_SIZE_OPTIONS
 } from "../constants/constants";
-import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
 
 export const actionTypes = {
@@ -173,7 +168,7 @@ function* fetchMedal() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.MEDAL_INDEX_FAILURE, error: e.message });
@@ -182,15 +177,15 @@ function* fetchMedal() {
 }
 function* callAction({ action, id }) {
   try {
-    const result = yield call(medalActionRequest, action, id);
+    yield call(medalActionRequest, action, id);
     const medal = yield select(store => store.medal);
-    if (action == "delete") {
+    if (action === "delete") {
       yield put({ type: actionTypes.MEDAL_INDEX_REQUEST });
     } else {
       let data = medal.data;
       data.forEach(item => {
-        if (item.id == id) {
-          if (action == "disable") item.status = "Draft";
+        if (item.id === id) {
+          if (action === "disable") item.status = "Draft";
           else item.status = "Publish";
         }
       });
@@ -201,7 +196,7 @@ function* callAction({ action, id }) {
       });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.MEDAL_INDEX_FAILURE, error: e.message });
@@ -209,7 +204,7 @@ function* callAction({ action, id }) {
   }
 }
 function medalActionRequest(action, id) {
-  if (action == "delete") {
+  if (action === "delete") {
     return http({ path: `medals/${id}`, method: "delete" }).then(
       response => response.data
     );
@@ -226,7 +221,7 @@ function* changeItem({ id }) {
   yield put({ type: actionTypes.MEDAL_LOADING_REQUEST });
   if (medal.data != null) {
     const filterMedals = medal.data.filter(medal => {
-      return medal.id == id;
+      return medal.id === id;
     });
     if (filterMedals.length > 0) {
       yield put({ type: actionTypes.MEDAL_SET_ITEM, item: filterMedals[0] });
@@ -240,7 +235,7 @@ function* changeItem({ id }) {
       yield put({ type: actionTypes.MEDAL_SET_ITEM, item: result });
     else yield put({ type: actionTypes.MEDAL_SET_ITEM, item: null });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.MEDAL_INDEX_FAILURE, error: e.message });
@@ -298,7 +293,7 @@ function* saveItem({ history }) {
       yield put({ type: actionTypes.MEDAL_CHANGE_SAVE_STATUS, status: false });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.MEDAL_INDEX_FAILURE, error: e.message });
@@ -308,7 +303,6 @@ function* saveItem({ history }) {
   }
 }
 function* newItemFetch(){
-  const medal = yield select(store => store.medal);
   const item = {
     id: null,
     name: "",

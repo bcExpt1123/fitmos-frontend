@@ -1,6 +1,5 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
-import { put, call, takeLatest, takeEvery,takeLeading, select } from "redux-saga/effects";
+import { put, call, takeLatest, takeLeading, select } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http,fileDownload } from "../../app/pages/home/services/api";
 import {
@@ -162,7 +161,7 @@ function* fetchTransaction() {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -191,7 +190,7 @@ function* searchTransaction({ name, value }) {
       meta: { total: result.total, pageTotal: result.last_page }
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({
@@ -219,39 +218,6 @@ function* changePageSize({ pageSize }) {
     meta: { page: 1, pageSize: pageSize }
   });
   yield put({ type: actionTypes.TRANSACTION_INDEX_REQUEST });
-}
-const findTransaction = id =>
-  http({ path: `transactions/${id}` }).then(response => response.data);
-function* changeItem({ id }) {
-  const transactions = yield select(store => store.transaction.data);
-  yield put({ type: actionTypes.TRANSACTION_LOADING_REQUEST });
-  if (transactions != null) {
-    const filterTransactions = transactions.filter(transaction => {
-      return transaction.id == id;
-    });
-    if (filterTransactions.length > 0) {
-      yield put({
-        type: actionTypes.TRANSACTION_SET_ITEM,
-        item: transactions[0]
-      });
-      return;
-    }
-  }
-  try {
-    const result = yield call(findTransaction, id);
-    if (result.id)
-      yield put({ type: actionTypes.TRANSACTION_SET_ITEM, item: result });
-    else yield put({ type: actionTypes.TRANSACTION_SET_ITEM, item: null });
-  } catch (e) {
-    if (e.response.status == 401) {
-      yield put(logOut());
-    } else {
-      yield put({
-        type: actionTypes.TRANSACTION_INDEX_FAILURE,
-        error: e.message
-      });
-    }
-  }
 }
 const findLog = id=>
   http({ path: `transactions/${id}/log` }).then(response => response.data);

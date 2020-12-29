@@ -1,28 +1,15 @@
 import React, { Component,useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
-import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import SearchIcon from "@material-ui/icons/Search";
-import ListAltIcon from "@material-ui/icons/ListAlt";
-import { red } from "@material-ui/core/colors";
-import TextField from "@material-ui/core/TextField";
-import MenuItem from "@material-ui/core/MenuItem";
-import FormControl from "@material-ui/core/FormControl";
-import InputLabel from "@material-ui/core/InputLabel";
-import Select from "@material-ui/core/Select";
+import {  injectIntl } from "react-intl";
+import { makeStyles } from "@material-ui/styles";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, 
+  colors, TextField, MenuItem, FormControl, InputLabel, Select } from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";  
+import ListAltIcon from "@material-ui/icons/ListAlt";  
 import classnames from "classnames";
-import Modal from "react-bootstrap/Modal";
+import {Modal } from "react-bootstrap";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
+import TablePaginationActions from "../../components/pagination/TablePaginationActions";
 import {
   $pageSize,
   $page,
@@ -47,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -113,7 +100,7 @@ function Main({ transactions, meta, $page, $pageSize }) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions != null &&
+              {transactions !== null &&
                 transactions.map(row => (
                   <TableRow key={row.id}>
                     <TableCell component="th" scope="row">
@@ -128,9 +115,9 @@ function Main({ transactions, meta, $page, $pageSize }) {
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Completed",
-                            "btn-label-danger": row.status == "Declined",
-                            "btn-label-brand": row.status == "Pending"
+                            "btn-label-success": row.status === "Completed",
+                            "btn-label-danger": row.status === "Declined",
+                            "btn-label-brand": row.status === "Pending"
                           }
                         )}
                       >
@@ -139,7 +126,7 @@ function Main({ transactions, meta, $page, $pageSize }) {
                     </TableCell>
                     {false&&(
                       <TableCell align="left" style={{ padding: "0" }}>
-                        {row.status != "Completed" && (
+                        {row.status !== "Completed" && (
                           <IconButton
                             className={classes.button}
                             aria-label="Log"

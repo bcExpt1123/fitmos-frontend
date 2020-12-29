@@ -1,24 +1,14 @@
 import React, { Component } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { FormattedMessage, injectIntl } from "react-intl";
+import { connect, useSelector } from "react-redux";
+import { injectIntl } from "react-intl";
 import TablePaginationActions from "../../components/pagination/TablePaginationActions";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableFooter from "@material-ui/core/TableFooter";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import TableRow from "@material-ui/core/TableRow";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "@material-ui/core";
+import {Table, TableHead, TableBody, TableCell, TableFooter, TablePagination, TableRow, Paper, IconButton, colors }from "@material-ui/core";
 import DisableIcon from "@material-ui/icons/Clear";
 import BookIcon from "@material-ui/icons/Book";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import EditIcon from "@material-ui/icons/Edit";
 import RedoIcon from "@material-ui/icons/Redo";
-import { red } from "@material-ui/core/colors";
 import { NavLink } from "react-router-dom";
 import classnames from "classnames";
 import { INDEX_PAGE_SIZE_OPTIONS } from "../../../modules/constants/constants";
@@ -38,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   iconHover: {
     margin: theme.spacing(2),
     "&:hover": {
-      color: red[800]
+      color: colors.red[800]
     }
   }
 }));
@@ -83,10 +73,10 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
     $pageSize(parseInt(event.target.value, 10));
   };
   const can = permission=>{
-    if(currentUser.type=='admin'&&currentUser.role!='super'){
+    if(currentUser.type==='admin'&&currentUser.role!=='super'){
       return currentUser.permissions.indexOf(permission)>-1;
     }
-    else if(currentUser.type=='admin'&&currentUser.role=='super'){
+    else if(currentUser.type==='admin'&&currentUser.role==='super'){
       return true;
     }
   }
@@ -127,8 +117,8 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
                         className={classnames(
                           " btn btn-bold btn-xs btn-font-sm normal",
                           {
-                            "btn-label-success": row.status == "Active",
-                            "btn-label-danger": row.status == "Disabled"
+                            "btn-label-success": row.status === "Active",
+                            "btn-label-danger": row.status === "Disabled"
                           }
                         )}
                       >
@@ -182,7 +172,7 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
                         </NavLink>
                       }
                       {false&&(<>
-                        {row.status == "Active" ? (
+                        {row.status === "Active" ? (
                           <IconButton
                             className={classes.button}
                             aria-label="Disable"

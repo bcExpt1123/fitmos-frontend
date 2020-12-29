@@ -1,12 +1,9 @@
-import objectPath from "object-path";
 import { persistReducer } from "redux-persist";
 import {
   put,
   call,
   takeLatest,
-  takeLeading,
   select,
-  delay
 } from "redux-saga/effects";
 import storage from "redux-persist/lib/storage";
 import { http } from "../../app/pages/home/services/api";
@@ -104,7 +101,7 @@ function* fetchCartSetting() {
       coupons:result.coupons,
     });
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CART_SETTING_FAILURE, error: e.message });
@@ -141,7 +138,7 @@ function* saveItem() {
       yield put({ type: actionTypes.CART_SETTING_CHANGE_SAVE_STATUS, status: false });
     }
   } catch (e) {
-    if (e.response.status == 401) {
+    if (e.response.status === 401) {
       yield put(logOut());
     } else {
       yield put({ type: actionTypes.CART_SETTING_FAILURE, error: e.message });
