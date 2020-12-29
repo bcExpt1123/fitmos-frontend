@@ -113,9 +113,9 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
           </div>  
         ):(
           step===0?(
-            <div className="actions">
-              <button className="previous" onClick={()=>setAll(true)}>Ver Workout</button>
-              <button onClick={()=>nextStep(block.slug,workouts.current)} className="next">
+            <div className="actions  mt-3 mb-3">
+              {/* <button className="previous" onClick={()=>setAll(true)}>Ver Workout</button> */}
+              <button onClick={()=>nextStep(block.slug,workouts.current)} className="start">
                 Comenzar
               </button>
             </div>

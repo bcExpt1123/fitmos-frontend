@@ -9,7 +9,7 @@ import Blog from "./Blog";
 import Blocks from "./Blocks";
 import Block from "./Block";
 import ModalView from "./ModalView";
-import { initialModalBlock } from "../../redux/workout/actions";
+import { initialModalBlock, convertContent,convertVideo,setVideo,  confirmModalNo, confirmModalYes } from "../../redux/workout/actions";
 
 const Body = ()=>{
   const workout = process.env.REACT_APP_WORKOUT;
@@ -49,7 +49,9 @@ const Body = ()=>{
           )}
           {line.video&&(
             <button onClick={()=>{
-                setVid(line.video.id);
+                dispatch(convertVideo());
+                dispatch(setVideo(line.video));
+                dispatch(confirmModalNo());
                 setShow(true);
                 http({
                   method: "POST",
@@ -71,6 +73,7 @@ const Body = ()=>{
   }
   const openModal = ()=>{
     setShow(true);
+    dispatch(confirmModalYes());
     dispatch(initialModalBlock());
   }
   return (
@@ -110,7 +113,10 @@ const Body = ()=>{
       )
     }
     {workout === 'update'?(
-      <ModalView isOpen={show} step={step} onClose={() => {setShow(false)}} />
+      <ModalView isOpen={show} step={step} onClose={() => {
+        dispatch(convertContent());
+        setShow(false)
+      }} />
     ):(
       <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)} />
     )}

@@ -15,6 +15,7 @@ import {
   stopRunning,
   setTimer,
   removeTimer,
+  replaceWithShortcode
 } from "./actions";
 
 const initialState = {
@@ -101,6 +102,30 @@ const reducer = persistReducer(
         ...state,
         timer:false,
       }),
+      [replaceWithShortcode]:(state, {payload:{shortcode}})=>{
+        const blocks = state.workouts.current.blocks.map((block)=>{
+          if(block.content && Array.isArray(block.content)){
+            block.content = block.content.map((line)=>{
+              if(line.video && line.video.id && line.video.original_id == shortcode.original_id){
+                if(typeof line.line.before_content == "object"){
+                  line.before_content = line.line.before_content.content.replace("@@multipler@@",Math.round(shortcode.multipler * line.line.before_content.multipler));
+                }
+                line.video = shortcode;
+                if(Array.isArray(line.line.after_content)){
+                  line.after_content = line.line.after_content.content.replace("@@multipler@@",Math.round(shortcode.multipler * line.line.before_content.multipler));
+                }
+              }
+              return line;
+            })
+          }
+          return block;
+        });
+        const workouts = {...state.workouts};
+        workouts.current.blocks = blocks;
+        return {
+          ...state,workouts
+        }
+      }
     },
     initialState
   )

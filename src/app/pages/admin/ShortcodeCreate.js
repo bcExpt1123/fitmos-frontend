@@ -114,7 +114,7 @@ function Main() {
           {workout==='update'?
             <>
               <Grid container item xs={8} spacing={2}>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <TextField
                     required
                     id="name"
@@ -127,7 +127,7 @@ function Main() {
                     margin="normal"
                   />
                 </Grid>
-                <Grid item xs={3}>
+                <Grid item xs={4}>
                   <TextField
                     required
                     id="time"
@@ -139,7 +139,7 @@ function Main() {
                     margin="normal"
                   />
                 </Grid>
-                <Grid item xs={3}>
+                {/* <Grid item xs={3}>
                   <InputLabel id="instruction-label" className="mt-4">Difficultty</InputLabel>
                   <StyledRating
                     name="customized-color"
@@ -149,8 +149,8 @@ function Main() {
                     precision={1}
                     icon={<FavoriteIcon fontSize="inherit" />}
                   />                    
-                </Grid>
-                <Grid item xs={3}>
+                </Grid> */}
+                <Grid item xs={4}>
                   <TextField
                     required
                     id="level"
@@ -261,15 +261,14 @@ function Main() {
                     {file ? (
                       <Player
                         autoPlay
+                        src={file}
                       >
-                        <source src={file} />
                       </Player>
                     ) : item.video_url ? (
                       <Player
                         autoPlay
-                        loop
+                        src={item.video_url}
                       >
-                        <source src={item.video_url} />
                       </Player>
                     ) : (
                           <label htmlFor="raised-button-file">

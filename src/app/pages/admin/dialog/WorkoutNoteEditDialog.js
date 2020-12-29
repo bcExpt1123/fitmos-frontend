@@ -132,6 +132,7 @@ export default function WorkoutEditDialog(props) {
                 onChange={props.handleTimerTypeChange}
                 style={{width:'150px'}}
               >
+                <MenuItem value="null">None</MenuItem>
                 <MenuItem value="amrap">Amrap</MenuItem>
                 <MenuItem value="for_time">For time</MenuItem>
                 <MenuItem value="tabata">Tabata</MenuItem>
@@ -139,7 +140,7 @@ export default function WorkoutEditDialog(props) {
                 <MenuItem value="extra">Extra Workout</MenuItem>
               </Select>
             </FormControl>            
-            {props.timerType&&(
+            {props.timerType&&props.timerType != "null"&&(
               <>{
                 props.timerType === "tabata"?(
                 <div>

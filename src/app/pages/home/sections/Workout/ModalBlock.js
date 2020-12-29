@@ -115,9 +115,11 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
             </div>
           ):(
             <div className="actions">
-              <button  className="previous" onClick={previousStep}>
+              {step>1&&
+                <button  className="previous" onClick={previousStep}>
                 Anterior
               </button>
+              }
               <button onClick={()=>nextStep(block.slug,workouts.current)} className="next">
                 Siguiente
               </button>

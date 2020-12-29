@@ -2,6 +2,9 @@ import { call, takeLeading, select,put } from "redux-saga/effects";
 import {
   confirmAlternate,setVideo
 } from "./actions";
+import {
+  replaceWithShortcode
+} from "../done/actions";
 import { http } from "../../services/api";
 
 const confirmAlternateRequest = ({shortcode_id,alternate_id})=>
@@ -19,10 +22,11 @@ function* onConfirmAlternate(){
   const video = yield select(({workout}) => workout.video);
   try {
     const result = yield call(confirmAlternateRequest, {
-      shortcode_id:originalVideo.id,
+      shortcode_id:originalVideo.original_id,
       alternate_id:video.id,
     });
     yield put(setVideo(video));
+    yield put(replaceWithShortcode({shortcode:video}));
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));

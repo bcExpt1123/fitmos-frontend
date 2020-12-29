@@ -10,6 +10,8 @@ import {
   convertContent,
   setVideo,
   alternateVideo,
+  confirmModalNo,
+  confirmModalYes,
 } from "./actions";
 
 const initialState = {
@@ -18,6 +20,7 @@ const initialState = {
   originalVideo:false,
   video:false,
   timer:false,
+  modalVideo:false,
 };
 const reducer = persistReducer(
   {
@@ -69,13 +72,24 @@ const reducer = persistReducer(
           instruction:state.video.instruction,
           url:state.video.url,
           time:state.video.time,
-          level:state.video.level
+          level:state.video.level,
+          multipler:state.video.multipler,
+          original_multipler:state.video.original_multipler,
         }
         return {
           ...state,
           video:changeVideo,
         }
-      }}
+      }},
+      [confirmModalNo]:(state,actions) =>({
+        ...state,
+        modalVideo:false
+      }),
+      [confirmModalYes]:(state,actions) =>({
+        ...state,
+        modalVideo:true
+      }),
+    
     },
     initialState
   )

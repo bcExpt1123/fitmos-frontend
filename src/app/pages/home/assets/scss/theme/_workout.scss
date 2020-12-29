@@ -99,24 +99,19 @@
       }
     }
     .actions{
-      display: flex; 
-      justify-content: flex-end;
+      // display: flex; 
+      // justify-content: flex-end;
       button{
         border-radius: 3px;
         box-sizing: border-box;
         font-size: 16px;
-        margin: 10px;
         padding: 12px 40px;
-        &.next{
+        &.start{
           border: 1px solid #1A7998;
           background-color: #1A7998;          
           color:white;
+          width: 100%;
           padding: 12px 80px;
-        }
-        &.previous{
-          border: 1px solid #B9B7B7;
-          background-color: #ffffff;                  
-          color:$basic-text-color;
         }
       }
     }

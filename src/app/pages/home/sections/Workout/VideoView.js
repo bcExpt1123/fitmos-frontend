@@ -4,7 +4,7 @@ import classnames from "classnames";
 import {Rating} from '@material-ui/lab';
 import { withStyles } from "@material-ui/core";
 import FavoriteIcon from '@material-ui/icons/Brightness1';
-import { Player } from 'video-react';
+import { Player, LoadingSpinner } from 'video-react';
 import "video-react/dist/video-react.css";
 import Icon from "../../components/Icon";
 import { alternateVideo, convertContent, confirmAlternate } from "../../redux/workout/actions";
@@ -17,28 +17,41 @@ const StyledRating = withStyles({
     color: '#ff3d47',
   },
 })(Rating);
-const VideoView = () => {
+const VideoView = ({onClose}) => {
   const dispatch = useDispatch();
   const video = useSelector(({workout})=>workout.video);
   const originalVideo = useSelector(({workout})=>workout.originalVideo);
+  const modalVideo = useSelector(({workout})=>workout.modalVideo);
   const videoRef = useRef();
   const [wideVideo, setWideVideo] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const checkLoad = ()=>{
+    if(videoRef.current.videoWidth>0){
+      // console.log(videoRef.current.videoHeight/videoRef.current.videoWidth)
+      if(videoRef.current.videoHeight/videoRef.current.videoWidth >1.25){
+        setWideVideo(true);
+      }else{
+        setWideVideo(false);
+      }
+      setLoading(false);
+      videoRef.current.play();
+    }else{
+      setTimeout(checkLoad,10);
+    }
+  }
   useEffect(()=>{
     if(videoRef.current){
-      setTimeout(()=>{
-        if(videoRef.current.videoWidth>0){
-          // console.log(videoRef.current.videoHeight/videoRef.current.videoWidth)
-          if(videoRef.current.videoHeight/videoRef.current.videoWidth >1.25){
-            setWideVideo(true);
-          }else{
-            setWideVideo(false);
-          }
-        }
-      },100)
+      setTimeout(checkLoad,10);
     }
   },[video]);
   const changeVideo = (slug)=>{
+    setLoading(true);
     dispatch(alternateVideo(slug));
+    setTimeout(checkLoad,10);
+  }
+  const onCloseVideo = ()=>{
+    if(modalVideo)dispatch(convertContent());
+    else onClose();
   }
   return (
     <>
@@ -52,6 +65,12 @@ const VideoView = () => {
           icon={<FavoriteIcon fontSize="inherit" />}
         />                    
       </div> */}
+      {loading&&
+        <div className="video-loading" style={{width:window.innerHeight * 9 /16 + "px" }}>
+          <div className="video-react-loading-spinner">
+          </div>  
+        </div>
+      }
       <div className={'workout-video'}>
         <Player
           ref={videoRef}
@@ -59,6 +78,7 @@ const VideoView = () => {
           loop
           src={video.url}
         >
+          <LoadingSpinner />
         </Player>      
       </div>
       {(video.alternate_a || video.alternate_b)&&
@@ -76,13 +96,17 @@ const VideoView = () => {
         </div>
       }
       <div className="actions workout-footer">
-        <button type="button" className={"btn back"} onClick={() => { dispatch(convertContent())}}>
+        <button type="button" className={"btn back"} onClick={onCloseVideo}>
           Regresar
         </button>           
-        {originalVideo.id != video.id&&(
+        {originalVideo.id != video.id?(
           <button type="button" className={"btn swap"} onClick={() => { dispatch(confirmAlternate())}}>
             Escoger
           </button>              
+        ):(
+          <div className={"active"}>
+            Activo
+          </div>                        
         )}   
       </div>
     </>

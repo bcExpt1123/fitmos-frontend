@@ -1,9 +1,15 @@
-import React,{useState} from "react";
+import React,{useState, useEffect} from "react";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, Select, InputLabel, MenuItem, FormControl, IconButton} from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Row, Col} from "react-bootstrap";
 import { makeStyles } from "@material-ui/core";
+import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
+import "@webscopeio/react-textarea-autocomplete/style.css";
+import {actionTypes} from "../../../../modules/subscription/shortcode";
+import {actionTypes as actions} from "../../../../modules/subscription/keyword";
+
+
 const useStyles = ()=>{
   return makeStyles(theme => ({
     root: {
@@ -21,6 +27,32 @@ const useStyles = ()=>{
 }
 export default function WorkoutEditDialog(props) {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const [textareaEl,setTextAreaEl] = useState(false);
+  useEffect(()=>{
+    if(!items){
+      dispatch({type:actionTypes.SHORTCODE_UPDATE_LIST});
+    }
+    if(!keywords){
+      dispatch({type:actions.KEYWORD_UPDATE_LIST});
+    }
+  },[]);
+  useEffect(()=>{
+    if(textareaEl)textareaEl.focus();
+  },[textareaEl]);
+  const Item = ({ entity: { name} }) => <div>{`${name}`}</div>;
+  const items = useSelector(({shortcode})=>shortcode.all);
+  const keywords = useSelector(({keyword})=>keyword.all);
+  const autocomplete = (token)=>{
+    return items.filter((item,index)=>{
+      return item.name.toLowerCase().startsWith(token.substr(0).toLowerCase());
+    }).slice(0,10);
+  }
+  const autocompleteKeyword = (token)=>{
+    return keywords.filter((item,index)=>{
+      return item.name.toLowerCase().startsWith(token.substr(0).toLowerCase());
+    }).slice(0,10);
+  }
   const [file,setFile] = useState(null);
   const [hash,setHash] = useState(Date.now());
   const handleCapture = ({ target })=> {
@@ -57,18 +89,32 @@ export default function WorkoutEditDialog(props) {
         </DialogContentText>
         <Row>
           <Col sm={5}>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label=""
-              multiline={true}
-              rows={26}
-              rowsMax={28}
-              value={props.content}
+          <ReactTextareaAutocomplete
+              className="content"
               onChange={props.handleChange}
-              fullWidth
-            />
+              loadingComponent={() => <span>Loading</span>}
+              value={props.content}
+              innerRef = {textarea=>{
+                setTextAreaEl(textarea)
+              }}
+              minChar={0}
+              trigger={{
+                "@": {
+                  dataProvider: token => {
+                    return autocomplete(token);
+                  },
+                  component: Item,
+                  output: (item, trigger) => "{"+item.name+"}"
+                },
+                "(": {
+                  dataProvider: token => {
+                    return autocompleteKeyword(token);
+                  },
+                  component: Item,
+                  output: (item, trigger) => item.name
+                }                
+              }}
+            />            
           </Col>
           {props.imageEnable&&
             <Col sm={5}>
@@ -106,12 +152,13 @@ export default function WorkoutEditDialog(props) {
                 onChange={props.handleTimerTypeChange}
                 style={{width:'150px'}}
               >
+                <MenuItem value="null">None</MenuItem>
                 <MenuItem value="amrap">Amrap</MenuItem>
                 <MenuItem value="for_time">For time</MenuItem>
                 <MenuItem value="tabata">Tabata</MenuItem>
               </Select>
             </FormControl>            
-            {props.timerType&&(
+            {props.timerType&&props.timerType != "null"&&(
               props.timerType === "tabata"?(
                 <div>
                   <TextField

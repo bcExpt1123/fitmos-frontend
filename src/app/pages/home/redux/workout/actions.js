@@ -10,6 +10,8 @@ export const {
   setVideo,
   alternateVideo,
   confirmAlternate,
+  confirmModalNo,
+  confirmModalYes,
 } = createActions(
   "INITIAL_MODAL_BLOCK",
   "NEXT_MODAL_BLOCK",
@@ -20,5 +22,7 @@ export const {
   "SET_VIDEO",
   "ALTERNATE_VIDEO",
   "CONFIRM_ALTERNATE",
+  "CONFIRM_MODAL_NO",
+  "CONFIRM_MODAL_YES",
   { prefix: "WORKOUT" }
 );

@@ -421,7 +421,10 @@ function* saveItem({ history }) {
         type: actionTypes.SHORTCODE_INDEX_FAILURE,
         error: e.message
       });
-      alert("Saving failed.");
+      if(e.response.status === 422){
+        if(e.response.data.errors.video)alert(e.response.data.errors.video[0])
+        else alert("Saving failed.");
+      }else  alert("Saving failed.");
       yield put({
         type: actionTypes.SHORTCODE_CHANGE_SAVE_STATUS,
         status: false

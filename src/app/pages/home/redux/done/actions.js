@@ -20,6 +20,7 @@ export const {
   stopRunning,
   setTimer,
   removeTimer,
+  replaceWithShortcode
 } = createActions(
   "DONE_WORKOUT",
   "START_WORKOUT",
@@ -40,5 +41,6 @@ export const {
   "STOP_RUNNING",
   "SET_TIMER",
   "REMOVE_TIMER",
+  "REPLACE_WITH_SHORTCODE",
   { prefix: "DONE" }
 );
