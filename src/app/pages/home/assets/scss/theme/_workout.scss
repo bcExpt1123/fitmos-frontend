@@ -226,6 +226,13 @@
       }
       .blog{
         padding:0 20px;
+        .image{
+          margin-left: -20px;
+          margin-right: -20px;
+          img{
+            border-radius: 0px;
+          }
+        }
         #timer-clock{
           margin-left: -20px;
           margin-right: -20px;
