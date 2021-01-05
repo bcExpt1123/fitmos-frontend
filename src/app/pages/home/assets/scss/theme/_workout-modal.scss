@@ -10,12 +10,27 @@
             .modal-title{
               color:white;
               text-shadow: 3px 3px 8px gray;
+              .active{
+                display:inline-block;
+                background-color: #51AB80;
+                color: white;
+                border-radius: 3px;
+                margin: 0 5px;
+                padding: 6px 10px; 
+              }
             }
             .help{
               i{
                 font-size: 25px;
                 color:white;
                 text-shadow: -1px 1px 5px grey;
+              }
+            }
+            .close{
+              margin: -1.5rem -0.5rem -1.5rem auto;
+              opacity: 1;
+              &::before{
+                color:white;
               }
             }
           }
@@ -157,7 +172,7 @@
     .workout-footer{
       position: fixed;
       bottom: 30px;
-      left: calc( 50% - 225px);
+      left: calc( 50% - 200px);
       .back{
         background-color: white;
         color: #333333;
@@ -168,13 +183,6 @@
         color:white;
         font-size: 16px!important;
       }
-      .active{
-        background-color: #51AB80;
-        color:white;
-        border-radius: 3px;
-        margin: 10px;
-        padding: 12px 40px;        
-      }
     }
     .video-loading{
       height: 100vh;
@@ -183,11 +191,10 @@
       z-index: 10;
       position: fixed;
       top:0;
-      margin-left: -39px;
       .video-react-loading-spinner{
         position: absolute;
         top: 50%;
-        left: 50%;
+        left: calc(50% - 20px );
         margin: -25px 0 0 -25px;
         opacity: 0.85;
         text-align: left;
@@ -220,39 +227,52 @@
     width: 430px;
   }
 }
+.alternate-modal{
+  .modal-dialog{
+    width: 400px;
+    .modal-content{
+      border:0;
+    }
+  }
+}
+#video_modal{
+  height:90vh;
+}
 @media( min-width:2100px ){
   .workouts-modal.video .modal-dialog{
-    width: 550px;
+    width: 33%;
   }
 }
 @media( min-width:2300px ){
   .workouts-modal.video .modal-dialog{
-    width: 600px;
+    width: 33%;
   }
 }
 @media( min-width:2500px ){
   .workouts-modal.video .modal-dialog{
-    width: 670px;
+    width: 33%;
   }
 }
 @media( min-width:2800px ){
   .workouts-modal.video .modal-dialog{
-    width: 750px;
+    width: 33%;
   }
 }
 @media( min-width:3500px ){
   .workouts-modal.video .modal-dialog{
-    width: 900px;
+    width: 33%;
   }
 }
 @media (max-width: 550px) {
   .workouts-modal{
-    &.video{
+    &.video.trans{
       .modal-dialog{
         width: auto;
-        .help{
-          i{
-            font-size: 20px!important;
+        .modal-content .modal-header{
+          .help{
+            i{
+              font-size: 20px!important;
+            }
           }
         }
       }
@@ -314,7 +334,10 @@
         button{
           padding: 3px 10px;
           &.next{
-            padding: 3px 20px;
+            padding: 3px 40px;
+          }
+          &.previous{
+            padding: 3px 50px;
           }
         }
       }  
@@ -330,7 +353,7 @@
         width: calc(100% + 43px);
       }
       .workout-footer{
-        left: auto;
+        left: calc( 50% - 150px);
         .active{
           padding: 3px 10px;
         }
@@ -356,7 +379,24 @@
         }
       }
     }
+  }
+  .instruction-modal{
+    .modal-dialog{
+      width: 90%;
+      margin: 1.75rem auto;
+      .modal-content .modal-header{
+        .modal-title{
+          font-size:15px;
+        }
+      }      
+    }
   }  
+  .alternate-modal{
+    .modal-dialog{
+      width: 90%;
+      margin: 1.75rem auto;
+    }
+  }
   .modal-backdrop{
     background-color: #1a1a1a;
     &.show{

@@ -82,6 +82,12 @@ h3 {
 }
 .btn-primary, .btn-primary:active {
   background-color: #1A7998 !important;
+  border-color: #1A7998 !important;
+}
+.btn-custom, .btn-custom:active {
+  border: 1px solid #B9B7B7;
+  background-color: #ffffff;
+  color: #333333;
 }
 @media (max-width: 767px) {
   .header-title {
