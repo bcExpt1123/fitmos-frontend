@@ -27,7 +27,7 @@
               }
             }
             .close{
-              margin: -1.5rem -0.5rem -1.5rem auto;
+              margin: -1.1rem -0.5rem -1.5rem auto;
               opacity: 1;
               &::before{
                 color:white;
@@ -78,7 +78,7 @@
       .nav.nav-tabs{
         width: calc(100% + 120px);
         margin-left: -60px;
-        padding-left: calc(50% - 15px);
+        padding-left: calc(50% - 32px);
         border-bottom: 2px solid #DDDDD7;        
         .nav-link{
           font-size:21px;
@@ -232,6 +232,12 @@
     width: 400px;
     .modal-content{
       border:0;
+      .actions{
+        .btn{
+          font-size:16px !important;
+          padding: 12px 40px;
+        }
+      }
     }
   }
 }
@@ -335,9 +341,10 @@
           padding: 3px 10px;
           &.next{
             padding: 3px 40px;
+            margin-right:0px;
           }
           &.previous{
-            padding: 3px 50px;
+            padding: 3px 40px;
           }
         }
       }  
@@ -392,9 +399,19 @@
     }
   }  
   .alternate-modal{
+    top:-16px;
     .modal-dialog{
       width: 90%;
       margin: 1.75rem auto;
+      .modal-content{
+        border:0;
+        .actions{
+          .btn{
+            font-size:16px !important;
+            padding: 3px 10px;
+          }
+        }
+      }
     }
   }
   .modal-backdrop{

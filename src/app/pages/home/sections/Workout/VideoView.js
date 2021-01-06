@@ -70,12 +70,14 @@ const VideoView = ({onClose}) => {
     }
   },[video]);
   useEffect(()=>{
-    document.body.style.cssText = "overflow:hidden !important";
+    // document.body.style.cssText = "overflow:hidden !important";
     if(isMobile()) {
       const mobileBack = document.getElementsByClassName("modal-backdrop")[0];
       mobileBack.style.backgroundColor = "#1a1a1a";
       if(mobileBack.classList.contains("show"))mobileBack.style.opacity = "1";
       detectswipe('video_modal',swapeMobile);
+      const chat = document.getElementById("wabi-floating-button");
+      chat.style.zIndex = 0;
     }else{
       const videoDialog = document.getElementsByClassName("video-dialog")[0];
       if(videoDialog)videoDialog.style.width = (window.innerHeight * 9 / 16 ) + "px";
@@ -85,6 +87,8 @@ const VideoView = ({onClose}) => {
       if(isMobile()){
         if(document.exitFullscreen)document.exitFullscreen();
         setFullScreen(false);
+        const chat = document.getElementById("wabi-floating-button");
+        chat.style.zIndex = 2147483646;
       }
     }
   },[]);
@@ -198,7 +202,7 @@ const VideoView = ({onClose}) => {
 
           <Modal.Footer className="actions">
             <Button variant="custom" onClick={() => setConfirmAlternateShow(false)}>No</Button>
-            <Button variant="primary" onClick={()=>{dispatch(confirmAlternate());setConfirmAlternateShow(false)}}>Si</Button>
+            <Button variant="primary" onClick={()=>{dispatch(confirmAlternate());setConfirmAlternateShow(false);onCloseVideo();}}>Si</Button>
           </Modal.Footer>
         </Modal.Dialog>         
       </Modal>
