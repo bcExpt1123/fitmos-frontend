@@ -97,9 +97,13 @@ const ModalView = ({ isOpen, onClose }) => {
                 </button>               */}
                 <Modal.Title className="w-100"> 
                   {video.name}
-                  {originalVideo.id == video.id&&
+                  {originalVideo.id == video.id?
                     <div className={"active"}>
                       Activo
+                    </div>
+                    :
+                    <div className={"active"} style={{backgroundColor:'transparent'}}>
+                      &nbsp;
                     </div>
                   }
                 </Modal.Title>
