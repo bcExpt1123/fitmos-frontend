@@ -41,11 +41,11 @@
     }
   }
 	#sidebar {
-		width: 213px;
+		width: 320px;
     position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
+    top: 125px;
+    left: 30px;
+    height: 750px;
     z-index: 999;
     background: $basic-text-color;
     color: #fff;
@@ -212,12 +212,10 @@
       display:none;
     }
 	}
-	#content{
-		padding-left: 213px;	
-	}
 	&.three-column{
 		#content{
-      padding-right: 336px;
+      margin: 48px auto;
+      width: calc(100% - 700px);
       .page-main{
         margin-top:20px;
         padding: 30px;    
@@ -233,11 +231,11 @@
 		}
   }
 	#rightbar{
-		width: 336px;
+		width: 320px;
     position: fixed;
-    top: 0;
-    right: 0;
-    height: 100vh;
+    top: 125px;
+    right: 30px;
+    height: 90vh;
     z-index: 999;
     background: #fff;
     color: $basic-text-color;

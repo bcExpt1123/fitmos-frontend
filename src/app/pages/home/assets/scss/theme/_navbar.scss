@@ -5,6 +5,12 @@
     background: #232323;
     transition: none;
     min-height: 77px;
+    &.full-width{
+      min-height: auto;
+      &>.container{
+        max-width: none;
+      }
+    }
     .back-button {
       @include back-button;
     }
