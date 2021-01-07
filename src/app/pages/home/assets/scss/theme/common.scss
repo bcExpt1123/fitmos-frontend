@@ -89,6 +89,10 @@ h3 {
   background-color: #ffffff;
   color: #333333;
 }
+.btn-custom-secondary, .btn-custom-secondary:active{
+  background-color: #F5F6F7;
+  color: #333333;
+}
 @media (max-width: 767px) {
   .header-title {
     font-size: 18px;

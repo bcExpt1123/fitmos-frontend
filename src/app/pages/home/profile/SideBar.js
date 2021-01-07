@@ -57,7 +57,7 @@ const SideBar = () => {
   }
   return (  
     <div id="sidebar">
-      <div className="wrapper-rightbar">
+      <div className="wrapper-side">
         <div className="profile-image">
           <div className="avatar" onClick={openModal}>
             <Avatar
@@ -67,35 +67,38 @@ const SideBar = () => {
               changeImage={file}
             />
           </div>
-          <div className="name">
-            <div className="username" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
-            <div className="level">
-              <NavLink className="" to="/level">
-                Nivel Físico {currentUser.customer.current_condition}
-              </NavLink>
+        </div>
+        <div className="profile-info">
+          <div className="full-name" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
+          <div className="username">@{currentUser.customer.username}</div>
+          <div className="summary">You will need to include apple sign in at least on an iphone app because due recent updates on their store if you include third party login is required to get approval.</div>
+        </div>
+        <div className="social-info row">
+          <div className="col-4">
+            <div className="value">{parseInt(currentUser.customer.current_height)}
             </div>
-            <div className="objective-label" onClick={openModalObjective}>Objetivo</div>
-            <div className="objective-value" onClick={openModalObjective}>{findObjective(currentUser.customer.objective, currentUser)}</div>
+            <div className="label">Following</div>
+          </div>
+          <div className="col-4">
+            <div className="value">{parseInt(currentUser.customer.current_weight)}
+            <span className="unit">K</span></div>
+            <div className="label">Followers</div>
+          </div>
+          <div className="col-4">
+            <div className="value">{currentUser.customer.imc}</div>
+            <div className="label">Posts</div>
           </div>
         </div>
-        <div className="imc row">
-          <div className="col-4"  onClick={openModal}>
-            <div className="value">{parseInt(currentUser.customer.current_height)}
-            <span className="unit">{currentUser.customer.current_height_unit}</span></div>
-            <div className="label">Altura</div>
-          </div>
-          <div className="col-4"  onClick={openModalWeight}>
-            <div className="value">{parseInt(currentUser.customer.current_weight)}
-            <span className="unit">{currentUser.customer.current_weight_unit}</span></div>
-            <div className="label">Peso</div>
-          </div>
-          <div className="col-4"  onClick={openModalWeight}>
-            <div className="value">{currentUser.customer.imc}</div>
-            <div className="label">IMC</div>
-          </div>
+        <div className="actions">
+          <button className="btn btn-custom-secondary">
+            Editar Perfil
+          </button>
+          <button className="btn btn-custom-secondary">
+            Configuración
+          </button>
         </div>
         <div className="workout">
-          <h3 className="">Workouts</h3>
+          <h3 className="mb-4">Entrenamiento</h3>
           <div className="progress-bar-wrapper">
             <div className="medal-image">
               {done.toWorkoutImage&&(
@@ -103,20 +106,34 @@ const SideBar = () => {
               )}
             </div>
             <div className="progress-bar-body">
-              <span>{done.workoutCount}/{done.toWorkout}</span>
+              <span className="label">Bodyweight Fitness</span><span className="value">{currentUser.customer.current_condition}/5</span>
+              <ProgressBar now={20} />
+            </div>
+          </div>          
+          <div className="progress-bar-wrapper">
+            <div className="medal-image">
+              {done.toWorkoutImage&&(
+                <img src={done.toWorkoutImage} alt="workout-medal"/>
+              )}
+            </div>
+            <div className="progress-bar-body">
+              <span className="label">Workout Totales</span>
+              <span className="value">{done.workoutCount}/{done.toWorkout}</span>
               <ProgressBar now={now} />
             </div>
           </div>
-        </div>
-        <div className="workout-progress">
-          <QuickStatsChart
-            value={total}
-            desc="Progreso"
-            data={chartOptions.data}
-            labels={chartOptions.labels}
-            color={chartOptions.color}
-            border={chartOptions.border}
-          />
+          <div className="progress-bar-wrapper">
+            <div className="medal-image">
+              {done.toWorkoutImage&&(
+                <img src={done.toWorkoutImage} alt="workout-medal"/>
+              )}
+            </div>
+            <div className="progress-bar-body">
+              <span className="label">Completados Nov.</span>
+              <span className="value">{done.workoutCount}/{done.toWorkout}</span>
+              <ProgressBar now={now} />
+            </div>
+          </div>
         </div>
       </div>
       <DetailModal show={show} handleClose={handleClose}/>

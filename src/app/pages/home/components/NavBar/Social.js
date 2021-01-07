@@ -52,6 +52,10 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
     }
     if(serviceItem == null)dispatch($changeItem(1));
   },[]);
+  const [showCreatingPost, setShowCreatingPost] = useState(false);
+  const OpenCreatingPost = ()=>{
+    setShowCreatingPost(true);
+  }
   const navbarClassnames =
     " full-width align-items-center navbar-fixed-top navbar-toggleable-sm ";
   return (
@@ -123,14 +127,9 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 data-app-modern-menu="true"
               >
                 <li className="nav-item">
-                  <NavLink
-                    to={"/"}
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    Entrenamiento
-                  </NavLink>
+                  <button type="button" className={"back-button"} onClick={OpenCreatingPost}>
+                    Add a Post
+                  </button>
                 </li>
                 {currentUser.has_workout_subscription&&(
                   <>
