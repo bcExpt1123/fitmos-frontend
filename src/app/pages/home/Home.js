@@ -13,6 +13,7 @@ import SectionPricing from "./sections/SectionPricing";
 import SectionTestimonial from "./sections/SectionTestimonial";
 import SectionInstagram from "./sections/SectionInstagram";
 import ThreeColumn from "./layouts/Three";
+import TwoColumn from "./layouts/Two";
 import { findWorkouts,initialBlock, fetchSurvey } from "./redux/done/actions";
 import PageHeader from "./layouts/PageHeader";
 import Header from "./sections/Workout/Header";
@@ -37,7 +38,6 @@ const Home = ({ auth,history }) => {
   const step = useSelector(({done})=>done.step);
   return (
   <>
-
     {auth.currentUser&&auth.logOuting===false ? (
       auth.currentUser.has_workout_subscription?(
       <>
@@ -48,13 +48,13 @@ const Home = ({ auth,history }) => {
           content="Workout -Fitemos"
         />
         </MetaTags>
-        <ThreeColumn>
-          <PageHeader title={`Hola ${auth.currentUser.customer.first_name}`} tagLine={tagLine}/>
+        <TwoColumn>
+          {/* <PageHeader title={`Hola ${auth.currentUser.customer.first_name}`} tagLine={tagLine}/> */}
           <div className={classnames("workout",{timer:step!==0})}>
             <Header/>
             <Body/>
           </div>
-        </ThreeColumn>
+        </TwoColumn>
       </>
       ):(
         <>

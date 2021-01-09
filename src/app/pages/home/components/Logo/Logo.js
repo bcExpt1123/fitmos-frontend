@@ -19,13 +19,13 @@ const Logo = ({ color, className, variant,checkout, ...other }) => {
       />
     )
     :(
-      <Link onClick={handleLink}>
+      <span onClick={handleLink} className="cursor-pointer">
         <img
           src={require("../../assets/img/Fitmose-logo1.png")}
           alt="Fitemos"
           title=""
         />
-      </Link>
+      </span>
     )
   );
 };

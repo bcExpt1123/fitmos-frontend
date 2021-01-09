@@ -26,7 +26,7 @@ const WorkoutPage = () => {
       />
     </MetaTags>
     <ThreeColumn>
-      <PageHeader title={`Hola ${currentUser.customer.first_name}`}/>
+      {/* <PageHeader title={`Hola ${currentUser.customer.first_name}`}/> */}
       <div className="workout">
         <Header/>
         <Body/>

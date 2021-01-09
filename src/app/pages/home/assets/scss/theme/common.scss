@@ -29,6 +29,7 @@
 @import "./_company";
 @import "./_product";
 @import "./_footer_checkout.scss";
+@import "./social/index";
 .fs-btn {
   border-radius: 7px;
   background: linear-gradient(90deg, #028fb4, #bfd734);
@@ -145,4 +146,7 @@ h3 {
   .close{
     margin-left:-34px;
   }
+}
+.cursor-pointer{
+  cursor: pointer;
 }

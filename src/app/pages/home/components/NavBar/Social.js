@@ -15,6 +15,7 @@ import {
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
 import { start } from "../../redux/checkout/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
+import CreatePostModal from "../../social/posts/CreatingModal";
 
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
@@ -55,6 +56,9 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
     setShowCreatingPost(true);
+  }
+  const handleCreatingModalClose = () => {
+    setShowCreatingPost(false);
   }
   const navbarClassnames =
     " full-width align-items-center navbar-fixed-top navbar-toggleable-sm ";
@@ -181,6 +185,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
           )}
         </Container>
       </Navbar>
+      <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
     </>
   );
 }

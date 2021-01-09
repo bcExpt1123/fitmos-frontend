@@ -1,0 +1,97 @@
+.creating-post-mention{
+  .creating-post-mention__control{
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: normal;
+    .creating-post-mention__highlighter{
+      padding: 9px;
+      min-height: 243px;
+      outline: 0;
+      border: 0;
+      max-height: 280px;
+      overflow: auto;
+      position: absolute;
+      bottom: 14px;
+    }
+    .creating-post-mention__input{
+      padding: 9px;
+      min-height: 243px;
+      outline: 0;
+      border: 0;
+      max-height: 280px;
+      overflow: auto!important;
+      position: absolute;
+      bottom: 14px;
+    }  
+  }
+  .creating-post-mention__suggestions{
+    .creating-post-mention__suggestions__list{
+      background-color: white;
+      border: 1px solid rgba(0,0,0,0.15);
+      font-size: 10px;
+      .creating-post-mention__suggestions__item{
+        padding: 5px 15px;
+        border-bottom: 1px solid rgba(0,0,0,0.15);
+        &.creating-post-mention__suggestions__item--focused{
+          background-color: #cee4e5;
+        }
+      }
+    }
+  }
+}
+.create-post{
+  .modal-dialog{
+    width:400px;
+    .back{
+      font-size: 20px;
+      border-radius: 15px;
+      background-color: #E5E7EB;
+      width:33px;
+      margin: -3px 10px 0 0;
+      display: inline-block;
+      i{
+        font-size: 15px;
+        margin-left: 8px;
+      }
+    }
+    .tag-followers{
+      .search{
+        border:0;
+        border-radius: 10px;
+        padding:5px;
+        width:300px;
+        background-color: #F0F2F6;
+        &:focus{
+          outline-width: 0px;
+        }
+      }
+      .btn-primary{
+        padding:5px;
+        margin: 0 0 0 15px;
+      }
+      label{
+        font-size: 12px;
+      }
+      .tag-content{
+        height: 280px;
+        overflow: auto;
+      }
+      .tagged{
+        border-radius: 20px;
+        padding: 5px;
+        border: 1px solid rgba($basic-text-color,0.5);
+      }
+      ul{
+        list-style: none;
+        padding-left: 0px;        
+      }
+    }
+    .create-post-footer{
+      button.btn-primary{
+        float:right;
+        margin: 0;
+        padding: 5px 32px;
+      }
+    }
+  }
+}

@@ -50,35 +50,38 @@ const Header = ()=>{
   },[survey]);// eslint-disable-line react-hooks/exhaustive-deps
   return (
     <div className="workout-header">
-      {workouts&&(workouts.previous?(
-        <>
-          <span className="active" onClick={()=>{if(changeConfirm())clickDate(workouts.previous.today)}}> <i className="fas fa-angle-left"></i> </span>
-          <span className="mobile-full-screen" onClick={goBackIntroduction}> <i className="fas fa-angle-left"></i> </span>
-        </>
-      ):(
-        <span> <i className="fas fa-angle-left"></i> </span>
-      ))}
-      <span className="workout-date">
-      {
-        workouts&&workouts.current&&(
-          workouts.current.short_date
-        )
-      }
-      </span>
-      {workouts&&(workouts.next?(
-        <span className="active" onClick={()=>{if(changeConfirm())clickDate(workouts.next.today)}}> <i className="fas fa-angle-right"></i> </span>
-      ):(
-        <span> <i className="fas fa-angle-right"></i> </span>
-      ))}
+      <b style={{fontSize:"21px"}}>Workout del día</b>
       {
         workouts&&workouts.current&&(
           workouts.current.read?(
-            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/checked.svg")} style={{float:'right'}} className="mt-sm-2"/>
+            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/checked.svg")} className="ml-5 mr-5 mb-2" style={{width:"25px",height:"25px"}}/>
           ):(
-            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/unchecked.svg")} style={{float:'right'}} className="mt-sm-2"/>
+            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/unchecked.svg")} className="ml-5 mr-5 mb-2" style={{width:"25px",height:"25px"}}/>
           )
         )
       }
+      <div style={{float:"right"}}>
+        {workouts&&(workouts.previous?(
+          <>
+            <span className="active" onClick={()=>{if(changeConfirm())clickDate(workouts.previous.today)}}> <i className="fas fa-angle-left"></i> </span>
+            <span className="mobile-full-screen" onClick={goBackIntroduction}> <i className="fas fa-angle-left"></i> </span>
+          </>
+        ):(
+          <span> <i className="fas fa-angle-left"></i> </span>
+        ))}
+        <span className="workout-date">
+        {
+          workouts&&workouts.current&&(
+            workouts.current.short_date
+          )
+        }
+        </span>
+        {workouts&&(workouts.next?(
+          <span className="active" onClick={()=>{if(changeConfirm())clickDate(workouts.next.today)}}> <i className="fas fa-angle-right"></i> </span>
+        ):(
+          <span> <i className="fas fa-angle-right"></i> </span>
+        ))}
+      </div>
       {currentUser&&currentUser.customer.qbligatory_question==null&&(
         <Modal
           show={show}

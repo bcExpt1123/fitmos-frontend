@@ -121,7 +121,9 @@ class Base extends Component {
     if (this.state.intervalId) {
       window.clearInterval(this.state.intervalId)
     }
-
+    this.setState({
+      intervalId: false
+    })
     document.removeEventListener('keydown', this.handleESC, false)
     document.removeEventListener('playBeep', this.handleBeeps, false)
   }
