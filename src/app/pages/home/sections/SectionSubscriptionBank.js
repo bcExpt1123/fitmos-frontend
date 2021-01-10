@@ -11,7 +11,7 @@ import {
   $updateInterval,
   $changeType,
 } from "../../../../modules/subscription/service";
-import { findUserDetails } from "../redux/auth/actions";
+// import { findUserDetails } from "../redux/auth/actions";
 import { setCheckoutKind, sendBankRequest } from "../redux/checkout/actions";
 import { roundToMoney } from "../../../../_metronic/utils/utils.js";
 import { CHECKOUT_KIND } from "../constants/checkout-kind";
@@ -140,7 +140,7 @@ export default function SubscriptionBank({match}) {
     // if(serviceItem == null || serviceItem&&serviceItem.bank_fee == undefined)$changeItem(1);  
     dispatch($findWorkoutSerive());
     setCheckoutKind({checkoutKind:CHECKOUT_KIND.ACTIVATE});
-    dispatch(findUserDetails());
+    // dispatch(findUserDetails());
     if(!currentUser){
       const parsed = qs.parse(window.location.search);
       if(parsed.renewal && parsed.renewal==='bank'){

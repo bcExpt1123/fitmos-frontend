@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import SVG from "react-inlinesvg";
 import {Modal, Form, Button } from "react-bootstrap";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import { http } from "../../services/api";
 import { findWorkouts,initialBlock,doneQuestion,stopRunning } from "../../redux/done/actions";
 import SurveyModal from "./SurveyModal";
 

@@ -6,7 +6,7 @@ import Avatar from "../components/Avatar";
 import QuickStatsChart from "../../../widgets/QuickStatsChart";
 import { $findPublished } from "../../../../modules/subscription/benchmark";
 import { findObjective } from "./Profile/Objective";
-import { findUserDetails } from "../redux/auth/actions";
+// import { findUserDetails } from "../redux/auth/actions";
 import DetailModal from "./Profile/Dialogs/Detail";
 import SectionEditWeight from "../DashboardPage/SectionEditWeight";
 import SectionChangeGoal from "../DashboardPage/SectionChangeGoal";
@@ -32,7 +32,7 @@ const RightBar = () => {
       console.log("published")
       dispatch($findPublished());
     }
-    dispatch(findUserDetails());
+    // dispatch(findUserDetails());
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const [show, setShow] = useState(false);
   const [showWeight, setShowWeight] = useState(false);

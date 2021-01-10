@@ -17,6 +17,7 @@ import {
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
 import { start } from "../../redux/checkout/actions";
+import { pulling } from "../../redux/workout/actions";
 import ProofButton from "../../components/ProofButton";
 import { $changeItem } from "../../../../../modules/subscription/service";
 
@@ -42,11 +43,13 @@ class NavBarVariantFull extends React.Component {
       loginADate.setTime(loginATime);
       const loginDate = new Date();
       loginDate.setTime(loginTime);
-      if (this.props.currentUser && loginDate < new Date()) {
-        //this.props.deleteAuthAction();
-        this.props.regenerateAuthAction();
-      } else if (this.props.currentUser && loginADate < new Date()) {
-        this.props.regenerateAuthAction();
+      if(this.props.currentUser){
+        this.props.pulling({id:this.props.currentUser.customer.id});
+        if (loginDate < new Date()) {
+          this.props.regenerateAuthAction();
+        } else if (loginADate < new Date()) {
+          this.props.regenerateAuthAction();
+        }
       }
     }
     const parsed = qs.parse(window.location.search);
@@ -304,7 +307,8 @@ export const mapDispatchToProps = {
   regenerateAuthAction,
   setPrivateVoucher,
   $changeItem,
-  start
+  start,
+  pulling
 };
 
 export default withRouter(NavBarWrapper);

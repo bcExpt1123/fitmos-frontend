@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import classnames from "classnames";
 import { Modal } from "react-bootstrap";
 import { MentionsInput, Mention } from 'react-mentions';
@@ -7,44 +7,15 @@ import Chip from '@material-ui/core/Chip';
 // import defaultStyle from "./defaultStyle";
 import TagFollower from '../sections/TagFollower';
 import SearchLocation from '../sections/SearchLocation';
-const users = [
-  {
-    id: 1,
-    display: "Walter White"
-  },
-  {
-    id: 2,
-    display: "Jesse Pinkman"
-  },
-  {
-    id: 3,
-    display: 'Gustavo "Gus" Fring'
-  },
-  {
-    id: 4,
-    display: "Saul Goodman"
-  },
-  {
-    id: 5,
-    display: "Hank Schrader"
-  },
-  {
-    id: 6,
-    display: "Skyler White"
-  },
-  {
-    id: 7,
-    display: "Mike Ehrmantraut"
-  }
-];
 const CreatePostModal = ({show, handleClose}) => {
   const dispatch = useDispatch();
+  const users = useSelector(({people})=>people.people);
   const [errors,setErrors] = useState([]);
   const [content, setContent] = useState("");
   const [type, setType] = useState("post");
   useEffect(()=>{
     setSearchableCustomers(users);
-  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  },[users]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleChange = (ev, newValue)=>{
     setContent(newValue);
     console.log(newValue)
@@ -66,6 +37,19 @@ const CreatePostModal = ({show, handleClose}) => {
   /** tag */
   const [searchableCustomers, setSearchableCustomers] = useState([]);
   const [tagFollowers, setTagFollowers] = useState([]);
+  /** images  vs videos */
+  const [files, setFiles] = useState([]);
+  const handleCapture = ({ target })=>{
+    let file = URL.createObjectURL(target.files[0]);
+  }
+  const filterPeople=(search, callback)=>{
+    if(search.length>1){
+      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search));
+      callback(filteredPeople.slice(0, 20));
+    }else{
+      callback(users.slice(0, 20));
+    }
+  }
   return (
     <Modal
       show={show}
@@ -102,12 +86,11 @@ const CreatePostModal = ({show, handleClose}) => {
               onChange={handleChange} 
               onBlur={handleBlur} 
               placeholder="Escribe algo..."
-              markup="{{__id__}}"
               className="creating-post-mention"
             >
               <Mention
                 trigger="@"
-                data={users}
+                data={filterPeople}
                 // renderSuggestion={this.renderUserSuggestion}
               />
             </MentionsInput>
@@ -119,9 +102,19 @@ const CreatePostModal = ({show, handleClose}) => {
                   <i className="fas fa-hashtag" />
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <span className="cursor-pointer">
-                  <i className="far fa-file-image" />
-                </span>
+                <input
+                  accept="image/* | video/*"
+                  style={{ display: "none" }}
+                  id="upload-file-button"
+                  multiple
+                  type="file"
+                  onChange={handleCapture}
+                />
+                <label htmlFor="upload-file-button">
+                  <span className="cursor-pointer">
+                    <i className="far fa-file-image" />
+                  </span>
+                </label>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <span className="cursor-pointer" onClick={openLocationSearch}>
                   <i className="fas fa-map-marker-alt" />

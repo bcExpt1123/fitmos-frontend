@@ -9,7 +9,7 @@ import Footer from "./components/Footer";
 import StepPayment from "./CheckoutPage/StepPayment";
 import { initialVoucher,checkVoucher,generateFirstPayVoucher } from "./redux/vouchers/actions";
 import { checkPaymentMode, changeVoucher,inside,outside, start } from "./redux/checkout/actions";
-import { findUserDetails } from "./redux/auth/actions";
+// import { findUserDetails } from "./redux/auth/actions";
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { calculatePriceWithCoupon } from '../../../lib/calculatePrice';
 
@@ -43,7 +43,7 @@ const CheckoutPage = () => {
   },[coupons]);
   const dispatch = useDispatch();
   useEffect(() => {
-    if(paymentType==="bank")dispatch(findUserDetails());
+    // if(paymentType==="bank")dispatch(findUserDetails());
     reactLocalStorage.set('checkout', true);
     dispatch(inside({activePlan}));
     dispatch(checkVoucher());

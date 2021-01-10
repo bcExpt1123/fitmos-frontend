@@ -12,6 +12,7 @@ import {
   alternateVideo,
   confirmModalNo,
   confirmModalYes,
+  setPublic,
 } from "./actions";
 
 const initialState = {
@@ -20,6 +21,7 @@ const initialState = {
   originalVideo:false,
   video:false,
   timer:false,
+  publicProfile:false,
   modalVideo:false,
 };
 const reducer = persistReducer(
@@ -89,6 +91,10 @@ const reducer = persistReducer(
         ...state,
         modalVideo:true
       }),
+      [setPublic]:(state, actions) =>({
+        ...state,
+        publicProfile:actions.payload
+      })
     
     },
     initialState

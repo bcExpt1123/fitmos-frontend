@@ -14,6 +14,7 @@ import {
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
 import { start } from "../../redux/checkout/actions";
+import { pulling } from "../../redux/workout/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
 
@@ -52,6 +53,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
       dispatch(setPrivateVoucher(parsed.coupon));
     }
     if(serviceItem == null)dispatch($changeItem(1));
+    if( currentUser ) dispatch(pulling({id:currentUser.customer.id}))
   },[]);
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
