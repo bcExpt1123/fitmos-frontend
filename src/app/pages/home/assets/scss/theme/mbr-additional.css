@@ -1,9 +1,9 @@
-@import url(https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap);
+/* @import url(https://fonts.googleapis.com/css?family=Rubik:300,300i,400,400i,500,500i,700,700i,900,900i&display=swap); */
 body {
-  font-family: Rubik;
+  font-family: "OPEN SANS";
 }
 .display-1 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 4.25rem;
   font-display: swap;
 }
@@ -11,12 +11,12 @@ body {
   font-size: 6.8rem;
 }
 .display-2 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 2.2rem;
   font-display: swap;
 }
 .display-3 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 3.2rem;
 }
 
@@ -24,7 +24,7 @@ body {
   font-size: 3.52rem;
 }
 .display-4 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 1.3rem;
   font-display: swap;
 }
@@ -32,7 +32,7 @@ body {
   font-size: 1.92rem;
 }
 .display-5 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 1.5rem;
   font-display: swap;
 }
@@ -40,7 +40,7 @@ body {
   font-size: 2.4rem;
 }
 .display-7 {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 1.7rem;
   line-height: 1.2;
   font-display: swap;
@@ -548,7 +548,7 @@ a:hover {
   display: none;
 }
 .form-control {
-  font-family: "Rubik", sans-serif;
+  font-family: "OPEN SANS", sans-serif;
   font-size: 1rem;
 }
 .form-control > .mbr-iconfont {

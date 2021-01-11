@@ -5,9 +5,9 @@ import { Navbar, Container } from "react-bootstrap";
 import { NavLink, useHistory } from "react-router-dom";
 import * as qs from 'query-string';
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
+import SVG from "react-inlinesvg";
 
 import Avatar from "../Avatar";
-import Icon from "../Icon";
 import Logo from "../Logo";
 import {
   authenticate as regenerateAuthAction,
@@ -17,7 +17,7 @@ import { start } from "../../redux/checkout/actions";
 import { pulling } from "../../redux/workout/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
-
+import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
 
@@ -64,6 +64,10 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   }
   const navbarClassnames =
     " full-width align-items-center navbar-fixed-top navbar-toggleable-sm ";
+  const [showSubmenu, setShowSubmenu] = useState(false);
+  const openSubmenu = ()=>{
+    setShowSubmenu(true);
+  }
   return (
     <>
       <Navbar
@@ -80,111 +84,167 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
         onToggle={toggleisDrawerOpen}
       >
         <Container>
-          {(checkout===undefined && checkout !== true)&&
-            <Navbar.Toggle
-              aria-controls="responsive-navbar-nav"
-              className={"navbar-toggler-right"}
-              children={
-                <div className="hamburger">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-              }
-            />
-          }
-          <div className="menu-logo">
-            <div className="navbar-brand">
-              <span className="navbar-logo">
-                <Logo checkout={checkout}/>
-              </span>
+          <div className="menu-first">
+            <div className="menu-logo">
+              <div className="navbar-brand">
+                <span className="navbar-logo">
+                  <Logo checkout={checkout}/>
+                </span>
+              </div>
             </div>
+            <div className="search">
+              <input id="search" placeholder="&#xF002; Search" type="text" className="mt-3"/>
+            </div>  
           </div>
-          {(checkout===undefined && checkout !== true)&&(
-            <Navbar.Collapse id="responsive-navbar-nav">
-              <ul
-                className="mr-auto navbar-nav nav-dropdown"
-                data-app-modern-menu="true"
+          <ul
+            className="navbar-nav nav-dropdown menu-second"
+            data-app-modern-menu="true"
+          >
+            <li className="nav-item">
+              <NavLink
+                to="/"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
               >
-                <li className="nav-item">
-                  <NavLink
-                    to={"/"}
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    Entrenamiento
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to={"/"}
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    Entrenamiento
-                  </NavLink>
-                </li>
-              </ul>  
-              <ul
-                className="navbar-nav nav-dropdown"
-                data-app-modern-menu="true"
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout.svg")} />
+                </span>
+                <span className="svg-icon-active menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout-active.svg")} />
+                </span>
+                <span className="menu-text">Workout</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/newsfeed"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
               >
-                <li className="nav-item">
-                  <button type="button" className={"back-button"} onClick={OpenCreatingPost}>
-                    Add a Post
-                  </button>
-                </li>
-                {currentUser.has_workout_subscription&&(
-                  <>
-                    <li className="nav-item">
-                      <NavLink
-                        to="/news"
-                        className={"nav-link link text-white display-4"}
-                        activeClassName="active"
-                        exact
-                      >
-                        Blog
-                      </NavLink>
-                    </li>
-                  </>
-                )}
-                <li className="nav-item">
-                  <NavLink
-                    to="/settings/profile"
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    <span>{currentUser.name}</span>
-                    <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/profile"
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    Ir a mi cuenta
-                  </NavLink>
-                </li>
-                <li className="nav-item">
-                  <NavLink
-                    to="/logout"
-                    className={"nav-link link text-white display-4"}
-                    activeClassName="active"
-                    exact
-                  >
-                    Cerrar Sesión
-                  </NavLink>
-                </li>
-              </ul>
-            </Navbar.Collapse>
-          )}
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/newsfeed.svg")} />
+                </span>
+                <span className="svg-icon-active menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/newsfeed-active.svg")} />
+                </span>
+                <span className="menu-text">Newsfeed</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/leaderboard"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/leaderboard.svg")} />
+                </span>
+                <span className="svg-icon-active menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/leaderboard-active.svg")} />
+                </span>
+                <span className="menu-text">Leaderboard</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/benchmarks"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <span className="svg-icon menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/explore.svg")} />
+                </span>
+                <span className="svg-icon-active menu-icon">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/explore-active.svg")} />
+                </span>
+                <span className="menu-text">Explore</span>
+              </NavLink>
+            </li>
+          </ul>
+          <ul
+            className="navbar-nav nav-dropdown menu-third"
+            data-app-modern-menu="true"
+          >
+            <li className="nav-item">
+              <NavLink
+                to="/settings/profile"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
+                <span className="full-name">{currentUser.name}</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <button type="button" className={"clickable-button"} onClick={OpenCreatingPost}>
+                <i className="far fa-plus-square" />
+              </button>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/settings/profile"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <i className="far fa-comments" />
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                to="/profile"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <i className="far fa-bell" />
+              </NavLink>
+            </li>
+            <li className="nav-item dropdown">
+              <button type="button" className={"clickable-button"} onClick={openSubmenu}>
+                <i className="fas fa-chevron-down" />
+              </button>
+              <div className={classnames("dropdown-menu",{show:showSubmenu})}>
+                <NavLink
+                  to="/profile"
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                >
+                  My Profile
+                </NavLink>                
+                <NavLink
+                  to="/profile"
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                >
+                  Settings
+                </NavLink>                
+                <NavLink
+                  to="/profile"
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                >
+                  Help&Support
+                </NavLink>                
+                <NavLink
+                  to="/logout"
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                >
+                  Cerrar Sesión
+                </NavLink>
+              </div>
+            </li>
+          </ul>
         </Container>
       </Navbar>
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
@@ -205,7 +265,7 @@ const NavBarWrapper = ({ ...props }) => {
     300
   );
   return (
-    <section className="menu fitemos-menu">
+    <section className="menu fitemos-menu-social">
       <NavBarVariantFull {...props} isScroll={hideOnNavbar} />
     </section>
   );

@@ -28,6 +28,8 @@ import PerfilPage from "./Perfil";
 import Workout from "./Workout";
 import LevelPage from "./Level";
 import SubscriptionTabs from "./Subscriptions";
+import NewsfeedPage from "./Newsfeed";
+import LeaderboardPage from "./Leaderboard";
 import { LayoutSplashScreen } from "../../../_metronic";
 
 export default function HomePage() {
@@ -70,6 +72,8 @@ export default function HomePage() {
         <Route exact path="/perfil" component={PerfilPage} />
         <Route exact path="/level" component={LevelPage} />
         <Route exact path="/subscriptions" component={SubscriptionTabs} />
+        <Route exact path="/newsfeed" component={NewsfeedPage} />
+        <Route exact path="/leaderboard" component={LeaderboardPage} />
       </Switch>
     </Suspense>
   );
