@@ -9,6 +9,7 @@ import SVG from "react-inlinesvg";
 
 import Avatar from "../Avatar";
 import Logo from "../Logo";
+import MiniLogo from "../MiniLogo";
 import {
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
@@ -18,6 +19,8 @@ import { pulling } from "../../redux/workout/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import BasicSubmenu from "./DropDown/BasicSubMenu";
+import Submenu from "./DropDown/SubMenu";
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
 
@@ -58,16 +61,24 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
     setShowCreatingPost(true);
+    setShowSubmenu(false);
   }
   const handleCreatingModalClose = () => {
     setShowCreatingPost(false);
   }
   const navbarClassnames =
     " full-width align-items-center navbar-fixed-top navbar-toggleable-sm ";
+  const [showBasicSubMenu, setShowBasicSubMenu] = useState(false);
+  const openBasicSubmenu = ()=>{
+    setShowSubmenu(false);
+    setShowBasicSubMenu(!showBasicSubMenu);
+  }
   const [showSubmenu, setShowSubmenu] = useState(false);
   const openSubmenu = ()=>{
-    setShowSubmenu(true);
+    setShowBasicSubMenu(false);
+    setShowSubmenu(!showSubmenu);
   }
+  const [clickSearch, setClickSearch] = useState(false);
   return (
     <>
       <Navbar
@@ -85,19 +96,31 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
       >
         <Container>
           <div className="menu-first">
-            <div className="menu-logo">
-              <div className="navbar-brand">
-                <span className="navbar-logo">
-                  <Logo checkout={checkout}/>
-                </span>
+            {!clickSearch&&
+              <div className="menu-logo">
+                <div className="navbar-brand">
+                  <span className="navbar-logo">
+                    <Logo checkout={checkout}/>
+                    <MiniLogo checkout={checkout} />
+                  </span>
+                </div>
               </div>
-            </div>
+            }
+            {clickSearch&&
+              <button className="back-button"  onClick={()=>setClickSearch(false)}>
+                <i className="fas fa-arrow-left" />
+              </button>
+            }
             <div className="search">
-              <input id="search" placeholder="&#xF002; Search" type="text" className="mt-3"/>
+             {!clickSearch&&<button className="search-button" onClick={()=>setClickSearch(true)}>
+                  <i className="fas fa-search" />
+                </button>
+              }
+              <input id="search" placeholder="&#xF002; Search" type="text" className={classnames("mt-3",{clickable:clickSearch})}/>
             </div>  
           </div>
           <ul
-            className="navbar-nav nav-dropdown menu-second"
+            className={classnames("navbar-nav nav-dropdown menu-second",{clickable:clickSearch})}
             data-app-modern-menu="true"
           >
             <li className="nav-item">
@@ -164,22 +187,14 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 <span className="menu-text">Explore</span>
               </NavLink>
             </li>
+            <li className="nav-item dropdown">
+              <BasicSubmenu show={showBasicSubMenu} open={openBasicSubmenu}/>
+            </li>
           </ul>
           <ul
             className="navbar-nav nav-dropdown menu-third"
             data-app-modern-menu="true"
           >
-            <li className="nav-item">
-              <NavLink
-                to="/settings/profile"
-                className={"nav-link link text-white display-4"}
-                activeClassName="active"
-                exact
-              >
-                <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
-                <span className="full-name">{currentUser.name}</span>
-              </NavLink>
-            </li>
             <li className="nav-item">
               <button type="button" className={"clickable-button"} onClick={OpenCreatingPost}>
                 <i className="far fa-plus-square" />
@@ -205,44 +220,19 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 <i className="far fa-bell" />
               </NavLink>
             </li>
+            <li className="nav-item">
+              <NavLink
+                to="/settings/profile"
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
+                <span className="full-name">{currentUser.name}</span>
+              </NavLink>
+            </li>
             <li className="nav-item dropdown">
-              <button type="button" className={"clickable-button"} onClick={openSubmenu}>
-                <i className="fas fa-chevron-down" />
-              </button>
-              <div className={classnames("dropdown-menu",{show:showSubmenu})}>
-                <NavLink
-                  to="/profile"
-                  className={"dropdown-item"}
-                  activeClassName="active"
-                  exact
-                >
-                  My Profile
-                </NavLink>                
-                <NavLink
-                  to="/profile"
-                  className={"dropdown-item"}
-                  activeClassName="active"
-                  exact
-                >
-                  Settings
-                </NavLink>                
-                <NavLink
-                  to="/profile"
-                  className={"dropdown-item"}
-                  activeClassName="active"
-                  exact
-                >
-                  Help&Support
-                </NavLink>                
-                <NavLink
-                  to="/logout"
-                  className={"dropdown-item"}
-                  activeClassName="active"
-                  exact
-                >
-                  Cerrar Sesión
-                </NavLink>
-              </div>
+              <Submenu open={openSubmenu} show={showSubmenu} openCreatingPost={OpenCreatingPost}/>
             </li>
           </ul>
         </Container>

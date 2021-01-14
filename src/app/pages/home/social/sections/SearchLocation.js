@@ -1,13 +1,27 @@
-import React,{ useState, useEffect, useMemo } from 'react';
+import React,{ useState, useEffect, useMemo, useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
-// import parse from 'autosuggest-highlight/parse';
+import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
 import { http } from "../../services/api";
+
+function loadScript(src, position, id) {
+  if (!position) {
+    return;
+  }
+
+  const script = document.createElement('script');
+  script.setAttribute('async', '');
+  script.setAttribute('id', id);
+  script.src = src;
+  position.appendChild(script);
+}
+
+const autocompleteService = { current: null };
 
 const useStyles = makeStyles((theme) => ({
   icon: {
@@ -16,25 +30,41 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SearchLocation() {
+export default function SearchLocation({setLocation, onClose}) {
   const classes = useStyles();
   const [value, setValue] = useState(null);
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
+  const loaded = useRef(false);
+
+  if (typeof window !== 'undefined' && !loaded.current) {
+    if (!document.querySelector('#google-maps')) {
+      loadScript(
+        `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_PAYPAL_GOOGLE_MAP_KEY}&libraries=places`,
+        document.querySelector('head'),
+        'google-maps',
+      );
+    }
+
+    loaded.current = true;
+  }  
   const fetch = useMemo(
     () =>
       throttle((request, callback) => {
-        http({
-          path: false,
-          httpUrl:`https://nominatim.openstreetmap.org/search?q=${request.input}&format=json&addressdetails=1`,
-          method: "GET",
-        }).then(response => callback(response.data));
-      }, 20),
+        autocompleteService.current.getPlacePredictions(request, callback);
+      }, 200),
     [],
   );
 
   useEffect(() => {
     let active = true;
+
+    if (!autocompleteService.current && window.google) {
+      autocompleteService.current = new window.google.maps.places.AutocompleteService();
+    }
+    if (!autocompleteService.current) {
+      return undefined;
+    }
 
     if (inputValue === '') {
       setOptions(value ? [value] : []);
@@ -55,7 +85,6 @@ export default function SearchLocation() {
         setOptions(newOptions);
       }
     });
-
     return () => {
       active = false;
     };
@@ -65,7 +94,7 @@ export default function SearchLocation() {
     <Autocomplete
       id="openstreetmap"
       style={{ width: 300, height:300 }}
-      getOptionLabel={(option) => (typeof option === 'string' ? option : option.display_name)}
+      getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
       options={options}
       autoComplete
@@ -75,6 +104,10 @@ export default function SearchLocation() {
       onChange={(event, newValue) => {
         setOptions(newValue ? [newValue, ...options] : options);
         setValue(newValue);
+        if(newValue && newValue.structured_formatting){
+          setLocation(newValue.structured_formatting.main_text);
+          onClose();
+        }
       }}
       onInputChange={(event, newInputValue) => {
         setInputValue(newInputValue);
@@ -83,13 +116,11 @@ export default function SearchLocation() {
         <TextField {...params} label="Add a location" variant="outlined" fullWidth />
       )}
       renderOption={(option) => {
-        console.log(option)
-        // const matches = option.structured_formatting.main_text_matched_substrings;
-        // const parts = parse(
-        //   option.structured_formatting.main_text,
-        //   matches.map((match) => [match.offset, match.offset + match.length]),
-        // );
-        const parts = [];
+        const matches = option.structured_formatting.main_text_matched_substrings;
+        const parts = parse(
+          option.structured_formatting.main_text,
+          matches.map((match) => [match.offset, match.offset + match.length]),
+        );
         return (
           <Grid container alignItems="center">
             <Grid item>
@@ -103,7 +134,7 @@ export default function SearchLocation() {
               ))}
 
               <Typography variant="body2" color="textSecondary">
-                {option.display_name}
+                {option.structured_formatting.secondary_text}
               </Typography>
             </Grid>
           </Grid>

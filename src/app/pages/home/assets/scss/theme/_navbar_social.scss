@@ -1,4 +1,31 @@
 @import "./_avatar.scss";
+@mixin dropdown{
+  .dropdown-menu{
+    left:auto;
+    right:0;
+    margin-top: 3px;        
+    &.show{
+      display:block;
+    }        
+    .drop-item:hover{
+      color: #16181b;
+      text-decoration: none;
+      background-color: #f8f9fa;          
+    }
+  }
+}
+@mixin clickable-button {
+  background-color: transparent;
+  color: #fff;
+  transition: opacity 0.15s;
+  border: 0;
+  margin-top: 13px;
+  position: relative;   
+  i{
+    font-size: 24px;
+  }   
+}
+
 .fitemos-menu-social {
   .navbar {
     padding: 0;
@@ -15,6 +42,11 @@
     .back-button {
       @include back-button;
     }
+  }
+  .dropdown-item.active{
+    background-color: white;
+    color:rgba($basic-text-color, 1);
+    font-weight: 600;
   }
   .menu-first{
     .menu-logo {
@@ -51,10 +83,26 @@
           transition: font-size 0.25s;
         }
       }
+      .mini-logo{
+        display: none;
+      }
     }
     .search{
       display: inline-block;
       vertical-align: top;
+      .search-button{
+        display: none;
+        background-color: transparent;
+        color: #fff;
+        transition: opacity 0.15s;
+        border: 0;
+        margin-top: 13px;
+        position: relative;
+        i{
+          font-size: 25px;
+          color:#DDDDD7;
+        }  
+      }
       input{
         &::placeholder{
           font-family: "Font Awesome 5 Free", sans-serif;        
@@ -71,7 +119,7 @@
   .menu-second{
     li{
       a{
-        padding: 0.767em 1.377em !important;
+        padding: 13px 1.377em !important;
         .svg-icon-active{
           display:none;
         }
@@ -96,6 +144,13 @@
           color:#DDDDD7;
         }
       }
+      &.dropdown{
+        @include dropdown;
+      }  
+      .clickable-button{
+        display: none;
+        @include clickable-button;
+      }  
     }
   }
   .menu-third{
@@ -103,15 +158,7 @@
       font-size:17px;
     }
     .clickable-button{
-      background-color: transparent;
-      color: #fff;
-      transition: opacity 0.15s;
-      border: 0;
-      margin-top: 13px;
-      position: relative;   
-      i{
-        font-size: 24px;
-      }   
+      @include clickable-button;
     }
     .link{
       padding: 13px 17px!important;
@@ -120,31 +167,138 @@
       }
     }
     .dropdown{
+      @include dropdown;
       .dropdown-menu{
-        left:auto;
-        right:0;
-        margin-top: 3px;        
-        &.show{
-          display:block;
-        }        
-        .drop-item:hover{
-          color: #16181b;
-          text-decoration: none;
-          background-color: #f8f9fa;          
+        .createing{
+          display:none;
         }
       }
     }
   }
 }
-@media (min-width: 767px) {
-  .fitemos-menu {
-    .menu-logo {
-      flex-shrink: 0;
+@media (max-width: 1400px) {
+  .fitemos-menu-social {
+    .menu-second li a{
+      padding: 13px !important;      
+    }
+    .menu-third {
+      .link{
+        padding: 13px !important;      
+        .full-name{
+          display:none;
+        }
+      }
+      .dropdown{
+        margin-left: -17px;
+        .clickable-button i{
+          font-size: 13px;
+          margin-top: 7px;        
+        }
+      }
     }
   }
 }
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1100px;
+@media (max-width: 1177px) {
+  .fitemos-menu-social {
+    .navbar.full-width{
+      padding:0 12px;
+    }
+  }
+}
+@media (max-width: 1132px) {
+  .fitemos-menu-social {
+    .menu-second li a .menu-text{
+      display:none;
+    }    
+    .menu-second li a{
+      padding: 13px 1.4rem!important;      
+    }
+    .menu-third {
+      .link{
+        padding: 13px 17px!important;      
+      }
+    }
+  }
+}
+@media (max-width: 1024px) {
+  .fitemos-menu-social {
+    .menu-first{
+      .back-button{
+        i{
+          font-size: 25px;
+          color:#DDDDD7;
+        }
+      }
+      .search{
+        .search-button{
+          display: block;
+        }
+        #search{
+          display:none;
+          &.clickable{
+            display:block;
+          }
+        }
+      }
+    }
+  }
+}
+@media (max-width: 768px) {
+  .fitemos-menu-social {
+    .menu-third{
+      .nav-item:nth-of-type(1){
+        display: none;
+      }
+      .dropdown{
+        .dropdown-menu{
+          .createing{
+            display:block;
+          }
+        }
+      }  
+    }
+  }
+}
+@media (max-width: 703px) {
+  .fitemos-menu-social {
+    .menu-first{
+      width:219px;
+      .navbar-logo{
+        >span{
+          display: none;
+          &.mini-logo{
+            display:block;
+          }  
+        }        
+      }
+    }
+    .menu-second{
+      &.clickable{
+        display:none;
+      }
+      .nav-item{
+        .link{
+          display:none;
+          &.active{
+            display:block;
+          }
+        }
+        &.dropdown{
+          display: block;    
+          .clickable-button{
+            display: block;
+            padding: 6px 12px 18px 12px;
+          }        
+          .dropdown-menu{
+            padding: 0;
+          }
+        }
+      }
+    }
+    .menu-third{
+      .link{
+        padding: 13px !important;        
+      }
+    }
   }
 }

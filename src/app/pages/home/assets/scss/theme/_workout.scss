@@ -156,6 +156,18 @@
   background-color: #1A7998;  
   display:block;
 }
+@media (max-width: 1080px) {
+  .workout{
+    .workout-header{
+      padding:18px;
+    }
+    .workout-body {
+      .block{
+        padding: 0 18px;
+      }
+    }
+  }
+}
 @media (max-width: 991px) {
   .page-title{
     .sub-title{

@@ -54,6 +54,16 @@
         margin-left: 8px;
       }
     }
+    .author{
+      .avatar{
+        margin-right: 10px;        
+      }
+      .follower:last-of-type{
+        .spot{
+          display:none;
+        }
+      }
+    }
     .tag-followers{
       .search{
         border:0;
@@ -84,6 +94,89 @@
       ul{
         list-style: none;
         padding-left: 0px;        
+      }
+    }
+    .medias-container{
+      position: relative;
+      .medias-body{
+        position: relative;
+        .medias{
+          position: relative;
+          .wrapper{
+            position: absolute;
+            overflow: hidden;
+            justify-content: center;
+            display: flex;
+            align-items: center;
+            .item{
+              position: relative;
+              width: 100%;
+              height: 100%;
+              word-wrap: break-word;
+              &>img,&>video{
+                width:100%;
+                height: 100%;
+                object-fit: cover;
+              }
+            }
+          }
+        }
+        .actions{
+          display: none;
+          position: absolute;
+          left: 20px;
+          top:20px;
+        }
+        &:hover{
+          .actions{
+            display: block;
+          }
+        }
+      }
+      .remove-all{
+        position: absolute;
+        right: 20px;
+        top:20px;
+        div{
+          background-color: #fff;
+          border-radius: 20px;
+          width: 26px;
+          height: 26px;
+          padding: 2px 0px 0 7.5px;
+        }
+      }
+    }
+    .manage-medias{
+      overflow: auto;
+      min-height: 200px;
+      max-height: 700px;
+      div{
+        overflow: hidden;
+        margin: 2px 0;
+        position: relative;
+        img,video{
+          width:100%;
+          height:100%;
+          object-fit: cover;
+        }
+        .actions{
+          position: absolute;
+          display: none;
+          top:20px;
+          right:20px;
+          div{
+            background-color: #fff;
+            border-radius: 20px;
+            width: 26px;
+            height: 26px;
+            padding: 2px 0px 0 7.5px;  
+          }
+        }
+        &:hover{
+          .actions{
+            display: block;
+          }
+        }
       }
     }
     .create-post-footer{

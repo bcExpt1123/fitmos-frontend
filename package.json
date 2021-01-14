@@ -49,6 +49,7 @@
     "@researchgate/react-intersection-observer": "^1.0.5",
     "@tanem/svg-injector": "^8.0.35",
     "@webscopeio/react-textarea-autocomplete": "^4.7.2",
+    "autosuggest-highlight": "^3.1.1",
     "axios": "^0.19.0",
     "axios-mock-adapter": "^1.17.0",
     "bootstrap": "^4.4.1",

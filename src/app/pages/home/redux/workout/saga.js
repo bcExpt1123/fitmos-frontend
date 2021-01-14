@@ -47,6 +47,7 @@ function* onPulling({payload:{id}}){
       if( pull.customer ){
         const customer = yield select(({auth}) => auth.currentUser.customer);
         const d = new Date(customer.updated_at);
+        console.log(d.getTime(), pull.customer)
         if(pull.customer !=d.getTime()){
           yield put(findUserDetails());
         }
@@ -63,6 +64,7 @@ function* onPulling({payload:{id}}){
     } catch (e) {
       console.log(e);
       // yield put({ type: FETCH_JOKE_FAILURE, message: e.message })
+      yield delay(10000);
     }
   }  
 }
