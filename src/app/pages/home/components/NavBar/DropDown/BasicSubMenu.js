@@ -5,8 +5,8 @@ import { NavLink } from "react-router-dom";
 const BasicSubmenu = ({show,open})=>{
   return (
     <>
-      <button type="button" className={"clickable-button"} onClick={open}>
-        <i className="fas fa-ellipsis-h" />
+      <button type="button" className={"clickable-button dropbtn"} onClick={open}>
+        <i className="fas fa-ellipsis-h dropbtn" />
       </button>
       <div className={classnames("dropdown-menu",{show:show})}>
         <NavLink

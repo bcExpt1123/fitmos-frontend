@@ -5,8 +5,8 @@ import { NavLink } from "react-router-dom";
 const Submenu = ({open,show,openCreatingPost} )=>{
   return (
     <>
-      <button type="button" className={"clickable-button"} onClick={open}>
-        <i className="fas fa-chevron-down" />
+      <button type="button" className={"clickable-button dropbtn"} onClick={open}>
+        <i className="fas fa-chevron-down dropbtn" />
       </button>
       <div className={classnames("dropdown-menu",{show:show})}>
         <a className={"dropdown-item createing"} onClick={openCreatingPost}>

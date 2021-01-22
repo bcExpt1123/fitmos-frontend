@@ -116,14 +116,31 @@
     -ms-transform: translate(-50%, -50%);
     text-align: center;
   }  
-  .auth-form .form-control select{
-    background-color: transparent;
-    border: 0;
-    width: 100%;
-    &:focus{
-      outline-width: 0;
+  .auth-form{
+    .form-control select{
+      background-color: transparent;
+      border: 0;
+      width: 100%;
+      &:focus{
+        outline-width: 0;
+      }
     }
-  }
+    .description{
+      .form-control{
+        height:122px;
+        textarea{
+          width: 100%;
+          border:0;
+          &:focus{
+            outline-width: 0;
+          }          
+        }
+      }
+    }
+    .fs-btn{
+      margin:10px auto;
+    }
+  } 
 }
 .dropzone{
   display: flex;

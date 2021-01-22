@@ -1,0 +1,93 @@
+.search-customers{
+  @include search-section;
+  .result{
+    .item{
+      >div{
+        display: inline-block;
+        img{
+          width:64px;
+          height: 64px;
+          border-radius: 32px;
+          object-fit: cover;
+          margin-top: -16px;          
+        }
+        .name{
+          display: inline-block;
+          margin-left: 10px;
+          .fullname{
+            padding-top: 10px;
+            font-size: 14px;
+            color: $basic-text-color;
+          }
+          .username{
+            font-size: 12px;
+            color:#707C89;
+          }
+        }
+      }
+      .follow{
+        float: right;
+        margin-top: 13px;
+        border:0;
+        border-radius: 3px;
+        font-size: 14px;
+        background-color: #BDD631;
+        color:white;
+        padding: 9px;
+      }
+    }
+  }
+}
+.search-shops{
+  @include search-section;
+  .result{
+    .item{
+      img{
+        width:64px;
+        height: 64px;
+        border-radius: 32px;
+        object-fit: cover;
+        margin-top: -16px;          
+      }
+      .body{
+        display: inline-block;
+        margin-left: 10px;
+        width: calc( 100% - 74px);
+        .name{
+          color:$basic-text-color;
+          font-size: 14px;
+        }
+        .content{
+          color:#707C89;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+.search-posts{
+  @include search-section;
+  .result{
+    .item{
+      video,img{
+        height:88px;
+        width:88px;
+      }
+      .body{
+        display: inline-block;
+        margin-left: 10px;
+        width: calc( 100% - 98px);
+        vertical-align: top;
+        .content{
+          color:#707C89;
+          font-size: 14px;
+          height: 55px;          
+        }
+        .post-footer{
+          padding: 2px;
+          @include post-footer;
+        }        
+      }
+    }
+  }
+}

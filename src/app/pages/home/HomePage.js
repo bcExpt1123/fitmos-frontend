@@ -24,12 +24,19 @@ import Product from "./Product";
 import Partners from "./Partners";
 import Benchmarks from "./Benchmarks";
 import ProfilePage from "./Profile";
+import ProfilePicturesPage from "./social/posts/Pictures";
 import PerfilPage from "./Perfil";
 import Workout from "./Workout";
 import LevelPage from "./Level";
 import SubscriptionTabs from "./Subscriptions";
 import NewsfeedPage from "./Newsfeed";
 import LeaderboardPage from "./Leaderboard";
+import Customer from "./Customer";
+import SearchPage from "./Search";
+import SearchCustomersPage from "./SearchCustomers";
+import SearchCompaniesPage from "./SearchCompanies";
+import SearchPostsPage from "./SearchPosts";
+import SocialPostPage from "./social/posts/Post";
 import { LayoutSplashScreen } from "../../../_metronic";
 
 export default function HomePage() {
@@ -66,14 +73,22 @@ export default function HomePage() {
         <Route exact path="/shop" component={Shop} />
         <Route exact path="/shop/companies/:id" component={Company} />
         <Route exact path="/shop/products/:id" component={Product} />
+        <Route exact path="/customers/:id" component={Customer} />
+        <Route exact path="/customers/:id/pictures" component={ProfilePicturesPage} />
         <Route exact path="/partners" component={Partners} />
         <Route exact path="/benchmarks" component={Benchmarks} />
         <Route exact path="/profile" component={ProfilePage} />
+        <Route exact path="/profile/pictures" component={ProfilePicturesPage} />
         <Route exact path="/perfil" component={PerfilPage} />
         <Route exact path="/level" component={LevelPage} />
         <Route exact path="/subscriptions" component={SubscriptionTabs} />
         <Route exact path="/newsfeed" component={NewsfeedPage} />
         <Route exact path="/leaderboard" component={LeaderboardPage} />
+        <Route exact path="/search" component={SearchPage} />
+        <Route exact path="/search-people" component={SearchCustomersPage} />
+        <Route exact path="/search-shops" component={SearchCompaniesPage} />
+        <Route exact path="/search-posts" component={SearchPostsPage} />
+        <Route exact path="/posts/:id" component={SocialPostPage} />
       </Switch>
     </Suspense>
   );

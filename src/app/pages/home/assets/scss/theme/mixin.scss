@@ -1,3 +1,4 @@
+$post-modal-icon-color:#F5F6F7;
 $green-yellow-color: #c8dc50;
 $bg-title-size: 3.85rem;
 $basic-text-color: #333333;
@@ -21,4 +22,55 @@ $main-background-color:#F2F3F6;
 @mixin mobile-back-button{
   position: relative;
   left: 0;
+}
+@mixin search-section{
+  background-color: white;
+  margin-top: 40px;
+  padding: 20px;
+  border-radius: 5px;  
+  .label{
+    font-size: 16px;
+    font-weight: 600;
+    >div{
+      float:right;
+      a{
+        font-size: 12px;
+      }
+    }
+  }
+  .result{
+    margin: 20px 0 0 0;
+    .item{
+      padding:10px 0;
+    }
+  }
+}
+@mixin post-footer{
+  .likes{
+    display: inline-block;
+    span{
+      font-size: 16px;
+      color:#707C89;
+      &:nth-of-type(1){
+        padding-right: 40px;
+      }
+      i{
+        font-size: 20px;
+        line-height: 24px;
+      }
+    }
+    i.fa-heart{
+      color:#D83B18;
+    }
+  }
+  .share{
+    display: inline-block;
+    text-align: right;
+    float: right;
+    i{
+      font-size: 20px;
+      line-height: 24px;
+      color:#707C89;
+    }
+  }
 }

@@ -1,7 +1,7 @@
 import React,{useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { $frontPage } from "../../../../modules/subscription/company";
+import { $frontPage, $fetchFrontIndex } from "../../../../modules/subscription/company";
 import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
 
 
@@ -13,6 +13,9 @@ const Shop = () => {
   useEffect(() => {
     setIsFetching(false);
   }, [company.frontMeta]);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(()=>{
+    dispatch($fetchFrontIndex());
+  },[]);
   const fetchMoreListItems = ()=>{
     dispatch($frontPage());
   }

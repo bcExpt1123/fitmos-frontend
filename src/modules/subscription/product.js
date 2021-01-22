@@ -224,7 +224,10 @@ export const actionTypes = {
    export function $deleteImage(image) {
     return { type: actionTypes.PRODUCT_DELETE_IMAGE, image };
   }
-  export const $fetchFrontIndex = (companyId) => ({ type: actionTypes.PRODUCT_FRONT_INITIAL_INDEX_REQUEST,companyId });
+  export const $fetchFrontIndex = (companyId) => {
+    console.log(companyId)
+    return { type: actionTypes.PRODUCT_FRONT_INITIAL_INDEX_REQUEST,companyId }
+  };
   export function $frontPage(companyId) {
     return { type: actionTypes.PRODUCT_FRONT_PAGE_CHANGED,companyId};
   }

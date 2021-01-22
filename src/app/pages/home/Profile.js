@@ -1,19 +1,35 @@
-import React from "react";
+import React,{useEffect, useState} from "react";
 import MetaTags from "react-meta-tags";
-import {Row} from "react-bootstrap";
-import {Col} from "react-bootstrap";
-import SVG from "react-inlinesvg";
+// import {Row} from "react-bootstrap";
+// import {Col} from "react-bootstrap";
+// import SVG from "react-inlinesvg";
 
+// import ThreeColumn from "./layouts/Three";
+// import PageHeader from "./layouts/PageHeader";
+// import Account from "./sections/Profile/Account";
+// import Details from "./sections/Profile/Details";
+// import Objective from "./sections/Profile/Objective";
+// import Subscription from "./sections/Profile/Subscription";
+// import Email from "./sections/Profile/Email";
+// import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
+import { useSelector, useDispatch } from "react-redux";
 import ThreeColumn from "./layouts/Three";
-import PageHeader from "./layouts/PageHeader";
-import Account from "./sections/Profile/Account";
-import Details from "./sections/Profile/Details";
-import Objective from "./sections/Profile/Objective";
-import Subscription from "./sections/Profile/Subscription";
-import Email from "./sections/Profile/Email";
-import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
+import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/actions";
+import Posts from "./social/sections/Posts";
 
-const ProfilePage = () => (
+
+const ProfilePage = () => {
+  const posts = useSelector(({post})=>post.customerPosts);
+  const currentUser = useSelector(({auth})=>auth.currentUser);
+  const last = useSelector(({post})=>post.customerPostsLast);
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(findCustomerPosts(currentUser.customer.id));
+  },[])
+  const dispatchAction = ()=>{
+    dispatch(appendCustomerPostsAfter(currentUser.customer.id));
+  }
+  return(
   <>
     <MetaTags>
       <title>Profile -Fitemos </title>
@@ -23,7 +39,7 @@ const ProfilePage = () => (
       />
     </MetaTags>
     <ThreeColumn>
-      <PageHeader title={`Mi Cuenta`}/>
+      {/* <PageHeader title={`Mi Cuenta`}/>
       <Row className="profile">
         <Col xs={12} md={6}>
           <Account />
@@ -49,9 +65,10 @@ const ProfilePage = () => (
           <img src={toAbsoluteUrl("/media/icons/png/social/youtube.png")} alt="youtube"/>
         </a>
 
-      </div>
+      </div> */}
+        {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true}/>}
     </ThreeColumn>
   </>
-);
+)};
 
 export default ProfilePage;

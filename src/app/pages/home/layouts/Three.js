@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import NavBar from "../components/NavBar";
 import NavBarSocial from "../components/NavBar/Social";
 import SideBar from "../profile/SideBar";
-import RightBar from "../sections/RightBar";
+import RightBar from "../social/sections/RightBar";
 
   
 const ThreeColumn = ({children}) => {  

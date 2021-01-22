@@ -12,6 +12,7 @@ import { updateProfile, uploadProfileImage } from "../../../redux/userSettings/a
 import Avatar from "../../../components/Avatar";
 import { toAbsoluteUrl } from "../../../../../../_metronic/utils/utils";
 import ProfileOverlay from "./ProfileOverlay";
+import EditWeight from "../../../profile/EditWeight";
 
 const validate = withPassword => ({
   email,
@@ -63,7 +64,8 @@ const EditProfile = ({ show, handleClose }) => {
       current_height,
       country,
       country_code,
-      gender
+      gender,
+      description
     },
     { setSubmitting, setErrors, setFieldValue }
   ) => {
@@ -75,7 +77,8 @@ const EditProfile = ({ show, handleClose }) => {
       current_height,
       country,
       country_code,
-      gender
+      gender,
+      description
     };
     return new Promise((resolve, reject) => {
         dispatch(updateProfile({
@@ -112,6 +115,7 @@ const EditProfile = ({ show, handleClose }) => {
       show={show}
       onHide={handleClose}
       animation={false}
+      size="lg"
       className={classNames("profile-edit",{upload:uploadImage})}
       centered
     >
@@ -131,7 +135,8 @@ const EditProfile = ({ show, handleClose }) => {
             current_height:currentUser.customer.current_height,
             country:currentUser.customer.country,
             country_code:currentUser.customer.country_code,
-            gender:currentUser.customer.gender
+            gender:currentUser.customer.gender,
+            description:currentUser.customer.description
           }}
           validate={validate(currentUser.password)}
           onSubmit={onSubmit}
@@ -165,7 +170,7 @@ const EditProfile = ({ show, handleClose }) => {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12}>
+                <Col xs={6}>
                   <FormGroup
                     hasValue={Boolean(values.first_name)}
                     name="first_name"
@@ -184,9 +189,7 @@ const EditProfile = ({ show, handleClose }) => {
                     />
                   </FormGroup>
                 </Col>
-              </Row>
-              <Row>
-                <Col xs={12}>
+                <Col xs={6}>
                   <FormGroup
                     hasValue={Boolean(values.last_name)}
                     name="last_name"
@@ -207,7 +210,7 @@ const EditProfile = ({ show, handleClose }) => {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12}>
+                <Col xs={6}>
                   <FormGroup
                     hasValue={Boolean(values.current_height)}
                     name="current_height"
@@ -226,9 +229,7 @@ const EditProfile = ({ show, handleClose }) => {
                     />
                   </FormGroup>
                 </Col>
-              </Row>
-              <Row>
-                <Col xs={12}>
+                <Col xs={6}>
                   <FormGroup
                     hasValue={Boolean(values.country_code)}
                     name="country_code"
@@ -255,22 +256,7 @@ const EditProfile = ({ show, handleClose }) => {
                 </Col>
               </Row>
               <Row>
-                <Col xs={12}>
-                  <PhoneInput
-                    country={values.country_code}
-                    localization={es}
-                    id="whatsapp_phone_number"
-                    type="text"
-                    name="whatsapp_phone_number"
-                    value={values.whatsapp_phone_number}
-                    masks={{pa: '.... .... ....'}}
-                    onFocus={handleFocus}
-                    onChange={(phone,country) => {values.whatsapp_phone_number = phone;values.country = country.name;values.country_code=country.countryCode;}}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12} className="mt-4">
+                <Col xs={6} className="">
                   <FormGroup
                     hasValue={Boolean(values.gender)}
                     name="gender"
@@ -292,6 +278,42 @@ const EditProfile = ({ show, handleClose }) => {
                     </Field>  
                   </FormGroup>
                 </Col>
+                <Col xs={6}>
+                  <PhoneInput
+                    country={values.country_code}
+                    localization={es}
+                    id="whatsapp_phone_number"
+                    type="text"
+                    name="whatsapp_phone_number"
+                    value={values.whatsapp_phone_number}
+                    masks={{pa: '.... .... ....'}}
+                    onFocus={handleFocus}
+                    onChange={(phone,country) => {values.whatsapp_phone_number = phone;values.country = country.name;values.country_code=country.countryCode;}}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12} className="description">
+                  <FormGroup
+                    hasValue={Boolean(values.description)}
+                    name="description"
+                    htmlFor="description"
+                    label={"Description"}
+                    focused={focused.description}
+                    touched={touched.description}
+                    valid={Boolean(values.description && !errors.description)}
+                  >
+                    <Field
+                      id="description"
+                      type="text"
+                      name="description"
+                      as="textarea"
+                      rows="5"
+                      autoComplete="description"
+                      onFocus={handleFocus}
+                    />
+                  </FormGroup>
+                </Col>
               </Row>
               <Row>
                 <Col xs={12}>
@@ -303,6 +325,7 @@ const EditProfile = ({ show, handleClose }) => {
             </Form>
           )}
         </Formik>
+        <EditWeight />
       </Modal.Body>
     </Modal>
   );

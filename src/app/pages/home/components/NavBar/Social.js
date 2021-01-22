@@ -14,13 +14,14 @@ import {
   authenticate as regenerateAuthAction,
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
-import { start } from "../../redux/checkout/actions";
 import { pulling } from "../../redux/workout/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
+import EditPostModal from "../../social/posts/EditingModal";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import BasicSubmenu from "./DropDown/BasicSubMenu";
 import Submenu from "./DropDown/SubMenu";
+import SearchResult from "./DropDown/SearchResult";
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
 
@@ -57,6 +58,21 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
     }
     if(serviceItem == null)dispatch($changeItem(1));
     if( currentUser ) dispatch(pulling({id:currentUser.customer.id}))
+    function hideDropDowns(event){
+      if (!event.target.matches('.dropbtn')) {
+        console.log(event.target)
+        var dropdowns = document.getElementsByClassName("dropdown-menu");
+        var i;
+        for (i = 0; i < dropdowns.length; i++) {
+          var openDropdown = dropdowns[i];
+          if (openDropdown.classList.contains('show')) {
+            openDropdown.classList.remove('show');
+          }
+        }
+      }
+    } 
+    window.addEventListener('click', hideDropDowns) 
+    return ()=>window.removeEventListener("click", hideDropDowns);   
   },[]);
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
@@ -79,6 +95,15 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
     setShowSubmenu(!showSubmenu);
   }
   const [clickSearch, setClickSearch] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const clearSearchValue = () => {
+    setSearchValue("");
+  }
+  useEffect(()=>{
+    setSearchValue("");
+  },[window.location.pathname]);
+  //edit post
+  const editPost = useSelector(({post})=>post.editPost);
   return (
     <>
       <Navbar
@@ -116,7 +141,10 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                   <i className="fas fa-search" />
                 </button>
               }
-              <input id="search" placeholder="&#xF002; Search" type="text" className={classnames("mt-3",{clickable:clickSearch})}/>
+              <input id="search" placeholder="&#xF002; Buscar...." autoComplete="off" type="text" className={classnames("mt-3 dropbtn",{clickable:clickSearch})} value={searchValue} onChange={(evt)=>setSearchValue(evt.target.value)}/>
+              <div className="search-result dropdown">
+                <SearchResult value={searchValue} clearValue={clearSearchValue}/>
+              </div>
             </div>  
           </div>
           <ul
@@ -238,6 +266,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
         </Container>
       </Navbar>
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
+      <EditPostModal show={!(editPost===false)} />
     </>
   );
 }

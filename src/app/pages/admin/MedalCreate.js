@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { makeStyles } from "@material-ui/core";
-import { Button, Paper, TextField, Grid, IconButton } from "@material-ui/core";
+import { Button, Paper, TextField, Grid, IconButton,MenuItem, FormControl, InputLabel, Select } from "@material-ui/core";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import {
   $setNewItem,
@@ -51,6 +51,11 @@ class Main extends Component {
         marginLeft: theme.spacing(2),
         marginRight: theme.spacing(2)
       },
+      formControl:{
+        marginLeft: theme.spacing(2),
+        marginTop: theme.spacing(2),
+        marginRight: theme.spacing(2)
+      },
       margin: {
         margin: theme.spacing(1)
       }
@@ -67,7 +72,22 @@ class Main extends Component {
             autoComplete="off"
           >
             <Grid container spacing={3}>
-              <Grid item xs={4}>
+              <Grid item xs={1} className="mt-3">
+                <FormControl className={this.classes.formControl}>
+                  <InputLabel id="medal-type">Type</InputLabel>
+                  <Select
+                    labelId="medal-type"
+                    id="select"
+                    value={this.props.item.type}
+                    onChange={this.handleChange("type")}
+                  >
+                    <MenuItem value="total">total</MenuItem>
+                    <MenuItem value="level">level</MenuItem>
+                    <MenuItem value="month">month</MenuItem>
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={3}>
                 <TextField
                   required
                   id="name"
@@ -80,7 +100,7 @@ class Main extends Component {
                   margin="normal"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   required
                   id="count"
@@ -94,7 +114,7 @@ class Main extends Component {
                   margin="normal"
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <input
                   accept="image/*"
                   className={this.classes.input}

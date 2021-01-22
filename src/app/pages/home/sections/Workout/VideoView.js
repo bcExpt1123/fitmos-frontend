@@ -70,7 +70,6 @@ const VideoView = ({onClose}) => {
     }
   },[video]);
   useEffect(()=>{
-    // document.body.style.cssText = "overflow:hidden !important";
     if(isMobile()) {
       const mobileBack = document.getElementsByClassName("modal-backdrop")[0];
       mobileBack.style.backgroundColor = "#1a1a1a";

@@ -25,6 +25,7 @@ export const actionTypes = {
   MEDAL_NEW_ITEM_FETCH: "MEDAL_NEW_ITEM_FETCH",
   MEDAL_SET_ITEM_VALUE: "MEDAL_SET_ITEM_VALUE",
   MEDAL_SET_VALUE: "MEDAL_SET_VALUE",
+  MEDAL_CHANGE_TYPE: "MEDAL_CHANGE_TYPE",
   MEDAL_CHANGE_SAVE_STATUS: "MEDAL_CHANGE_SAVE_STATUS",
   MEDAL_SET_ITEM_ERROR: "MEDAL_SET_ITEM_ERROR",
   MEDAL_UPLOAD_IMAGE:"MEDAL_UPLOAD_IMAGE",
@@ -38,6 +39,7 @@ export const selectors = {};
 
 const initialState = {
   data: null,
+  originData: null,
   meta: {
     total: 0
   },
@@ -47,6 +49,7 @@ const initialState = {
   searchCondition: {
     search: ""
   },
+  type:'all',
   errors: {
     name: "",
     count:""
@@ -68,6 +71,7 @@ export const reducer = persistReducer(
         return {
           ...state,
           data: action.data,
+          originData:action.data,
           meta: { ...state.meta, ...action.meta }
         };
 
@@ -99,6 +103,10 @@ export const reducer = persistReducer(
         return { ...state, errors };
       case actionTypes.MEDAL_SET_VALUE:
         return { ...state, [action.key]: action.value };
+      case actionTypes.MEDAL_CHANGE_TYPE:
+        let data = state.originData.filter((item)=>item.type==action.value);  
+        if(action.value == 'all') data = [...state.originData];
+        return { ...state, type: action.value, data };
     
       default:
         return state;
@@ -131,9 +139,6 @@ export function $pageSize(pageSize = INDEX_PAGE_SIZE_DEFAULT) {
   return { type: actionTypes.MEDAL_PAGESIZE_CHANGED, pageSize: pageSize };
 }
 
-export function $changeConditionValue(name, value) {
-  return { type: actionTypes.MEDAL_SEARCH_REQUEST, name, value };
-}
 export function $delete(id) {
   return { type: actionTypes.MEDAL_ACTION_REQUEST, action: "delete", id };
 }
@@ -153,7 +158,12 @@ export function $updateItemImage(image) {
 export function $updateItemValue(name, value) {
   return { type: actionTypes.MEDAL_SET_ITEM_VALUE, name, value };
 }
-
+export function $setValue(key, value){
+  return { type: actionTypes.MEDAL_SET_VALUE, key, value }
+}
+export function $changeType(value){
+  return { type: actionTypes.MEDAL_CHANGE_TYPE, value }
+}
 const medalsRequest = (meta, searchCondition) =>
   http({
     path: `medals`
@@ -246,6 +256,7 @@ const saveMedal = medal => {
   const formData = new FormData();
   formData.append("name", medal.item.name);
   formData.append("count", medal.item.count);
+  formData.append("type", medal.item.type);
   if (medal.uploadImage) {
     const files = Array.from(medal.uploadImage);
     files.forEach((file, i) => {
@@ -305,6 +316,7 @@ function* saveItem({ history }) {
 function* newItemFetch(){
   const item = {
     id: null,
+    type:"total",
     name: "",
     count: 0,
     uploadImage: "",
@@ -312,7 +324,6 @@ function* newItemFetch(){
   };
   yield put({ type: actionTypes.MEDAL_SET_ITEM, item });
 }
-
 
 export function* saga() {
   yield takeLeading(actionTypes.MEDAL_INDEX_REQUEST, fetchMedal);

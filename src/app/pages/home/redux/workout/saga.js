@@ -7,6 +7,7 @@ import {
 } from "../done/actions";
 import { findUserDetails } from "../../redux/auth/actions";
 import { findFriends } from "../../redux/people/actions";
+import { findNewsfeed, appendNewsfeedBefore } from "../../redux/post/actions";
 import { http } from "../../services/api";
 
 const confirmAlternateRequest = ({shortcode_id,alternate_id})=>
@@ -59,8 +60,16 @@ function* onPulling({payload:{id}}){
           yield put(setPublic(pull.publicProfile));
         }
       }
-      if(process.env.APP_ENV !== "production")yield delay(10000);
-      else yield delay(1000);
+      const newsfeedStart = yield select(({post})=>post.launch);
+      const newsfeedPosts = yield select(({post})=>post.newsfeed);
+      if( !newsfeedStart && newsfeedPosts.length === 0 ){
+        yield put(findNewsfeed());
+      }else if( pull.newsfeed ){
+        yield put(appendNewsfeedBefore(pull.newsfeed));
+        // send post ids
+      }
+      if(process.env.APP_ENV !== "production")yield delay(100000);
+      else yield delay(10000);
     } catch (e) {
       console.log(e);
       // yield put({ type: FETCH_JOKE_FAILURE, message: e.message })

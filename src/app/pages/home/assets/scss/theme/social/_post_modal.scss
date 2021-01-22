@@ -1,0 +1,114 @@
+
+.post-modal{
+  width: 100%;
+  height: 100%;
+  max-width:100%;
+  margin: 0;
+  padding: 0;  
+  background-color: transparent;
+  .modal-content{
+    height: auto;
+    min-height: 100%;
+    border-radius: 0;
+    background-color: transparent;
+    .modal-body{
+      padding: 0;
+      .slides{
+        display:inline-block;
+        width: calc(100% - 350px);
+        background-color: transparent;
+        vertical-align: bottom;
+        height: 99vh;        
+        position: relative;
+        .close{
+          float:left;
+          color:$post-modal-icon-color;
+          opacity: 1;
+          font-size: 36px;
+          z-index: 20;
+          cursor: pointer;
+          margin: 10px 37px;
+        }
+        .sliders{
+          margin: 10vh auto auto auto;
+          width: 80vh;
+          height: 80vh;
+          // margin: auto;
+          // width: 500px;
+          .slick-slider{
+            .slick-prev {
+              left: 0;
+              font: normal normal normal 16px/1 "LineAwesome";
+              font-weight: 600;
+              margin-left: -133px;
+              &:before {
+                color: $post-modal-icon-color;
+                font-family: unset;
+                font-size: 50px;
+                content: "\f111";
+              }
+            }
+            .slick-next {
+              right: 24px;
+              font: normal normal normal 16px/1 "LineAwesome";
+              font-weight: 600;
+              margin-right: -133px;
+              &:before {
+                color: $post-modal-icon-color;
+                font-size: 50px;
+                content: "\f112";
+                font-family: unset;
+              }
+            }          
+            .slick-slide {
+              margin: auto;
+              width:80vh;
+              height: 80vh;
+              .post-media{
+                opacity: 0;
+              }
+              .image-hidden{
+                opacity: 1;
+                transition: opacity 0.8s ease-in;
+              }      
+              img{
+                margin: auto;
+                width:80vh;
+                height: 80vh;
+                object-fit: contain;
+              }
+              .video-react{
+                width:80vh;
+                height: 80vh;
+                left: 50%;
+                position: absolute;
+                top: 50%;
+                transform: translate(-50%, -50%);                 
+                background-color: transparent;
+                video{
+                }
+                .video-react-big-play-button{
+                  left: 50%;
+                  position: absolute;
+                  top: 50%;
+                  transform: translate(-50%, -50%);                 
+                }                
+              }
+              &.slick-active{
+                z-index: 1;
+              }
+            }
+          }
+        }
+      }
+      .post{
+        display: none;
+        background-color: white;
+        display:inline-block;
+        width:350px;
+        height: calc( 100vh - 2px);
+        margin-bottom: 0;
+      }
+    }
+  }  
+}

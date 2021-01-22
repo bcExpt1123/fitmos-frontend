@@ -26,7 +26,6 @@ import { setReferralVoucher } from "../pages/home/redux/vouchers/actions";
 export const Routes = withRouter(({ history }) => {
   const lastLocation = useLastLocation();
   routerHelpers.saveLastLocation(lastLocation);
-  console.log(window.location.pathname);
   if (window.location.host === 'fitemos.com'){
     window.location = window.location.protocol + "//www." + window.location.host + window.location.pathname;
   }
@@ -161,10 +160,17 @@ export const Routes = withRouter(({ history }) => {
     "/shop/products/:id",//new
     "/benchmarks",//new
     "/partners",//new
-    "/profile",//new
+    "/profile",
+    "/profile/pictures",//new
     "/perfil",//new
     "/level",//new
     "/subscriptions",//new
+    "/customers/:id",//new
+    "/customers/:id/pictures",//new
+    "/search",
+    "/search-people",
+    "/search-shops",
+    "/search-posts",
     "/pricing",
     "/checkout",
     "/settings/subscriptions",
@@ -174,6 +180,8 @@ export const Routes = withRouter(({ history }) => {
     "/settings/notifications",
     "/news",
     "/news/:id",
+    "/posts",
+    "/posts/:id",
     "/ayuda",
     "/contact",
     "/terms_and_condition",

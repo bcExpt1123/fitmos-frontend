@@ -8,15 +8,21 @@ import Footer from "../components/Footer";
 const OneColumn = ({children}) => {  
   const currentUser = useSelector(({auth})=>auth.currentUser);
   return (  
-      <>
-        {currentUser?
-          <NavBarSocial />:
-          <NavBar />
-        }
+    <>
+      {currentUser?
+        <NavBarSocial />:
         <NavBar />
-        {children}
-        <Footer />
-      </>
+      }
+      <div className="wrapper">
+        <div id="content">
+          <div className="page-main">
+            <div className="container">
+              {children}        
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   )  
 }  
 export default OneColumn;

@@ -114,12 +114,33 @@
         outline: 0;
         margin-top: 0.79rem!important;        
       }
+      .search-result.dropdown{
+        .dropdown-menu{
+          div{
+            margin-left: 10px;
+            font-weight: 600;
+            font-size: 15px;
+          }
+          .nothing{
+            color:rgba($basic-text-color, 0.5);
+            padding-left: 10px;
+            font-size: 12px;
+          }
+          .open-search-button{
+            background-color: transparent;
+            color: #1A7998;
+            border: 0;
+            font-size: 15px;
+          }
+        }
+      }
     }
   }
   .menu-second{
     li{
       a{
         padding: 13px 1.377em !important;
+        height:62px;
         .svg-icon-active{
           display:none;
         }
@@ -156,6 +177,11 @@
   .menu-third{
     .full-name{
       font-size:17px;
+      display: inline-block;
+      width: 120px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;            
     }
     .clickable-button{
       @include clickable-button;

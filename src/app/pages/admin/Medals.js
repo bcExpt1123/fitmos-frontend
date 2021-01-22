@@ -1,14 +1,15 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import { makeStyles } from "@material-ui/core";
-import { Table, TableHead, TableBody, TableCell, Paper, IconButton, TableRow, colors} from "@material-ui/core";
+import { Table, TableHead, TableBody, TableCell, Paper, IconButton, TableRow, colors, MenuItem, FormControl, InputLabel, Select} from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import { NavLink } from "react-router-dom";
 import {
   $fetchIndex,
-  $delete
+  $delete,
+  $changeType
 } from "../../../modules/subscription/medal";
 
 
@@ -33,6 +34,7 @@ const useStyles = makeStyles(theme => ({
 }));
 const headRows = [
   { id: "id", numeric: false, disablePadding: false, label: "ID" },
+  { id: "type", numeric: false, disablePadding: false, label: "Type" },
   { id: "name", numeric: false, disablePadding: false, label: "Name" },
   { id: "count", numeric: false, disablePadding: false, label: "Count" },
   { id: "image", numeric: false, disablePadding: false, label: "Image" },
@@ -69,6 +71,7 @@ function Main({ medals, $delete }) {
                     <TableCell component="th" scope="row">
                       {row.id}
                     </TableCell>
+                    <TableCell align="left">{row.type}</TableCell>
                     <TableCell align="left">{row.name}</TableCell>
                     <TableCell align="left">
                       {row.count}
@@ -138,6 +141,11 @@ const mapDispatchToProps1 = {
 
 const Medals = injectIntl(connect(null, mapDispatchToProps1)(MedalWrapper));
 function Sub() {
+  const type = useSelector(({medal})=>medal.type); 
+  const dispatch = useDispatch();
+  const handleTypeChange = (evt)=>{
+    dispatch($changeType(evt.target.value));
+  }
   return (
     <>
       <div className="kt-subheader__main">
@@ -154,6 +162,22 @@ function Sub() {
         <span className="kt-subheader__separator kt-subheader__separator--v" />
         <span className="kt-subheader__desc">
         </span>
+        <FormControl className="mb-4">
+          <InputLabel id="medal-type">Type</InputLabel>
+          <Select
+            labelId="medal-type"
+            id="select"
+            value={type}
+            onChange={handleTypeChange}
+          >
+            <MenuItem value="all">All</MenuItem>
+            <MenuItem value="total">Total</MenuItem>
+            <MenuItem value="level">Level</MenuItem>
+            <MenuItem value="month">Month</MenuItem>
+          </Select>
+        </FormControl>
+
+
       </div>
 
       <div className="kt-subheader__toolbar">

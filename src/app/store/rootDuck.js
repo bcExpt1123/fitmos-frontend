@@ -50,8 +50,7 @@ import vouchersReducer from "../pages/home/redux/vouchers/reducer";
 import doneReducer from "../pages/home/redux/done/reducer";
 import workoutReducer from "../pages/home/redux/workout/reducer";
 import peopleReducer from "../pages/home/redux/people/reducer";
-//import { clearState } from './actions';
-//import { getStateFromCookies } from '../middlewares/cookie';
+import postReducer from "../pages/home/redux/post/reducer";
 
 //import accountDeleted from './accountDeleted/saga';
 import alert from "../pages/home/redux/alert/saga";
@@ -77,6 +76,7 @@ import vouchers from "../pages/home/redux/vouchers/saga";
 import done from "../pages/home/redux/done/saga";
 import workout from "../pages/home/redux/workout/saga";
 import people from "../pages/home/redux/people/saga";
+import post from "../pages/home/redux/post/saga";
 
 
 export const rootReducer = combineReducers({
@@ -118,6 +118,7 @@ export const rootReducer = combineReducers({
   company: company.reducer,
   product: product.reducer,
   people:peopleReducer,
+  post:postReducer,
 });
 
 export function* rootSaga() {
@@ -158,6 +159,7 @@ export function* rootSaga() {
     done(),
     workout(),
     people(),
+    post(),
     survey.saga(),
     company.saga(),
     product.saga(),

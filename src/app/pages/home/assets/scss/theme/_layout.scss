@@ -46,7 +46,6 @@
     top: 125px;
     left: 40px;
     height: 750px;
-    z-index: 999;
     background: white;
     color: $basic-text-color;
     .wrapper-side{
@@ -56,7 +55,7 @@
 	}
 	&.three-column{
 		#content{
-      margin: 48px auto;
+      margin: 33px auto;
       width: calc(100% - 700px);
       .page-main{
         margin-top:20px;
@@ -78,15 +77,37 @@
     position: fixed;
     top: 125px;
     right: 30px;
-    height: 90vh;
-    z-index: 999;
-    background: #fff;
     color: $basic-text-color;
-    @import "_shared_profile";
     .wrapper-rightbar{
-      padding:30px;
+      padding:15px;
       height: 100%;
+      background: #fff;
       overflow-x: hidden;      
+      margin-bottom: 20px;
+      .label{
+        font-size: 16px;
+        font-weight: 600;
+        padding: 10px 0;
+        a{
+          font-size: 12px;
+          font-weight: 600;
+          float: right;
+        }
+      }
+      .body{
+        .medias{
+          display: grid;
+          grid-template-columns: auto auto auto;
+          >div{
+            padding: 2px;
+            img,video{
+              width: 91px;
+              height: 91px;
+              object-fit: cover;
+            }
+          }          
+        }
+      }
     }
   }
   .mobile-menu{
@@ -158,6 +179,16 @@
         .page-main{
           margin-top:30px;
           padding: 10px 350px 10px 10px;    
+        }
+			}
+    }
+		&.two-column{
+			#content{
+        padding-left: 0;
+        width: 100%;
+        .page-main{
+          margin-top:30px;
+          padding: 10px 10px 10px 10px;    
         }
 			}
     }

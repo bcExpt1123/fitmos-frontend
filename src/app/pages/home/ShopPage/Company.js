@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SectionProduct from "./SectionProduct";
 import { $fetchFrontIndex, $frontPage,$cleanCompanyId } from "../../../../modules/subscription/product";
-import useInfiniteScroll from "../../../../lib//useInfiniteScroll";
+import useInfiniteScroll from "../../../../lib/useInfiniteScroll";
 
 
 const Company = ({match}) => {
@@ -18,7 +18,7 @@ const Company = ({match}) => {
     return () => {
       dispatch($cleanCompanyId());
     };
-  },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  },[match.params.id]);// eslint-disable-line react-hooks/exhaustive-deps
   const meta = product.frontMeta;
   const products = product.frontData;
   useEffect(() => {
