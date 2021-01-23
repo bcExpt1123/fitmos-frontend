@@ -16,6 +16,7 @@ import EditWeight from "../../../profile/EditWeight";
 
 const validate = withPassword => ({
   email,
+  username,
   first_name,
   last_name,
   password,
@@ -23,6 +24,9 @@ const validate = withPassword => ({
 }) => {
   const errors = {};
 
+  if (!username) {
+    errors.username = { id: "SettingsForm.Profile.Error.FirstName.required" };
+  }
   if (!first_name) {
     errors.first_name = { id: "SettingsForm.Profile.Error.FirstName.required" };
   }
@@ -58,6 +62,7 @@ const EditProfile = ({ show, handleClose }) => {
   const dispatch = useDispatch();    
   const onSubmit = (
     {
+      username,
       first_name,
       last_name,
       whatsapp_phone_number,
@@ -71,6 +76,7 @@ const EditProfile = ({ show, handleClose }) => {
   ) => {
     country = es[country_code];
     let params = {
+      username,
       first_name,
       last_name,
       whatsapp_phone_number,
@@ -130,6 +136,7 @@ const EditProfile = ({ show, handleClose }) => {
             whatsapp_phone_number: currentUser.customer.whatsapp_phone_number
               ? currentUser.customer.whatsapp_phone_number
               : "",
+            username: currentUser.customer.username,  
             first_name: currentUser.customer.first_name,
             last_name: currentUser.customer.last_name,
             current_height:currentUser.customer.current_height,
@@ -167,6 +174,27 @@ const EditProfile = ({ show, handleClose }) => {
                       </div>
                     )}
                   </Avatar>
+                </Col>
+              </Row>
+              <Row>
+                <Col xs={12}>
+                  <FormGroup
+                    hasValue={Boolean(values.username)}
+                    name="username"
+                    htmlFor="username"
+                    label={"Username"}
+                    focused={focused.username}
+                    touched={touched.username}
+                    valid={Boolean(values.username && !errors.username)}
+                  >
+                    <Field
+                      id="username"
+                      type="text"
+                      name="username"
+                      autoComplete="username"
+                      onFocus={handleFocus}
+                    />
+                  </FormGroup>
                 </Col>
               </Row>
               <Row>

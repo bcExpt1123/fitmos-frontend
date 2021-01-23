@@ -8,7 +8,7 @@ import "video-react/dist/video-react.css";
 import { Modal, Button } from "react-bootstrap";
 import { Markup } from "interweave";
 import { alternateVideo, convertContent, confirmAlternate } from "../../redux/workout/actions";
-import {isMobile, detectswipe} from '../../../../../_metronic/utils/utils';
+import {isMobile,isIOS, detectswipe} from '../../../../../_metronic/utils/utils';
 
 const StyledRating = withStyles({
   iconFilled: {
@@ -146,6 +146,7 @@ const VideoView = ({onClose}) => {
           autoPlay
           loop
           src={video.url}
+          playsInline={true}
         >
           <LoadingSpinner />
         </Player>      

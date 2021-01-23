@@ -9,7 +9,7 @@ const ProfileDropdown = ()=>{
   return (
     <div className=" dropdown">
       <button type="button" className={"btn btn-custom-secondary dropbtn"} onClick={toggleHandle}>
-        <i className="fas fa-ellipsis-h" />
+        <i className="fas fa-ellipsis-h dropbtn" />
       </button>
       <div className={classnames("dropdown-menu",{show})}>
         <a className={"dropdown-item"}>Block</a>

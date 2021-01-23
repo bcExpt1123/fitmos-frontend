@@ -100,3 +100,21 @@
   color:blue;
   text-decoration: underline;
 }
+.absolute.center{
+  display: flex; // make us of Flexbox
+  align-items: center; // does vertically center the desired content
+  justify-content: center; // horizontally centers single line items
+  text-align: center;
+  height: calc(85vh - 70px);
+  .item{
+    .first-text{
+      text-align: center;
+      font-size: 24px;   
+      font-weight: 600;
+    }
+    .second-text{
+      text-align: center;
+      font-size: 22px;   
+    }
+  }
+}

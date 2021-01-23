@@ -1,8 +1,10 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
 
 const Submenu = ({open,show,openCreatingPost} )=>{
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   return (
     <>
       <button type="button" className={"clickable-button dropbtn"} onClick={open}>
@@ -13,7 +15,7 @@ const Submenu = ({open,show,openCreatingPost} )=>{
           Crear Post
         </a>                
         <NavLink
-          to="/profile"
+          to={"/customers/"+currentUser.customer.id}
           className={"dropdown-item"}
           activeClassName="active"
           exact
@@ -29,7 +31,7 @@ const Submenu = ({open,show,openCreatingPost} )=>{
           Settings
         </NavLink>                
         <NavLink
-          to="/profile"
+          to="/ayuda"
           className={"dropdown-item"}
           activeClassName="active"
           exact

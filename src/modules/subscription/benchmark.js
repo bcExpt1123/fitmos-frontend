@@ -443,13 +443,15 @@ function* findPublished() {
   const benchmark = yield select(store => store.benchmark);
   if (benchmark.published.length === 0) {
     try {
-      const {workouts,profile:{fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount}} = yield call(getRecentWorkouts);
+      const {workouts,profile:{fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount,levelMedalImage,
+        toMonthWorkout, toMonthWorkoutImage, monthWorkoutCount,monthWorkoutTotal,monthPercent}} = yield call(getRecentWorkouts);
       yield put({
         type: actionTypes.BENCHMARK_SET_VALUE,
         key: "workouts",
         value: workouts
       });
-      yield put(setWorkout({fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount}));
+      yield put(setWorkout({fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount,
+        levelMedalImage,toMonthWorkout, toMonthWorkoutImage, monthWorkoutCount,monthWorkoutTotal,monthPercent}));
     } catch (e) {
       if (e.response.status === 401) {
         yield put({ type: deleteAuthData });

@@ -27,8 +27,10 @@ const sendDoneWorkout = (date,blog) =>
 
 function* onDoneWorkout({payload:{date,blog}}) {
   try {
-    const { fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount } = yield call(sendDoneWorkout,date,blog);
-    yield put(setWorkout({fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount}));
+    const { fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount,levelMedalImage,
+      toMonthWorkout, toMonthWorkoutImage, monthWorkoutCount,monthWorkoutTotal,monthPercent } = yield call(sendDoneWorkout,date,blog);
+    yield put(setWorkout({fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount,
+      levelMedalImage,toMonthWorkout, toMonthWorkoutImage, monthWorkoutCount,monthWorkoutTotal,monthPercent}));
     yield put($resetPublished());
     yield put(findWorkouts(date));
   } catch (error) {

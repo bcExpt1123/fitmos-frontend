@@ -23,6 +23,7 @@ const initialState = {
   customerPosts:[],
   post:false,
   editPost:false,
+  customerProfile:true,
   customerPostsLastId:-1,
   customerPostsLast:false,
   launch:false,

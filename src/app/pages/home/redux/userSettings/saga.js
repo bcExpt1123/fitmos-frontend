@@ -43,6 +43,7 @@ const flattenErrors = errObj =>
   );
 const updateUserProfile = params => {
   const formData = new FormData();
+  formData.append("username", params.username);
   formData.append("first_name", params.first_name);
   formData.append("last_name", params.last_name);
   //formData.append("email", params.email);

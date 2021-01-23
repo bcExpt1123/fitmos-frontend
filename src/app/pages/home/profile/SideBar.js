@@ -114,7 +114,7 @@ const SideBar = () => {
           </div>
         </div>
         <div className="actions">
-        {customer?
+        {(customer && customer.id !== currentUser.customer.id)?
           <>
             <FollowButton customer={customer} />
             <button className="btn btn-custom-secondary">
@@ -138,12 +138,12 @@ const SideBar = () => {
           <div className="progress-bar-wrapper">
             <div className="medal-image">
               {customer?
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
+                customer.medals.levelMedalImage&&(
+                  <img src={customer.medals.levelMedalImage} alt="workout-medal"/>
                 )
                 :
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
+                done.levelMedalImage&&(
+                  <img src={done.levelMedalImage} alt="workout-medal"/>
                 )
               }
             </div>
@@ -161,8 +161,8 @@ const SideBar = () => {
           <div className="progress-bar-wrapper">
             <div className="medal-image">
               {customer?
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
+                customer.medals.toWorkoutImage&&(
+                  <img src={customer.medals.toWorkoutImage} alt="workout-medal"/>
                 )
                 :
                 done.toWorkoutImage&&(
@@ -174,8 +174,8 @@ const SideBar = () => {
               <span className="label">Workout Totales</span>
               {customer?
                 <>
-                  <span className="value">{done.workoutCount}/{done.toWorkout}</span>
-                  <ProgressBar now={now} />
+                  <span className="value">{customer.medals.workoutCount}/{customer.medals.toWorkout}</span>
+                  <ProgressBar now={customer.medals.workoutCount/customer.medals.toWorkout*100} />
                 </>
                 :
                 <>
@@ -188,12 +188,12 @@ const SideBar = () => {
           <div className="progress-bar-wrapper">
             <div className="medal-image">
               {customer?
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
+                customer.medals.toMonthWorkout&&(
+                  <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
                 )
                 :
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
+                done.toMonthWorkout&&(
+                  <img src={done.toMonthWorkoutImage} alt="workout-medal"/>
                 )
               }
             </div>
@@ -201,13 +201,13 @@ const SideBar = () => {
               <span className="label">Completados Nov.</span>
               {customer?
                 <>
-                  <span className="value">{done.workoutCount}/{done.toWorkout}</span>
-                  <ProgressBar now={now} />
+                  <span className="value">{customer.medals.monthWorkoutCount}/{customer.medals.monthWorkoutTotal}</span>
+                  <ProgressBar now={customer.medals.monthPercent} />
                 </>
                 :
                 <>
-                  <span className="value">{done.workoutCount}/{done.toWorkout}</span>
-                  <ProgressBar now={now} />
+                  <span className="value">{done.monthWorkoutCount}/{done.monthWorkoutTotal}</span>
+                  <ProgressBar now={done.monthPercent} />
                 </>
               }
             </div>

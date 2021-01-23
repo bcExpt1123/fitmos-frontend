@@ -135,6 +135,7 @@ const findCustomerPostsRequest = (customerId)=>
 function* onFindCustomerPosts({payload}){
   try {
     const result = yield call(findCustomerPostsRequest,payload);
+    yield put (setItemValue({name:'customerProfile',value:result.customerProfile}))
     yield put(setCustomerPosts(result.posts));
   } catch (error) {
     console.log(error);
