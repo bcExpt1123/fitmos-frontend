@@ -29,7 +29,7 @@ const Company = ({match}) => {
   }
   const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   return (
-    <section className="company" id="company">
+    <section className="company mt-5" id="company">
       {product&&product.company&&(
         <div className="item row">
           <div className="image mb-5 col-12 col-md-3">

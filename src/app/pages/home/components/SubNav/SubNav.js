@@ -6,7 +6,7 @@ import { NavLink } from "react-router-dom";
 const SubNav = ({ links,handleLogout }) => {
   return (
     <ul className={"nav profile-settings mb-2"}>
-      {links.map(({ label, name, url }) => (
+      {links.map(({ label, name, url, match }) => (
         <li key={name}>
           {name==='logout'?(
             <a
@@ -17,7 +17,19 @@ const SubNav = ({ links,handleLogout }) => {
               {label}
             </a>
         ):(
-            <NavLink
+            match?
+              <NavLink
+                to={url}
+                className={"nav-link link "}
+                activeClassName="active"
+                isActive={(a, location) => {
+                  return (location.pathname.match(match))
+                }}                
+              >
+                {label}
+              </NavLink>
+            :
+              <NavLink
               to={url}
               className={"nav-link link "}
               activeClassName="active"
@@ -25,7 +37,7 @@ const SubNav = ({ links,handleLogout }) => {
             >
               {label}
             </NavLink>
-          )}
+      )}
         </li>
       ))}
     </ul>

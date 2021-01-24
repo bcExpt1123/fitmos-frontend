@@ -86,7 +86,7 @@ const Product = ({match}) => {
     )
   }
   return (
-    <section className="product" id="company">
+    <section className="product mt-5" id="company">
       {product&&image&&(
         <>
           <LightgalleryProvider>

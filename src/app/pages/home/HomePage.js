@@ -9,8 +9,9 @@ import Pricing from "./Pricing";
 import Checkout from "./Checkout";
 import Ayuda from "./Ayuda";
 import Contact from "./Contact";
-import Posts from "./Posts";
-import Post from "./Post";
+// import Posts from "./Posts";
+import Posts from "./ExplorePage/Blog";
+import Post from "./ExplorePage/Post";
 import Profile from "./SettingsPage/SectionEditProfile";
 import Payments from "./SettingsPage/SectionPayments";
 import Invoices from "./SettingsPage/SectionInvoices";
@@ -18,11 +19,16 @@ import Terms from "./Pages/Terms";
 import Privacy from "./Pages/Privacy";
 import CookiesPolicy from "./Pages/Cookies";
 import Subscriptions from "./SettingsPage/SectionSubscriptions";
-import Shop from "./Shop";
-import Company from "./Company";
-import Product from "./Product";
+import Shop from "./ExplorePage/Shop";
+import Company from "./ExplorePage/Company";
+import Product from "./ExplorePage/Product";
+// import Shop from "./Shop";
+// import Shop from "./ExplorePage/Shop";
+// import Company from "./Company";
+// import Product from "./Product";
 import Partners from "./Partners";
-import Benchmarks from "./Benchmarks";
+// import Benchmarks from "./Benchmarks";
+import Benchmarks from "./ExplorePage/Benchmark";
 import ProfilePage from "./Profile";
 import ProfilePicturesPage from "./social/posts/Pictures";
 import PerfilPage from "./Perfil";
@@ -37,6 +43,8 @@ import SearchCustomersPage from "./SearchCustomers";
 import SearchCompaniesPage from "./SearchCompanies";
 import SearchPostsPage from "./SearchPosts";
 import SocialPostPage from "./social/posts/Post";
+import Events from "./ExplorePage/Events";
+import Event from "./ExplorePage/Events";
 import { LayoutSplashScreen } from "../../../_metronic";
 
 export default function HomePage() {
@@ -89,6 +97,8 @@ export default function HomePage() {
         <Route exact path="/search-shops" component={SearchCompaniesPage} />
         <Route exact path="/search-posts" component={SearchPostsPage} />
         <Route exact path="/posts/:id" component={SocialPostPage} />
+        <Route exact path="/eventos" component={Events} />
+        <Route exact path="/eventos/:id" component={Event} />
       </Switch>
     </Suspense>
   );

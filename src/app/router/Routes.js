@@ -188,7 +188,9 @@ export const Routes = withRouter(({ history }) => {
     "/privacy",
     "/cookies",
     "/newsfeed",
-    "/leaderboard"
+    "/leaderboard",
+    "/eventos",
+    "/eventos/:id"
   ];
   const frontUnauthorizedUrls = [
     "/",

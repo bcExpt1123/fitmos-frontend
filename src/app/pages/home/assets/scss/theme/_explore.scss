@@ -1,0 +1,60 @@
+.explore {
+  .body {
+    border-radius: 7px;
+    .profile-settings {
+      text-align: center;
+      width: 450px;
+      margin: 30px auto 0 auto;
+      padding-top: 10px;
+      border-radius: 5px;
+      background-color: white;
+    }
+    .userAvatar.avatar {
+      margin: 30px auto;
+      display: block;
+      .avatar-clip {
+        img {
+          border-radius: 7px;
+        }
+      }
+    }
+    .auth-form {
+      .form-label,
+      .form-control {
+        background-color: white;
+      }
+      .form-label {
+        font-weight: 400;
+      }
+      .form-control {
+        border-radius: 7px;
+        input {
+          color: #333333;
+        }
+      }
+      .react-tel-input{
+        .form-control,.flag-dropdown{
+          border-color: #b3d139;
+        }
+        .form-control{
+          width: 100%;
+        }
+      } 
+    }
+  }
+}
+.profile-settings {
+  li {
+    a {
+      font-size: 17px;
+      color: #333333;
+      font-weight: 500;
+      padding: 2px  30px;
+      &.active {
+        border-bottom: 2px solid #AFCA32;
+        padding-bottom: 0;
+      }
+    }
+  }
+}
+  

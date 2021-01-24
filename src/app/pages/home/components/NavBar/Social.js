@@ -204,7 +204,9 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 to="/benchmarks"
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
-                exact
+                isActive={(match, location) => {
+                  return (location.pathname.match('/\/benchmarks|\/news|\/shop|\/events/'))
+                }}                
               >
                 <span className="svg-icon menu-icon">
                   <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/explore.svg")} />
@@ -230,7 +232,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             </li>
             <li className="nav-item">
               <NavLink
-                to={"/customers"+currentUser.customer.id}
+                to={"/customers/"+currentUser.customer.id}
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 exact
