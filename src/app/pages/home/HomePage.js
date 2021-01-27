@@ -45,6 +45,7 @@ import SearchPostsPage from "./SearchPosts";
 import SocialPostPage from "./social/posts/Post";
 import Events from "./ExplorePage/Events";
 import Event from "./ExplorePage/Events";
+import UsernamePage from "./Username";
 import { LayoutSplashScreen } from "../../../_metronic";
 
 export default function HomePage() {
@@ -79,10 +80,10 @@ export default function HomePage() {
         <Route exact path="/privacy" component={Privacy} />
         <Route exact path="/cookies" component={CookiesPolicy} />
         <Route exact path="/shop" component={Shop} />
-        <Route exact path="/shop/companies/:id" component={Company} />
+        {/* <Route exact path="/shop/companies/:id" component={Company} /> */}
         <Route exact path="/shop/products/:id" component={Product} />
-        <Route exact path="/customers/:id" component={Customer} />
-        <Route exact path="/customers/:id/pictures" component={ProfilePicturesPage} />
+        {/* <Route exact path="/customers/:id" component={Customer} /> */}
+        {/* <Route exact path="/customers/:id/pictures" component={ProfilePicturesPage} /> */}
         <Route exact path="/partners" component={Partners} />
         <Route exact path="/benchmarks" component={Benchmarks} />
         <Route exact path="/profile" component={ProfilePage} />
@@ -99,6 +100,7 @@ export default function HomePage() {
         <Route exact path="/posts/:id" component={SocialPostPage} />
         <Route exact path="/eventos" component={Events} />
         <Route exact path="/eventos/:id" component={Event} />
+        <Route exact path="/:username" component={UsernamePage} />
       </Switch>
     </Suspense>
   );

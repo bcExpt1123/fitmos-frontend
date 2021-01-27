@@ -150,6 +150,9 @@ export const Routes = withRouter(({ history }) => {
     "/admin/companies/:id/products/create",
     "/admin/companies/:id/products/:id",
     "/admin/companies/:id/products/viewImages/:id",
+    "/admin/eventos",
+    "/admin/eventos/create",
+    "/admin/eventos/:id",
   ];
   const frontBannerUrls = [
     "/",
@@ -190,7 +193,8 @@ export const Routes = withRouter(({ history }) => {
     "/newsfeed",
     "/leaderboard",
     "/eventos",
-    "/eventos/:id"
+    "/eventos/:id",
+    "/:username",
   ];
   const frontUnauthorizedUrls = [
     "/",
@@ -204,7 +208,8 @@ export const Routes = withRouter(({ history }) => {
     "/news/:id",
     "/signup",
     "/auth/login",
-    "/auth/forgot-password"
+    "/auth/forgot-password",
+    "/:username",
   ];
   return (
     /* Create `LayoutContext` from current `history` and `menuConfig`. */

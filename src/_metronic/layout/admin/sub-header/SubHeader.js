@@ -27,6 +27,8 @@ import { SubHeaderCategories} from "../../../../app/pages/admin/Categories";
 import { SubHeaderCategoryCreate} from "../../../../app/pages/admin/CategoryCreate";
 import { SubHeaderEvents } from "../../../../app/pages/admin/Events";
 import { SubHeaderEventCreate } from "../../../../app/pages/admin/EventCreate";
+import { SubHeaderEventos } from "../../../../app/pages/admin/Eventos";
+import { SubHeaderEventoCreate } from "../../../../app/pages/admin/EventoCreate";
 import { SubHeaderShortcodes } from "../../../../app/pages/admin/Shortcodes";
 import { SubHeaderShortcodeCreate } from "../../../../app/pages/admin/ShortcodeCreate";
 import { SubHeaderKeywords } from "../../../../app/pages/admin/Keywords";
@@ -143,16 +145,11 @@ class SubHeader extends React.Component {
             <Route exact path="/admin/categories/create" component={SubHeaderCategoryCreate} />
             <Route exact path="/admin/categories/:id" component={SubHeaderCategoryCreate} />
             <Route exact path="/admin/events" component={SubHeaderEvents} />
-            <Route
-              exact
-              path="/admin/events/create"
-              component={SubHeaderEventCreate}
-            />
-            <Route
-              exact
-              path="/admin/events/:id"
-              component={SubHeaderEventCreate}
-            />
+            <Route exact path="/admin/events/create" component={SubHeaderEventCreate} />
+            <Route exact path="/admin/events/:id" component={SubHeaderEventCreate} />
+            <Route exact path="/admin/eventos" component={SubHeaderEventos} />
+            <Route exact path="/admin/eventos/create" component={SubHeaderEventoCreate} />
+            <Route exact path="/admin/eventos/:id" component={SubHeaderEventoCreate} />
             <Route exact path="/admin/shortcodes" component={SubHeaderShortcodes}/>
             <Route exact path="/admin/shortcodes/create" component={SubHeaderShortcodeCreate}/>
             <Route exact path="/admin/shortcodes/:id" component={SubHeaderShortcodeCreate}/>

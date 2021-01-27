@@ -22,6 +22,8 @@ import { Categories} from "./Categories";
 import { CategoryCreate } from "./CategoryCreate";
 import { Events } from "./Events";
 import { EventCreate } from "./EventCreate";
+import { Eventos } from "./Eventos";
+import { EventoCreate } from "./EventoCreate";
 import { Shortcodes } from "./Shortcodes";
 import { ShortcodeCreate } from "./ShortcodeCreate";
 import { Keywords } from "./Keywords";
@@ -94,6 +96,9 @@ export default function AdminPage() {
         <Route exact path="/admin/events" component={Events} />
         <Route exact path="/admin/events/create" component={EventCreate} />
         <Route exact path="/admin/events/:id" component={EventCreate} />
+        <Route exact path="/admin/eventos" component={Eventos} />
+        <Route exact path="/admin/eventos/create" component={EventoCreate} />
+        <Route exact path="/admin/eventos/:id" component={EventoCreate} />
         <Route exact path="/admin/shortcodes" component={Shortcodes} />
         <Route exact path="/admin/shortcodes/create" component={ShortcodeCreate} />
         <Route exact path="/admin/shortcodes/:id" component={ShortcodeCreate} />

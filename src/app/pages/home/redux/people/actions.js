@@ -12,7 +12,8 @@ export const {
   appendCompanies,
   searchPosts,
   appendPosts,
-  findCustomer
+  findCustomer,
+  findUsername,
 } = createActions(
   "FIND_FRIENDS",
   "SET_PEOPLE",
@@ -26,5 +27,6 @@ export const {
   "SEARCH_POSTS",
   "APPEND_POSTS",
   "FIND_CUSTOMER",
+  "FIND_USERNAME",
   { prefix: "PEOPLE" }
 );

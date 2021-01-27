@@ -14,7 +14,8 @@ import FollowButton from "../social/sections/FollowButton";
 const SideBar = () => {  
   const file=false;
   const currentUser = useSelector(({ auth }) => auth.currentUser);
-  const customer = useSelector(({people})=>people.customer);
+  const customer = useSelector(({people})=>people.username);
+  
   const done = useSelector(({ done }) => done);
   const now = (done.workoutCount)/(done.toWorkout)*100;
   const benchmark = useSelector(({ benchmark }) => benchmark);
@@ -60,11 +61,14 @@ const SideBar = () => {
   const openModalObjective = ()=>{
     setObjective(true);
   }
+  const check = ()=>{
+    return customer!="username" && customer.type==="customer";
+  }
   return (  
     <div id="sidebar">
       <div className="wrapper-side">
         <div className="profile-image">
-          {customer?
+          {check()?
             <div className="avatar">
               <Avatar
                 pictureUrls={customer.avatarUrls}
@@ -83,7 +87,7 @@ const SideBar = () => {
             </div>
           }
         </div>
-        {customer?
+        {check()?
           <div className="profile-info">
             <div className="full-name">{customer.first_name} {customer.last_name}</div>
             <div className="username">@{customer.username}</div>
@@ -98,23 +102,23 @@ const SideBar = () => {
         }
         <div className="social-info row">
           <div className="col-4">
-            <div className="value">{customer?customer.followings&&customer.followings.length:currentUser.customer.followings&&currentUser.customer.followings.length}
+            <div className="value">{check()?customer.followings&&customer.followings.length:currentUser.customer.followings&&currentUser.customer.followings.length}
             </div>
             <div className="label">Following</div>
           </div>
           <div className="col-4">
-            <div className="value">{customer?customer.followers&&customer.followers.length:currentUser.customer.followers&&currentUser.customer.followers.length}
+            <div className="value">{check()?customer.followers&&customer.followers.length:currentUser.customer.followers&&currentUser.customer.followers.length}
             {/* <span className="unit">K</span> */}
             </div>
             <div className="label">Followers</div>
           </div>
           <div className="col-4">
-            <div className="value">{customer?customer.postCount:currentUser.customer.postCount}</div>
+            <div className="value">{check()?customer.postCount:currentUser.customer.postCount}</div>
             <div className="label">Posts</div>
           </div>
         </div>
         <div className="actions">
-        {(customer && customer.id !== currentUser.customer.id)?
+        {(check() && customer.id !== currentUser.customer.id)?
           <>
             <FollowButton customer={customer} />
             <button className="btn btn-custom-secondary">
@@ -137,7 +141,7 @@ const SideBar = () => {
           <h3 className="mb-4">Entrenamiento</h3>
           <div className="progress-bar-wrapper">
             <div className="medal-image">
-              {customer?
+              {check()?
                 customer.medals.levelMedalImage&&(
                   <img src={customer.medals.levelMedalImage} alt="workout-medal"/>
                 )
@@ -149,7 +153,7 @@ const SideBar = () => {
             </div>
             <div className="progress-bar-body">
               <span className="label">Bodyweight Fitness</span>
-              {customer?<>
+              {check()?<>
                 <span className="value">{customer.current_condition}/5</span>
                 <ProgressBar now={customer.current_condition/5*100} />
               </>:<>
@@ -160,7 +164,7 @@ const SideBar = () => {
           </div>          
           <div className="progress-bar-wrapper">
             <div className="medal-image">
-              {customer?
+              {check()?
                 customer.medals.toWorkoutImage&&(
                   <img src={customer.medals.toWorkoutImage} alt="workout-medal"/>
                 )
@@ -172,7 +176,7 @@ const SideBar = () => {
             </div>
             <div className="progress-bar-body">
               <span className="label">Workout Totales</span>
-              {customer?
+              {check()?
                 <>
                   <span className="value">{customer.medals.workoutCount}/{customer.medals.toWorkout}</span>
                   <ProgressBar now={customer.medals.workoutCount/customer.medals.toWorkout*100} />
@@ -187,7 +191,7 @@ const SideBar = () => {
           </div>
           <div className="progress-bar-wrapper">
             <div className="medal-image">
-              {customer?
+              {check()?
                 customer.medals.toMonthWorkout&&(
                   <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
                 )
@@ -199,7 +203,7 @@ const SideBar = () => {
             </div>
             <div className="progress-bar-body">
               <span className="label">Completados Nov.</span>
-              {customer?
+              {check()?
                 <>
                   <span className="value">{customer.medals.monthWorkoutCount}/{customer.medals.monthWorkoutTotal}</span>
                   <ProgressBar now={customer.medals.monthPercent} />

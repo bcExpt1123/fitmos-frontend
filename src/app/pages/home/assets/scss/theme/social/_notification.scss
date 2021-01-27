@@ -1,0 +1,36 @@
+.kt-quick-panel{
+  .notification-title{
+    margin: 10px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    color:$secondary-text-color;
+  }  
+  .kt-notification-v2{
+    .kt-notification-v2__item{
+      &:hover{
+        background-color: transparent;
+      }
+      .kt-notification-v2__item-icon{
+        img{
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;      
+        }
+      }
+      .kt-notification-v2__itek-wrapper{
+        .kt-notification-v2__item-title{
+          color:$secondary-text-color;
+        }
+        .kt-notification-v2__item-desc{
+          color:#707C89;
+        }
+        .actions{
+          button{
+            font-size: 14px;
+            padding:0 27px;
+          }
+        }
+      }
+    }
+  }
+}

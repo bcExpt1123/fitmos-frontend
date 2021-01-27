@@ -6,19 +6,17 @@ import { $fetchFrontIndex, $frontPage,$cleanCompanyId } from "../../../../module
 import useInfiniteScroll from "../../../../lib/useInfiniteScroll";
 
 
-const Company = ({match}) => {
+const Company = ({id}) => {
   const dispatch = useDispatch();
-  const [id, setId] = useState(null);
   const product = useSelector(({ product }) => product);
   useEffect(() => {
-    if(product.companyId !== match.params.id){
-      dispatch($fetchFrontIndex(match.params.id));
+    if(product.companyId !== id){
+      dispatch($fetchFrontIndex(id));
     }
-    setId(match.params.id);
     return () => {
       dispatch($cleanCompanyId());
     };
-  },[match.params.id]);// eslint-disable-line react-hooks/exhaustive-deps
+  },[id]);// eslint-disable-line react-hooks/exhaustive-deps
   const meta = product.frontMeta;
   const products = product.frontData;
   useEffect(() => {

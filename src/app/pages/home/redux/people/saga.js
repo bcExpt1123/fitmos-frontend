@@ -12,6 +12,7 @@ import {
   searchPosts,
   appendPosts,
   findCustomer,
+  findUsername
 } from "./actions";
 import { http } from "../../services/api";
 
@@ -125,6 +126,20 @@ function* onFindCustomer({payload}){
 
   }
 }
+const findUsernameRequest = (username)=>
+  http({
+    path: "search/username?u="+username,
+    method: "GET"
+  }).then(response => response.data);
+function* onFindUsername({payload}){
+  try{
+    const result = yield call(findUsernameRequest, payload);
+    if(result.id)yield put(setItemValue({name:"username",value:result}));
+    else yield put(setItemValue({name:"username",value:false}));
+  } catch (error){
+
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(findFriends,onFindFriends);
   yield takeLatest(searchAll,onSearchAll);
@@ -132,4 +147,5 @@ export default function* rootSaga() {
   yield takeLeading(searchCompanies,onSearchCompanies);
   yield takeLeading(searchPosts,onSearchPosts);
   yield takeLeading(findCustomer, onFindCustomer);
+  yield takeLeading(findUsername, onFindUsername);
 }

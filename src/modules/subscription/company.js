@@ -186,7 +186,7 @@ export function $updateItemImage(image) {
   return { type: actionTypes.COMPANY_UPLOAD_IMAGE, image };
 }
 export function $setNewItem() {
-  const item = { id: null, name: "", phone: "", mail: "", image: "",date:"",description:"",all:"",mobile_phone:"", website_url:"",address:"",facebook:"", instagram:"", twitter:"", horario:"" };
+  const item = { id: null, username:"",name: "", phone: "", mail: "", image: "",date:"",description:"",all:"",mobile_phone:"", website_url:"",address:"",facebook:"", instagram:"", twitter:"", horario:"" };
   return { type: actionTypes.COMPANY_SET_ITEM, item};
 }
 export function $changeItem(id) {
@@ -297,6 +297,7 @@ function* searchCompany({ name, value }) {
 }
 const saveCompany = company => {
   const formData = new FormData();
+  formData.append("username", company.item.username);
   formData.append("name", company.item.name);
   formData.append("mail", company.item.mail);
   formData.append("phone", company.item.phone);
@@ -359,7 +360,10 @@ function* saveItem({ history }) {
         });
 
       }
-      if(result.errors.logo){
+      if(result.errors.username){
+        alert(result.errors.username);
+      }
+      else if(result.errors.logo){
         alert(result.errors.logo);
       }
       else if(result.errors.name){
@@ -419,8 +423,6 @@ function* callAction({ action, id }) {
   try {
     yield call(companyActionRequest, action, id);
     const company = yield select(store => store.company);
-    console.log(company);
-   
     if (action === "delete") {
       yield put({ type: actionTypes.COMPANY_INDEX_REQUEST });
     } else {

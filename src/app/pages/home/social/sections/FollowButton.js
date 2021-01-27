@@ -1,14 +1,16 @@
 import React,{useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { follow, unfollow } from "../../redux/notification/actions";
 
-const FollowButton = (customer)=>{
+const FollowButton = ({customer})=>{
   const currentUser = useSelector(({ auth }) => auth.currentUser);
+  const buttonDisabled = useSelector(({ notification }) => notification.followDisabled);
   const dispatch = useDispatch();  
-  const follow = ()=>{
-
+  const handleFollow = ()=>{
+    dispatch(follow(customer.id));
   }
-  const unfollow = ()=>{
-
+  const handleUnfollow = ()=>{
+    dispatch(unfollow(customer.id));
   }
   return (
     (customer&&customer.id != currentUser.customer.id)&&(
@@ -19,9 +21,9 @@ const FollowButton = (customer)=>{
           customer.following.status === 'pending'?
           <button className="btn btn-custom-secondary">Following</button>
           :
-          <button className="btn btn-custom-secondary" onClick={unfollow}>Unfollow</button>
+          <button className="btn btn-custom-secondary" onClick={handleUnfollow} disabled={buttonDisabled}>Unfollow</button>
         :
-        <button className="btn btn-custom-secondary" onClick={follow}>Follow</button>
+        <button className="btn btn-custom-third" onClick={handleFollow} disabled={buttonDisabled}>Follow</button>
     )    
   )
 }

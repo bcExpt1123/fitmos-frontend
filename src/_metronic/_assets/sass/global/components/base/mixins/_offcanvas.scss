@@ -20,11 +20,11 @@
     -webkit-backface-visibility: hidden;
     width: $width !important;
     transition: $transition;
-    left: -($width + 20px);
+    right: -($width + 20px);
 
     &.#{$class}--on {
       transition: $transition;
-      left: 0;
+      right: 0;
     }
 
     @include kt-hack-ie {

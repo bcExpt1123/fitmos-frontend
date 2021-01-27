@@ -1,7 +1,6 @@
 import { handleActions } from "redux-actions";
 import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import { appendCustomerPostsAfter } from "../post/actions";
 import {
   setPeople,
   setSearchResult,
@@ -30,12 +29,13 @@ const initialState = {
   searchPosts:[],
   postLastId:-1,
   postLast:false,
+  username:"username",
 };
 const reducer = persistReducer(
   {
     storage,
     key: "people",
-    blacklist:['customer'],
+    blacklist:['customer','username'],
   },
   handleActions(
     {

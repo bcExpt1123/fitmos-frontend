@@ -22,7 +22,7 @@ export default function Posts({posts,last,dispatchAction, show}) {
   }
   const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   return (
-    <>
+    <div className="newsfeed">
       {show&&
         <div className="tag-post">
           What's on your mind? {currentUser.customer.first_name}
@@ -42,6 +42,6 @@ export default function Posts({posts,last,dispatchAction, show}) {
         }
       </div>
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
-    </>
+    </div>
   );
 }

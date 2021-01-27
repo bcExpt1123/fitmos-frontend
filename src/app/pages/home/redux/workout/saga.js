@@ -8,6 +8,7 @@ import {
 import { findUserDetails } from "../../redux/auth/actions";
 import { findFriends } from "../../redux/people/actions";
 import { findNewsfeed, appendNewsfeedBefore } from "../../redux/post/actions";
+import { searchNotifications, findFollows } from "../../redux/notification/actions";
 import { http } from "../../services/api";
 
 const confirmAlternateRequest = ({shortcode_id,alternate_id})=>
@@ -68,7 +69,13 @@ function* onPulling({payload:{id}}){
         yield put(appendNewsfeedBefore(pull.newsfeed));
         // send post ids
       }
-      if(process.env.APP_ENV !== "production")yield delay(100000);
+      if( pull.notification ){
+        yield put(searchNotifications(pull.notification));
+      }
+      if( pull.follow ){
+        yield put(findFollows(pull.follow));
+      }
+      if(process.env.APP_ENV !== "production")yield delay(10000);
       else yield delay(10000);
     } catch (e) {
       console.log(e);

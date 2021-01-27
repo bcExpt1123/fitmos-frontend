@@ -83,6 +83,13 @@ export default {
         page: "admin/events"
       },
       {
+        title: "Evento",
+        root: true,
+        icon: "flaticon2-open-text-book",
+        can:["events"],
+        page: "admin/eventos"
+      },
+      {
         title: "Shortcodes",
         root: true,
         icon: "flaticon2-sort-alphabetically",

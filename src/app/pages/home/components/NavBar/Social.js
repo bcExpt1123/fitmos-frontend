@@ -22,6 +22,8 @@ import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import BasicSubmenu from "./DropDown/BasicSubMenu";
 import Submenu from "./DropDown/SubMenu";
 import SearchResult from "./DropDown/SearchResult";
+import QuickPanel from "../../../../partials/layout/QuickPanel";
+import NotificationToggler from "./Notifications/Toggler";
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
 
@@ -241,14 +243,11 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink
-                to="/profile"
+              <a                
                 className={"nav-link link text-white display-4"}
-                activeClassName="active"
-                exact
               >
-                <i className="far fa-bell" />
-              </NavLink>
+                <NotificationToggler />
+              </a>
             </li>
             <li className="nav-item">
               <NavLink
@@ -269,6 +268,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
       </Navbar>
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
       <EditPostModal show={!(editPost===false)} />
+      <QuickPanel />
     </>
   );
 }

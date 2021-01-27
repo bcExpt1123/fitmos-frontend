@@ -38,7 +38,7 @@ const Submenu = ({open,show,openCreatingPost} )=>{
           Crear Post
         </a>                
         <NavLink
-          to={"/customers/"+currentUser.customer.id}
+          to={"/"+currentUser.customer.username}
           className={"dropdown-item"}
           activeClassName="active"
           exact

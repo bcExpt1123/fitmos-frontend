@@ -103,6 +103,17 @@ const Main = ({history}) =>{
               <Grid item xs={4}>
                 <TextField
                   required
+                  id="username"
+                  label="Username"
+                  type="text"
+                  margin="normal"
+                  value={item.username}
+                  onChange={handleChange("username")}
+                />
+              </Grid>
+              <Grid item xs={4}>
+                <TextField
+                  required
                   id="standard-required"
                   label="Name"
                   className={classes.textField}
@@ -122,6 +133,8 @@ const Main = ({history}) =>{
                   onChange={handleChange("mail")}
                 />
               </Grid>
+            </Grid>
+            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   required
@@ -133,8 +146,6 @@ const Main = ({history}) =>{
                   onChange={handleChange("phone")}
                 />
               </Grid>
-            </Grid>
-            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   id="mobile_phone"
@@ -154,6 +165,8 @@ const Main = ({history}) =>{
                   onChange={handleChange("website_url")}
                 />
               </Grid>
+            </Grid>
+            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   required
@@ -165,8 +178,6 @@ const Main = ({history}) =>{
                   onChange={handleChange("address")}
                 />
               </Grid>
-            </Grid>
-            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   id="facebook"
@@ -186,6 +197,8 @@ const Main = ({history}) =>{
                   onChange={handleChange("instagram")}
                 />
               </Grid>
+            </Grid>
+            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   id="twitter"
@@ -196,8 +209,6 @@ const Main = ({history}) =>{
                   onChange={handleChange("twitter")}
                 />
               </Grid>
-            </Grid>
-            <Grid item container spacing={3}>
               <Grid item xs={4}>
                 <TextField
                   id="horario"

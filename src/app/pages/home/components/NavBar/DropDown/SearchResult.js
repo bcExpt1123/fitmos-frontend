@@ -24,7 +24,7 @@ const SearchResult = ({value,clearValue})=>{
         :
           searchResult.people.map((customer)=>(
             <NavLink
-              to={"/customers/"+customer.id}
+              to={"/"+customer.username}
               className={"dropdown-item"}
               activeClassName="active"
               exact
@@ -40,7 +40,7 @@ const SearchResult = ({value,clearValue})=>{
         :
           searchResult.shops.map((company)=>(
             <NavLink
-              to={"/shop/companies/"+company.id}
+              to={"/"+company.username}
               className={"dropdown-item"}
               activeClassName="active"
               exact

@@ -6,17 +6,17 @@ import TwoColumn from "./layouts/Two";
 import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/actions";
 import Posts from "./social/sections/Posts";
 
-export default function Customer({match}) {
+export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
   const customerProfile = useSelector(({post})=>post.customerProfile);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const last = useSelector(({post})=>post.customerPostsLast);
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(findCustomerPosts(match.params.id));
-  },[match.params.id])
+    dispatch(findCustomerPosts(id));
+  },[id])
   const dispatchAction = ()=>{
-    dispatch(appendCustomerPostsAfter(match.params.id));
+    dispatch(appendCustomerPostsAfter(id));
   }
   return (
     <>
@@ -29,7 +29,7 @@ export default function Customer({match}) {
       </MetaTags>
       {customerProfile?
         <ThreeColumn>
-          {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == match.params.id}/>}
+          {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id}/>}
         </ThreeColumn>
         :
         <TwoColumn>
