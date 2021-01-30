@@ -6,7 +6,8 @@ import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
 import CommentView from "./CommentView";
-import {createComment, appendComments, appendNextComments} from "../../redux/post/actions";
+import MentionTextarea from "./MentionTextarea";
+import {createComment, appendComments, appendNextComments, toggleLike} from "../../redux/post/actions";
 
 export default function Post({post}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -51,8 +52,8 @@ export default function Post({post}) {
   /** comment */
   const [commentContent, setCommentContent] = useState("");
   const commentTextarea = useRef();
-  const handleCommentChange = (evt)=>{
-    setCommentContent(evt.target.value);
+  const handleCommentChange = (content)=>{
+    setCommentContent(content);
   }
   const dispatch = useDispatch();
   const onCommentFormSubmit= e => {
@@ -65,6 +66,11 @@ export default function Post({post}) {
   }
   const handleNextComments = ()=>{
     dispatch(appendNextComments(post.id));
+  }
+  const handleLike = e=>{
+    if(post.customer_id != currentUser.customer.id ){
+      dispatch(toggleLike(post));
+    }
   }
   return (
     <div className="social-post" key={post.id}>
@@ -145,7 +151,7 @@ export default function Post({post}) {
       </div>
       <div className="post-footer">
         <div className="likes">
-          <span><i className="fas fa-heart" /> {post.likesCount}</span>
+          <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
           <span><i className="far fa-comment" /> {post.previousCommentsCount + post.comments.length + post.nextCommentsCount}</span>
         </div>
         <div className="share">
@@ -165,8 +171,7 @@ export default function Post({post}) {
           <div className="cursor-pointer append" onClick={handleNextComments}> show next comments</div>
         }
         <form onSubmit={onCommentFormSubmit}>
-          <textarea placeholder="Add a comment" ref={commentTextarea} onChange={handleCommentChange} value={commentContent} />
-          <button type="submit">Submit</button>
+          <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true}/>
         </form>
       </div>
     </div>

@@ -1,8 +1,9 @@
 import React,{useState, useRef} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
-import {createReply, deleteComment, updateComment} from "../../redux/post/actions";
+import {createReply, deleteComment, updateComment, toggleLike} from "../../redux/post/actions";
 import Avatar from "../../components/Avatar";
+import MentionTextarea from "./MentionTextarea";
 
 const convertTime = (timeString)=>{
   const now = new Date();
@@ -29,8 +30,8 @@ const CommentView = ({comment})=>{
     setShow(!show);
   }
   const commentTextarea = useRef();
-  const handleCommentChange = (evt)=>{
-    setReplyContent(evt.target.value);
+  const handleCommentChange = (content)=>{
+    setReplyContent(content);
   }
   const dispatch = useDispatch();
   const onReplyFormSubmit= e => {
@@ -60,6 +61,11 @@ const CommentView = ({comment})=>{
     dispatch(updateComment({id:comment.id,content:commentEditContent,post_id:comment.post_id}));
     setShowEdit(false);
   }
+  const handleLike = e=>{
+    if(comment.customer_id != currentUser.customer.id ){
+      dispatch(toggleLike(comment));
+    }
+  }
   return (
     <>
       <Avatar pictureUrls={comment.customer.avatarUrls} size="xs" />
@@ -68,49 +74,49 @@ const CommentView = ({comment})=>{
         <div className="content">{showEdit?
           <>
             <form onSubmit={onEditFormSubmit}>
-              <textarea placeholder="Edit a comment" ref={commentEditTextarea} onChange={handleCommentEditChange} value={commentEditContent} />
+              <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}/>
+              {/* <textarea placeholder="Edit a comment" ref={commentEditTextarea} onChange={handleCommentEditChange} value={commentEditContent} />
               <button type="submit">Submit</button>
-              <button type="button" onClick={()=>setShowEdit(false)}>Cancel</button>
+              <button type="button" onClick={()=>setShowEdit(false)}>Cancel</button> */}
             </form>
           </>
           :
           <>{comment.content}</>
-        }</div>
+        }
+        </div>
         <div className="actions">
-          <button className="like-comment">like</button>
+          <span className="like-comment"  >
+            {comment.likesCount}
+            likes
+          </span>
           <button className="reply-comment" onClick={openReplyComment}>reply</button>      
           <div className="comment-time">{convertTime(comment.created_at)}</div>
         </div>
         {show&&(
           <form onSubmit={onReplyFormSubmit}>
-            <textarea placeholder="Add a reply" ref={commentTextarea} onChange={handleCommentChange} value={replyContent} />
-            <button type="submit">Submit</button>
+            <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true}/>
+            {/* <textarea placeholder="Add a reply" ref={commentTextarea} onChange={handleCommentChange} value={replyContent} />
+            <button type="submit">Submit</button> */}
           </form>        
         )}
       </div>
       <div className="popup-actions">
-        <div className=" dropdown">
-          <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-            <i className="fas fa-ellipsis-h dropbtn" />
-          </button>
-          <div className={classnames("dropdown-menu dropdown-menu-right" ,{show:showDropdown})}>
-            {
-              comment.customer_id == currentUser.customer.id?
-              <>
-                <a className={"dropdown-item"} onClick={openEditComment}>Edit Comment</a>
-                <a className={"dropdown-item"} onClick={handleDelete}>Delete Comment</a>
-              </>
-              :
-              <>
-                {true?<a className={"dropdown-item"}>Hide comment</a>
-                  :
-                  <a className={"dropdown-item"}>Unfollow username</a>
-                }
-                <a className={"dropdown-item"}>Report Comment</a>
-              </>
-            }
-          </div>
-        </div>    
+        {
+          comment.customer_id == currentUser.customer.id?
+            <div className=" dropdown">
+              <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
+                <i className="fas fa-ellipsis-h dropbtn" />
+              </button>
+              <div className={classnames("dropdown-menu dropdown-menu-right" ,{show:showDropdown})}>
+                  <>
+                    <a className={"dropdown-item"} onClick={openEditComment}>Edit Comment</a>
+                    <a className={"dropdown-item"} onClick={handleDelete}>Delete Comment</a>
+                  </>
+              </div>
+            </div>    
+          :  
+            <span><i className={classnames("fas fa-heart like")} onClick={handleLike}/></span>
+        }
       </div>
     </>    
   )

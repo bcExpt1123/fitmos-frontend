@@ -207,7 +207,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
             >
               <Mention
                 trigger="@"
-                markup={'@{$__display__$}(__id__)'}
+                // markup={'@{$__display__$}(__id__)'}
                 data={filterPeople}
                 // renderSuggestion={this.renderUserSuggestion}
               />

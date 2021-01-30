@@ -61,7 +61,9 @@ $main-background-color:#F2F3F6;
       }
     }
     i.fa-heart{
-      color:#D83B18;
+      &.like{
+        color:#D83B18;  
+      }
     }
   }
   .share{

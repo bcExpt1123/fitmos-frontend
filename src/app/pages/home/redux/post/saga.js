@@ -26,7 +26,8 @@ import {
   createReply,
   appendComments,
   appendNextComments,
-  syncPosts
+  syncPosts,
+  toggleLike,
 } from "./actions";
 import { http } from "../../services/api";
 
@@ -635,6 +636,32 @@ function* onSyncPosts({payload}){
     console.log(e)
   }
 }
+const likeRequest = (activity_id)=>
+  http({
+    path: "likes",
+    method: "POST",
+    data:{
+      activity_id
+    }
+  }).then(response => response.data);
+const unlikeRequest = (activity_id)=>
+  http({
+    path: "likes/"+activity_id,
+    method: "DELETE",
+  }).then(response => response.data);
+
+function* onToggleLike({payload}){
+  try{
+    let result;
+    if(payload.like){
+      result = yield call(unlikeRequest, payload.activity_id);
+    }else{
+      result = yield call(likeRequest, payload.activity_id);
+    }
+  }catch(e){
+
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(findNewsfeed,onFindNewsfeed);
   yield takeLeading(appendNewsfeedBefore,onAppendNewsfeedBefore);
@@ -655,4 +682,5 @@ export default function* rootSaga() {
   yield takeLeading(deleteComment, onDeleteComment);
   yield takeLeading(updateComment, onUpdateComment);
   yield takeLeading(syncPosts, onSyncPosts);
+  yield takeLeading(toggleLike, onToggleLike);
 }

@@ -1,0 +1,150 @@
+import React, { useState, useRef, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Mention, MentionsInput } from "react-mentions";
+import { StylesViaJss } from "substyle-jss";
+// import CommentParagraph from "./CommentParagraph";
+import { NimblePicker, emojiIndex } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
+import data from "emoji-mart/data/google.json";
+
+export default function MentionTextarea({content, setContent, submit}) {
+  const [comment, setComment] = useState(content);
+  const [showEmojis, setShowEmojis] = useState(false);
+  const emojiPicker = useRef(null);
+  const filterPeople=(search, callback)=>{
+    if(search.length>1){
+      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search));
+      callback(filteredPeople.slice(0, 20));
+    }else{
+      callback(users.slice(0, 20));
+    }
+  }
+  const users = useSelector(({people})=>people.people);  
+  const handleSelectEmoji = emoji => {
+    setShowEmojis(false);
+    setComment(`${comment} ${emoji.native}`);
+  };
+  const handleChange = event => {
+    let text = colonsToUnicode(event.target.value);
+    setComment(text);
+    setContent(text);
+  };
+
+  const colonsToUnicode = text => {
+    const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
+    let newText = text;
+
+    let match = colonsRegex.exec(text);
+
+    if (match !== null) {
+      let colons = match[2];
+      let offset = match.index + match[1].length;
+
+      newText =
+        newText.slice(0, offset) + getEmoji(colons) + newText.slice(offset + 2);
+    }
+    return newText;
+  };
+
+  const getEmoji = emoji => {
+    let emoj;
+    switch (emoji) {
+      case "D":
+        emoj = emojiIndex.search(":)")[1].native;
+        break;
+      case ")":
+        emoj = emojiIndex.search(":)")[0].native;
+        break;
+      case "(":
+        emoj = emojiIndex.search(":(")[0].native;
+        break;
+      case "P":
+        emoj = emojiIndex.search(":P")[0].native;
+        break;
+      case "o":
+        emoj = emojiIndex.search("Hushed")[0].native;
+        break;
+      case "O":
+        emoj = emojiIndex.search("Hushed")[0].native;
+        break;
+      default:
+        emoj = "";
+    }
+    return emoj;
+  };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (emojiPicker.current && !emojiPicker.current.contains(event.target)) {
+        setShowEmojis(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emojiPicker]);
+  const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
+    console.log(entry)
+    return <>
+    </>
+  }
+  return (
+    <StylesViaJss>
+      <div className="col-12 py-3">
+        <div
+          className="comment-input-container px-2 row col-12 mx-auto"
+          style={comment ? { border: "1px solid #71cee3" } : {}}
+        >
+          <div className="col-11 px-0">
+            <MentionsInput
+              value={comment}
+              onChange={handleChange}
+              className="mentions"
+              placeholder="Leave a comment..."
+              allowSuggestionsAboveCursor={true}
+            >
+              <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion}/>
+            </MentionsInput>
+            {showEmojis ? (
+              <span className={"emoji__picker"}  ref={emojiPicker}>
+                <NimblePicker
+                  onSelect={handleSelectEmoji}
+                  showSkinTones={false}
+                  emojiTooltip={false}
+                  showPreview={false}
+                  sheetSize={32}
+                  data={data}
+                />
+              </span>
+            ) : (
+              <button
+                className={"emoji__button"}
+                onClick={() => setShowEmojis(true)}
+              >
+                {String.fromCodePoint(0x1f60a)}
+              </button>
+            )}
+          </div>
+          <div className="col-1">
+            {
+              submit&&
+                <>
+                  <button
+                    className="send-text"
+                    style={comment ? { color: "#3B5E66" } : {}}
+                    type="submit"
+                    // onClick={() => {
+                    //   // setComments([...comments, comment]);
+                    //   setComment("");
+                    // }}
+                  >
+                    Send
+                  </button>
+                </>
+            }
+          </div>
+        </div>
+      </div>
+    </StylesViaJss>
+  );
+}
