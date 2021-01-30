@@ -7,7 +7,7 @@ import {
 } from "../done/actions";
 import { findUserDetails } from "../../redux/auth/actions";
 import { findFriends } from "../../redux/people/actions";
-import { findNewsfeed, appendNewsfeedBefore } from "../../redux/post/actions";
+import { findNewsfeed, appendNewsfeedBefore, syncPosts } from "../../redux/post/actions";
 import { searchNotifications, findFollows } from "../../redux/notification/actions";
 import { http } from "../../services/api";
 
@@ -39,9 +39,17 @@ function* onConfirmAlternate(){
 function* onPulling({payload:{id}}){
   while (true) {
     try {
+      const newsfeed = yield select(({post})=>post.newsfeed);
+      const newsfeedPostIds = newsfeed.map(item=>item.id);
+      const customerPosts = yield select(({post})=>post.customerPosts);
+      const customerPostIds = customerPosts.map(item=>item.id);
+      const ids = [...newsfeedPostIds, ...customerPostIds];
+      const data = {ids};
       const response = yield call(() => fetch(process.env.REACT_APP_PULL_API_URL+id,{
         method:"POST",
+        body:JSON.stringify(data),
         headers: {
+          'Accept': 'application/json, text/plain, */*',
           'Content-Type': 'application/json'
         },
       }))
@@ -75,7 +83,18 @@ function* onPulling({payload:{id}}){
       if( pull.follow ){
         yield put(findFollows(pull.follow));
       }
-      if(process.env.APP_ENV !== "production")yield delay(10000);
+      if( pull.posts && pull.posts.length>0){
+        const mergedPosts = [...newsfeed, ...customerPosts];
+        const diffPosts = mergedPosts.filter(postItem=>pull.posts.some(post=>{
+            const d = new Date(postItem.updated_at);
+            return postItem.id == post.id && d.getTime()!=post.updated_at
+          }));
+        if(diffPosts.length>0){
+          const diffIds = diffPosts.map(post=>post.id);
+          yield put(syncPosts(diffIds));
+        }
+      }
+      if(process.env.APP_ENV !== "production")yield delay(5000);
       else yield delay(10000);
     } catch (e) {
       console.log(e);

@@ -207,7 +207,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 isActive={(match, location) => {
-                  return (location.pathname.match('/\/benchmarks|\/news|\/shop|\/events/'))
+                  return (location.pathname.match('/\/benchmarks|\/news$|\/news\/|\/shop|\/events/'))
                 }}                
               >
                 <span className="svg-icon menu-icon">

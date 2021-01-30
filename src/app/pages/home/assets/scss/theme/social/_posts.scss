@@ -94,6 +94,68 @@
     padding:23px;
     @include post-footer;
   }
+  .post-comments{
+    padding: 0 23px 23px 23px;
+    .append{
+      font-size: 12px;
+      color:rgba($basic-text-color, 0.5);
+    }
+    .comment-view{
+      padding: 5px 0;
+      font-size: 10px;
+      &.reply{
+        padding-left: 20px;
+      }
+      .avatar{
+        display: inline-block;
+        vertical-align: top;
+      }
+      .body{
+        width:calc( 100% - 55px);
+        padding-left: 5px;
+        display: inline-block;
+        .author{
+          font-weight: bold;
+        }
+        .actions{
+          button{
+            border:0;
+            background-color: transparent;
+            &:hover{
+              font-weight: bold;
+            }
+          }
+          .comment-time{
+            display: inline;
+            font-size:9px;
+            color:rgba($basic-text-color, 0.5);
+          }
+        }
+      }
+      .popup-actions{
+        width: 20px;
+        display: inline-block;
+        vertical-align: top;
+        .dropdown{
+          .btn{
+            padding: 0;
+            margin: 0;
+          }
+        }
+      }
+    }
+    form{
+      textarea{
+        width: calc(100% - 50px);
+        height: 25px;
+      }
+      button{
+        border:0;
+        background-color: transparent;
+        float: right;
+      }
+    }
+  }
 }
 .post-page{
   margin-top: 45px;

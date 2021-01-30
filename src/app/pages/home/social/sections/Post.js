@@ -1,12 +1,12 @@
 import React,{ useState, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
-import { Player, LoadingSpinner } from 'video-react';
-import Avatar from "../../components/Avatar";
 import RenderMedia from "./RenderMedia";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
+import CommentView from "./CommentView";
+import {createComment, appendComments, appendNextComments} from "../../redux/post/actions";
 
 export default function Post({post}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -48,6 +48,24 @@ export default function Post({post}) {
     window.addEventListener('resize', handleResize) 
     return ()=>window.removeEventListener("resize", handleResize);   
   },[]);
+  /** comment */
+  const [commentContent, setCommentContent] = useState("");
+  const commentTextarea = useRef();
+  const handleCommentChange = (evt)=>{
+    setCommentContent(evt.target.value);
+  }
+  const dispatch = useDispatch();
+  const onCommentFormSubmit= e => {
+    e.preventDefault();
+    dispatch(createComment({post_id:post.id,content:commentContent}))
+    setCommentContent("");
+  }
+  const handlePreviousComments = ()=>{
+    dispatch(appendComments(post.id));
+  }
+  const handleNextComments = ()=>{
+    dispatch(appendNextComments(post.id));
+  }
   return (
     <div className="social-post" key={post.id}>
       <PostContent post={post} />
@@ -127,12 +145,29 @@ export default function Post({post}) {
       </div>
       <div className="post-footer">
         <div className="likes">
-          <span><i className="fas fa-heart" /> 1.3K</span>
-          <span><i className="far fa-comment" /> 162</span>
+          <span><i className="fas fa-heart" /> {post.likesCount}</span>
+          <span><i className="far fa-comment" /> {post.previousCommentsCount + post.comments.length + post.nextCommentsCount}</span>
         </div>
         <div className="share">
           <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
         </div>
+      </div>
+      <div className="post-comments">
+        {(post.previousCommentsCount>0) && 
+          <div className="cursor-pointer append" onClick={handlePreviousComments}> show preview comments</div>
+        }
+        {post.comments.length>0&&post.comments.map(comment=>
+          <div className={classnames("comment-view",{reply:comment.level1>0})} key={comment.id}>
+            <CommentView comment={comment}/>
+          </div>
+        )}
+        {(post.nextCommentsCount>0) && 
+          <div className="cursor-pointer append" onClick={handleNextComments}> show next comments</div>
+        }
+        <form onSubmit={onCommentFormSubmit}>
+          <textarea placeholder="Add a comment" ref={commentTextarea} onChange={handleCommentChange} value={commentContent} />
+          <button type="submit">Submit</button>
+        </form>
       </div>
     </div>
   );
