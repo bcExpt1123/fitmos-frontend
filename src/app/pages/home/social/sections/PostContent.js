@@ -1,8 +1,11 @@
 import React,{ useState } from 'react';
 import { useDispatch,useSelector } from "react-redux";
 import classnames from "classnames";
+import { NavLink } from "react-router-dom";
 import Avatar from "../../components/Avatar";
 import {deletePost, openEditModal} from "../../redux/post/actions";
+import DropDown from "../../components/DropDown";
+import LinkProfile from "./customer/Link";
 
 export default function PostContent({post}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -46,31 +49,47 @@ export default function PostContent({post}) {
   return (
     <>
       <div className="post-header">
-        <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
-        <div className=" dropdown">
-          <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-            <i className="fas fa-ellipsis-h dropbtn" />
-          </button>
-          <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
-            {
-              post.customer_id == currentUser.customer.id?
-              <>
-                <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
-                <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
-              </>
-              :
-              <>
-                {true?<a className={"dropdown-item"}>Hide all posts from username</a>
+        <NavLink
+          to={"/"+post.customer.username}
+          className={"link-profile"}
+        >
+          <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
+        </NavLink>        
+        <DropDown>
+          {({show,toggleHandle})=>(
+            <div className=" dropdown">
+              <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
+                <i className="fas fa-ellipsis-h dropbtn" />
+              </button>
+              <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
+                {
+                  post.customer_id == currentUser.customer.id?
+                  <>
+                    <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
+                    <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
+                  </>
                   :
-                  <a className={"dropdown-item"}>Unfollow username</a>
+                  <>
+                    {true?<a className={"dropdown-item"}>Hide all posts from username</a>
+                      :
+                      <a className={"dropdown-item"}>Unfollow username</a>
+                    }
+                    <a className={"dropdown-item"}>Report Post</a>
+                  </>
                 }
-                <a className={"dropdown-item"}>Report Post</a>
-              </>
-            }
-          </div>
-        </div>    
+              </div>
+            </div>    
+          )}
+        </DropDown>
         <span>
-          <span className="full-name">{post.customer.first_name} {post.customer.last_name}</span>
+          <span className="full-name">
+            <NavLink
+              to={"/"+post.customer.username}
+              className={"link-profile"}
+            >
+              {post.customer.first_name} {post.customer.last_name}
+            </NavLink>
+          </span>
           {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<>&nbsp;is</>}
           {post.location&&<>&nbsp;in {post.location}</>}
           {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
@@ -78,7 +97,7 @@ export default function PostContent({post}) {
           {
             post.tagFollowers&&post.tagFollowers.map((follower)=>(
               <span key={follower.id} className="follower">
-                <span className="follower">{follower.first_name}&nbsp;{follower.last_name}</span>
+                <span className="follower"><LinkProfile id={follower.id} display={follower.first_name+' '+follower.last_name}/></span>
                 <span className="spot">, &nbsp;</span>
               </span>
             ))

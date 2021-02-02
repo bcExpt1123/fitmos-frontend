@@ -4,29 +4,33 @@ import { useSelector, useDispatch } from "react-redux";
 import TwoColumn from "../../layouts/Two";
 import { matchPath, useHistory } from "react-router-dom";
 import { appendCustomerPostMediasAfter} from "../../redux/post/actions";
+import {findUsername, setItemValue} from "../../redux/people/actions";
 import ClickableMedia from "../sections/ClickableMedia";
 import PostModal from "../sections/PostModal";
 import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
 
 const PicturesPage = () => {
   const match = matchPath(window.location.pathname, {
-    path:['/customers/:id/pictures','/profile/pictures'],
+    path:['/:username/pictures'],
     exact:true,
     strict:true
   });  
+  const username = useSelector(({people})=>people.username);
   const dispatch = useDispatch();
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const selfMedias = useSelector(({post})=>post.selfMedias);
   const last = useSelector(({post})=>post.selfMediasLast);
   useEffect(()=>{
     if(match&&match.params){
-      if(match.path === '/profile/pictures' ){
-        dispatch(appendCustomerPostMediasAfter(currentUser.customer.id));
-      }else{
-        dispatch(appendCustomerPostMediasAfter(match.params.id));
-      }
+      dispatch(findUsername(match.params.username));
     }
+    return ()=>{
+      dispatch(setItemValue({name:'username',value:'username'}));
+    }      
   },[])
+  useEffect(()=>{
+    if(username.type=='customer')dispatch(appendCustomerPostMediasAfter(username.id));
+  },[username]);
   const [show, setShow] = useState(false);
   const [media, setMedia] = useState(false);
   const onClose = ()=>{
@@ -42,11 +46,7 @@ const PicturesPage = () => {
   }
   const fetchMoreListItems = ()=>{
     if(!last){
-      if(match.path === '/profile/pictures' ){
-        dispatch(appendCustomerPostMediasAfter(currentUser.customer.id));
-      }else{
-        dispatch(appendCustomerPostMediasAfter(match.params.id));
-      }
+      dispatch(appendCustomerPostMediasAfter(match.params.id));
     }
     else setIsFetching(false);
   }

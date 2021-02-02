@@ -168,8 +168,8 @@ export const Routes = withRouter(({ history }) => {
     "/perfil",//new
     "/level",//new
     "/subscriptions",//new
-    "/customers/:id",//new
-    "/customers/:id/pictures",//new
+    // "/customers/:id",//new
+    // "/customers/:id/pictures",//new
     "/search",
     "/search-people",
     "/search-shops",
@@ -195,6 +195,7 @@ export const Routes = withRouter(({ history }) => {
     "/eventos",
     "/eventos/:id",
     "/:username",
+    "/:username/pictures",
   ];
   const frontUnauthorizedUrls = [
     "/",

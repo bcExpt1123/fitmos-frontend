@@ -7,7 +7,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
-import {createComment, appendComments, appendNextComments, toggleLike} from "../../redux/post/actions";
+import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike} from "../../redux/post/actions";
 
 export default function Post({post}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -67,13 +67,19 @@ export default function Post({post}) {
   const handleNextComments = ()=>{
     dispatch(appendNextComments(post.id));
   }
+  const handleNextReplies = (comment)=>()=>{
+    dispatch(appendNextReplies(comment));
+  }
+  const handleHideReplies = (comment)=>()=>{
+    dispatch(hideReplies(comment));
+  }
   const handleLike = e=>{
     if(post.customer_id != currentUser.customer.id ){
       dispatch(toggleLike(post));
     }
   }
   return (
-    <div className="social-post" key={post.id}>
+    <div className="social-post">
       <PostContent post={post} />
       <div className="medias-container">
         <div className="medias-body">
@@ -152,7 +158,7 @@ export default function Post({post}) {
       <div className="post-footer">
         <div className="likes">
           <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
-          <span><i className="far fa-comment" /> {post.previousCommentsCount + post.comments.length + post.nextCommentsCount}</span>
+          <span><i className="far fa-comment" /> {post.commentsCount}</span>
         </div>
         <div className="share">
           <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
@@ -160,15 +166,32 @@ export default function Post({post}) {
       </div>
       <div className="post-comments">
         {(post.previousCommentsCount>0) && 
-          <div className="cursor-pointer append" onClick={handlePreviousComments}> show preview comments</div>
+          <div className="cursor-pointer append" onClick={handlePreviousComments}> Show preview comments</div>
         }
         {post.comments.length>0&&post.comments.map(comment=>
-          <div className={classnames("comment-view",{reply:comment.level1>0})} key={comment.id}>
-            <CommentView comment={comment}/>
-          </div>
+          <React.Fragment  key={comment.id}>
+            <div className={classnames("comment-view")}>
+              <CommentView comment={comment}/>
+            </div>
+            {(comment.children.length>0) && 
+              <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
+            }
+            <div className={"comment-replies"}>
+              {
+                comment.children.map((reply)=>
+                  <div className={classnames("comment-view reply")}  key={reply.id}>
+                    <CommentView comment={reply}/>
+                  </div>
+                )
+              }
+            </div>
+            {(comment.nextChildrenCount>0) && 
+              <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
+            }
+          </React.Fragment>
         )}
         {(post.nextCommentsCount>0) && 
-          <div className="cursor-pointer append" onClick={handleNextComments}> show next comments</div>
+          <div className="cursor-pointer append" onClick={handleNextComments}> Show next comments</div>
         }
         <form onSubmit={onCommentFormSubmit}>
           <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true}/>

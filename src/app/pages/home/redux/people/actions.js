@@ -14,6 +14,7 @@ export const {
   appendPosts,
   findCustomer,
   findUsername,
+  findPopupCustomer,
 } = createActions(
   "FIND_FRIENDS",
   "SET_PEOPLE",
@@ -28,5 +29,6 @@ export const {
   "APPEND_POSTS",
   "FIND_CUSTOMER",
   "FIND_USERNAME",
+  "FIND_POPUP_CUSTOMER",
   { prefix: "PEOPLE" }
 );

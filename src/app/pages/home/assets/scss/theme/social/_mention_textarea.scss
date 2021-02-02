@@ -33,3 +33,34 @@
     border: 0;    
   }
 }
+.mention-customers{
+  background-color: white;
+  border-top:1px solid rgba($basic-text-color, 0.5);
+  border-left:1px solid rgba($basic-text-color, 0.5);
+  border-right:1px solid rgba($basic-text-color, 0.5);
+  &.focused{
+    background-color: rgb(206, 228, 229);
+  }
+  .avatar{
+    display: inline-block;
+    margin: 5px;
+    vertical-align: top;
+  }
+  .info{
+    display: inline-block;
+    .username{
+      margin-top: 10px;
+      color:rgba($basic-text-color, 0.5);
+    }
+  }
+}
+.dropdown-menu.popup{
+  .avatar{
+    display: inline-block;
+    margin: 5px;
+    vertical-align: top;
+  }
+  .info{
+    display: inline-block;
+  }
+}

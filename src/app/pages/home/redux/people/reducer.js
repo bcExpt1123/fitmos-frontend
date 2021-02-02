@@ -12,8 +12,9 @@ import {
 
 const initialState = {
   customer:false,
-  people:[],
-  followers:[],
+  people:[],//tag following, mentions
+  // followers:[],
+  popupCustomers:[],
   searchValue:"",
   searchResult:{
     people:[],
@@ -35,7 +36,7 @@ const reducer = persistReducer(
   {
     storage,
     key: "people",
-    blacklist:['customer','username'],
+    blacklist:['customer','username','popupCustomers'],
   },
   handleActions(
     {

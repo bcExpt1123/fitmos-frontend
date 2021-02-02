@@ -17,6 +17,7 @@ import {
 } from "./actions";
 
 const initialState = {
+  dropdown:false,
   newsfeed:[],
   newsfeedLastId:-1,
   newsfeedLast:false,

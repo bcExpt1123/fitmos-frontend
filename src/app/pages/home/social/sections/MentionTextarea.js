@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Mention, MentionsInput } from "react-mentions";
 import { StylesViaJss } from "substyle-jss";
+import classnames from "classnames";
 // import CommentParagraph from "./CommentParagraph";
 import { NimblePicker, emojiIndex } from "emoji-mart";
+import Avatar from "../../components/Avatar";
 import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
 
@@ -23,6 +25,7 @@ export default function MentionTextarea({content, setContent, submit}) {
   const handleSelectEmoji = emoji => {
     setShowEmojis(false);
     setComment(`${comment} ${emoji.native}`);
+    setContent(`${comment} ${emoji.native}`);
   };
   const handleChange = event => {
     let text = colonsToUnicode(event.target.value);
@@ -83,10 +86,53 @@ export default function MentionTextarea({content, setContent, submit}) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [emojiPicker]);
+  useEffect(() => {
+    if(content == "")setComment("")
+  }, [content]);
+  // const renderHighlightedDisplay = (display)=>{
+  //   const { ignoreAccents, query, style } = this.props
+
+  //   let i = getSubstringIndex(display, query, ignoreAccents)
+
+  //   if (i === -1) {
+  //     return <span {...style('display')}>{display}</span>
+  //   }
+
+  //   return (
+  //     <span {...style('display')}>
+  //       {display.substring(0, i)}
+  //       <b {...style('highlight')}>{display.substring(i, i + query.length)}</b>
+  //       {display.substring(i + query.length)}
+  //     </span>
+  //   )
+  // }
   const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
-    console.log(entry)
-    return <>
-    </>
+    return <div className={classnames("mention-customers",{focused:focused})}>
+      <div className="avatar">
+        <Avatar
+          pictureUrls={entry.avatarUrls}
+          size="xs"
+          className={"userAvatar"}
+        />
+      </div>
+      <div className="info">
+        <div>{
+          Array.isArray(highlightedDisplay.props.children)?
+          <>{
+            highlightedDisplay.props.children.map((child, index)=><span key={index}>
+              {child}
+            </span>)
+          }
+          </>
+          :
+          <>
+            {highlightedDisplay.props.children}
+          </>
+          }</div>
+        <div className="username">{entry.username}</div>
+      </div>
+      
+    </div>
   }
   return (
     <StylesViaJss>

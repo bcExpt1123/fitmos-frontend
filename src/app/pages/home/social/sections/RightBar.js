@@ -6,22 +6,14 @@ import ClickableMedia from "./ClickableMedia";
 import PostModal from "./PostModal";
 
 const RightBar = () => {  
-  const match = matchPath(window.location.pathname, {
-    path:['/customers/:id','/profile'],
-    exact:true,
-    strict:true
-  });  
+  const username = useSelector(({people})=>people.username);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const dispatch = useDispatch();
   const selfMedias = useSelector(({post})=>post.selfRandomMedias);
   const otherMedias = useSelector(({post})=>post.otherRandomMedias);
   useEffect(()=>{
-    if(match&&match.params){
-      if(match.path === '/profile' ){
-        dispatch(findRandomMedias(currentUser.customer.id));
-      }else{
-        dispatch(findRandomMedias(match.params.id));
-      }
+    if(username.type === 'customer'){
+        dispatch(findRandomMedias(username.id));
     }
   },[])
   const [show, setShow] = useState(false);
@@ -34,10 +26,10 @@ const RightBar = () => {
   }
   return (  
     <div id="rightbar">
-      {match?
+      {username.type === 'customer'?
         <>
           <div className="wrapper-rightbar">
-            <div className="label">Galería de María <NavLink  className="" to={match.path === '/profile'?"/profile/pictures":`/customers/${match.params.id}/pictures`}>Ver Todos</NavLink></div>
+            <div className="label">Galería de María <NavLink  className="" to={`/${username.username}/pictures`}>Ver Todos</NavLink></div>
             <div className="body">
               {selfMedias.length===0?<>There is no items</>
                 :

@@ -26,6 +26,8 @@ import {
   createReply,
   appendComments,
   appendNextComments,
+  appendNextReplies,
+  hideReplies,
   syncPosts,
   toggleLike,
 } from "./actions";
@@ -235,7 +237,7 @@ function* onOpenEditModal({payload}){
     yield put(setItemValue({name:"editPost", value:payload}));
   }
 }
-const createCommentRequest = (postId,content,minLevel0,minLevel1,maxLevel0,maxLevel1)=>
+const createCommentRequest = (postId,content,from_id)=>
   http({
     path: "comments",
     method: "POST",
@@ -243,24 +245,22 @@ const createCommentRequest = (postId,content,minLevel0,minLevel1,maxLevel0,maxLe
       post_id:postId,
       content,
       condition:{
-        minLevel0,
-        minLevel1,
-        maxLevel0,
-        maxLevel1,
-        id:postId        
+        from_id        
       }
     }
   }).then(response => response.data);
 function* onCreateComment({payload}){
   const [posts, type, post] = yield call(getPosts,payload.post_id);
-  const [minLevel0,minLevel1,maxLevel0,maxLevel1] = getCommentRange(post);
+  const [fromId,toId] = getCommentRange(post);
   try{
-    const result = yield call(createCommentRequest, payload.post_id, payload.content,minLevel0,minLevel1,maxLevel0,maxLevel1);
+    const result = yield call(createCommentRequest, payload.post_id, payload.content,fromId);
     if(type){
       const newPosts = posts.map(post=>{
         if(post.id == payload.post_id){
-          post.comments.push(result.comment);          
-          post.commentsCount++;
+          post.previousCommentsCount = result.previousCommentsCount;
+          post.comments = result.comments;
+          post.nextCommentsCount = result.nextCommentsCount;
+          post.commentsCount = result.commentsCount;
         }
         return post;
       });
@@ -287,45 +287,40 @@ function* onCreateComment({payload}){
 
   }
 }
-const createReplyRequest = (postId,content,parent_activity_id,minLevel0,minLevel1,maxLevel0,maxLevel1)=>
+const createReplyRequest = (postId,content,parent_activity_id)=>
   http({
     path: "comments",
     method: "POST",
     data:{
       post_id:postId,
       parent_activity_id,
-      content,
-      condition:{
-        minLevel0,
-        minLevel1,
-        maxLevel0,
-        maxLevel1,
-        id:postId
-      }
+      content
     }
   }).then(response => response.data);
-function findWithAttr(array, attr, value) {
-  for(var i = 0; i < array.length; i += 1) {
-      if(array[i][attr] === value) {
-          return i;
-      }
-  }
-  return -1;
-}  
+// function findWithAttr(array, attr, value) {
+//   for(var i = 0; i < array.length; i += 1) {
+//       if(array[i][attr] === value) {
+//           return i;
+//       }
+//   }
+//   return -1;
+// }  
 function* onCreateReply({payload}){
   const [posts, type, post] = yield call(getPosts,payload.post_id);
-  const [minLevel0,minLevel1,maxLevel0,maxLevel1] = getCommentRange(post);
   try{
-    const result = yield call(createReplyRequest, payload.post_id, payload.content,payload.parent_activity_id,minLevel0,minLevel1,maxLevel0,maxLevel1);
+    const result = yield call(createReplyRequest, payload.post_id, payload.content,payload.parent_activity_id);
     if(type){
       const newPosts = posts.map(post=>{
         if(post.id == payload.post_id){
-          const comments = [...post.comments];
-          comments.reverse();
-          const latestReplyPosition = findWithAttr(comments,'parent_activity_id',result.comment.parent_activity_id);    
-          // post.comments.push(result.comment);    
-          post.comments.splice(comments.length - latestReplyPosition,0, result.comment);
-          post.commentsCount++;
+          const comments = post.comments.map(comment=>{
+            if(comment.activity_id == payload.parent_activity_id){
+              comment.children = result.comments;
+              comment.nextChildrenCount = result.nextChildrenCount;
+            }
+            return comment;
+          });
+          post.comments = comments;
+          post.commentsCount = result.commentsCount;
         }
         return post;
       });
@@ -336,9 +331,15 @@ function* onCreateReply({payload}){
         if(checkNewsfeed){
           const newPosts = newsfeed.map(post=>{
             if(post.id == payload.post_id){
-              post.previousCommentsCount = result.previousCommentsCount;
-              post.comments = result.comments;
-              post.nextCommentsCount = result.nextCommentsCount;
+              const comments = post.comments.map(comment=>{
+                if(comment.activity_id == payload.parent_activity_id){
+                  comment.children = result.comments;
+                  comment.nextChildrenCount = result.nextChildrenCount;
+                }
+                return comment;
+              });
+              post.comments = comments;
+              post.commentsCount = result.commentsCount;
             }
             return post;
           });
@@ -352,9 +353,9 @@ function* onCreateReply({payload}){
 
   }
 }
-const appendCommentsRequest = (postId,level0, level1)=>
+const appendCommentsRequest = (id)=>
   http({
-    path: "comments?post_id="+postId+"&level0="+level0+"&level1="+level1+"&type=append",
+    path: "comments?id="+id+"&type=append",
     method: "GET",
   }).then(response => response.data);
 function* getPosts(postId){
@@ -380,14 +381,12 @@ function* getPosts(postId){
 function* onAppendComments({payload}){
   let [posts, type, post] = yield call(getPosts,payload);
   if(post){
-    let level0 = -1;
-    let level1 = -1;
+    let id = -1;
     if(post.comments.length>0){
-      level0 = post.comments[0].level0;
-      level1 = post.comments[0].level1;
+      id = post.comments[0].id;
     }
     try {
-      const result = yield call(appendCommentsRequest,payload, level0, level1);
+      const result = yield call(appendCommentsRequest,id);
       if(result.comments && result.comments.length>0){
         const comments = [...result.comments];
         comments.reverse();
@@ -421,29 +420,27 @@ function* onAppendComments({payload}){
     }
   }
 }
-const appendNextCommentsRequest = (postId,level0, level1)=>
+const appendNextCommentsRequest = (id)=>
   http({
-    path: "comments?post_id="+postId+"&level0="+level0+"&level1="+level1+"&type=appendNext",
+    path: "comments?id="+id+"&type=appendNext",
     method: "GET",
   }).then(response => response.data);
 
 function* onAppendNextComments({payload}){
   let [posts, type, post] = yield call(getPosts,payload);
   if(post){
-    let level0 = -1;
-    let level1 = -1;
+    let id = -1;
     if(post.comments.length>0){
-      level0 = post.comments[post.comments.length-1].level0;
-      level1 = post.comments[post.comments.length-1].level1;
+      id = post.comments[post.comments.length-1].id;
     }
     try {
-      const result = yield call(appendNextCommentsRequest,payload, level0, level1);
+      const result = yield call(appendNextCommentsRequest,id);
       if(result.comments && result.comments.length>0){
         const comments = [...result.comments];
         const newPosts = posts.map(item=>{
           if(item.id == post.id){
             item.comments = [...item.comments,...comments];
-            item.nextCommentsCount = 0;
+            item.nextCommentsCount = item.nextCommentsCount - comments.length;
           }
           return item;
         });
@@ -455,7 +452,7 @@ function* onAppendNextComments({payload}){
             const newPosts = newsfeed.map(item=>{
               if(item.id == post.id){
                 item.comments = [...item.comments,...comments];
-                item.nextCommentsCount = 0;
+                item.nextCommentsCount = item.nextCommentsCount - comments.length;
               }
               return post;
             });
@@ -486,7 +483,15 @@ function* onUpdateComment({payload}){
       const newPosts = posts.map(post=>{
         if(post.id == payload.post_id){
           const comments = post.comments.map(comment=>{
-            if(comment.id === payload.id)comment.content = result.comment.content;
+            if(payload.level1>0){
+              const children = comment.children.map((reply)=>{
+                if(reply.id === payload.id)reply.content = result.comment.content;  
+                return reply;
+              });
+              comment.children = children;
+            }else{
+              if(comment.id === payload.id)comment.content = result.comment.content;
+            }
             return comment;
           });
           post.comments = [...comments];
@@ -501,7 +506,15 @@ function* onUpdateComment({payload}){
           const newPosts = newsfeed.map(post=>{
             if(post.id == payload.post_id){
               const comments = post.comments.map(comment=>{
-                if(comment.id === payload.id)comment.content = result.comment.content;
+                if(payload.level1>0){
+                  const children = comment.children.map((reply)=>{
+                    if(reply.id === payload.id)reply.content = result.comment.content;  
+                    return reply;
+                  });
+                  comment.children = children;
+                }else{
+                  if(comment.id === payload.id)comment.content = result.comment.content;
+                }
                 return comment;
               });
               post.comments = [...comments];
@@ -518,31 +531,48 @@ function* onUpdateComment({payload}){
 
   }
 }
-const deleteCommentRequest = (commentId,minLevel0,minLevel1,maxLevel0,maxLevel1,postId)=>
+const deleteCommentRequest = (commentId,fromId,toId)=>
   http({
     path: "comments/"+commentId,
     method: "DELETE",
     data:{
-      condition:{
-        minLevel0,
-        minLevel1,
-        maxLevel0,
-        maxLevel1,
-        id:postId
-      }
+      from_id:fromId,
+      to_id:toId
     }
   }).then(response => response.data);
 function* onDeleteComment({payload}){
   const [posts, type,post] = yield call(getPosts,payload.post_id);
-  const [minLevel0,minLevel1,maxLevel0,maxLevel1] = getCommentRange(post);
+  let fromId,toId; 
+  if(payload.level1>0){
+    const comment = post.comments.find(item=>item.activity_id == payload.parent_activity_id);
+    fromId  = -1;
+    toId = -1;
+    if(comment.children.length){
+      toId = comment.children[comment.children.length-1].id;
+    }
+  }else{
+    [fromId,toId] = getCommentRange(post);    
+  }
   try{
-    const result = yield call(deleteCommentRequest,payload.id, minLevel0,minLevel1,maxLevel0,maxLevel1,payload.post_id);
+    const result = yield call(deleteCommentRequest,payload.id,fromId,toId);
     if(type){
       const newPosts = posts.map(post=>{
         if(post.id == payload.post_id){
-          const comments = [...post.comments];
-          post.comments = comments.filter(comment=>comment.id!=payload.id)
-          post.commentsCount--;
+          if(payload.level1>0){
+            const comments = post.comments.map(comment=>{
+              if(comment.activity_id === payload.parent_activity_id){
+                comment.children = result.children;
+                comment.commentsCount = result.commentsCount;
+              }
+              return comment;
+            });
+            post.comments = [...comments];
+          }else{
+            post.previousCommentsCount = result.previousCommentsCount;
+            post.comments = result.comments;
+            post.nextCommentsCount = result.nextCommentsCount;
+          }
+          post.commentsCount = result.commentsCount;
         }
         return post;
       });
@@ -553,9 +583,21 @@ function* onDeleteComment({payload}){
         if(checkNewsfeed){
           const newPosts = newsfeed.map(post=>{
             if(post.id == payload.post_id){
-              post.previousCommentsCount = result.previousCommentsCount;
-              post.comments = result.comments;
-              post.nextCommentsCount = result.nextCommentsCount;
+              if(payload.level1>0){
+                const comments = post.comments.map(comment=>{
+                  if(comment.activity_id === payload.parent_activity_id){
+                    comment.children = result.children;
+                    comment.commentsCount = result.commentsCount;
+                  }
+                  return comment;
+                });
+                post.comments = [...comments];
+              }else{
+                post.previousCommentsCount = result.previousCommentsCount;
+                post.comments = result.comments;
+                post.nextCommentsCount = result.nextCommentsCount;
+              }
+              post.commentsCount = result.commentsCount;
             }
             return post;
           });
@@ -569,18 +611,123 @@ function* onDeleteComment({payload}){
     console.log(e)
   }
 }
-const getCommentRange = (post)=>{
-  let minLevel0=-1;
-  let minLevel1=-1;
-  let maxLevel0=-1;
-  let maxLevel1=-1;
-  if(post.comments.length>0){
-    minLevel0 = post.comments[0].level0;
-    minLevel1 = post.comments[0].level1;
-    maxLevel0 = post.comments[post.comments.length-1].level0;
-    maxLevel1 = post.comments[post.comments.length-1].level1;
+const appendNextRepliesRequest = (id)=>
+  http({
+    path: "comments?id="+id+"&type=appendNextReplies",
+    method: "GET",
+  }).then(response => response.data);
+
+function* onAppendNextReplies({payload}){
+  let [posts, type, post] = yield call(getPosts,payload.post_id);
+  if(post){
+    let id = -1;
+    if(payload.children.length>0){
+      id = payload.children[payload.children.length-1].id;
+    }else{
+      id = payload.id;
+    }
+    try {
+      const result = yield call(appendNextRepliesRequest,id);
+      if(result.comments && result.comments.length>0){
+        const replies = [...result.comments];
+        const newPosts = posts.map(item=>{
+          if(item.id == post.id){
+            const comments = post.comments.map(comment=>{
+              if(comment.id == payload.id){
+                comment.children = [...comment.children, ...replies];
+                comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
+              }
+              return comment;
+            });
+            console.log(comments)
+            post.comments = comments;
+          }
+          return item;
+        });
+        if(type=="customer"){
+          yield put(setItemValue({name:"customerPosts", value:newPosts}));
+          const newsfeed = yield select(({post})=>post.newsfeed);
+          post = newsfeed.find(item=>item.id == payload);
+          if(post){
+            const newPosts = newsfeed.map(item=>{
+              if(item.id == post.id){
+                const comments = post.comments.map(comment=>{
+                  if(comment.id == payload.id){
+                    comment.children = [...comment.children, ...replies];
+                    comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
+                  }
+                  return comment;
+                });
+                post.comments = comments;
+              }
+              return post;
+            });
+            yield put(setItemValue({name:"newsfeed", value:newPosts}));
+          }      
+        }else{
+          yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        }        
+      }
+    }catch(error){
+      console.log(error)
+    }
   }
-  return [minLevel0,minLevel1,maxLevel0,maxLevel1];
+}
+function* onHideReplies({payload}){
+  let [posts, type, post] = yield call(getPosts,payload.post_id);
+  if(post){
+    try {
+      if(payload.children && payload.children.length>0){
+        const newPosts = posts.map(item=>{
+          if(item.id == post.id){
+            const comments = post.comments.map(comment=>{
+              if(comment.id == payload.id){
+                comment.nextChildrenCount = comment.nextChildrenCount + comment.children.length;
+                comment.children = [];
+              }
+              return comment;
+            });
+            post.comments = comments;
+          }
+          return item;
+        });
+        if(type=="customer"){
+          yield put(setItemValue({name:"customerPosts", value:newPosts}));
+          const newsfeed = yield select(({post})=>post.newsfeed);
+          post = newsfeed.find(item=>item.id == payload);
+          if(post){
+            const newPosts = newsfeed.map(item=>{
+              if(item.id == post.id){
+                const comments = post.comments.map(comment=>{
+                  if(comment.id == payload.id){
+                    comment.nextChildrenCount = comment.nextChildrenCount + comment.children.length;
+                    comment.children = [];
+                  }
+                  return comment;
+                });
+                post.comments = comments;
+              }
+              return post;
+            });
+            yield put(setItemValue({name:"newsfeed", value:newPosts}));
+          }      
+        }else{
+          yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        }        
+      }
+    }catch(error){
+
+    }
+  }
+}
+const getCommentRange = (post)=>{
+  let fromId=-1;
+  let toId=-1;
+  if(post.comments.length>0){
+    fromId = post.comments[0].id;
+    toId = post.comments[post.comments.length-1].id;
+  }
+  return [fromId,toId];
 }
 const syncRequest = (ids)=>
   http({
@@ -599,16 +746,13 @@ function* onSyncPosts({payload}){
     const posts = [...newsfeed, ...customerPosts];
     const filtedPosts = posts.filter(post=>payload.some(id=>id==post.id));
     postData = filtedPosts.map(post=>{
-      const [minLevel0,minLevel1,maxLevel0,maxLevel1] = getCommentRange(post);
+      const [fromId, toId] = getCommentRange(post);
       return{
         id:post.id,
-        minLevel0,
-        minLevel1,
-        maxLevel0,
-        maxLevel1,
+        from_id:fromId,
+        to_id:toId,
       }
     });
-    console.log(postData)
   }else{
     return;
   }
@@ -619,6 +763,15 @@ function* onSyncPosts({payload}){
     newPosts = newsfeed.map(post=>{
       const item = result.posts.find(item=>item.id == post.id);
       if(item){
+        const comments = item.comments.map(newComment=>{
+          const oldComment = post.comments.find(comment=>comment.id == newComment.id);    
+          if(oldComment.children.length>0){
+            newComment.children = oldComment.children;
+            newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
+          }
+          return newComment;
+        });
+        item.comments = comments;
         post = {...item};
       }
       return post;
@@ -683,4 +836,6 @@ export default function* rootSaga() {
   yield takeLeading(updateComment, onUpdateComment);
   yield takeLeading(syncPosts, onSyncPosts);
   yield takeLeading(toggleLike, onToggleLike);
+  yield takeLeading(  appendNextReplies,onAppendNextReplies);
+  yield takeLeading(  hideReplies, onHideReplies );
 }

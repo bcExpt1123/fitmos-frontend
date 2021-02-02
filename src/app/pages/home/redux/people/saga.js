@@ -12,7 +12,8 @@ import {
   searchPosts,
   appendPosts,
   findCustomer,
-  findUsername
+  findUsername,
+  findPopupCustomer
 } from "./actions";
 import { http } from "../../services/api";
 
@@ -140,6 +141,28 @@ function* onFindUsername({payload}){
 
   }
 }
+// const findPopupCustomerRequest = (id)=>
+//   http({
+//     path: "search/username?u="+id,
+//     method: "GET"
+//   }).then(response => response.data);
+function* onFindPopupCustomer({payload}){
+  const customers = yield select(({people})=>people.people);
+  const customer = customers.find((customer)=>customer.id == payload);
+  let popupCustomers = yield select(({people})=>people.popupCustomers);
+  if(customer){
+    popupCustomers = [...popupCustomers, customer];
+    yield put(setItemValue({name:"popupCustomers",value:popupCustomers}));
+  }else{
+    try{
+      const result = yield call(findCustomerRequest,payload);
+      popupCustomers = [...popupCustomers, result];
+      yield put(setItemValue({name:"popupCustomers",value:popupCustomers}));
+    }catch(e){
+      console.log(e);
+    }
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(findFriends,onFindFriends);
   yield takeLatest(searchAll,onSearchAll);
@@ -148,4 +171,5 @@ export default function* rootSaga() {
   yield takeLeading(searchPosts,onSearchPosts);
   yield takeLeading(findCustomer, onFindCustomer);
   yield takeLeading(findUsername, onFindUsername);
+  yield takeLeading(findPopupCustomer, onFindPopupCustomer);
 }

@@ -121,9 +121,13 @@
           button{
             border:0;
             background-color: transparent;
+            color:rgba($basic-text-color, 0.5);
             &:hover{
               font-weight: bold;
             }
+          }
+          .like-comment{
+            color:rgba($basic-text-color, 0.5);
           }
           .comment-time{
             display: inline;
@@ -131,26 +135,29 @@
             color:rgba($basic-text-color, 0.5);
           }
         }
-        .like.fa-heart{
-          color:#D83B18;
-        }
       }
       .popup-actions{
         width: 20px;
         display: inline-block;
         vertical-align: top;
+        padding-top: 10px;        
         .dropdown{
           .btn{
             padding: 0;
             margin: 0;
           }
         }
+        .like.fa-heart{
+          color:#D83B18;
+        }
       }
+    }
+    .comment-append-replies{
+      padding-left: 20px;
     }
     form{
       textarea{
         width: calc(100% - 50px);
-        height: 25px;
       }
       button{
         border:0;
