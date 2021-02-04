@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import FormPostModal from '../sections/FormPostModal';
-import { updatePost, closeEditModal } from '../../redux/post/actions';
+import { updatePost, closeEditModal, setItemValue } from '../../redux/post/actions';
 
 const EditPostModal = ({show}) => {
   const dispatch = useDispatch();
@@ -14,10 +14,12 @@ const EditPostModal = ({show}) => {
     setTimeout(()=>{
       setSaving(false);
       handleClose();
+      dispatch(setItemValue({name:"openEditModal",value:false}));
     },500);
   }
   const handleClose = ()=>{
     dispatch(closeEditModal());
+    dispatch(setItemValue({name:"openEditModal",value:false}));    
   }
   return (
     <FormPostModal show={show} title={'Edit Post'} handleClose={handleClose} publishPost={publishPost} post={post} saving={saving}/>

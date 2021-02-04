@@ -15,7 +15,7 @@
       padding: 0;
       .slides{
         display:inline-block;
-        width: calc(100% - 350px);
+        width: calc(100% - 354px);
         background-color: transparent;
         vertical-align: bottom;
         height: 99vh;        
@@ -105,10 +105,49 @@
         display: none;
         background-color: white;
         display:inline-block;
-        width:350px;
+        width:354px;
         height: calc( 100vh - 2px);
         margin-bottom: 0;
-      }
+        border-radius: 0;
+        .post-comments{
+          height: 450px;
+          overflow: auto;
+          .comment-view{
+            form{
+              margin-right: -43px;
+              .comment-input-container.row{
+                flex-direction: row;
+                .col-11{
+                  flex: 0 0 87.66667%;
+                  max-width: 87.66667%;
+                }
+                .col-1{
+                  flex: 0 0 12.33333%;
+                  max-width: 12.33333%;
+                  padding-left: 0;
+                  padding-right: 0;
+                }    
+              }    
+            }
+          }
+        }
+        form.comment-create{
+          .comment-input-container.row{
+            flex-direction: row;
+            font-size: 12px;
+            .col-11{
+              flex: 0 0 87.66667%;
+              max-width: 87.66667%;
+            }
+            .col-1{
+              flex: 0 0 12.33333%;
+              max-width: 12.33333%;
+              padding-left: 0;
+              padding-right: 0;
+            }
+          }
+        }
+    }
     }
   }  
 }

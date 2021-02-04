@@ -7,7 +7,11 @@ export const {
   follow,
   unfollow,
   reject,
-  accept
+  accept,
+  block,
+  unblock,
+  mute,
+  unmute
 } = createActions(
   "SET_ITEM_VALUE",
   "FIND_FOLLOWS",
@@ -16,5 +20,9 @@ export const {
   "UNFOLLOW",
   "REJECT",
   "ACCEPT",
+  "BLOCK",
+  "UNBLOCK",
+  "MUTE",
+  "UNMUTE",
   { prefix: "NOTIFICATION" }
 );

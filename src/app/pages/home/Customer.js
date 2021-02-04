@@ -8,7 +8,7 @@ import Posts from "./social/sections/Posts";
 
 export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
-  const customerProfile = useSelector(({post})=>post.customerProfile);
+  const username = useSelector(({people})=>people.username);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const last = useSelector(({post})=>post.customerPostsLast);
   const dispatch = useDispatch();
@@ -27,9 +27,9 @@ export default function Customer({id}) {
         content="Customer Posts - Fitemos"
       />
       </MetaTags>
-      {customerProfile?
+      {(username.profile==='public' || username.following && (username.following.status == 'accepted'))?
         <ThreeColumn>
-          {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id}/>}
+          {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false}/>}
         </ThreeColumn>
         :
         <TwoColumn>

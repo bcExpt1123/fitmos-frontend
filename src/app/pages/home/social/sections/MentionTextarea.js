@@ -89,23 +89,6 @@ export default function MentionTextarea({content, setContent, submit}) {
   useEffect(() => {
     if(content == "")setComment("")
   }, [content]);
-  // const renderHighlightedDisplay = (display)=>{
-  //   const { ignoreAccents, query, style } = this.props
-
-  //   let i = getSubstringIndex(display, query, ignoreAccents)
-
-  //   if (i === -1) {
-  //     return <span {...style('display')}>{display}</span>
-  //   }
-
-  //   return (
-  //     <span {...style('display')}>
-  //       {display.substring(0, i)}
-  //       <b {...style('highlight')}>{display.substring(i, i + query.length)}</b>
-  //       {display.substring(i + query.length)}
-  //     </span>
-  //   )
-  // }
   const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
     return <div className={classnames("mention-customers",{focused:focused})}>
       <div className="avatar">

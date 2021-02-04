@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { MentionsInput, Mention } from 'react-mentions';
+import classnames from "classnames";
+import { NimblePicker, emojiIndex } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
+import data from "emoji-mart/data/google.json";
 import TagFollower from '../sections/TagFollower';
 import Avatar from "../../components/Avatar";
 import SearchLocation from '../sections/SearchLocation';
@@ -31,7 +35,8 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     }
   },[users,post]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleChange = (ev, newValue)=>{
-    setContent(newValue);
+    let text = colonsToUnicode(newValue);
+    setContent(text);
   }
   const handleBlur = () => (ev, clickedOnSuggestion) => {
     if (!clickedOnSuggestion) {
@@ -125,6 +130,95 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     const id = post?post.id:false;
     publishPost({files, location, tagFollowers, content,id:id});
   }
+  const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
+    return <div className={classnames("mention-customers",{focused:focused})}>
+      <div className="avatar">
+        <Avatar
+          pictureUrls={entry.avatarUrls}
+          size="xs"
+          className={"userAvatar"}
+        />
+      </div>
+      <div className="info">
+        <div>{
+          Array.isArray(highlightedDisplay.props.children)?
+          <>{
+            highlightedDisplay.props.children.map((child, index)=><span key={index}>
+              {child}
+            </span>)
+          }
+          </>
+          :
+          <>
+            {highlightedDisplay.props.children}
+          </>
+          }</div>
+        <div className="username">{entry.username}</div>
+      </div>
+      
+    </div>
+  }
+  const [showEmojis, setShowEmojis] = useState(false);
+  const emojiPicker = useRef(null);
+  const handleSelectEmoji = emoji => {
+    setShowEmojis(false);
+    // setComment(`${comment} ${emoji.native}`);
+    setContent(`${content} ${emoji.native}`);
+  };
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (emojiPicker.current && !emojiPicker.current.contains(event.target)) {
+        setShowEmojis(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [emojiPicker]);
+  const colonsToUnicode = text => {
+    const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
+    let newText = text;
+
+    let match = colonsRegex.exec(text);
+
+    if (match !== null) {
+      let colons = match[2];
+      let offset = match.index + match[1].length;
+
+      newText =
+        newText.slice(0, offset) + getEmoji(colons) + newText.slice(offset + 2);
+    }
+    return newText;
+  };
+
+  const getEmoji = emoji => {
+    let emoj;
+    switch (emoji) {
+      case "D":
+        emoj = emojiIndex.search(":)")[1].native;
+        break;
+      case ")":
+        emoj = emojiIndex.search(":)")[0].native;
+        break;
+      case "(":
+        emoj = emojiIndex.search(":(")[0].native;
+        break;
+      case "P":
+        emoj = emojiIndex.search(":P")[0].native;
+        break;
+      case "o":
+        emoj = emojiIndex.search("Hushed")[0].native;
+        break;
+      case "O":
+        emoj = emojiIndex.search("Hushed")[0].native;
+        break;
+      default:
+        emoj = "";
+    }
+    return emoj;
+  };
+
   return (
     <Modal
       show={show}
@@ -209,7 +303,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                 trigger="@"
                 // markup={'@{$__display__$}(__id__)'}
                 data={filterPeople}
-                // renderSuggestion={this.renderUserSuggestion}
+                renderSuggestion={renderPeopleSuggestion}
               />
             </MentionsInput>
             <div className="medias-container">
@@ -303,7 +397,27 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
             <div className="create-post-footer mt-3">
               <div className="mt-1" style={{display:"inline-block"}}>
                 Agrega
-                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                {showEmojis ? (
+                  <span className={"emoji__picker"}  ref={emojiPicker}>
+                    <NimblePicker
+                      onSelect={handleSelectEmoji}
+                      showSkinTones={false}
+                      emojiTooltip={false}
+                      showPreview={false}
+                      sheetSize={32}
+                      data={data}
+                    />
+                  </span>
+                ) : (
+                  <button
+                    className={"emoji__button"}
+                    onClick={() => setShowEmojis(true)}
+                  >
+                    {String.fromCodePoint(0x1f60a)}
+                  </button>
+                )}                
+                &nbsp;&nbsp;&nbsp;&nbsp;
                 <span className="cursor-pointer" onClick={openTagFollowers}>
                   <i className="fas fa-hashtag" />
                 </span>

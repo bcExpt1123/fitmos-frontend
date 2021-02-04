@@ -21,9 +21,18 @@ const initialState = {
   newsfeed:[],
   newsfeedLastId:-1,
   newsfeedLast:false,
-  customerPosts:[],
+  suggested:0,
+  old:0,
+  modalPost:false,
+  suggestedPosts:[],
+  suggestedPostsLastId:-1,
+  suggestedPostsLast:false,
+  oldNewsfeed:[],
+  oldNewsfeedLastId:-1,
+  oldNewsfeedLast:false,
   post:false,
   editPost:false,
+  customerPosts:[],
   customerProfile:true,
   customerPostsLastId:-1,
   customerPostsLast:false,
@@ -33,6 +42,7 @@ const initialState = {
   selfMedias:[],
   selfMediasLastId:-1,
   selfMediasLast:false,
+  openEditModal:false,
 };
 // const containsPost = (posts, post)=>{
 //   posts.every(item=>item.id == post.id)
@@ -67,6 +77,7 @@ const reducer = persistReducer(
           const ids = filteredPostsAfter.map(item=>item.id);
           minId = Math.min(...ids);
         }
+        console.log(filteredPostsAfter.length)
         return {
           ...state,
           newsfeed:clonedNewsfeedAfter,

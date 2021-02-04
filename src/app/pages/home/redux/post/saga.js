@@ -2,9 +2,7 @@ import { call, takeLeading, select,put, delay, race } from "redux-saga/effects";
 import {
   findNewsfeed, 
   setNewsfeed,   
-  appendNewsfeedBefore,
   appendNewsfeedAfter,
-  addNewsfeedBefore,
   addNewsfeedAfter,
   createPost,
   updatePost,
@@ -30,6 +28,11 @@ import {
   hideReplies,
   syncPosts,
   toggleLike,
+  readingPost,
+  appendSuggestedPosts,
+  refreshPosts,
+  convertOldNewsfeed,
+  appendOldNewsfeed,
 } from "./actions";
 import { http } from "../../services/api";
 
@@ -37,46 +40,50 @@ const findNewsfeedRequest = ()=>
   http({
     path: "customers/newsfeed",
     method: "POST",
+    data:{
+      suggested:0
+    }
   }).then(response => response.data);
 
 function* onFindNewsfeed(){
+  yield put(setItemValue({name:'old',value:0}));
   try {
     const result = yield call(findNewsfeedRequest);
-    yield put(setNewsfeed(result.newsfeed));
-  } catch (error) {
-    console.log(error);
-    //yield put(validateVoucherFailed({ token }));
-  }  
-}
-const appendNewsfeedBeforeRequest = (ids)=>
-  http({
-    path: "posts/sub-newsfeed",
-    method: "POST",
-    data: {
-      ids
+    if(result.newsfeed.length == 0){
+      yield put(setItemValue({name:"newsfeedLast",value:true}));
+      yield put(setItemValue({name:"suggested", value:1}));
+      yield put(appendSuggestedPosts());
+      yield put(appendOldNewsfeed());
+    }else{
+      yield put(setNewsfeed(result.newsfeed));
     }
-  }).then(response => response.data);
-function* onAppendNewsfeedBefore({payload}){
-  try {
-    const result = yield call(appendNewsfeedBeforeRequest, payload);
-    yield put(addNewsfeedBefore(result.items));
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
   }  
 }
-const appendNewsfeedAfterRequest = (post_id)=>
+const appendNewsfeedAfterRequest = (post_id,suggested)=>
   http({
     path: "customers/newsfeed",
     method: "POST",
-    data:{post_id}
+    data:{post_id,suggested}
   }).then(response => response.data);
 function* onAppendNewsfeedAfter(){
   const id = yield select(({post})=>post.newsfeedLastId);
+  const suggested = yield select(({post})=>post.suggested);
+  if(suggested === 1)yield put(setItemValue({name:"suggested", value:0}));
   try {
-    const result = yield call(appendNewsfeedAfterRequest, id);
-    console.log(result)
-    yield put(addNewsfeedAfter(result.newsfeed));
+    let result = yield call(appendNewsfeedAfterRequest, id,0);
+    if(suggested === 0 ){
+      if(result.newsfeed.length == 0){
+        yield put(setItemValue({name:"newsfeedLast",value:true}));
+        yield put(setItemValue({name:"suggested", value:1}));
+        yield put(appendSuggestedPosts());
+        yield put(appendOldNewsfeed());
+      }else{
+        yield put(addNewsfeedAfter(result.newsfeed));
+      }
+    }
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
@@ -167,15 +174,14 @@ function* onAppendCustomerPostsAfter({payload}){
     //yield put(validateVoucherFailed({ token }));
   }  
 }
-const findPostRequest = (id)=>
+const findPostRequest = (id,comment)=>
   http({
-    path: "posts/"+id,
+    path: "posts/"+id+"?comment="+comment,
     method: "GET",
   }).then(response => response.data);
 function* onFindPost({payload}){
-  console.log(payload)
   try{
-    const result = yield call(findPostRequest,payload);
+    const result = yield call(findPostRequest,payload.id,payload.comment);
     yield put(setItemValue({name:"post",value:result}));
   } catch(error){
 
@@ -249,42 +255,97 @@ const createCommentRequest = (postId,content,from_id)=>
       }
     }
   }).then(response => response.data);
-function* onCreateComment({payload}){
-  const [posts, type, post] = yield call(getPosts,payload.post_id);
-  const [fromId,toId] = getCommentRange(post);
-  try{
-    const result = yield call(createCommentRequest, payload.post_id, payload.content,fromId);
-    if(type){
-      const newPosts = posts.map(post=>{
-        if(post.id == payload.post_id){
-          post.previousCommentsCount = result.previousCommentsCount;
-          post.comments = result.comments;
-          post.nextCommentsCount = result.nextCommentsCount;
-          post.commentsCount = result.commentsCount;
-        }
-        return post;
-      });
-      if(type=="customer"){
-        yield put(setItemValue({name:"customerPosts", value:newPosts}));
-        const newsfeed = yield select(({post})=>post.newsfeed);
-        const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
-        if(checkNewsfeed){
-          const newPosts = newsfeed.map(post=>{
-            if(post.id == payload.post_id){
-              post.previousCommentsCount = result.previousCommentsCount;
-              post.comments = result.comments;
-              post.nextCommentsCount = result.nextCommentsCount;
-            }
-            return post;
-          });        
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }
-      }else{
+const replaceComments = (post,result)=>{
+  post.previousCommentsCount = result.previousCommentsCount;
+  const comments = result.comments.map(newComment=>{
+    const oldComment = post.comments.find(comment=>comment.id == newComment.id);    
+    if(oldComment&&oldComment.children.length>0){
+      newComment.children = oldComment.children;
+      newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
+    }
+    return newComment;
+  });
+  post.comments = comments;
+
+  // post.comments = result.comments;
+  post.nextCommentsCount = result.nextCommentsCount;
+  post.commentsCount = result.commentsCount;
+  return post;  
+}  
+const changePostComments = (oldPost,oldComment,result)=>(post)=>{
+  if(post.id == oldComment.post_id){
+    post = replaceComments(post,result);
+  }
+  return post;  
+}  
+function* updatePosts(posts, type, oldPostId,oldPost, oldComment, result, isModalPost,callback){
+  if(type){
+    const newPosts = posts.map(callback(oldPost,oldComment, result));
+    if(type=="customer"){
+      yield put(setItemValue({name:"customerPosts", value:newPosts}));
+      const newsfeed = yield select(({post})=>post.newsfeed);
+      const checkNewsPost = newsfeed.find(item=>item.id == oldPostId);
+      if(checkNewsPost){
+        const newPosts = newsfeed.map(callback(checkNewsPost,oldComment, result));
         yield put(setItemValue({name:"newsfeed", value:newPosts}));
       }
+      const suggestedPosts = yield select(({post})=>post.suggestedPosts);
+      const checkSuggestedPost = suggestedPosts.find(item=>item.id == oldPostId);
+      if(checkSuggestedPost){
+        const newPosts = suggestedPosts.map(callback(checkSuggestedPost,oldComment, result));
+        yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+      }
+    }else{
+      if(type=="newsfeed"){
+        yield put(setItemValue({name:"newsfeed", value:newPosts}));
+      }else{
+        yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+      }      
     }
+  }  
+}
+function* onCreateComment({payload}){
+  let [posts, type, post, isModalPost] = yield call(getPosts,payload.post_id);
+  let fromId,toId;
+  if(isModalPost){
+    post = yield select(({post})=>post.post);    
+  }
+  [fromId,toId] = getCommentRange(post);    
+  try{
+    const result = yield call(createCommentRequest, payload.post_id, payload.content,fromId);
+    if(isModalPost){
+      post = yield call(replaceComments,post,result);
+      yield put(setItemValue({name:"post", value:post}));
+    }else{
+      if(type)yield call(updatePosts,posts,type,payload.post_id, null, payload, result, isModalPost,changePostComments);
+    }
+  // if(type){
+  //   const newPosts = posts.map(changePostComments(payload, result));
+  //   if(type=="customer"){
+  //     yield put(setItemValue({name:"customerPosts", value:newPosts}));
+  //     const newsfeed = yield select(({post})=>post.newsfeed);
+  //     const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
+  //     if(checkNewsfeed){
+  //       const newPosts = newsfeed.map(changePostComments(payload, result));
+  //       yield put(setItemValue({name:"newsfeed", value:newPosts}));
+  //     }
+  //     const suggestedPosts = yield select(({post})=>post.suggestedPosts);
+  //     const checkSuggestedPosts = suggestedPosts.some(item=>item.id == payload.post_id);
+  //     if(checkSuggestedPosts){
+  //       const newPosts = suggestedPosts.map(changePostComments(payload, result));
+  //       yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+  //     }
+  //   }else{
+  //     if(type=="newsfeed"){
+  //       yield put(setItemValue({name:"newsfeed", value:newPosts}));
+  //     }else{
+  //       yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+  //     }
+      
+  //   }
+  // }
   }catch(error){
-
+    console.log(error)
   }
 }
 const createReplyRequest = (postId,content,parent_activity_id)=>
@@ -305,50 +366,61 @@ const createReplyRequest = (postId,content,parent_activity_id)=>
 //   }
 //   return -1;
 // }  
+const replaceCommentReplies = (post , oldComment, result)=>{
+  const comments = post.comments.map(comment=>{
+    if(comment.activity_id == oldComment.parent_activity_id){
+      comment.children = result.comments;
+      comment.nextChildrenCount = result.nextChildrenCount;
+    }
+    return comment;
+  });
+  post.comments = comments;
+  post.commentsCount = result.commentsCount;  
+  return post;
+}
+const changeCreateReplies = (oldPost,oldComment, result)=>(post)=>{
+  if(post.id == oldComment.post_id){
+    post = replaceCommentReplies(post, oldComment, result);
+  }
+  return post;  
+}
 function* onCreateReply({payload}){
-  const [posts, type, post] = yield call(getPosts,payload.post_id);
+  let [posts, type, post, isModalPost] = yield call(getPosts,payload.post_id);
+  if(isModalPost){
+    post = yield select(({post})=>post.post);    
+  }
   try{
     const result = yield call(createReplyRequest, payload.post_id, payload.content,payload.parent_activity_id);
-    if(type){
-      const newPosts = posts.map(post=>{
-        if(post.id == payload.post_id){
-          const comments = post.comments.map(comment=>{
-            if(comment.activity_id == payload.parent_activity_id){
-              comment.children = result.comments;
-              comment.nextChildrenCount = result.nextChildrenCount;
-            }
-            return comment;
-          });
-          post.comments = comments;
-          post.commentsCount = result.commentsCount;
-        }
-        return post;
-      });
-      if(type=="customer"){
-        yield put(setItemValue({name:"customerPosts", value:newPosts}));
-        const newsfeed = yield select(({post})=>post.newsfeed);
-        const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
-        if(checkNewsfeed){
-          const newPosts = newsfeed.map(post=>{
-            if(post.id == payload.post_id){
-              const comments = post.comments.map(comment=>{
-                if(comment.activity_id == payload.parent_activity_id){
-                  comment.children = result.comments;
-                  comment.nextChildrenCount = result.nextChildrenCount;
-                }
-                return comment;
-              });
-              post.comments = comments;
-              post.commentsCount = result.commentsCount;
-            }
-            return post;
-          });
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }  
-      }else{
-        yield put(setItemValue({name:"newsfeed", value:newPosts}));
-      }
+    if(isModalPost){
+      post = yield call(replaceCommentReplies, post, payload, result);
+      yield put(setItemValue({name:"post", value:post}));
+    }else{
+      if(type)yield call(updatePosts,posts,type,payload.post_id, null, payload, result, isModalPost,changeCreateReplies);
     }
+    // if(type){
+    //   const newPosts = posts.map(changeReplies(payload, result));
+    //   if(type=="customer"){
+    //     yield put(setItemValue({name:"customerPosts", value:newPosts}));
+    //     const newsfeed = yield select(({post})=>post.newsfeed);
+    //     const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
+    //     if(checkNewsfeed){
+    //       const newPosts = newsfeed.map(changeReplies(payload, result));
+    //       yield put(setItemValue({name:"newsfeed", value:newPosts}));
+    //     }  
+    //     const suggestedPosts = yield select(({post})=>post.newsfeed);
+    //     const checkSuggestedPosts = suggestedPosts.some(item=>item.id == payload.post_id);
+    //     if(checkSuggestedPosts){
+    //       const newPosts = suggestedPosts.map(changeReplies(payload, result));
+    //       yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+    //     }  
+    //   }else{
+    //     if(type=="newsfeed"){
+    //       yield put(setItemValue({name:"newsfeed", value:newPosts}));
+    //     }else{
+    //       yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+    //     }
+    //   }
+    // }
   }catch(error){
 
   }
@@ -362,6 +434,7 @@ function* getPosts(postId){
   let posts;
   let type;
   let item;
+  let isModalPost;
   const customerPosts = yield select(({post})=>post.customerPosts);
   if(customerPosts)item = customerPosts.find(item=>item.id == postId);
   if(item){
@@ -373,13 +446,31 @@ function* getPosts(postId){
     if(item){
       type = "newsfeed";
       posts = [...newsfeed];
+    }else{
+      const suggestedPosts = yield select(({post})=>post.suggestedPosts);
+      item = suggestedPosts.find(item=>item.id == postId);
+      if(item){
+        type = "suggestedPosts";
+        posts = [...suggestedPosts];
+      }      
     }
   }
-  return [posts, type,item];
+  const modalPost = yield select(({post})=>post.modalPost);
+  if(modalPost){
+    const post = yield select(({post})=>post.post);
+    if(postId == post.id)isModalPost = true;
+  }
+  return [posts, type,item, isModalPost];
 }
-  
+const changeAppendComments = (oldPost,oldComment,result)=>(item)=>{
+  if(item.id == result.post.id){
+    item.comments = [...result.comments,...item.comments];
+    item.previousCommentsCount = item.previousCommentsCount - result.comments.length;
+  }
+  return item;  
+}  
 function* onAppendComments({payload}){
-  let [posts, type, post] = yield call(getPosts,payload);
+  let [posts, type, post, isModalPost] = yield call(getPosts,payload);
   if(post){
     let id = -1;
     if(post.comments.length>0){
@@ -390,30 +481,19 @@ function* onAppendComments({payload}){
       if(result.comments && result.comments.length>0){
         const comments = [...result.comments];
         comments.reverse();
-        const newPosts = posts.map(item=>{
-          if(item.id == post.id){
-            item.comments = [...comments,...item.comments];
-            item.previousCommentsCount = item.previousCommentsCount - comments.length;
-          }
-          return item;
-        });
-        if(type=="customer"){
-          yield put(setItemValue({name:"customerPosts", value:newPosts}));
-          const newsfeed = yield select(({post})=>post.newsfeed);
-          post = newsfeed.find(item=>item.id == payload);
-          if(post){
-            const newPosts = newsfeed.map(item=>{
-              if(item.id == post.id){
-                item.comments = [...comments,...item.comments];
-                item.previousCommentsCount = item.previousCommentsCount - comments.length;
-              }
-              return post;
-            });
-            yield put(setItemValue({name:"newsfeed", value:newPosts}));
-          }      
-        }else{
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }        
+        yield call(updatePosts,posts,type,payload, null, null, {post,comments}, isModalPost,changeAppendComments);
+        // const newPosts = posts.map(changeAppendComments(post,comments));
+        // if(type=="customer"){
+        //   yield put(setItemValue({name:"customerPosts", value:newPosts}));
+        //   const newsfeed = yield select(({post})=>post.newsfeed);
+        //   post = newsfeed.find(item=>item.id == payload);
+        //   if(post){
+        //     const newPosts = newsfeed.map(changeAppendComments(post,comments));
+        //     yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        //   }      
+        // }else{
+        //   yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        // }        
       }
     }catch(error){
 
@@ -425,9 +505,16 @@ const appendNextCommentsRequest = (id)=>
     path: "comments?id="+id+"&type=appendNext",
     method: "GET",
   }).then(response => response.data);
-
+const changeAppendNextComments = (oldPost,oldComment,result)=>(item)=>{
+  if(item.id == result.post.id){
+    item.comments = [,...item.comments,...result.comments];
+    item.previousCommentsCount = item.previousCommentsCount - result.comments.length;
+  }
+  return item;  
+}  
+  
 function* onAppendNextComments({payload}){
-  let [posts, type, post] = yield call(getPosts,payload);
+  let [posts, type, post,isModalPost] = yield call(getPosts,payload);
   if(post){
     let id = -1;
     if(post.comments.length>0){
@@ -437,30 +524,31 @@ function* onAppendNextComments({payload}){
       const result = yield call(appendNextCommentsRequest,id);
       if(result.comments && result.comments.length>0){
         const comments = [...result.comments];
-        const newPosts = posts.map(item=>{
-          if(item.id == post.id){
-            item.comments = [...item.comments,...comments];
-            item.nextCommentsCount = item.nextCommentsCount - comments.length;
-          }
-          return item;
-        });
-        if(type=="customer"){
-          yield put(setItemValue({name:"customerPosts", value:newPosts}));
-          const newsfeed = yield select(({post})=>post.newsfeed);
-          post = newsfeed.find(item=>item.id == payload);
-          if(post){
-            const newPosts = newsfeed.map(item=>{
-              if(item.id == post.id){
-                item.comments = [...item.comments,...comments];
-                item.nextCommentsCount = item.nextCommentsCount - comments.length;
-              }
-              return post;
-            });
-            yield put(setItemValue({name:"newsfeed", value:newPosts}));
-          }      
-        }else{
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }        
+        yield call(updatePosts,posts,type,payload, null, null, {post,comments}, isModalPost,changeAppendNextComments);
+        // const newPosts = posts.map(item=>{
+        //   if(item.id == post.id){
+        //     item.comments = [...item.comments,...comments];
+        //     item.nextCommentsCount = item.nextCommentsCount - comments.length;
+        //   }
+        //   return item;
+        // });
+        // if(type=="customer"){
+        //   yield put(setItemValue({name:"customerPosts", value:newPosts}));
+        //   const newsfeed = yield select(({post})=>post.newsfeed);
+        //   post = newsfeed.find(item=>item.id == payload);
+        //   if(post){
+        //     const newPosts = newsfeed.map(item=>{
+        //       if(item.id == post.id){
+        //         item.comments = [...item.comments,...comments];
+        //         item.nextCommentsCount = item.nextCommentsCount - comments.length;
+        //       }
+        //       return post;
+        //     });
+        //     yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        //   }      
+        // }else{
+        //   yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        // }        
       }
     }catch(error){
 
@@ -475,57 +563,89 @@ const updateCommentRequest = (id, content)=>
       content
     }
   }).then(response => response.data);
+const replaceUpdateComment = (post,oldComment, result)=>{
+  const comments = post.comments.map(comment=>{
+    if(result.comment.level1>0){
+      const children = comment.children.map((reply)=>{
+        if(reply.id == oldComment.id)reply.content = result.comment.content;  
+        return reply;
+      });
+      comment.children = children;
+    }else{
+      if(comment.id == oldComment.id)comment.content = result.comment.content;
+    }
+    return comment;
+  });
+  post.comments = [...comments];
+  return post;
+}
+const changeUpdateComment = (oldPost,oldComment,result)=>(post)=>{
+  if(post.id == oldComment.post_id){
+    post = replaceUpdateComment(post,oldComment, result);
+  }
+  return post;
+}  
+  
 function* onUpdateComment({payload}){
-  const [posts, type,post] = yield call(getPosts,payload.post_id);
+  let [posts, type,post, isModalPost] = yield call(getPosts,payload.post_id);
+  if(isModalPost){
+    post = yield select(({post})=>post.post);    
+  }
   try{
     const result = yield call(updateCommentRequest,payload.id, payload.content);
-    if(type){
-      const newPosts = posts.map(post=>{
-        if(post.id == payload.post_id){
-          const comments = post.comments.map(comment=>{
-            if(payload.level1>0){
-              const children = comment.children.map((reply)=>{
-                if(reply.id === payload.id)reply.content = result.comment.content;  
-                return reply;
-              });
-              comment.children = children;
-            }else{
-              if(comment.id === payload.id)comment.content = result.comment.content;
-            }
-            return comment;
-          });
-          post.comments = [...comments];
-        }
-        return post;
-      });
-      if(type=="customer"){
-        yield put(setItemValue({name:"customerPosts", value:newPosts}));
-        const newsfeed = yield select(({post})=>post.newsfeed);
-        const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
-        if(checkNewsfeed){
-          const newPosts = newsfeed.map(post=>{
-            if(post.id == payload.post_id){
-              const comments = post.comments.map(comment=>{
-                if(payload.level1>0){
-                  const children = comment.children.map((reply)=>{
-                    if(reply.id === payload.id)reply.content = result.comment.content;  
-                    return reply;
-                  });
-                  comment.children = children;
-                }else{
-                  if(comment.id === payload.id)comment.content = result.comment.content;
-                }
-                return comment;
-              });
-              post.comments = [...comments];
-            }
-            return post;
-          });
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }  
-      }else{
-        yield put(setItemValue({name:"newsfeed", value:newPosts}));
-      }
+    if(isModalPost){
+      post = yield call(replaceUpdateComment,post,payload, result);
+      yield put(setItemValue({name:"post", value:post}));
+    }else{
+      if(type){
+        yield call(updatePosts,posts,type,payload.post_id, null, payload, result, isModalPost,changeUpdateComment);
+        // const newPosts = posts.map(post=>{
+        //   if(post.id == payload.post_id){
+        //     const comments = post.comments.map(comment=>{
+        //       if(result.comment.level1>0){
+        //         const children = comment.children.map((reply)=>{
+        //           if(reply.id == payload.id)reply.content = result.comment.content;  
+        //           return reply;
+        //         });
+        //         comment.children = children;
+        //       }else{
+        //         if(comment.id == payload.id)comment.content = result.comment.content;
+        //       }
+        //       return comment;
+        //     });
+        //     post.comments = [...comments];
+        //   }
+        //   return post;
+        // });
+        // if(type=="customer"){
+        //   yield put(setItemValue({name:"customerPosts", value:newPosts}));
+        //   const newsfeed = yield select(({post})=>post.newsfeed);
+        //   const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
+        //   if(checkNewsfeed){
+        //     const newPosts = newsfeed.map(post=>{
+        //       if(post.id == payload.post_id){
+        //         const comments = post.comments.map(comment=>{
+        //           if(payload.level1>0){
+        //             const children = comment.children.map((reply)=>{
+        //               if(reply.id === payload.id)reply.content = result.comment.content;  
+        //               return reply;
+        //             });
+        //             comment.children = children;
+        //           }else{
+        //             if(comment.id === payload.id)comment.content = result.comment.content;
+        //           }
+        //           return comment;
+        //         });
+        //         post.comments = [...comments];
+        //       }
+        //       return post;
+        //     });
+        //     yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        //   }  
+        // }else{
+        //   yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        // }      
+      }  
     }
   }catch(e){
 
@@ -540,9 +660,37 @@ const deleteCommentRequest = (commentId,fromId,toId)=>
       to_id:toId
     }
   }).then(response => response.data);
+const replaceDeleteComment = (post,oldComment, result)=>{
+  if(oldComment.level1>0){
+    const comments = post.comments.map(comment=>{
+      if(comment.activity_id === oldComment.parent_activity_id){
+        comment.children = result.children;
+        comment.commentsCount = result.commentsCount;
+      }
+      return comment;
+    });
+    post.comments = [...comments];
+  }else{
+    post.previousCommentsCount = result.previousCommentsCount;
+    post.comments = result.comments;
+    post.nextCommentsCount = result.nextCommentsCount;
+  }
+  post.commentsCount = result.commentsCount;
+  return post;
+}  
+const changeDeleteComment = (oldPost,oldComment,result)=>(post)=>{
+  if(post.id == oldComment.post_id){
+    post = replaceDeleteComment(post,oldComment, result);
+  }
+  return post;
+}  
+  
 function* onDeleteComment({payload}){
-  const [posts, type,post] = yield call(getPosts,payload.post_id);
+  let [posts, type,post, isModalPost] = yield call(getPosts,payload.post_id);
   let fromId,toId; 
+  if(isModalPost){
+    post = yield select(({post})=>post.post);    
+  }
   if(payload.level1>0){
     const comment = post.comments.find(item=>item.activity_id == payload.parent_activity_id);
     fromId  = -1;
@@ -555,56 +703,62 @@ function* onDeleteComment({payload}){
   }
   try{
     const result = yield call(deleteCommentRequest,payload.id,fromId,toId);
-    if(type){
-      const newPosts = posts.map(post=>{
-        if(post.id == payload.post_id){
-          if(payload.level1>0){
-            const comments = post.comments.map(comment=>{
-              if(comment.activity_id === payload.parent_activity_id){
-                comment.children = result.children;
-                comment.commentsCount = result.commentsCount;
-              }
-              return comment;
-            });
-            post.comments = [...comments];
-          }else{
-            post.previousCommentsCount = result.previousCommentsCount;
-            post.comments = result.comments;
-            post.nextCommentsCount = result.nextCommentsCount;
-          }
-          post.commentsCount = result.commentsCount;
-        }
-        return post;
-      });
-      if(type=="customer"){
-        yield put(setItemValue({name:"customerPosts", value:newPosts}));
-        const newsfeed = yield select(({post})=>post.newsfeed);
-        const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
-        if(checkNewsfeed){
-          const newPosts = newsfeed.map(post=>{
-            if(post.id == payload.post_id){
-              if(payload.level1>0){
-                const comments = post.comments.map(comment=>{
-                  if(comment.activity_id === payload.parent_activity_id){
-                    comment.children = result.children;
-                    comment.commentsCount = result.commentsCount;
-                  }
-                  return comment;
-                });
-                post.comments = [...comments];
-              }else{
-                post.previousCommentsCount = result.previousCommentsCount;
-                post.comments = result.comments;
-                post.nextCommentsCount = result.nextCommentsCount;
-              }
-              post.commentsCount = result.commentsCount;
-            }
-            return post;
-          });
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }  
-      }else{
-        yield put(setItemValue({name:"newsfeed", value:newPosts}));
+    if(isModalPost){
+      post = yield call(replaceDeleteComment,post,payload, result);
+      yield put(setItemValue({name:"post", value:post}));
+    }else{
+      if(type){
+        yield call(updatePosts,posts,type,payload.post_id, null, payload, result, isModalPost,changeDeleteComment);
+        // const newPosts = posts.map(post=>{
+        //   if(post.id == payload.post_id){
+        //     if(payload.level1>0){
+        //       const comments = post.comments.map(comment=>{
+        //         if(comment.activity_id === payload.parent_activity_id){
+        //           comment.children = result.children;
+        //           comment.commentsCount = result.commentsCount;
+        //         }
+        //         return comment;
+        //       });
+        //       post.comments = [...comments];
+        //     }else{
+        //       post.previousCommentsCount = result.previousCommentsCount;
+        //       post.comments = result.comments;
+        //       post.nextCommentsCount = result.nextCommentsCount;
+        //     }
+        //     post.commentsCount = result.commentsCount;
+        //   }
+        //   return post;
+        // });
+        // if(type=="customer"){
+        //   yield put(setItemValue({name:"customerPosts", value:newPosts}));
+        //   const newsfeed = yield select(({post})=>post.newsfeed);
+        //   const checkNewsfeed = newsfeed.some(item=>item.id == payload.post_id);
+        //   if(checkNewsfeed){
+        //     const newPosts = newsfeed.map(post=>{
+        //       if(post.id == payload.post_id){
+        //         if(payload.level1>0){
+        //           const comments = post.comments.map(comment=>{
+        //             if(comment.activity_id === payload.parent_activity_id){
+        //               comment.children = result.children;
+        //               comment.commentsCount = result.commentsCount;
+        //             }
+        //             return comment;
+        //           });
+        //           post.comments = [...comments];
+        //         }else{
+        //           post.previousCommentsCount = result.previousCommentsCount;
+        //           post.comments = result.comments;
+        //           post.nextCommentsCount = result.nextCommentsCount;
+        //         }
+        //         post.commentsCount = result.commentsCount;
+        //       }
+        //       return post;
+        //     });
+        //     yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        //   }  
+        // }else{
+        //   yield put(setItemValue({name:"newsfeed", value:newPosts}));
+        // }      
       }
     }
   }catch(e){
@@ -616,9 +770,30 @@ const appendNextRepliesRequest = (id)=>
     path: "comments?id="+id+"&type=appendNextReplies",
     method: "GET",
   }).then(response => response.data);
-
+const replaceAppendNextReplies = (oldPost,oldComment, post, replies)=>{
+  const comments = oldPost.comments.map(comment=>{
+    if(comment.id == oldComment.id){
+      comment.children = [...comment.children, ...replies];
+      comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
+    }
+    return comment;
+  });
+  // console.log(comments)
+  post.comments = comments;  
+  return post;
+}  
+const changeAppendNextReplies = (oldPost,oldComment,replies)=>(post)=>{
+  if(post.id == oldPost.id){
+    post = replaceAppendNextReplies(oldPost,oldComment, post, replies);
+  }
+  return post;
+}  
+  
 function* onAppendNextReplies({payload}){
-  let [posts, type, post] = yield call(getPosts,payload.post_id);
+  let [posts, type, post, isModalPost] = yield call(getPosts,payload.post_id);
+  if(isModalPost){
+    post = yield select(({post})=>post.post);
+  }
   if(post){
     let id = -1;
     if(payload.children.length>0){
@@ -630,93 +805,87 @@ function* onAppendNextReplies({payload}){
       const result = yield call(appendNextRepliesRequest,id);
       if(result.comments && result.comments.length>0){
         const replies = [...result.comments];
-        const newPosts = posts.map(item=>{
-          if(item.id == post.id){
-            const comments = post.comments.map(comment=>{
-              if(comment.id == payload.id){
-                comment.children = [...comment.children, ...replies];
-                comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
-              }
-              return comment;
-            });
-            console.log(comments)
-            post.comments = comments;
-          }
-          return item;
-        });
-        if(type=="customer"){
-          yield put(setItemValue({name:"customerPosts", value:newPosts}));
-          const newsfeed = yield select(({post})=>post.newsfeed);
-          post = newsfeed.find(item=>item.id == payload);
-          if(post){
-            const newPosts = newsfeed.map(item=>{
-              if(item.id == post.id){
-                const comments = post.comments.map(comment=>{
-                  if(comment.id == payload.id){
-                    comment.children = [...comment.children, ...replies];
-                    comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
-                  }
-                  return comment;
-                });
-                post.comments = comments;
-              }
-              return post;
-            });
-            yield put(setItemValue({name:"newsfeed", value:newPosts}));
-          }      
+        if(isModalPost){
+          post = yield call(replaceAppendNextReplies,post,payload, post, replies);
+          yield put(setItemValue({name:"post", value:post}));
         }else{
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }        
+          if(type)yield call(updatePosts,posts,type,payload.post_id, post, payload, replies, isModalPost,changeAppendNextReplies);        
+          // const newPosts = posts.map(item=>{
+          //   if(item.id == post.id){
+          //     const comments = post.comments.map(comment=>{
+          //       if(comment.id == payload.id){
+          //         comment.children = [...comment.children, ...replies];
+          //         comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
+          //       }
+          //       return comment;
+          //     });
+          //     console.log(comments)
+          //     post.comments = comments;
+          //   }
+          //   return item;
+          // });
+          // if(type=="customer"){
+          //   yield put(setItemValue({name:"customerPosts", value:newPosts}));
+          //   const newsfeed = yield select(({post})=>post.newsfeed);
+          //   post = newsfeed.find(item=>item.id == payload);
+          //   if(post){
+          //     const newPosts = newsfeed.map(item=>{
+          //       if(item.id == post.id){
+          //         const comments = post.comments.map(comment=>{
+          //           if(comment.id == payload.id){
+          //             comment.children = [...comment.children, ...replies];
+          //             comment.nextChildrenCount = comment.nextChildrenCount - replies.length;
+          //           }
+          //           return comment;
+          //         });
+          //         post.comments = comments;
+          //       }
+          //       return post;
+          //     });
+          //     yield put(setItemValue({name:"newsfeed", value:newPosts}));
+          //   }      
+          // }else{
+          //   yield put(setItemValue({name:"newsfeed", value:newPosts}));
+          // }                    
+        }
       }
     }catch(error){
       console.log(error)
     }
   }
 }
-function* onHideReplies({payload}){
-  let [posts, type, post] = yield call(getPosts,payload.post_id);
-  if(post){
-    try {
-      if(payload.children && payload.children.length>0){
-        const newPosts = posts.map(item=>{
-          if(item.id == post.id){
-            const comments = post.comments.map(comment=>{
-              if(comment.id == payload.id){
-                comment.nextChildrenCount = comment.nextChildrenCount + comment.children.length;
-                comment.children = [];
-              }
-              return comment;
-            });
-            post.comments = comments;
-          }
-          return item;
-        });
-        if(type=="customer"){
-          yield put(setItemValue({name:"customerPosts", value:newPosts}));
-          const newsfeed = yield select(({post})=>post.newsfeed);
-          post = newsfeed.find(item=>item.id == payload);
-          if(post){
-            const newPosts = newsfeed.map(item=>{
-              if(item.id == post.id){
-                const comments = post.comments.map(comment=>{
-                  if(comment.id == payload.id){
-                    comment.nextChildrenCount = comment.nextChildrenCount + comment.children.length;
-                    comment.children = [];
-                  }
-                  return comment;
-                });
-                post.comments = comments;
-              }
-              return post;
-            });
-            yield put(setItemValue({name:"newsfeed", value:newPosts}));
-          }      
-        }else{
-          yield put(setItemValue({name:"newsfeed", value:newPosts}));
-        }        
-      }
-    }catch(error){
+const replaceHideReplies = (oldPost, oldComment,post)=>{
+  const comments = oldPost.comments.map(comment=>{
+    if(comment.id == oldComment.id){
+      comment.nextChildrenCount = comment.nextChildrenCount + comment.children.length;
+      comment.children = [];
+    }
+    return comment;
+  });
+  post.comments = comments;
+  return post;
+}
+const changeHideReplies = (oldPost,oldComment,replies)=>(post)=>{
+  if(post.id == oldPost.id){
+    post = replaceHideReplies(oldPost, oldComment,post);
+  }
+  return post;
+}  
 
+function* onHideReplies({payload}){
+  let [posts, type, post, isModalPost] = yield call(getPosts,payload.post_id);
+  if(isModalPost){
+    post = yield select(({post})=>post.post);
+  }
+  if(post){
+    if(payload.children && payload.children.length>0){
+      if(isModalPost){
+        console.log(post);
+        post = yield call(replaceHideReplies,post, payload,post);
+        yield put(setItemValue({name:"post", value:post}));
+      }else{
+        if(type)yield call(updatePosts,posts,type,payload.post_id, post, payload, null, isModalPost,changeHideReplies);
+      }
     }
   }
 }
@@ -739,11 +908,12 @@ const syncRequest = (ids)=>
   }).then(response => response.data);
 function* onSyncPosts({payload}){
   let postData;
-  let newsfeed, customerPosts, newPosts;
+  let newsfeed,suggestedPosts, customerPosts, newPosts;
   if(Array.isArray(payload)){
     newsfeed = yield select(({post})=>post.newsfeed);
     customerPosts = yield select(({post})=>post.customerPosts);
-    const posts = [...newsfeed, ...customerPosts];
+    suggestedPosts = yield select(({post})=>post.suggestedPosts);
+    const posts = [...newsfeed, ...customerPosts,...suggestedPosts];
     const filtedPosts = posts.filter(post=>payload.some(id=>id==post.id));
     postData = filtedPosts.map(post=>{
       const [fromId, toId] = getCommentRange(post);
@@ -759,31 +929,13 @@ function* onSyncPosts({payload}){
   try{
     const result = yield call(syncRequest, postData);
     newsfeed = yield select(({post})=>post.newsfeed);
-    customerPosts = yield select(({post})=>post.customerPosts);
-    newPosts = newsfeed.map(post=>{
-      const item = result.posts.find(item=>item.id == post.id);
-      if(item){
-        const comments = item.comments.map(newComment=>{
-          const oldComment = post.comments.find(comment=>comment.id == newComment.id);    
-          if(oldComment.children.length>0){
-            newComment.children = oldComment.children;
-            newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
-          }
-          return newComment;
-        });
-        item.comments = comments;
-        post = {...item};
-      }
-      return post;
-    });
+    newPosts = newsfeed.map(changePost(result.posts));
     yield put(setItemValue({name:"newsfeed", value:newPosts}));
-    newPosts = customerPosts.map(post=>{
-      const item = result.posts.find(item=>item.id == post.id);
-      if(item){
-        post = {...item};
-      }
-      return post;
-    });
+    suggestedPosts = yield select(({post})=>post.suggestedPosts);
+    newPosts = suggestedPosts.map(changePost(result.posts));
+    yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+    customerPosts = yield select(({post})=>post.customerPosts);
+    newPosts = customerPosts.map(changePost(result.posts));
     yield put(setItemValue({name:"customerPosts", value:newPosts}));
   }catch(e){
     console.log(e)
@@ -815,9 +967,153 @@ function* onToggleLike({payload}){
 
   }
 }
+const onReadingRequest = (id)=>
+  http({
+    path: "posts/"+id+"/read",
+    method: "POST",
+  }).then(response => response.data);
+function* onReadingPost({payload}){
+  const currentUser = yield select(({auth})=>auth.currentUser);
+  try{
+    if(currentUser.customer.id!=payload.customer_id){
+      const result = yield call(onReadingRequest, payload.id);
+    }    
+  }catch(e){
+
+  }
+}
+function* onAppendSuggestedPosts(){
+  let id = yield select(({post})=>post.suggestedPostsLastId);
+  const suggested = yield select(({post})=>post.suggested);
+  if(suggested == 0)yield put(setItemValue({name:"suggested", value:1}));
+  try {
+    let result = yield call(appendNewsfeedAfterRequest, id,1);
+    console.log(result.posts)
+    let suggestedPosts = yield select(({post})=>post.suggestedPosts);
+    const filteredPostsAfter = result.newsfeed.filter((post)=>!suggestedPosts.some(item=>item.id == post.id));
+    suggestedPosts = suggestedPosts.concat(filteredPostsAfter);
+    if(filteredPostsAfter.length>0){
+      const ids = filteredPostsAfter.map(item=>item.id);
+      id = Math.min(...ids);
+    }
+    yield put(setItemValue({name:"suggestedPosts", value:suggestedPosts}));
+    yield put(setItemValue({name:"suggestedPostsLastId", value:id}));
+    yield put(setItemValue({name:"suggestedPostsLast", value:filteredPostsAfter.length === 0?true:false}));
+  } catch (error) {
+    console.log(error);
+    //yield put(validateVoucherFailed({ token }));
+  }  
+}
+const changePost = (newPosts)=>(post)=>{
+  const item = newPosts.find(item=>item.id == post.id);
+  if(item){
+    const comments = item.comments.map(newComment=>{
+      const oldComment = post.comments.find(comment=>comment.id == newComment.id);    
+      if(oldComment&&oldComment.children.length>0){
+        newComment.children = oldComment.children;
+        newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
+      }
+      return newComment;
+    });
+    item.comments = comments;
+    post = {...item};
+  }
+  return post;  
+}
+const replacePosts = (oldPosts)=>(post)=>{
+  const item = oldPosts.find(item=>item.id == post.id);
+  if(item){
+    const comments = item.comments.map(oldComment=>{
+      const newComment = post.comments.find(comment=>comment.id == oldComment.id);    
+      if(newComment&&newComment.children){
+        newComment.children = oldComment.children;
+        newComment.nextChildrenCount = newComment.nextChildrenCount - oldComment.children.length;
+      }
+      return newComment;
+    });
+    post.comments = comments;
+  }
+  return post;  
+}
+function* onRefreshPosts(){
+  const suggested = yield select(({post})=>post.suggested);
+  let postData;
+  let newsfeed, suggestedPosts, newPosts;
+  if(suggested ===  0 ){
+    const posts = yield select(({post})=>post.newsfeed);
+    postData = posts.map(post=>{
+      const [fromId, toId] = getCommentRange(post);
+      return{
+        id:post.id,
+        from_id:fromId,
+        to_id:toId,
+      }
+    });
+  }else{
+    const posts = yield select(({post})=>post.suggestedPosts);
+    postData = posts.map(post=>{
+      const [fromId, toId] = getCommentRange(post);
+      return{
+        id:post.id,
+        from_id:fromId,
+        to_id:toId,
+      }
+    });
+  }
+  try{
+    const result = yield call(syncRequest, postData);
+    if(suggested ===  0 ){
+      newsfeed = yield select(({post})=>post.newsfeed);
+      const filteredPosts = result.posts.filter((post)=>post.customer.following!=null&&post.customer.relation!=undefined);
+      newPosts = filteredPosts.map(replacePosts(newsfeed));
+      yield put(setItemValue({name:"newsfeed", value:newPosts}));      
+      if(newPosts.length ==0){
+        yield put(appendSuggestedPosts());
+      }
+    }else{
+      suggestedPosts = yield select(({post})=>post.suggestedPosts);
+      const filteredPosts = result.posts.filter((post)=>post.customer.following==null&&post.customer.relation!=undefined);
+      newPosts = filteredPosts.map(replacePosts(suggestedPosts));
+      yield put(setItemValue({name:"suggestedPosts", value:newPosts}));      
+    }
+  }catch(e){
+    console.log(e)
+  }
+}
+function* onConvertOldNewsfeed(){
+  yield put(setItemValue({name:'old',value:1}));
+  yield put(setItemValue({name:'oldNewsfeed',value:[]}));
+  yield put(setItemValue({name:'oldNewsfeedLastId',value:-1}));
+  yield put(setItemValue({name:'oldNewsfeedLast',value:false}));
+  yield put(appendOldNewsfeed());
+}
+const appendOldNewsfeedAfterRequest = (post_id)=>
+  http({
+    path: "customers/oldnewsfeed",
+    method: "POST",
+    data:{post_id}
+  }).then(response => response.data);
+function* onAppendOldNewsfeed(){
+  let id = yield select(({post})=>post.oldNewsfeedLastId);
+  try {
+    let result = yield call(appendOldNewsfeedAfterRequest, id);
+    let oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+    const filteredPostsAfter = result.oldNewsfeed.filter((post)=>!oldNewsfeed.some(item=>item.id == post.id));
+    oldNewsfeed = oldNewsfeed.concat(filteredPostsAfter);
+    if(filteredPostsAfter.length>0){
+      const ids = filteredPostsAfter.map(item=>item.id);
+      id = Math.min(...ids);
+    }
+    yield put(setItemValue({name:"oldNewsfeed", value:oldNewsfeed}));
+    yield put(setItemValue({name:"oldNewsfeedLastId", value:id}));
+    yield put(setItemValue({name:"oldNewsfeedLast", value:filteredPostsAfter.length === 0?true:false}));
+  } catch (error) {
+    console.log(error);
+    //yield put(validateVoucherFailed({ token }));
+  }  
+}
 export default function* rootSaga() {
   yield takeLeading(findNewsfeed,onFindNewsfeed);
-  yield takeLeading(appendNewsfeedBefore,onAppendNewsfeedBefore);
   yield takeLeading(appendNewsfeedAfter,onAppendNewsfeedAfter);
   yield takeLeading(createPost, onCreatePost);
   yield takeLeading(updatePost, onUpdatePost);
@@ -838,4 +1134,9 @@ export default function* rootSaga() {
   yield takeLeading(toggleLike, onToggleLike);
   yield takeLeading(  appendNextReplies,onAppendNextReplies);
   yield takeLeading(  hideReplies, onHideReplies );
+  yield takeLeading( readingPost, onReadingPost );
+  yield takeLeading( appendSuggestedPosts, onAppendSuggestedPosts );
+  yield takeLeading( refreshPosts, onRefreshPosts);
+  yield takeLeading( convertOldNewsfeed, onConvertOldNewsfeed);
+  yield takeLeading( appendOldNewsfeed, onAppendOldNewsfeed);
 }

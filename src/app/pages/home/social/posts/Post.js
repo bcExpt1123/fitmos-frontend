@@ -7,7 +7,7 @@ import Post from "../sections/Post";
 const PostPage = ({match}) => {
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(findPost(match.params.id));
+    dispatch(findPost({id:match.params.id,comment:0}));
   },[match.params.id]);
   const post = useSelector(({post})=>post.post);
   return <>

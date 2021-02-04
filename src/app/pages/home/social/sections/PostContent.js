@@ -1,13 +1,14 @@
 import React,{ useState } from 'react';
 import { useDispatch,useSelector } from "react-redux";
 import classnames from "classnames";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import Avatar from "../../components/Avatar";
-import {deletePost, openEditModal} from "../../redux/post/actions";
+import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions";
+import { follow, unfollow, mute } from "../../redux/notification/actions";
 import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
 
-export default function PostContent({post}) {
+export default function PostContent({post, newsfeed,modalShow}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const renderWord = (word)=>{
     const follower = post.contentFollowers.filter(customer=>word===`$${customer.id}$`);
@@ -20,8 +21,9 @@ export default function PostContent({post}) {
         <>{word}</>}
     </>
   }
+  const history = useHistory();
   const handleClick = (customer)=>()=>{
-    console.log("Clicked!"+customer.id)
+    history.push("/"+customer.username);
   }
   const renderPostLine = (line)=>{
     const regexp = /(\$[0-9]+\$)/g;
@@ -35,16 +37,22 @@ export default function PostContent({post}) {
       })
     )
   }
-  const [show, setShow] = useState(false);
-  const toggleHandle = ()=>{
-    setShow(!show);
-  }
   const dispatch = useDispatch();
   const handleDelete = (post)=>()=>{
     dispatch(deletePost(post));
   }
   const openEditPostModal = (post)=>()=>{
     dispatch(openEditModal(post));
+    if(modalShow === true)dispatch(setItemValue({name:"openEditModal",value:true}));
+  }
+  const handleFollow = ()=>{
+    dispatch(follow(post.customer_id));
+  }
+  const handleUnfollow = ()=>{
+    dispatch(unfollow(post.customer_id));
+  }
+  const handleMute = ()=>{
+    dispatch(mute(post.customer_id));
   }
   return (
     <>
@@ -70,10 +78,9 @@ export default function PostContent({post}) {
                   </>
                   :
                   <>
-                    {true?<a className={"dropdown-item"}>Hide all posts from username</a>
-                      :
-                      <a className={"dropdown-item"}>Unfollow username</a>
-                    }
+                    {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                    {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                    {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
                     <a className={"dropdown-item"}>Report Post</a>
                   </>
                 }

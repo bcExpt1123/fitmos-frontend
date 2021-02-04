@@ -51,16 +51,15 @@ const CommentView = ({comment})=>{
   // }
   const [showEdit, setShowEdit ] = useState(false);
   const handleDelete = ()=>{
-    dispatch(deleteComment({id:comment.id, post_id:comment.post_id}));
+    dispatch(deleteComment(comment));
   }
   const commentEditTextarea = useRef();
-  const [commentEditContent, setcommentEditContent] = useState(comment.content);
+  const [commentEditContent, setCommentEditContent] = useState(comment.content);
   const openEditComment = ()=>{
     setShowEdit(true);
-    setTimeout(()=>commentEditTextarea.current.focus(),20);
   }
-  const handleCommentEditChange = (evt)=>{
-    setcommentEditContent(evt.target.value);
+  const handleCommentEditChange = (text)=>{
+    setCommentEditContent(text);
   }
   const onEditFormSubmit = e => {
     e.preventDefault();
@@ -95,9 +94,6 @@ const CommentView = ({comment})=>{
             <>
               <form onSubmit={onEditFormSubmit}>
                 <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}/>
-                {/* <textarea placeholder="Edit a comment" ref={commentEditTextarea} onChange={handleCommentEditChange} value={commentEditContent} />
-                <button type="submit">Submit</button>
-                <button type="button" onClick={()=>setShowEdit(false)}>Cancel</button> */}
               </form>
             </>
             :

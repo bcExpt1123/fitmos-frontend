@@ -8,6 +8,8 @@ import {
 
 const initialState = {
   followDisabled:false,
+  muteDisabled:false,
+  blockDisabled:false,
   follows:[],
   followLastId:-1,
   notifications:[],

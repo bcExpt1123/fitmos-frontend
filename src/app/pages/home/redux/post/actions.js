@@ -17,7 +17,6 @@ export const {
   openEditModal,
   closeEditModal,
   findNewsfeed,
-  appendNewsfeedBefore,
   appendNewsfeedAfter,
   addNewsfeedBefore,
   addNewsfeedAfter,
@@ -32,6 +31,11 @@ export const {
   appendCustomerPostMediasAfter,
   addCustomerPostMediasAfter,
   syncPosts,
+  readingPost,
+  appendSuggestedPosts,
+  refreshPosts,
+  convertOldNewsfeed,
+  appendOldNewsfeed,
 } = createActions(
   "CREATE_POST",
   "UPDATE_POST",
@@ -49,7 +53,6 @@ export const {
   "OPEN_EDIT_MODAL",
   "CLOSE_EDIT_MODAL",
   "FIND_NEWSFEED",
-  "APPEND_NEWSFEED_BEFORE",
   "APPEND_NEWSFEED_AFTER",
   "ADD_NEWSFEED_BEFORE",
   "ADD_NEWSFEED_AFTER",
@@ -64,5 +67,10 @@ export const {
   "APPEND_CUSTOMER_POST_MEDIAS_AFTER",
   "ADD_CUSTOMER_POST_MEDIAS_AFTER",
   "SYNC_POSTS",
+  "READING_POST",
+  "APPEND_SUGGESTED_POSTS",
+  "REFRESH_POSTS",
+  "CONVERT_OLD_NEWSFEED",
+  "APPEND_OLD_NEWSFEED",
   { prefix: "POST" }
 );

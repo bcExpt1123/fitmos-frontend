@@ -4,7 +4,7 @@ import Post from "./Post";
 import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 
-export default function Posts({posts,last,dispatchAction, show}) {
+export default function Posts({posts,last,dispatchAction, show, newsfeed}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect(() => {
     setIsFetching(false);
@@ -35,7 +35,7 @@ export default function Posts({posts,last,dispatchAction, show}) {
         {posts.length == 0?<div className="tag-post">There is no items</div>:
           <>{
             posts.map(post=>
-              <Post post={post} key={post.id}/>
+              <Post post={post} newsfeed={newsfeed} key={post.id}/>
             )}
             {isFetching && 'Obteniendo más elementos de la lista...'}
           </>

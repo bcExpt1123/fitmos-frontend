@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import classnames from "classnames";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { Modal, Button } from "react-bootstrap";
 import { stopRunning } from "../../../redux/done/actions";
 import { logOut as logOutAction } from "../../../redux/auth/actions";
@@ -24,7 +24,9 @@ const Submenu = ({open,show,openCreatingPost} )=>{
     setShowForm(false);
   }
   const dispatch = useDispatch();
+  const history = useHistory();
   const handleLogout = ()=>{
+    history.push("/");
     dispatch(logOutAction());
     setShowForm(false);
   }

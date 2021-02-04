@@ -11,15 +11,23 @@ const RightBar = () => {
   const dispatch = useDispatch();
   const selfMedias = useSelector(({post})=>post.selfRandomMedias);
   const otherMedias = useSelector(({post})=>post.otherRandomMedias);
+  const openEditModal = useSelector(({post})=>post.openEditModal);
   useEffect(()=>{
     if(username.type === 'customer'){
         dispatch(findRandomMedias(username.id));
     }
   },[])
+  useEffect(()=>{
+    if(openEditModal)setShow(false);
+    else if(media){
+      setShow(true);
+    }
+  },[openEditModal]);
   const [show, setShow] = useState(false);
   const [media, setMedia] = useState(false);
   const onClose = ()=>{
     setShow(false);
+    setMedia(false);
     setTimeout(() => {
       console.log(show)
     }, 100);

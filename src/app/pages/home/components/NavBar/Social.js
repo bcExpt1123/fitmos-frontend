@@ -62,7 +62,6 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
     if( currentUser ) dispatch(pulling({id:currentUser.customer.id}))
     function hideDropDowns(event){
       if (!event.target.matches('.dropbtn')) {
-        console.log(event.target)
         var dropdowns = document.getElementsByClassName("dropdown-menu");
         var i;
         for (i = 0; i < dropdowns.length; i++) {

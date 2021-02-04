@@ -6,11 +6,18 @@ import {
   follow,
   unfollow,
   accept,
-  reject
+  reject,
+  block,
+  unblock,
+  mute,
+  unmute
 } from "./actions";
 import {
   setItemValue as setPeopleValue,
 } from "../people/actions";
+import {
+  refreshPosts
+} from "../post/actions";
 
 import { http } from "../../services/api";
 import { ca } from "date-fns/locale";
@@ -76,6 +83,7 @@ function* onFollow({payload}){
     const result = yield call(followRequest, payload);
     yield put(setItemValue({name:'followDisabled',value:false}));
     if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'followDisabled',value:false}));
   }
@@ -94,6 +102,7 @@ function* onUnollow({payload}){
     const result = yield call(unFollowRequest, payload);
     yield put(setItemValue({name:'followDisabled',value:false}));
     if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'followDisabled',value:false}));
   }  
@@ -130,6 +139,84 @@ function* onReject({payload}){
     
   }
 }
+const blockRequest = (customerId)=>
+  http({
+    path: "follows/block",
+    method: "POST",
+    data:{
+      customer_id:customerId
+    }
+  }).then(response => response.data);
+function* onBlock({payload}){
+  yield put(setItemValue({name:'blockDisabled',value:true}));
+  try{
+    const result = yield call(blockRequest, payload);
+    yield put(setItemValue({name:'blockDisabled',value:false}));
+    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+  }catch(error){
+    yield put(setItemValue({name:'blockDisabled',value:false}));
+  }  
+}
+const unblockRequest = (customerId)=>
+  http({
+    path: "follows/unblock",
+    method: "POST",
+    data:{
+      customer_id:customerId
+    }
+  }).then(response => response.data);
+
+function* onUnblock({payload}){
+  yield put(setItemValue({name:'blockDisabled',value:true}));
+  try{
+    const result = yield call(unblockRequest, payload);
+    yield put(setItemValue({name:'blockDisabled',value:false}));
+    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    yield put(refreshPosts());
+  }catch(error){
+    yield put(setItemValue({name:'blockDisabled',value:false}));
+  }  
+}
+const muteRequest = (customerId)=>
+  http({
+    path: "follows/mute",
+    method: "POST",
+    data:{
+      customer_id:customerId
+    }
+  }).then(response => response.data);
+
+function* onMute({payload}){
+  yield put(setItemValue({name:'muteDisabled',value:true}));
+  try{
+    const result = yield call(muteRequest, payload);
+    yield put(setItemValue({name:'muteDisabled',value:false}));
+    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    yield put(refreshPosts());
+  }catch(error){
+    yield put(setItemValue({name:'muteDisabled',value:false}));
+  }  
+}
+const unmuteRequest = (customerId)=>
+  http({
+    path: "follows/unmute",
+    method: "POST",
+    data:{
+      customer_id:customerId
+    }
+  }).then(response => response.data);
+
+function* onUnmute({payload}){
+  yield put(setItemValue({name:'muteDisabled',value:true}));
+  try{
+    const result = yield call(unmuteRequest, payload);
+    yield put(setItemValue({name:'muteDisabled',value:false}));
+    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    yield put(refreshPosts());
+  }catch(error){
+    yield put(setItemValue({name:'muteDisabled',value:false}));
+  }    
+}
 export default function* rootSaga() {
   yield takeLeading(searchNotifications,onSearchNotifications);
   yield takeLeading(findFollows,onFindFollows);
@@ -137,4 +224,8 @@ export default function* rootSaga() {
   yield takeLeading(unfollow,onUnollow);
   yield takeLeading(accept,onAccept);
   yield takeLeading(reject,onReject);
+  yield takeLeading(block,onBlock);
+  yield takeLeading(unblock,onUnblock);
+  yield takeLeading(mute,onMute);
+  yield takeLeading(unmute,onUnmute);
 }
