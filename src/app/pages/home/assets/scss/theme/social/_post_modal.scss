@@ -154,3 +154,123 @@
 .link-profile{
   color:$basic-text-color;
 }
+@media(max-width:1450px){
+  .post-modal {
+    .modal-content{
+      .modal-body{
+        .slides{
+          .sliders{
+            margin: 14vh auto auto auto;
+            width: 71vh;
+            height: 71vh;            
+            .slick-slider{
+              .slick-slide{
+                width:71vh;
+                height: 71vh;  
+                img{
+                  width: 71vh;
+                  height: 71vh;            
+                }
+              } 
+              .slick-prev{
+                margin-left: -80px;
+              }
+              .slick-next{
+                margin-right: -80px;
+              }
+            } 
+          }
+        } 
+      } 
+    } 
+  }
+}
+@media(max-width:1450px){
+  .post-modal {
+    .modal-content{
+      .modal-body{
+        .slides{
+          .sliders{
+            margin: 20vh auto auto auto;
+            width: 60vh;
+            height: 60vh;            
+            .slick-slider{
+              .slick-slide{
+                width:60vh;
+                height: 60vh;  
+                img{
+                  width: 60vh;
+                  height: 60vh;            
+                  margin-left: -57px;                  
+                }
+              } 
+              .slick-prev{
+                margin-left: -80px;
+              }
+              .slick-next{
+                margin-right: -80px;
+              }
+            } 
+          }
+        } 
+      } 
+    } 
+  }
+}
+@media(max-width:1200px){
+  .post-modal {
+    .modal-content{
+      .modal-body{
+        .slides{
+          .sliders{
+            .slick-slider{
+              .slick-slide{
+                img{
+                  margin-left: -57px;                  
+                }
+              } 
+              .slick-prev{
+                margin-left: calc(1% - 10px);
+              }
+              .slick-next{
+                margin-right: calc(3% - 10px);
+              }
+            } 
+          }
+        } 
+      } 
+    } 
+  }
+}
+@media(max-width:1000px){
+  .post-modal {
+    .modal-content{
+      .modal-body{
+        .slides{
+          .sliders{
+            margin: 30vh auto auto auto;
+            width: 40vh;
+            height: 40vh;            
+            .slick-slider{
+              .slick-slide{
+                width:40vh;
+                height: 40vh;  
+                img{
+                  width: 40vh;
+                  height: 40vh;            
+                  margin-left: -57px;                  
+                }
+              } 
+              .slick-prev{
+                margin-left: -30px;
+              }
+              .slick-next{
+                margin-right: -30px;
+              }
+            } 
+          }
+        } 
+      } 
+    } 
+  }
+}

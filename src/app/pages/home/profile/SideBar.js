@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';  
+import React,{useState,useEffect, useRef} from 'react';  
 import { useDispatch, useSelector } from "react-redux";
 import { ProgressBar } from 'react-bootstrap';
 import Avatar from "../components/Avatar";
@@ -10,6 +10,7 @@ import SectionEditWeight from "../DashboardPage/SectionEditWeight";
 import SectionChangeGoal from "../DashboardPage/SectionChangeGoal";
 import ProfileDropdown from "../social/sections/ProfileDropdown";
 import FollowButton from "../social/sections/FollowButton";
+import ReadMore from '../components/ReadMore';
 
 const SideBar = () => {  
   const file=false;
@@ -64,6 +65,14 @@ const SideBar = () => {
   const check = ()=>{
     return customer!="username" && customer.type==="customer";
   }
+  const summaryRef = useRef();
+  const getWrapperWidth= ()=>{
+    if (summaryRef) {
+      // console.log('get wrapper width', window.getComputedStyle(summaryRef.current).getPropertyValue('width'));
+    } else {
+      console.log('get wrapper - no wrapper');
+    }
+  }
   return (  
     <div id="sidebar">
       <div className="wrapper-side">
@@ -97,7 +106,17 @@ const SideBar = () => {
           <div className="profile-info">
             <div className="full-name" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
             <div className="username">@{currentUser.customer.username}</div>
-            <div className="summary">{currentUser.customer.description}</div>
+            <div className="summary" ref={summaryRef}>
+              {currentUser.customer.description&&
+                <ReadMore 
+                  text={currentUser.customer.description}
+                  numberOfLines={4}
+                  lineHeight={1.4}
+                  showLessButton={true}
+                  onContentChange={getWrapperWidth}
+                />
+              }
+            </div>
           </div>
         }
         <div className="social-info row">

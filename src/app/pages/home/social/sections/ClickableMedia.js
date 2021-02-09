@@ -4,8 +4,10 @@ import "video-react/dist/video-react.css";
 
 const ClickableMedia = ({file, setShow, setMedia}) => {
   const openPostModal = (file)=>(evt)=>{
-    setShow(true);
-    setMedia(file);
+    if(window.innerWidth>800){
+      setShow(true);
+      setMedia(file);
+    }
   }
   return (
     <div className="cursor-pointer" onClick={openPostModal(file)}>

@@ -178,7 +178,7 @@
     .full-name{
       font-size:17px;
       display: inline-block;
-      width: 120px;
+      max-width: 120px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;            
@@ -188,6 +188,9 @@
     }
     .link{
       padding: 13px 17px!important;
+      &:last-of-type{
+        padding-right: 10px!important;
+      }
       i{
         font-size: 24px;
       }

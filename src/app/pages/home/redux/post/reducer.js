@@ -22,6 +22,7 @@ const initialState = {
   newsfeedLastId:-1,
   newsfeedLast:false,
   suggested:0,
+  savingPost:false,
   old:0,
   modalPost:false,
   suggestedPosts:[],

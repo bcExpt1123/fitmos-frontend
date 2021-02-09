@@ -30,8 +30,11 @@
 @import "./_shop";
 @import "./_company";
 @import "./_product";
+@import "./_evento";
+@import "./_read_more";
 @import "./_footer_checkout.scss";
 @import "./social/index";
+@import "./explore/index";
 .fs-btn {
   border-radius: 7px;
   background: linear-gradient(90deg, #028fb4, #bfd734);
@@ -161,4 +164,7 @@ h3 {
 }
 .dropdown-menu-right{
   left:auto!important;
+}
+.font-size-14{
+  font-size: 14px;
 }

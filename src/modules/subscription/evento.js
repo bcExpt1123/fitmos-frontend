@@ -33,6 +33,7 @@ export const actionTypes = {
   EVENTO_CHANGE_SAVE_STATUS: "EVENTO_CHANGE_SAVE_STATUS",
   EVENTO_SET_ITEM_ERROR: "EVENTO_SET_ITEM_ERROR",
   EVENTO_UPLOAD_IMAGE:"EVENTO_UPLOAD_IMAGE",
+  EVENTO_TOGGLE_ATTEND:"EVENTO_TOGGLE_ATTEND",
   //for pagination
   EVENTO_INDEX_META: "EVENTO_INDEX_META",
   EVENTO_PAGE_CHANGED: "EVENTO_PAGE_CHANGED",
@@ -67,6 +68,7 @@ const initialState = {
   },
   item: null,
   updatedItem: null,
+  uploadImage:[],
   action: "",
   searchCondition: {
     search: ""
@@ -77,6 +79,7 @@ const initialState = {
   },
   isloading: false,
   subscribed:false,
+  attendDisable:false,
 };
 
 export const reducer = persistReducer(
@@ -215,6 +218,9 @@ export function $subscribeWithFacebook(){
 export function $subscribeWithGoogle(name,email){
   return { type:actionTypes.EVENTO_FRONT_SUBSCRIBE_WITH_GOOGLE};
 }
+export function $toggleAttend(id){
+  return { type:actionTypes.EVENTO_TOGGLE_ATTEND,id};
+}
 
 const eventsRequest = (meta, searchCondition) =>
   http({
@@ -321,7 +327,6 @@ const findEvent = id =>
   http({ path: `eventos/${id}` }).then(response => response.data);
 function* changeItem({ id }) {
   const evento = yield select(store => store.evento);
-  const auth = yield select(store => store.auth);
   
   yield put({ type: actionTypes.EVENTO_LOADING_REQUEST });
   if (evento.data != null) {
@@ -459,6 +464,24 @@ function* changeFrontPage({ page }) {
   yield put({ type: actionTypes.EVENTO_FRONT_INDEX_META, frontMeta: { page: page } });
   yield put({ type: actionTypes.EVENTO_FRONT_INDEX_REQUEST });
 }
+const eventToggleAttedRequest = (id)=>
+  http({ path: `eventos/${id}/toggle-attend`, method: "post" }).then(
+    response => response.data
+  );
+function* toggleAttend({id}){
+  yield put({type:actionTypes.EVENTO_SET_VALUE,name:"attendDisable",value:true});
+  const evento = yield select(({evento})=>evento.item);
+  try{
+    const result = yield call(eventToggleAttedRequest,id);
+    if(evento.id == id){
+      yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"participants",value:result.event.participants});
+      yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"participant",value:result.event.participant});
+    }
+  }catch(e){
+
+  }
+  yield put({type:actionTypes.EVENTO_SET_VALUE,name:"attendDisable",value:false});
+}
 export function* saga() {
   yield takeLeading(actionTypes.EVENTO_INDEX_REQUEST, fetchEvent);
   yield takeLeading(actionTypes.EVENTO_PAGE_CHANGED, changePage);
@@ -470,4 +493,5 @@ export function* saga() {
   yield takeLeading(actionTypes.EVENTO_NEW_ITEM_FETCH,newItemFetch);
   yield takeLeading(actionTypes.EVENTO_FRONT_INDEX_REQUEST, fetchFrontEvent);
   yield takeLeading(actionTypes.EVENTO_FRONT_PAGE_CHANGED, changeFrontPage);
+  yield takeLeading(actionTypes.EVENTO_TOGGLE_ATTEND,toggleAttend);
 }

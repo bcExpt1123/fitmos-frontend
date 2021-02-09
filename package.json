@@ -60,6 +60,7 @@
     "classnames": "^2.2.6",
     "clipboard-copy": "^3.1.0",
     "clsx": "^1.1.0",
+    "connectycube": "^3.7.8",
     "cp-cli": "^2.0.0",
     "css-mediaquery": "^0.1.2",
     "date-fns": "^2.9.0",

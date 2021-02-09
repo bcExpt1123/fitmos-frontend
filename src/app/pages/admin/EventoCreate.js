@@ -6,7 +6,7 @@ import { Button, Paper, InputLabel, MenuItem, FormControl, TextField, Select, Gr
 import CKEditor from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import { compose, withStateHandlers } from "recompose";
+import { compose } from "recompose";
 import { InfoWindow, withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
 import {
   $setNewItem,
@@ -43,7 +43,7 @@ const Map = compose(
 
       </GoogleMap>
   )
-function Main({history}) {
+function Main({match,history}) {
   const classes = useStyles();
   const evento = useSelector(({ evento }) => evento);
   const dispatch=useDispatch();
@@ -51,6 +51,7 @@ function Main({history}) {
   const errors = evento.errors;
   const isloading = evento.loading;
   const [files, setFiles] = useState([]);
+  const [firstLoading, setFirstLoading] = useState(false);
   const handleOnSubmit = e => {
     e.preventDefault();
     if(item.latitude === null){
@@ -98,11 +99,23 @@ function Main({history}) {
     }    
   }
   const deleteMedia = (deleteFile)=>{
-    setFiles(files.filter(file=>deleteFile.id !==file.id));
+    const deletedFiles = files.filter(file=>deleteFile.id !==file.id);
+    setFiles(deletedFiles);
+    dispatch($updateItemImage(deletedFiles));
   }
   useEffect(()=>{
-    if(evento.item && evento.item.images){
-      setFiles(evento.item.images);
+    if(!firstLoading && evento.item){
+      if(evento.item.id ){
+        if(evento.item.id == match.params.id ){
+          setFiles(evento.item.images);
+          dispatch($updateItemImage(evento.item.images));
+          setFirstLoading(true);
+        }
+      }else{
+        setFiles([]);
+        dispatch($updateItemImage([]));
+        setFirstLoading(true);
+      }
     }
   },[evento.item]);// eslint-disable-line react-hooks/exhaustive-deps  
   return (

@@ -170,6 +170,33 @@
     }
   }
 }
+@media (min-width: 1300px){
+  .wrapper{
+    &.one-column{
+      .container{
+        max-width: 1300px;   
+      }
+    }
+  }
+}
+@media (min-width: 1400px){
+  .wrapper{
+    &.one-column{
+      .container{
+        max-width: 1400px;   
+      }
+    }
+  }
+}
+@media (min-width: 1600px){
+  .wrapper{
+    &.one-column{
+      .container{
+        max-width: 1600px;   
+      }
+    }
+  }
+}
 @media (max-width: 1200px) {
   .wrapper {
 		&.three-column{
@@ -212,6 +239,9 @@
       .responsive-menu{
         display:block;
       }    
+    }
+    #rightbar{
+      display: none;
     }
   }
 }

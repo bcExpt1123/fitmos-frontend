@@ -1,15 +1,14 @@
 import React from "react";
 import MetaTags from "react-meta-tags";
-import { useSelector } from "react-redux";
 import { matchPath } from "react-router-dom";
-
+import Evento from "./Item";
 
 const EventPage = () => {
   const match = matchPath(window.location.pathname, {
     path:'/eventos/:id',
     exact:true,
     strict:true
-  });    
+  }); 
   return(
     <>
       <MetaTags>
@@ -19,7 +18,9 @@ const EventPage = () => {
           content="Event -Fitemos"
         />
       </MetaTags>
-      Event
+      <div >
+        {match&&<Evento id={match.params.id} />}
+      </div>
     </>
 )};
 

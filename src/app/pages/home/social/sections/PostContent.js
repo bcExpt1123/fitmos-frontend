@@ -54,6 +54,13 @@ export default function PostContent({post, newsfeed,modalShow}) {
   const handleMute = ()=>{
     dispatch(mute(post.customer_id));
   }
+  const SHOW_LESS_TEXT = 'Show Less';
+  const SHOW_MORE_TEXT = 'Read More';
+  const [showMore, setShowMore] = useState(false);
+  const toggleReadMore = ()=>{
+    setShowMore(!showMore);
+  }
+  
   return (
     <>
       <div className="post-header">
@@ -112,11 +119,51 @@ export default function PostContent({post, newsfeed,modalShow}) {
         </span>
       </div>
       <div className="post-body">
-        {post.json_content && post.json_content.map((line,index)=>
-          <div key={index}>{
-            renderPostLine(line)
+        {post.json_content && <>
+          {post.json_content.length>5?
+          <>
+            {showMore?<>
+              {post.json_content.map((line, index)=>
+                (index<post.json_content.length-1)?
+                  <div key={index}>{renderPostLine(line)}</div>
+                  :
+                  <div key={index}>{renderPostLine(line)}
+                    <button 
+                      onClick={toggleReadMore}
+                      className="read-more__button"
+                    >
+                      {SHOW_LESS_TEXT}
+                    </button>              
+                  </div>
+              )}
+            </>:<>
+              <div>{renderPostLine(post.json_content[0])}</div>
+              <div>{renderPostLine(post.json_content[1])}</div>
+              <div>{renderPostLine(post.json_content[2])}</div>
+              <div>{renderPostLine(post.json_content[3])}</div>
+              <div>{renderPostLine(post.json_content[4])}<span>…</span>
+                <button 
+                  onClick={toggleReadMore}
+                  className="read-more__button"
+                >
+                  {SHOW_MORE_TEXT}
+                </button>          
+              </div>
+            </>            
             }
-          </div>)}
+          </>
+          :
+          <>
+            {post.json_content.map((line,index)=>
+              <div key={index}>{
+                renderPostLine(line)
+                }
+              </div>)
+            }          
+          </>
+          }
+          </>
+        }
       </div>
     </>
   );

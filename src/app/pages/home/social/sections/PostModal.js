@@ -50,6 +50,7 @@ const PostModal = ({show, media, onClose }) => {
   const handleLike = e=>{
     if(post.customer_id != currentUser.customer.id ){
       dispatch(toggleLike(post));
+      history.push(window.location.pathname);
     }
   }
   useEffect(()=>{

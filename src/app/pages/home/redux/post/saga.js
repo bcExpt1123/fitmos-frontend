@@ -108,10 +108,13 @@ const createPostRequest = ({files, location, tagFollowers, content})=>{
   }).then(response => response.data);
 }
 function* onCreatePost({payload}){
+  yield put(setItemValue({name:"savingPost",value:true}));
   try{
     const result = yield call(createPostRequest, payload);
+    yield put(setItemValue({name:"savingPost",value:false}));
   }catch (error) {
     console.log(error);
+    yield put(setItemValue({name:"savingPost",value:false}));
     //yield put(validateVoucherFailed({ token }));
   } 
 }
@@ -136,10 +139,13 @@ const updatePostRequest = ({files, location, tagFollowers, content,id})=>{
   }).then(response => response.data);
 }
 function* onUpdatePost({payload}){
+  yield put(setItemValue({name:"savingPost",value:true}));
   try{
     const result = yield call(updatePostRequest, payload);
+    yield put(setItemValue({name:"savingPost",value:false}));
   }catch (error) {
     console.log(error);
+    yield put(setItemValue({name:"savingPost",value:false}));
     //yield put(validateVoucherFailed({ token }));
   } 
 }
@@ -296,11 +302,17 @@ function* updatePosts(posts, type, oldPostId,oldPost, oldComment, result, isModa
         yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
       }
     }else{
-      if(type=="newsfeed"){
-        yield put(setItemValue({name:"newsfeed", value:newPosts}));
-      }else{
-        yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
-      }      
+      switch(type){
+        case "newsfeed":
+          yield put(setItemValue({name:"newsfeed", value:newPosts}));
+          break;
+        case "suggestedPosts":
+          yield put(setItemValue({name:"suggestedPosts", value:newPosts}));
+          break;
+        case "oldNewsfeed":
+          yield put(setItemValue({name:"oldNewsfeed", value:newPosts}));
+          break;
+      }
     }
   }  
 }
@@ -452,6 +464,13 @@ function* getPosts(postId){
       if(item){
         type = "suggestedPosts";
         posts = [...suggestedPosts];
+      }else{
+        const oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+        item = oldNewsfeed.find(item=>item.id == postId);
+        if(item){
+          type = "oldNewsfeed";
+          posts = [...oldNewsfeed];
+        }        
       }      
     }
   }
@@ -461,6 +480,55 @@ function* getPosts(postId){
     if(postId == post.id)isModalPost = true;
   }
   return [posts, type,item, isModalPost];
+}
+function* getPostsByActivity(activitytId){
+  let names=[];
+  let item;
+  let level="post";// or comment or reply
+  let isModalPost;
+  const customerPosts = yield select(({post})=>post.customerPosts);
+  if(customerPosts)item = customerPosts.find(item=>item.id == activitytId);
+  if(item){
+    names.push("customerPosts");
+  }
+  const newsfeed = yield select(({post})=>post.newsfeed);
+  if(newsfeed)item = newsfeed.find(item=>{
+    const comment = item.comments.find(comment=>{
+      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+      if(repley) return true;
+      return comment.activity_id == activitytId
+    });
+    if(comment) return true;
+    return item.activity_id == activitytId;
+  });
+  if(item){
+    names.push("newsfeed");
+  }
+  const suggestedPosts = yield select(({post})=>post.suggestedPosts);
+  if(suggestedPosts)item = suggestedPosts.find(item=>item.activity_id == activitytId);
+  if(item){
+    names.push("suggestedPosts");
+  }
+  const oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+  if(oldNewsfeed)item = oldNewsfeed.find(item=>{
+    const comment = item.comments.find(comment=>{
+      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+      if(repley) return true;
+      return comment.activity_id == activitytId
+    });
+    if(comment) return true;
+    return item.activity_id == activitytId;
+  });
+  if(item){
+    names.push("oldNewsfeed");
+  }        
+  const modalPost = yield select(({post})=>post.modalPost);
+  if(modalPost){
+    const post = yield select(({post})=>post.post);
+    names.push("post");
+    if(post.activity_id == activitytId)isModalPost = true;
+  }
+  return [names,item, isModalPost];
 }
 const changeAppendComments = (oldPost,oldComment,result)=>(item)=>{
   if(item.id == result.post.id){
@@ -908,12 +976,13 @@ const syncRequest = (ids)=>
   }).then(response => response.data);
 function* onSyncPosts({payload}){
   let postData;
-  let newsfeed,suggestedPosts, customerPosts, newPosts;
+  let newsfeed,suggestedPosts, customerPosts, newPosts, oldNewsfeed;
   if(Array.isArray(payload)){
     newsfeed = yield select(({post})=>post.newsfeed);
     customerPosts = yield select(({post})=>post.customerPosts);
     suggestedPosts = yield select(({post})=>post.suggestedPosts);
-    const posts = [...newsfeed, ...customerPosts,...suggestedPosts];
+    oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+    const posts = [...newsfeed, ...customerPosts,...suggestedPosts,...oldNewsfeed];
     const filtedPosts = posts.filter(post=>payload.some(id=>id==post.id));
     postData = filtedPosts.map(post=>{
       const [fromId, toId] = getCommentRange(post);
@@ -937,6 +1006,9 @@ function* onSyncPosts({payload}){
     customerPosts = yield select(({post})=>post.customerPosts);
     newPosts = customerPosts.map(changePost(result.posts));
     yield put(setItemValue({name:"customerPosts", value:newPosts}));
+    oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+    newPosts = customerPosts.map(changePost(result.posts));
+    yield put(setItemValue({name:"oldNewsfeed", value:newPosts}));
   }catch(e){
     console.log(e)
   }
@@ -954,17 +1026,95 @@ const unlikeRequest = (activity_id)=>
     path: "likes/"+activity_id,
     method: "DELETE",
   }).then(response => response.data);
+const postUnlike = (post,activityId)=>{
+  if(post.activity_id == activityId) {
+    post.like=false;
+    post.likesCount = post.likesCount - 1;
+  }else{
+    post.comments = post.comments.map(comment=>{
+      if(comment.activity_id == activityId){
+        comment.like=false;
+        comment.likeCount = comment.likeCount - 1;
+      }else{
+        comment.children = comment.children.map(reply=>{
+          if(reply.activity_id == activityId){
+            reply.like=false;
+            reply.likeCount = reply.likeCount - 1;
+          }
+          return reply;
+        })
+      }
+      return comment;
+    })
+  }
+  return post;
+}
+const postLike = (post,activityId)=>{
+  if(post.activity_id == activityId) {
+    post.like=true;
+    post.likesCount = post.likesCount + 1;
+  }else{
+    post.comments = post.comments.map(comment=>{
+      if(comment.activity_id == activityId){
+        comment.like=true;
+        comment.likeCount = comment.likeCount + 1;
+      }else{
+        comment.children = comment.children.map(reply=>{
+          if(reply.activity_id == activityId){
+            reply.like=true;
+            reply.likeCount = reply.likeCount + 1;
+          }
+          return reply;
+        })
+      }
+      return comment;
+    })
+  }
+  return post;
+}
 
 function* onToggleLike({payload}){
+  const [names,post, isModalPost] = yield call(getPostsByActivity,payload.activity_id);
+  // console.log(names,post);
+  const store = yield select(({post})=>post);
   try{
     let result;
+    let i;
     if(payload.like){
       result = yield call(unlikeRequest, payload.activity_id);
+      for(i=0;i<names.length;i++){
+        const name = names[i];
+        const data = store[name];
+        let newData;
+        if(Array.isArray(data)){
+          newData = data.map(post=>{
+            post = postUnlike(post, payload.activity_id);
+            return post;
+          });
+        }else{
+          newData = postUnlike(data, payload.activity_id);
+        }
+        yield put(setItemValue({name,value:newData}))
+      }
     }else{
       result = yield call(likeRequest, payload.activity_id);
+      for(i=0;i<names.length;i++){
+        const name = names[i];
+        const data = store[name];
+        let newData;
+        if(Array.isArray(data)){
+          newData = data.map(post=>{
+            post = postLike(post, payload.activity_id);
+            return post;
+          });
+        }else{
+          newData = postLike(data, payload.activity_id);
+        }
+        yield put(setItemValue({name,value:newData}))
+      }
     }
   }catch(e){
-
+    console.log(e)
   }
 }
 const onReadingRequest = (id)=>

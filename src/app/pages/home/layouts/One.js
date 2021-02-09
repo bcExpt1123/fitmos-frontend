@@ -13,7 +13,7 @@ const OneColumn = ({children}) => {
         <NavBarSocial />:
         <NavBar />
       }
-      <div className="wrapper">
+      <div className="wrapper one-column">
         <div id="content">
           <div className="page-main">
             <div className="container">

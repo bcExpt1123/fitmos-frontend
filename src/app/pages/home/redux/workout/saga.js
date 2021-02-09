@@ -45,7 +45,9 @@ function* onPulling({payload:{id}}){
       const customerPostIds = customerPosts.map(item=>item.id);
       const suggestedPosts = yield select(({post})=>post.suggestedPosts);
       const suggestedPostIds = suggestedPosts.map(item=>item.id);
-      const ids = [...newsfeedPostIds, ...customerPostIds,...suggestedPostIds];
+      const oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+      const oldNewsfeedIds = oldNewsfeed.map(item=>item.id);
+      const ids = [...newsfeedPostIds, ...customerPostIds,...suggestedPostIds,...oldNewsfeedIds];
       const data = {ids};
       const response = yield call(() => fetch(process.env.REACT_APP_PULL_API_URL+id,{
         method:"POST",
@@ -58,7 +60,7 @@ function* onPulling({payload:{id}}){
       const pull = yield call(()=>response.json());
       if( pull.customer ){
         const customer = yield select(({auth}) => auth.currentUser.customer);
-        const d = new Date(customer.updated_at);
+        const d = new Date(customer.updated_at+" GMT-0500");
         console.log(d.getTime(), pull.customer)
         if(pull.customer !=d.getTime()){
           yield put(findUserDetails());
@@ -86,9 +88,9 @@ function* onPulling({payload:{id}}){
         yield put(findFollows(pull.follow));
       }
       if( pull.posts && pull.posts.length>0){
-        const mergedPosts = [...newsfeed, ...customerPosts,...suggestedPosts];
+        const mergedPosts = [...newsfeed, ...customerPosts,...suggestedPosts, oldNewsfeed];
         const diffPosts = mergedPosts.filter(postItem=>pull.posts.some(post=>{
-            const d = new Date(postItem.updated_at);
+            const d = new Date(postItem.updated_at +" GMT-0500");
             return postItem.id == post.id && d.getTime()!=post.updated_at
           }));
         if(diffPosts.length>0){

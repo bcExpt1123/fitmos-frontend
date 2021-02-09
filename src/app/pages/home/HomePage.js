@@ -44,7 +44,7 @@ import SearchCompaniesPage from "./SearchCompanies";
 import SearchPostsPage from "./SearchPosts";
 import SocialPostPage from "./social/posts/Post";
 import Events from "./ExplorePage/Events";
-import Event from "./ExplorePage/Events";
+import Event from "./ExplorePage/Event";
 import UsernamePage from "./Username";
 import { LayoutSplashScreen } from "../../../_metronic";
 

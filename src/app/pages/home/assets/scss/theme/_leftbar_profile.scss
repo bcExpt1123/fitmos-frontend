@@ -20,6 +20,12 @@
   .summary{
     margin-top: 10px;
     font-size: 13px;
+    display: block;
+    height: 100px;
+    overflow: auto;    
+    div{
+      display: block;
+    }
   }
   div{
     display: flex;

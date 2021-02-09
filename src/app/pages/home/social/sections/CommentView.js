@@ -135,7 +135,7 @@ const CommentView = ({comment})=>{
               )}    
             </DropDown>
           :  
-            <span><i className={classnames("far fa-heart",{like:false})} onClick={handleLike}/></span>
+            <span><i className={classnames("far fa-heart cursor-pointer",{like:comment.like})} onClick={handleLike}/></span>
         }
       </div>
     </>    
