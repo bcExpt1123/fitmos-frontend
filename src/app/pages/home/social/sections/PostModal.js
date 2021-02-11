@@ -157,7 +157,7 @@ const PostModal = ({show, media, onClose }) => {
                 )}
               </div>
               <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
-                  <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true}/>
+                  <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
               </form>
             </div>
           </>

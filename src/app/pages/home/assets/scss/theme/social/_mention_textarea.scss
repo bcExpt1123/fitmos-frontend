@@ -1,13 +1,23 @@
 .comment-input-container{
-  border: 1px solid #ebebeb;
-  border-radius: 6px;
+  border-top: 1px solid #ebebeb;
   .mentions{
     margin: 1em 0;
   }  
-  .mentions__input{
-    padding: 0 0.5rem;
-    outline: 0;
-    border: 0;
+  .mentions--multiLine{
+    .mentions__control{
+      
+    }
+    .mentions__highlighter {
+      padding: 0 0.5rem;
+      .css-8-0-2-49{
+        background-color: rgb(206, 228, 229);
+      }
+    }
+    .mentions__input{
+      padding: 0 0.5rem;
+      outline: 0;
+      border: 0;
+    }  
   }
   .emoji__button {
     position: absolute;

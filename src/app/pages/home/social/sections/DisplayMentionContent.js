@@ -1,13 +1,9 @@
 import React,{useState, useEffect} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import classnames from "classnames";
-import Avatar from "../../components/Avatar";
 import Line from "./DisplayMentionLine";
 
 const SHOW_LESS_TEXT = 'Show Less';
 const SHOW_MORE_TEXT = 'Read More';
 const DisplayMentionContent = ({content})=>{
-  const currentUser = useSelector(({ auth }) => auth.currentUser);
   const [lines, setLines] = useState([]);
   const [show, setShow] = useState(false);
   useEffect(()=>{

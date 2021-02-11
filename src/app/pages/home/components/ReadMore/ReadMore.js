@@ -56,7 +56,7 @@ export default class ReadMore extends Component {
     let {
       teaserText,
       remainingText
-     } = this._getReadMoreParts({text, numberOfLines, readMoreCharacterLimit});
+    } = this._getReadMoreParts({text, numberOfLines, readMoreCharacterLimit});
 
     if (!showingAll && text.length > readMoreCharacterLimit) {
       return (
@@ -79,11 +79,15 @@ export default class ReadMore extends Component {
     );
   }
 
-  getActionButton = ({showingAll, showLessButton}) => {
+  getActionButton = ({showingAll, showLessButton, text, readMoreCharacterLimit, numberOfLines}) => {
     if (showingAll && !showLessButton) {
       return
     }
-
+    let {
+      teaserText,
+      remainingText
+    } = this._getReadMoreParts({text, numberOfLines, readMoreCharacterLimit});
+    if(!remainingText) return
     let buttonText = showingAll ? SHOW_LESS_TEXT : SHOW_MORE_TEXT;
 
     return (
@@ -106,7 +110,6 @@ export default class ReadMore extends Component {
       lineHeight
     } = this.props;
 
-    console.log(numberOfLines, lineHeight, numberOfLines * lineHeight);
     let maxHeight = numberOfLines * lineHeight;
     let style = {
       lineHeight,
@@ -114,7 +117,7 @@ export default class ReadMore extends Component {
     }
     let {showingAll} = this.state;
     let textToDisplay = this.getText({showingAll, text, readMoreCharacterLimit, numberOfLines});
-    let actionButton = this.getActionButton({showingAll, showLessButton});
+    let actionButton = this.getActionButton({showingAll, showLessButton, text, readMoreCharacterLimit, numberOfLines});
 
     return (
       <div className="read-more" style={style}>

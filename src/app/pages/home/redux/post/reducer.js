@@ -103,7 +103,7 @@ const reducer = persistReducer(
       },
       [addCustomerPostsAfter]:(state, actions) =>{
         let clonedCustomerPostsAfter = [...state.customerPosts];
-        const filteredPostsAfter = actions.payload.filter((post)=>!clonedCustomerPostsAfter.some(item=>item.id == post.id));
+        const filteredPostsAfter = actions.payload?actions.payload.filter((post)=>!clonedCustomerPostsAfter.some(item=>item.id == post.id)):[];
         clonedCustomerPostsAfter = clonedCustomerPostsAfter.concat(filteredPostsAfter);
         let minId = state.customerPostsLastId;
         if(filteredPostsAfter.length>0){
@@ -119,14 +119,14 @@ const reducer = persistReducer(
       },
       [setCustomerPosts]:(state, actions) =>{
         let mId = state.customerPostsLastId;
-        if(actions.payload.length>0){
+        if(actions.payload&&actions.payload.length>0){
           const ids = actions.payload.map(item=>item.id);
           mId = Math.min(...ids);
           console.log(mId)
         }
         return {
           ...state,
-          customerPosts:actions.payload,
+          customerPosts:actions.payload?actions.payload:[],
           customerPostsLastId:mId,
           customerPostsLast:false,
         }

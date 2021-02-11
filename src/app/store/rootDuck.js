@@ -26,6 +26,7 @@ import * as survey from "../../modules/subscription/survey";
 import * as company from "../../modules/subscription/company";
 import * as product from "../../modules/subscription/product";
 import * as evento from "../../modules/subscription/evento";
+import * as report from "../../modules/subscription/report";
 import { metronic } from "../../_metronic";
 import alertReducer from "../pages/home/redux/alert/reducer";
 import authReducer from "../pages/home/redux/auth/reducer";
@@ -121,6 +122,7 @@ export const rootReducer = combineReducers({
   survey: survey.reducer,
   company: company.reducer,
   product: product.reducer,
+  report: report.reducer,
   people:peopleReducer,
   post:postReducer,
   notification:notificationReducer,
@@ -170,5 +172,6 @@ export function* rootSaga() {
     survey.saga(),
     company.saga(),
     product.saga(),
+    report.saga(),
   ]);
 }

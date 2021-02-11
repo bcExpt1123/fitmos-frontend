@@ -173,5 +173,7 @@
   "SubscriptionForm.Error.Name.required":"necesario",
   "BlogPage.Button.Facebook":"Accede con Facebook",
   "BlogPage.Button.Google":"Accede con Google",
-  "Subscription.Renewal.Success":"Frecuencia de suscripción actualizada."
+  "Subscription.Renewal.Success":"Frecuencia de suscripción actualizada.",
+  "Social.Report.Success":"Su informe enviado con éxito",
+  "Social.Report.Failed":"Tu informe falló"
 }

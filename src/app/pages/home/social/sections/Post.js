@@ -52,7 +52,6 @@ export default function Post({post, newsfeed}) {
   },[]);
   /** comment */
   const [commentContent, setCommentContent] = useState("");
-  const commentTextarea = useRef();
   const handleCommentChange = (content)=>{
     setCommentContent(content);
   }
@@ -164,8 +163,8 @@ export default function Post({post, newsfeed}) {
           </div>
           <div className="post-footer">
             <div className="likes">
-              <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
-              <span><i className="far fa-comment" /> {post.commentsCount}</span>
+              <span><i className={classnames(" fa-heart cursor-pointer",{like:post.like,fas:post.like,far:post.like==false} )}  onClick={handleLike}/>&nbsp;&nbsp;&nbsp;{post.likesCount}</span>
+              <span><i className="far fa-comment" />&nbsp;&nbsp;&nbsp;{post.commentsCount}</span>
             </div>
             <div className="share">
               <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
@@ -201,7 +200,7 @@ export default function Post({post, newsfeed}) {
               <div className="cursor-pointer append" onClick={handleNextComments}> Show next comments</div>
             }
             <form onSubmit={onCommentFormSubmit}>
-              <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true}/>
+              <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
             </form>
           </div>
         </div>

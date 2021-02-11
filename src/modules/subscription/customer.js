@@ -92,18 +92,6 @@ export const reducer = persistReducer(
   }
 );
 
-export const actions = {
-  fetchIndexRequest: () => ({ type: actionTypes.CUSTOMER_INDEX_REQUEST }),
-
-  fetchIndexSuccess: payload => ({
-    payload,
-    type: actionTypes.CUSTOMER_INDEX_SUCCESS
-  }),
-
-  fetchIndexFailure: () => ({
-    type: actionTypes.CUSTOMER_INDEX_FAILURE
-  })
-};
 export const $fetchIndex = () => ({ type: actionTypes.CUSTOMER_INDEX_REQUEST });
 // ACTIONS CREATORS
 export function $pageSize(pageSize = INDEX_PAGE_SIZE_DEFAULT) {

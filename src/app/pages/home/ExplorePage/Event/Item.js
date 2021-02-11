@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Tab, Tabs } from 'react-bootstrap';
 import { Markup } from "interweave";
 import Slider from "react-slick";
 import { compose } from "recompose";
-import { InfoWindow, withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
-import { $changeItem, $toggleAttend } from "../../../../../modules/subscription/evento";
+import { withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
+import classnames from "classnames";
+import CommentView from "./CommentView";
+import MentionTextarea from "../../social/sections/MentionTextarea";
+import { $changeItem, $toggleAttend, $createComment, $appendNextReplies, $hideReplies } from "../../../../../modules/subscription/evento";
 
 const Map = compose(
   withScriptjs,
@@ -45,6 +48,22 @@ const EventPage = ({id}) => {
   }
   const handleUnattend = ()=>{
     dispatch($toggleAttend(event.id));
+  }
+  /** comment */
+  const [commentContent, setCommentContent] = useState("");
+  const handleCommentChange = (content)=>{
+    setCommentContent(content);
+  }
+  const onCommentFormSubmit= e => {
+    e.preventDefault();
+    dispatch($createComment(event.id,commentContent))
+    setCommentContent("");
+  }
+  const handleNextReplies = (comment)=>()=>{
+    dispatch($appendNextReplies(comment));
+  }
+  const handleHideReplies = (comment)=>()=>{
+    dispatch($hideReplies(comment));
   }
   return (
     event?
@@ -96,12 +115,32 @@ const EventPage = ({id}) => {
             </div>
           </>                                                                                     
         </Tab>
-        <Tab eventKey="comments" title="Comentarios (29)">
+        <Tab eventKey="comments" title={`Comentarios (${event.commentsCount})`}>
           {event.comments&&event.comments.map( (comment,index)=>(
-            <div key={comment.id}>
-              {comment.content}
-            </div>
-          ))}
+            <React.Fragment  key={comment.id}>
+              <div className={classnames("comment-view")}>
+                <CommentView comment={comment}/>
+              </div>
+              {(comment.children.length>0) && 
+                <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
+              }
+              <div className={"comment-replies"}>
+                {
+                  comment.children.map((reply)=>
+                    <div className={classnames("comment-view reply")}  key={reply.id}>
+                      <CommentView comment={reply}/>
+                    </div>
+                  )
+                }
+              </div>
+              {(comment.nextChildrenCount>0) && 
+                <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
+              }
+            </React.Fragment>
+        ))}
+          <form onSubmit={onCommentFormSubmit}>
+            <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+          </form>
         </Tab>
       </Tabs>
     </div>

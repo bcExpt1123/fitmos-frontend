@@ -7,6 +7,7 @@ import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions"
 import { follow, unfollow, mute } from "../../redux/notification/actions";
 import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
+import ReportModal from "./ReportModal";
 
 export default function PostContent({post, newsfeed,modalShow}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -40,19 +41,24 @@ export default function PostContent({post, newsfeed,modalShow}) {
   const dispatch = useDispatch();
   const handleDelete = (post)=>()=>{
     dispatch(deletePost(post));
+    setRefresh(refresh + 1);
   }
   const openEditPostModal = (post)=>()=>{
     dispatch(openEditModal(post));
     if(modalShow === true)dispatch(setItemValue({name:"openEditModal",value:true}));
+    setRefresh(refresh + 1);
   }
   const handleFollow = ()=>{
     dispatch(follow(post.customer_id));
+    setRefresh(refresh + 1);
   }
   const handleUnfollow = ()=>{
     dispatch(unfollow(post.customer_id));
+    setRefresh(refresh + 1);
   }
   const handleMute = ()=>{
     dispatch(mute(post.customer_id));
+    setRefresh(refresh + 1);
   }
   const SHOW_LESS_TEXT = 'Show Less';
   const SHOW_MORE_TEXT = 'Read More';
@@ -60,7 +66,15 @@ export default function PostContent({post, newsfeed,modalShow}) {
   const toggleReadMore = ()=>{
     setShowMore(!showMore);
   }
-  
+  const [refresh, setRefresh] = useState(false);
+  const handleReport=()=>{
+    setRefresh(refresh + 1);
+    setShowReportModal(true);
+  }  
+  const [showReportModal, setShowReportModal] = useState(false);
+  const onReportModalClose = ()=>{
+    setShowReportModal(false);
+  }
   return (
     <>
       <div className="post-header">
@@ -70,7 +84,7 @@ export default function PostContent({post, newsfeed,modalShow}) {
         >
           <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
         </NavLink>        
-        <DropDown>
+        <DropDown refresh={refresh}>
           {({show,toggleHandle})=>(
             <div className=" dropdown">
               <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
@@ -88,13 +102,14 @@ export default function PostContent({post, newsfeed,modalShow}) {
                     {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
                     {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
                     {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                    <a className={"dropdown-item"}>Report Post</a>
+                    <a className={"dropdown-item"} onClick={handleReport}>Report Post</a>
                   </>
                 }
               </div>
             </div>    
           )}
         </DropDown>
+        <ReportModal type={"post"} post={post} show={showReportModal} onClose={onReportModalClose}/>
         <span>
           <span className="full-name">
             <NavLink

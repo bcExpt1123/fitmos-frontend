@@ -49,5 +49,20 @@ const colonsToUnicode = text => {
   }
   return newText;
 };
-
-export {once, colonsToUnicode};
+const convertTime = (timeString)=>{
+  const now = new Date();
+  const other = new Date(timeString+" GMT-5");
+  const diffTime = (now.getTime() - other.getTime())/1000;
+  if(diffTime<60){
+    return "1m";
+  }else if(diffTime<3600){
+    return Math.round(diffTime/60)+"m";
+  }else if(diffTime<3600*24){
+    return Math.round(diffTime/3600)+"h";
+  }else if(diffTime<3600*24*30){
+    return Math.round(diffTime/3600/24)+"d";
+  }else{
+    return timeString;
+  }
+}
+export {once, colonsToUnicode, convertTime};

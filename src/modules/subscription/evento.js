@@ -14,7 +14,6 @@ import {
 } from "../constants/constants";
 import { serializeQuery } from "../../app/components/utils/utils";
 import { logOut } from "../../app/pages/home/redux/auth/actions";
-import { addAlertMessage } from "../../app/pages/home/redux/alert/actions";
 
 export const actionTypes = {
   EVENTO_INDEX_REQUEST: "EVENTO_INDEX_REQUEST",
@@ -43,9 +42,13 @@ export const actionTypes = {
   EVENTO_FRONT_INDEX_SUCCESS:"EVENTO_FRONT_INDEX_SUCCESS",
   EVENTO_FRONT_INDEX_META: "EVENTO_FRONT_INDEX_META",
   EVENTO_FRONT_PAGE_CHANGED: "EVENTO_FRONT_PAGE_CHANGED",
-  EVENTO_FRONT_SUBSCRIBED: "EVENTO_FRONT_SUBSCRIBED",
-  EVENTO_FRONT_SUBSCRIBE_WITH_FACEBOOK: "EVENTO_FRONT_SUBSCRIBE_WITH_FACEBOOK",
-  EVENTO_FRONT_SUBSCRIBE_WITH_GOOGLE: "EVENTO_FRONT_SUBSCRIBE_WITH_GOOGLE",
+  //for comment
+  EVENTO_CREATE_COMMENT: "EVENTO_CREATE_COMMENT",
+  EVENTO_DELETE_COMMENT: "EVENTO_DELETE_COMMENT",
+  EVENTO_UPDATE_COMMENT: "EVENTO_UPDATE_COMMENT",
+  EVENTO_APPEND_NEXT_REPLIES: "EVENTO_APPEND_NEXT_REPLIES",
+  EVENTO_HIDE_REPLIES: "EVENTO_HIDE_REPLIES",
+  EVENTO_CREATE_REPLY: "EVENTO_CREATE_REPLY",
 };
 
 export const selectors = {};
@@ -149,18 +152,6 @@ export const reducer = persistReducer(
   }
 );
 
-export const actions = {
-  fetchIndexRequest: () => ({ type: actionTypes.EVENTO_INDEX_REQUEST }),
-
-  fetchIndexSuccess: payload => ({
-    payload,
-    type: actionTypes.EVENTO_INDEX_SUCCESS
-  }),
-
-  fetchIndexFailure: () => ({
-    type: actionTypes.EVENTO_INDEX_FAILURE
-  })
-};
 export const $fetchIndex = () => ({ type: actionTypes.EVENTO_INDEX_REQUEST });
 // ACTIONS CREATORS
 export function $pageSize(pageSize = INDEX_PAGE_SIZE_DEFAULT) {
@@ -209,19 +200,27 @@ export const $fetchFrontIndex = () => ({ type: actionTypes.EVENTO_FRONT_INDEX_RE
 export function $frontPage(page = 1) {
   return { type: actionTypes.EVENTO_FRONT_PAGE_CHANGED, page: page };
 }
-export function $subscribe(name,email){
-  return { type:actionTypes.EVENTO_FRONT_SUBSCRIBED, payload:{name, email}};
-}
-export function $subscribeWithFacebook(){
-  return { type:actionTypes.EVENTO_FRONT_SUBSCRIBE_WITH_FACEBOOK};
-}
-export function $subscribeWithGoogle(name,email){
-  return { type:actionTypes.EVENTO_FRONT_SUBSCRIBE_WITH_GOOGLE};
-}
 export function $toggleAttend(id){
   return { type:actionTypes.EVENTO_TOGGLE_ATTEND,id};
 }
-
+export function $createComment(eventoId,content){
+  return { type:actionTypes.EVENTO_CREATE_COMMENT,eventoId,content};
+} 
+export function $appendNextReplies(comment){
+  return { type:actionTypes.EVENTO_APPEND_NEXT_REPLIES, comment}
+} 
+export function $hideReplies(comment){
+  return { type:actionTypes.EVENTO_HIDE_REPLIES, comment}
+}
+export function $createReply(evento_id,content,parent_id){
+  return { type:actionTypes.EVENTO_CREATE_REPLY,evento_id,content,parent_id}
+} 
+export function $deleteComment(comment){
+  return { type:actionTypes.EVENTO_DELETE_COMMENT,comment}
+} 
+export function $updateComment(id, content, evento_id){
+  return { type:actionTypes.EVENTO_UPDATE_COMMENT,id, content, evento_id}
+}
 const eventsRequest = (meta, searchCondition) =>
   http({
     path: `eventos?${serializeQuery({
@@ -482,6 +481,187 @@ function* toggleAttend({id}){
   }
   yield put({type:actionTypes.EVENTO_SET_VALUE,name:"attendDisable",value:false});
 }
+function* updateComments(currentComment, result){
+  let comments;
+  const evento = yield select(({evento})=>evento.item);
+  if(currentComment){
+    comments = evento.comments.map(newComment=>{
+      if(currentComment.id == newComment.id){
+        newComment.children = result.children;
+        newComment.nextChildrenCount = result.nextChildrenCount;
+      }
+      return newComment;
+    });
+  }else{
+    if(evento.comments.length == 0 ){
+      comments = [...result.comments];
+    }else{
+      comments = result.comments.map(newComment=>{
+        const oldComment = evento.comments.find(comment=>comment.id == newComment.id);    
+        if(oldComment&&oldComment.children.length>0){
+          newComment.children = oldComment.children;
+          newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
+        }
+        return newComment;
+      });      
+    }
+  }
+  yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+  if(result.commentsCount)yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"commentsCount",value:result.commentsCount});
+}
+const createCommentRequest = (eventoId,content)=>
+  http({
+    path: "evento-comments",
+    method: "POST",
+    data:{
+      evento_id:eventoId,
+      content,
+    }
+  }).then(response => response.data);
+function* createComment({eventoId,content}){
+  try{
+    const result = yield call(createCommentRequest, eventoId, content);
+    yield call(updateComments,null, result);
+  }catch(error){
+    console.log(error)
+  }
+}
+const updateCommentRequest = (id, content)=>
+  http({
+    path: "evento-comments/"+id,
+    method: "PUT",
+    data:{
+      content
+    }
+  }).then(response => response.data);
+function* updateComment({id, content}){
+  const evento = yield select(({evento})=>evento.item);
+  try{
+    const result = yield call(updateCommentRequest,id, content);
+    const comments = evento.comments.map(comment=>{
+      if(comment.children.length>0){
+        const children = comment.children.map((reply)=>{
+          if(reply.id == id)reply.content = content;  
+          return reply;
+        });
+        comment.children = children;      
+      }
+      if(comment.id == id){        
+        comment.content = content;
+      }
+      return comment;
+    });
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+  }catch(e){
+
+  }  
+}
+const deleteCommentRequest = (commentId,toId)=>
+  http({
+    path: "evento-comments/"+commentId,
+    method: "DELETE",
+    data:{
+      to_id:toId
+    }
+  }).then(response => response.data);
+function* deleteComment({comment}){
+  const evento = yield select(({evento})=>evento.item);
+  let toId = -1; 
+  if(comment.level1>0){
+    if(comment.children.length){
+      toId = comment.children[comment.children.length-1].id;
+    }
+  }
+  try{
+    const result = yield call(deleteCommentRequest,comment.id,toId);
+    let comments;
+    if(comment.level1>0){
+      comments = evento.comments.map(oldComment=>{
+        if(oldComment.id === comment.parent_id){
+          oldComment.children = result.children;
+          oldComment.nextChildrenCount = result.nextChildrenCount;
+        }
+        return oldComment;
+      });
+    }else{
+      comments = result.comments.map(newComment=>{
+        const oldComment = evento.comments.find(comment=>comment.id == newComment.id);    
+        if(oldComment&&oldComment.children.length>0){
+          newComment.children = oldComment.children;
+          newComment.nextChildrenCount = newComment.nextChildrenCount - newComment.children.length;
+        }
+        return newComment;
+      });
+    }
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"commentsCount",value:result.commentsCount});
+  }catch(e){
+    console.log(e)
+  }  
+}
+const createReplyRequest = (eventoId,content,parent_id)=>
+  http({
+    path: "evento-comments",
+    method: "POST",
+    data:{
+      evento_id:eventoId,
+      parent_id,
+      content
+    }
+  }).then(response => response.data);
+function* createReply({evento_id, content, parent_id}){
+  const evento = yield select(({evento})=>evento.item);
+  try{
+    const result = yield call(createReplyRequest, evento_id, content, parent_id);
+    const comments = evento.comments.map(oldComment=>{
+      if(oldComment.id === parent_id){
+        oldComment.children = result.comments;
+        oldComment.nextChildrenCount = result.nextChildrenCount;
+      }
+      return oldComment;
+    });
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"commentsCount",value:result.commentsCount});
+  }catch(error){
+
+  }
+}
+function* hideReplies({comment}){
+  const evento = yield select(({evento})=>evento.item);
+  if(comment.children && comment.children.length>0){
+    const comments = evento.comments.map(oldComment=>{
+      if(comment.id == oldComment.id){
+        oldComment.nextChildrenCount = oldComment.nextChildrenCount + oldComment.children.length;
+        oldComment.children = [];
+      }
+      return oldComment;
+    });
+    yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+  }
+}
+const appendNextRepliesRequest = (id)=>
+  http({
+    path: "evento-comments?id="+id+"&type=appendNextReplies",
+    method: "GET",
+  }).then(response => response.data);
+function* appendNextReplies({comment}){
+  const evento = yield select(({evento})=>evento.item);
+  try {
+    const result = yield call(appendNextRepliesRequest,comment.id);
+    if(result.comments && result.comments.length>0){
+      const comments = evento.comments.map(oldComment=>{
+        if(comment.id == oldComment.id){
+          oldComment.children = [...oldComment.children, ...result.comments];
+          oldComment.nextChildrenCount = oldComment.nextChildrenCount - result.comments.length;
+        }
+        return oldComment;
+      });
+      yield put({type:actionTypes.EVENTO_SET_ITEM_VALUE,name:"comments",value:comments});
+    }
+  }catch(error){
+
+  }
+}
 export function* saga() {
   yield takeLeading(actionTypes.EVENTO_INDEX_REQUEST, fetchEvent);
   yield takeLeading(actionTypes.EVENTO_PAGE_CHANGED, changePage);
@@ -494,4 +674,10 @@ export function* saga() {
   yield takeLeading(actionTypes.EVENTO_FRONT_INDEX_REQUEST, fetchFrontEvent);
   yield takeLeading(actionTypes.EVENTO_FRONT_PAGE_CHANGED, changeFrontPage);
   yield takeLeading(actionTypes.EVENTO_TOGGLE_ATTEND,toggleAttend);
+  yield takeLeading(actionTypes.EVENTO_CREATE_COMMENT,createComment);
+  yield takeLeading(actionTypes.EVENTO_UPDATE_COMMENT,updateComment);
+  yield takeLeading(actionTypes.EVENTO_DELETE_COMMENT,deleteComment);
+  yield takeLeading(actionTypes.EVENTO_CREATE_REPLY,createReply);
+  yield takeLeading(actionTypes.EVENTO_HIDE_REPLIES,hideReplies);
+  yield takeLeading(actionTypes.EVENTO_APPEND_NEXT_REPLIES,appendNextReplies);
 }

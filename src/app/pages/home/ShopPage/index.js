@@ -30,7 +30,7 @@ const Shop = () => {
               <NavLink
                 aria-label="Company"
                 title={`Read ${company.name}`}
-                to={`/shop/companies/${company.id}`}
+                to={`/${company.username}`}
               >
                 <div className="image">
                   <div className="background-container">

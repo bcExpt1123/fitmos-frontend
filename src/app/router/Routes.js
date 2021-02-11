@@ -153,6 +153,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/eventos",
     "/admin/eventos/create",
     "/admin/eventos/:id",
+    "/admin/reports",
   ];
   const frontBannerUrls = [
     "/",

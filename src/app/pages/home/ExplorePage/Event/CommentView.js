@@ -1,11 +1,11 @@
-import React,{useState, useRef} from "react";
+import React,{useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
-import {createReply, deleteComment, updateComment, toggleLike} from "../../redux/post/actions";
+import {$createReply, $deleteComment, $updateComment} from "../../../../../modules/subscription/evento";
 import Avatar from "../../components/Avatar";
-import MentionTextarea from "./MentionTextarea";
-import DisplayMentionContent from "./DisplayMentionContent";
+import MentionTextarea from "../../social/sections/MentionTextarea";
+import DisplayMentionContent from "../../social/sections/DisplayMentionContent";
 import DropDown from "../../components/DropDown";
 import { convertTime } from "../../../../../lib/common";
 
@@ -17,27 +17,21 @@ const CommentView = ({comment})=>{
     // if(!show)setTimeout(()=>commentTextarea.current.focus(),20);
     setShow(!show);
   }
-  const commentTextarea = useRef();
   const handleCommentChange = (content)=>{
     setReplyContent(content);
   }
   const dispatch = useDispatch();
   const onReplyFormSubmit= e => {
     e.preventDefault();
-    if(comment.level1>0)dispatch(createReply({post_id:comment.post_id,content:replyContent,parent_activity_id:comment.parent_activity_id}));
-    else dispatch(createReply({post_id:comment.post_id,content:replyContent,parent_activity_id:comment.activity_id}));
+    if(comment.level1>0)dispatch($createReply(comment.evento_id,replyContent,comment.parent_id));
+    else dispatch($createReply(comment.evento_id,replyContent,comment.id));
     setReplyContent("");
     setShow(false);
   }
-  // const [showDropdown, setShowDropdown ] = useState(false);
-  // const toggleHandle = ()=>{
-  //   setShowDropdown(!showDropdown);
-  // }
   const [showEdit, setShowEdit ] = useState(false);
   const handleDelete = ()=>{
-    dispatch(deleteComment(comment));
+    dispatch($deleteComment(comment));
   }
-  const commentEditTextarea = useRef();
   const [commentEditContent, setCommentEditContent] = useState(comment.content);
   const openEditComment = ()=>{
     setShowEdit(true);
@@ -47,13 +41,8 @@ const CommentView = ({comment})=>{
   }
   const onEditFormSubmit = e => {
     e.preventDefault();
-    dispatch(updateComment({id:comment.id,content:commentEditContent,post_id:comment.post_id}));
+    dispatch($updateComment(comment.id,commentEditContent,comment.evento_id));
     setShowEdit(false);
-  }
-  const handleLike = e=>{
-    if(comment.customer_id != currentUser.customer.id ){
-      dispatch(toggleLike(comment));
-    }
   }
   return (
     comment.customer?
@@ -77,7 +66,7 @@ const CommentView = ({comment})=>{
           {showEdit?
             <>
               <form onSubmit={onEditFormSubmit}>
-                <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit}/>
+                <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true} commentForm={onEditFormSubmit}/>
               </form>
             </>
             :
@@ -86,12 +75,6 @@ const CommentView = ({comment})=>{
         </div>
         <div className="actions">
           <div className="comment-time">{convertTime(comment.created_at)}</div>
-          <span className="like-comment"  >
-            &nbsp;&nbsp;&nbsp;&nbsp;
-            {comment.likesCount}
-            &nbsp;
-            likes
-          </span>
           <button className="reply-comment" onClick={openReplyComment}>Replay</button>      
         </div>
         {show&&(
@@ -102,7 +85,7 @@ const CommentView = ({comment})=>{
       </div>
       <div className="popup-actions">
         {
-          comment.customer_id == currentUser.customer.id?
+          comment.customer_id == currentUser.customer.id&&
             <DropDown>
               {({show,toggleHandle,setShow})=>(
                 <div className=" dropdown">
@@ -118,8 +101,6 @@ const CommentView = ({comment})=>{
                 </div>  
               )}    
             </DropDown>
-          :  
-            <span><i className={classnames("fa-heart cursor-pointer",{like:comment.like,fas:comment.like,far:comment.like==false})} onClick={handleLike}/></span>
         }
       </div>
     </>    

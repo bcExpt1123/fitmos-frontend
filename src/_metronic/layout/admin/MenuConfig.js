@@ -151,6 +151,13 @@ export default {
         can:["shop"],
         page: "admin/companies"
       },
+      {
+        title: "Reports",
+        root: true,
+        icon: "flaticon2-shopping-cart-1",
+        can:["events"],
+        page: "admin/reports"
+      },
     ]
   }
 };

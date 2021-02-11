@@ -37,7 +37,7 @@ function* onConfirmAlternate(){
   }  
 }
 function* onPulling({payload:{id}}){
-  while (true) {
+  while (false) {
     try {
       const newsfeed = yield select(({post})=>post.newsfeed);
       const newsfeedPostIds = newsfeed.map(item=>item.id);

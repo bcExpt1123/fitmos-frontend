@@ -9,7 +9,7 @@ import Avatar from "../../components/Avatar";
 import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
 
-export default function MentionTextarea({content, setContent, submit}) {
+export default function MentionTextarea({content, setContent, submit,commentForm}) {
   const [comment, setComment] = useState(content);
   const [showEmojis, setShowEmojis] = useState(false);
   const emojiPicker = useRef(null);
@@ -117,6 +117,14 @@ export default function MentionTextarea({content, setContent, submit}) {
       
     </div>
   }
+  const handleEnterPress = event =>{
+    if(event.keyCode == 13 ) {
+      if(event.shiftKey == false){
+        event.preventDefault();
+        commentForm(event);
+      }
+    }
+  }
   return (
     <StylesViaJss>
       <div className="col-12 py-3">
@@ -128,6 +136,7 @@ export default function MentionTextarea({content, setContent, submit}) {
             <MentionsInput
               value={comment}
               onChange={handleChange}
+              onKeyDown={handleEnterPress}
               className="mentions"
               placeholder="Leave a comment..."
               allowSuggestionsAboveCursor={true}
@@ -167,7 +176,7 @@ export default function MentionTextarea({content, setContent, submit}) {
                     //   setComment("");
                     // }}
                   >
-                    Send
+                    POST
                   </button>
                 </>
             }

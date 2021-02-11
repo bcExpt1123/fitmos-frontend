@@ -1,10 +1,7 @@
 import React,{useState, useEffect} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import classnames from "classnames";
 import LinkProfile from "./customer/Link";
 
 const DisplayMentionLine = ({line})=>{
-  const currentUser = useSelector(({ auth }) => auth.currentUser);
   const [words, setWords] = useState([]);
   useEffect(()=>{
     if (line !== "") {

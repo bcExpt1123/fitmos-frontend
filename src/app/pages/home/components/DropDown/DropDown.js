@@ -2,13 +2,16 @@ import React,{useState, useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setItemValue } from "../../redux/post/actions";
 
-const Dropdown = ({children})=>{
+const Dropdown = ({children,refresh})=>{
   const globalDropdown = useSelector(({post}) => post.dropdown);
   useEffect(()=>{
     if(globalDropdown && !self){
       if(show)setShow(false);
     }
   },[globalDropdown])
+  useEffect(()=>{
+    setShow(false);
+  },[refresh])
   const dispatch = useDispatch();
   const [show, setShow] = useState(false);
   const [self, setSelf] = useState(false);

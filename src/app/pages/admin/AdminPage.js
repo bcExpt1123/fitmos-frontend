@@ -50,6 +50,7 @@ import { CompanyCreate } from "./CompanyCreate";
 import { ProductCreate } from "./ProductCreate";
 import { LayoutSplashScreen } from "../../../_metronic";
 import { SurveyReports } from "./SurveyReports";
+import { SocialReports } from "./SocialReports";
 
 export default function AdminPage() {
   // useEffect(() => {
@@ -128,7 +129,7 @@ export default function AdminPage() {
         <Route exact path="/admin/survey/:id" component={SurveyCreate} />
         <Route exact path="/admin/survey/create" component={SurveyCreate}/>
         <Route exact path="/admin/survey/:id/view" component={SurveyReports}/>
-        <Route exact path="/admin/Companies" component={Companies} />
+        <Route exact path="/admin/companies" component={Companies} />
         <Route exact path="/admin/companies/create" component={CompanyCreate} />
         <Route exact path="/admin/companies/:id" component={CompanyCreate} />
         <Route exact path="/admin/companies/:id/products" component={Products} />
@@ -136,6 +137,7 @@ export default function AdminPage() {
         <Route exact path="/admin/companies/:id/products/:id" component={ProductCreate} />
         <Route exact path="/admin/companies/:id/products/:id" component={ProductCreate} />
         <Route exact path="/admin/companies/:id/products/viewImages/:id" component={ViewImages} />
+        <Route exact path="/admin/reports" component={SocialReports} />
       </Switch>
     </Suspense>
   );

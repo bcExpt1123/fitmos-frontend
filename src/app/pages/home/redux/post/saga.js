@@ -487,7 +487,15 @@ function* getPostsByActivity(activitytId){
   let level="post";// or comment or reply
   let isModalPost;
   const customerPosts = yield select(({post})=>post.customerPosts);
-  if(customerPosts)item = customerPosts.find(item=>item.id == activitytId);
+  if(customerPosts)item = customerPosts.find(item=>{
+    const comment = item.comments.find(comment=>{
+      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+      if(repley) return true;
+      return comment.activity_id == activitytId
+    });
+    if(comment) return true;
+    return item.activity_id == activitytId;
+  });
   if(item){
     names.push("customerPosts");
   }
@@ -505,7 +513,15 @@ function* getPostsByActivity(activitytId){
     names.push("newsfeed");
   }
   const suggestedPosts = yield select(({post})=>post.suggestedPosts);
-  if(suggestedPosts)item = suggestedPosts.find(item=>item.activity_id == activitytId);
+  if(suggestedPosts)item = suggestedPosts.find(item=>{
+    const comment = item.comments.find(comment=>{
+      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+      if(repley) return true;
+      return comment.activity_id == activitytId
+    });
+    if(comment) return true;
+    return item.activity_id == activitytId;
+  });
   if(item){
     names.push("suggestedPosts");
   }
@@ -733,7 +749,7 @@ const replaceDeleteComment = (post,oldComment, result)=>{
     const comments = post.comments.map(comment=>{
       if(comment.activity_id === oldComment.parent_activity_id){
         comment.children = result.children;
-        comment.commentsCount = result.commentsCount;
+        comment.nextChildrenCount = result.nextChildrenCount;
       }
       return comment;
     });
@@ -1075,7 +1091,7 @@ const postLike = (post,activityId)=>{
 
 function* onToggleLike({payload}){
   const [names,post, isModalPost] = yield call(getPostsByActivity,payload.activity_id);
-  // console.log(names,post);
+  console.log(names,post);
   const store = yield select(({post})=>post);
   try{
     let result;

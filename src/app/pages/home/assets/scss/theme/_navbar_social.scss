@@ -181,7 +181,9 @@
       max-width: 120px;
       white-space: nowrap;
       overflow: hidden;
-      text-overflow: ellipsis;            
+      text-overflow: ellipsis;  
+      margin-left: 15px;   
+      margin-bottom: -3px;       
     }
     .clickable-button{
       @include clickable-button;

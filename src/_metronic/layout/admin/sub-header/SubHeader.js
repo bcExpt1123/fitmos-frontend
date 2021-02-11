@@ -53,6 +53,7 @@ import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
 import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
 import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
 import { SubHeaderSurveyReports } from "../../../../app/pages/admin/SurveyReports";
+import { SubHeaderSocialReports } from "../../../../app/pages/admin/SocialReports";
 
 // import BreadCrumbs from "./components/BreadCrumbs";
 
@@ -268,6 +269,11 @@ class SubHeader extends React.Component {
               exact
               path="/admin/companies/:id/products/viewImages/:id"
               component={SubHeaderViewImages}
+            />
+            <Route
+              exact
+              path="/admin/reports"
+              component={SubHeaderSocialReports}
             />
           </Switch>
         </div>
