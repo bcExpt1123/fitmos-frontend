@@ -57,7 +57,6 @@ const ProfileDropdown = ()=>{
                 </>
               }
               <a className={"dropdown-item"} onClick={handleReport}>Report</a>
-              <a className={"dropdown-item"} onClick={()=>setShow(false)}>Cancel</a>
             </div>
           </div>    
         )}

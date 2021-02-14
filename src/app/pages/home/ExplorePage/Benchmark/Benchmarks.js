@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from "react";
+import React,{useState, useEffect, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {Row} from "react-bootstrap";
 import {Col} from "react-bootstrap";
@@ -21,10 +21,23 @@ const BenchmarksPage = () => {
     setShow(false);
   }
   const dispatch = useDispatch();
+  const [height, setHeight] = useState(230);
   useEffect(()=>{
     if(total === 0 )dispatch($findPublished());
     // dispatch(findUserDetails());
+    changeDimesions();
+    setTimeout(changeDimesions,50);
+    function handleResize() {
+      changeDimesions();
+    }
+    window.addEventListener('resize', handleResize) 
+    return ()=>window.removeEventListener("resize", handleResize);   
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  const changeDimesions = ()=>{
+    console.log(window.innerWidth)
+    if(window.innerWidth>900)setHeight(window.innerWidth/3-50);
+    if(window.innerWidth<768)setHeight(window.innerWidth-150);
+  }
 
   return (
     <>
@@ -43,10 +56,10 @@ const BenchmarksPage = () => {
                 className="content"
                 onClick={() => handleShow(benchmark)}
               >
-                <div className="image"
+                <div className="image cursor-pointer"
                   style={{
                     backgroundImage: "url(" + benchmark.image + ")",
-                    cursor: "pointer"
+                    height: height+"px",
                   }}
                 >
                   <div className="background">

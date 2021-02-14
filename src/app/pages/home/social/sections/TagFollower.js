@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import Chip from '@material-ui/core/Chip';
+import Avatar from "../../components/Avatar";
+
 const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers, setTagFollowers, onClose}) => {
   /** tag */
   const [searchCustomers, setSearchCustomers] = useState([]);
@@ -54,7 +56,19 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
           {searchCustomers.length>0?
             <ul>
               {searchCustomers.map((customer)=>
-                <li key={customer.id} className="cursor-pointer" onClick={handleClickSearchCustomers(customer)}>{customer.display}</li>
+                <li key={customer.id} className="cursor-pointer" onClick={handleClickSearchCustomers(customer)}>
+                  <div className="avatar">
+                    <Avatar
+                      pictureUrls={customer.avatarUrls}
+                      size="xs"
+                      className={"userAvatar"}
+                    />
+                  </div>
+                  <div className="info">
+                    <div>{customer.first_name} {customer.last_name}</div>
+                    <div className="username">{customer.username}</div>
+                  </div>
+                </li>
               )}
               <li></li>
             </ul>

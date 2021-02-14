@@ -43,10 +43,13 @@
       @include back-button;
     }
   }
-  .dropdown-item.active{
-    background-color: white;
-    color:rgba($basic-text-color, 1);
-    font-weight: 600;
+  .dropdown-item{
+    padding: 10px 0 5px 10px;
+    &.active{
+      background-color: white;
+      color:rgba($basic-text-color, 1);
+      font-weight: 600;
+    }
   }
   .menu-first{
     .menu-logo {
@@ -200,7 +203,7 @@
     .dropdown{
       @include dropdown;
       .dropdown-menu{
-        .createing{
+        .creating{
           display:none;
         }
       }
@@ -282,7 +285,7 @@
       }
       .dropdown{
         .dropdown-menu{
-          .createing{
+          .creating{
             display:block;
           }
         }

@@ -17,7 +17,7 @@ const RightBar = () => {
     if(username.type === 'customer'){
         dispatch(findRandomMedias(username.id));
     }
-  },[])
+  },[username])
   useEffect(()=>{
     if(openEditModal)setShow(false);
     else if(media){
@@ -38,19 +38,18 @@ const RightBar = () => {
       <Sticky offsetTop={130}>
         {username.type === 'customer'?
           <>
-            <div className="wrapper-rightbar">
-              <div className="label">Galería de María <NavLink  className="" to={`/${username.username}/pictures`}>Ver Todos</NavLink></div>
-              <div className="body">
-                {selfMedias.length===0?<>There is no items</>
-                  :
+            {selfMedias.length>0&&
+              <div className="wrapper-rightbar">
+                <div className="label">Galería de {username.first_name} <NavLink  className="" to={`/${username.username}/pictures`}>Ver Todos</NavLink></div>
+                <div className="body">
                   <div className="medias">
                     {selfMedias.map((media)=>
                       <ClickableMedia file={media} key={media.id} setShow={setShow} setMedia={setMedia}/>
                     )}
                   </div>
-                }
+                </div>
               </div>
-            </div>
+            }
             <div className="wrapper-rightbar">
               <div className="label">Galería de la Comunidad</div>
               <div className="body">

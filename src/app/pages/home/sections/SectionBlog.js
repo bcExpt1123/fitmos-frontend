@@ -7,9 +7,22 @@ import { $fetchFrontIndex,$frontPage } from "../../../../modules/subscription/ev
 export default function Blog() {
   const [activePage, setActivePage] = useState(1);
   const dispatch = useDispatch();
+  const [height, setHeight] = useState(230);
   useEffect(() => {
     dispatch($fetchFrontIndex())
+    changeDimesions();
+    setTimeout(changeDimesions,50);
+    function handleResize() {
+      changeDimesions();
+    }
+    window.addEventListener('resize', handleResize) 
+    return ()=>window.removeEventListener("resize", handleResize);   
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
+  const changeDimesions = ()=>{
+    console.log(window.innerWidth)
+    if(window.innerWidth>900)setHeight(window.innerWidth/3-50);
+    if(window.innerWidth<768)setHeight(window.innerWidth-150);
+  }
   const event = useSelector(({ event }) => event);
   const meta = event.frontMeta;
   const posts = event.frontData;
@@ -32,7 +45,8 @@ export default function Blog() {
                   <div className="background-container">
                       <div className="background" 
                         style={{
-                          backgroundImage: "url(" + post.image + ")"
+                          backgroundImage: "url(" + post.image + ")",
+                          height: height+"px",
                         }}
                       >
                         <h6 className="category">{post.category.name}</h6>

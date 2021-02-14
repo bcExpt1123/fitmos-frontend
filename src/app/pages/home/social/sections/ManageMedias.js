@@ -5,7 +5,7 @@ const ManageMedias = ({files, deleteMedia}) => {
     <div className="manage-medias">
       {files.map((file, index)=>(
         <div key={index}>
-          {RenderMedia(file)}
+          <RenderMedia file={file} />
           <div className="actions cursor-pointer" onClick={()=>deleteMedia(file)}>
             <div>
               <i className="fas fa-times" />

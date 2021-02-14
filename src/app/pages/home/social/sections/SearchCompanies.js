@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
-const SearchCompanies = ({companies}) => {
+const SearchCompanies = ({companies, keyword}) => {
   return <>
     {companies.length==0?
-      <>There is no items.</>:
+      <>There is no results with keyword "{keyword}".</>:
       companies.map(company=>(
         <div className="item" key={company.id}>
           <NavLink

@@ -27,7 +27,7 @@ export default function Customer({id}) {
         content="Customer Posts - Fitemos"
       />
       </MetaTags>
-      {(username.profile==='public' || username.following && (username.following.status == 'accepted'))?
+      {(username.profile==='public' || username.following && (username.following.status == 'accepted') || username.id == currentUser.customer.id)?
         <ThreeColumn>
           {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false}/>}
         </ThreeColumn>

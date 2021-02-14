@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
-const SearchCustomers = ({customers}) => {
+const SearchCustomers = ({customers, keyword}) => {
   return <>
     {customers.length==0?
-      <>There is no items.</>:
+      <>There is no results with keyword "{keyword}".</>:
       customers.map(customer=>(
         <div className="item" key={customer.id}>
           <div>

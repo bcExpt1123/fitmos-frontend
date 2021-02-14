@@ -187,7 +187,7 @@ function Main({match,history}) {
               <InputLabel id="google-map">Map</InputLabel>
               <div>
                 <Map
-                  googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_PAYPAL_GOOGLE_MAP_KEY}
+                  googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
                   loadingElement={<div style={{ height: `100%` }} />}
                   containerElement={<div style={{ height: `400px` }} />}
                   mapElement={<div style={{ height: `100%` }} />}

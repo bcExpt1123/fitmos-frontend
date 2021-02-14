@@ -6,7 +6,7 @@ import SubNav from "../components/SubNav";
 const Page = ({ actions, currentUser, section }) => {
   const profileLinks = [
     { name: "benchmarks", url: "/benchmarks", label: "Benchmarks" },
-    { name: "events", url: "/eventos", label: "Eventos" },
+    { name: "events", url: "/eventos", label: "Eventos",match:'/eventos' },
     { name: "blog", url: "/news", label: "Blog",match:'/news' },
     { name: "shop", url: "/shop", label: "Shop",match:'/shop' },
   ];

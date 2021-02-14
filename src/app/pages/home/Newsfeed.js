@@ -31,7 +31,7 @@ export default function Newsfeed() {
     dispatch( setItemValue({name:"old",value:0}) );
   }
   useEffect(()=>{
-    // if(posts.length == 0 )setTimeout(()=>dispatch(appendSuggestedPosts()),4000);
+    if(posts.length == 0 )setTimeout(()=>dispatch(appendSuggestedPosts()),4000);
     console.log(oldPosts.length)
   },[oldPosts]);
   const convertOld = ()=>{

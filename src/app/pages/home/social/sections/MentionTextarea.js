@@ -5,9 +5,10 @@ import { StylesViaJss } from "substyle-jss";
 import classnames from "classnames";
 // import CommentParagraph from "./CommentParagraph";
 import { NimblePicker, emojiIndex } from "emoji-mart";
-import Avatar from "../../components/Avatar";
 import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
+import Avatar from "../../components/Avatar";
+import { isMobile } from '../../../../../_metronic/utils/utils';
 
 export default function MentionTextarea({content, setContent, submit,commentForm}) {
   const [comment, setComment] = useState(content);
@@ -143,25 +144,27 @@ export default function MentionTextarea({content, setContent, submit,commentForm
             >
               <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion}/>
             </MentionsInput>
-            {showEmojis ? (
-              <span className={"emoji__picker"}  ref={emojiPicker}>
-                <NimblePicker
-                  onSelect={handleSelectEmoji}
-                  showSkinTones={false}
-                  emojiTooltip={false}
-                  showPreview={false}
-                  sheetSize={32}
-                  data={data}
-                />
-              </span>
-            ) : (
-              <button
-                className={"emoji__button"}
-                onClick={() => setShowEmojis(true)}
-              >
-                {String.fromCodePoint(0x1f60a)}
-              </button>
-            )}
+            {isMobile()===false&&<>
+              {showEmojis ? (
+                <span className={"emoji__picker"}  ref={emojiPicker}>
+                  <NimblePicker
+                    onSelect={handleSelectEmoji}
+                    showSkinTones={false}
+                    emojiTooltip={false}
+                    showPreview={false}
+                    sheetSize={32}
+                    data={data}
+                  />
+                </span>
+              ) : (
+                <button
+                  className={"emoji__button"}
+                  onClick={() => setShowEmojis(true)}
+                >
+                  {String.fromCodePoint(0x1f60a)}
+                </button>
+              )}                
+            </>}
           </div>
           <div className="col-1">
             {

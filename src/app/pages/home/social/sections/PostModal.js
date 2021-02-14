@@ -57,6 +57,7 @@ const PostModal = ({show, media, onClose }) => {
     if(sliderRef.current){
       const mediaIndex = post.medias.findIndex((file) =>file.id === media.id);
       sliderRef.current.slickGoTo(mediaIndex);
+      setActiveSlide(mediaIndex)
       setTimeout(() => {
         setHidden(true);
       }, 10);
@@ -83,6 +84,7 @@ const PostModal = ({show, media, onClose }) => {
     setHidden(false);
     onClose();
   }
+  const [activeSlide, setActiveSlide] = useState(0);
   const settings = {
     arrows: true,
     infinite: true,
@@ -94,6 +96,7 @@ const PostModal = ({show, media, onClose }) => {
     slidesToShow: 1,
     centerMode:true,
     slidesToScroll: 1,
+    afterChange: (current) => setActiveSlide(current),
   };
   const sliderRef = useRef();
   const commentContainer = useRef();
@@ -115,8 +118,8 @@ const PostModal = ({show, media, onClose }) => {
               </div>
               <div className="sliders">
                 <Slider {...settings} ref={sliderRef}>
-                  {post.medias.map(media=>
-                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}>{RenderMedia(media)}</div>
+                  {post.medias.map((media, index)=>
+                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}><RenderMedia file={media} videoIndex={0} status={activeSlide === index}/></div>
                   )}
                 </Slider>
               </div>  

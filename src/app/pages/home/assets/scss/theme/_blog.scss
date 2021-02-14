@@ -35,7 +35,7 @@ section.blog{
       margin: 30px 6px;
       border-radius: 7px;
       .image{
-        height:222px;
+        height: 100%;
         .background-container {
           height: 100%;
           overflow: hidden;
@@ -46,7 +46,7 @@ section.blog{
             background-repeat: no-repeat;
             border-top-left-radius: 7px;
             border-top-right-radius: 7px;
-            height: 222px;
+            height: 300px;
             overflow: hidden;
             pointer-events: none;
             .category{

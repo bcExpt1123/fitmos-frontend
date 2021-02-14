@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
 import { useSelector, useDispatch } from "react-redux";
 import * as qs from 'query-string';
@@ -10,11 +10,12 @@ import SearchCompanies from "./social/sections/SearchCompanies";
 import SearchPosts from "./social/sections/SearchPosts";
 const Search = () => {
   const dispatch = useDispatch();
+  const [keyword, setKeyword] = useState("");
   useEffect(()=>{
     const parsed = qs.parse(window.location.search);
     if (parsed.search) {
-      console.log(parsed.search)
       dispatch(searchAll(parsed.search));
+      setKeyword(parsed.search);
     }
   },[]);
   const results = useSelector(({people})=>people.searchResult);
@@ -43,7 +44,7 @@ const Search = () => {
           } 
         </div>
         <div className="result">
-          <SearchCustomers customers = {results.people} />
+          <SearchCustomers customers = {results.people} keyword = {keyword}/>
         </div>
       </div>
       <div className="search-shops">
@@ -60,7 +61,7 @@ const Search = () => {
           } 
         </div>
         <div className="result">
-          <SearchCompanies companies = {results.shops} />
+          <SearchCompanies companies = {results.shops} keyword = {keyword}/>
         </div>
       </div>
       <div className="search-posts">
@@ -77,7 +78,7 @@ const Search = () => {
           } 
         </div>
         <div className="result">
-          <SearchPosts posts = {results.posts} />
+          <SearchPosts posts = {results.posts} keyword = {keyword}/>
         </div>
       </div>
     </OneColumn>

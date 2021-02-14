@@ -114,19 +114,19 @@ export default function PostContent({post, newsfeed,modalShow}) {
           <span className="full-name">
             <NavLink
               to={"/"+post.customer.username}
-              className={"link-profile"}
+              className={"link-profile font-weight-bold"}
             >
               {post.customer.first_name} {post.customer.last_name}
             </NavLink>
           </span>
-          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<>&nbsp;is</>}
-          {post.location&&<>&nbsp;in {post.location}</>}
+          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span className="font-weight-bold">&nbsp;is</span>}
+          {(post.location && post.location!='false')&&<span className="font-weight-bold">&nbsp;in {post.location}</span>}
           {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
           &nbsp;
           {
             post.tagFollowers&&post.tagFollowers.map((follower)=>(
               <span key={follower.id} className="follower">
-                <span className="follower"><LinkProfile id={follower.id} display={follower.first_name+' '+follower.last_name}/></span>
+                <span className="follower font-weight-bold"><LinkProfile id={follower.id} display={follower.first_name+' '+follower.last_name}/></span>
                 <span className="spot">, &nbsp;</span>
               </span>
             ))

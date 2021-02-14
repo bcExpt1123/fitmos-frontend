@@ -1,11 +1,11 @@
 import React,{useState,useEffect, useRef} from 'react';  
 import { useDispatch, useSelector } from "react-redux";
 import { ProgressBar } from 'react-bootstrap';
+import { matchPath, useHistory } from "react-router-dom";
+import Sticky from "wil-react-sticky";
 import Avatar from "../components/Avatar";
 import { $findPublished } from "../../../../modules/subscription/benchmark";
 import { findCustomer, setItemValue } from "../redux/people/actions"
-import { matchPath } from "react-router-dom";
-import Sticky from "wil-react-sticky";
 import DetailModal from "../sections/Profile/Dialogs/Detail";
 import SectionEditWeight from "../DashboardPage/SectionEditWeight";
 import SectionChangeGoal from "../DashboardPage/SectionChangeGoal";
@@ -45,6 +45,10 @@ const SideBar = () => {
   const [show, setShow] = useState(false);
   const [showWeight, setShowWeight] = useState(false);
   const [objective, setObjective] = useState(false);
+  const history = useHistory();
+  const redirectProfile = ()=>{
+    history.push('/'+ currentUser.customer.username);
+  }
   const handleClose = ()=>{
     setShow(false);
   }
@@ -88,7 +92,7 @@ const SideBar = () => {
                 />
               </div>
               :
-              <div className="avatar" onClick={openModal}>
+              <div className="avatar" onClick={redirectProfile}>
                 <Avatar
                   pictureUrls={currentUser.avatarUrls}
                   size="xm"
@@ -117,8 +121,8 @@ const SideBar = () => {
             </div>
             :
             <div className="profile-info">
-              <div className="full-name" onClick={openModal}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
-              <div className="username">@{currentUser.customer.username}</div>
+              <div className="full-name cursor-pointer" onClick={redirectProfile}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
+              <div className="username" onClick={redirectProfile}>@{currentUser.customer.username}</div>
               <div className="summary" ref={summaryRef}>
                 {currentUser.customer.description?
                   <ReadMore 

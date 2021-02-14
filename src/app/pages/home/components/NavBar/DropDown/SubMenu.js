@@ -36,7 +36,7 @@ const Submenu = ({open,show,openCreatingPost} )=>{
         <i className="fas fa-chevron-down dropbtn" />
       </button>
       <div className={classnames("dropdown-menu",{show:show})}>
-        <a className={"dropdown-item createing"} onClick={openCreatingPost}>
+        <a className={"dropdown-item creating"} onClick={openCreatingPost}>
           Crear Post
         </a>                
         <NavLink

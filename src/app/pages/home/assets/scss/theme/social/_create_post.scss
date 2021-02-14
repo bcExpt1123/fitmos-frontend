@@ -4,7 +4,7 @@
     font-size: 12px;
     font-weight: normal;
     .creating-post-mention__highlighter{
-      padding: 9px;
+      padding: 9px 0;
       min-height: 143px;
       outline: 0;
       border: 0;
@@ -14,7 +14,7 @@
       bottom: 14px;
     }
     .creating-post-mention__input{
-      padding: 9px;
+      padding: 9px 0;
       min-height: 143px;
       outline: 0;
       border: 0;
@@ -74,9 +74,19 @@
           outline-width: 0px;
         }
       }
+      .MuiChip-outlinedPrimary{
+        color:$secondary-background-color;
+        border: 1px solid $secondary-background-color;
+      }
+      .MuiChip-deleteIconOutlinedColorPrimary{
+        color:rgba($secondary-background-color,0.7);
+        &:hover{
+          color:$secondary-background-color;
+        }
+      }
       .btn-primary{
         padding:5px;
-        margin: 0 0 0 15px;
+        margin: 0 0 5px 15px;
       }
       label{
         font-size: 12px;
@@ -93,6 +103,22 @@
       ul{
         list-style: none;
         padding-left: 0px;        
+        margin-left: -10px;
+        li{
+          .avatar{
+            display: inline-block;
+            margin: 5px;
+            vertical-align: top;
+          }
+          .info{
+            display: inline-block;
+            margin-top: 2px;
+            .username{
+              margin-top: -3px;
+              color:rgba($basic-text-color, 0.5);
+            }
+          }        
+        }
       }
     }
     .medias-container{

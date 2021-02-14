@@ -112,10 +112,10 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
         className={classnames(
           navbarClassnames,
           { "bg-color": isScroll },
-          { "navbar-short": !isScroll },
+          { "navbar-short": false },
           { opened: isDrawerOpen },
           { transparent: false },
-          { "navbar-dropdown": !isScroll },
+          { "navbar-dropdown": true },
           {"checkout":checkout}
         )}
         onToggle={toggleisDrawerOpen}
@@ -163,7 +163,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                   <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout.svg")} />
                 </span>
                 <span className="svg-icon-active menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout-active.svg")} />
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout-active.svg")} style={{marginTop:"4px"}}/>
                 </span>
                 <span className="menu-text">Workout</span>
               </NavLink>
@@ -206,7 +206,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 isActive={(match, location) => {
-                  return (location.pathname.match('/\/benchmarks|\/news$|\/news\/|\/shop|\/events/'))
+                  return (location.pathname.match('/\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/'))
                 }}                
               >
                 <span className="svg-icon menu-icon">

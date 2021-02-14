@@ -13,6 +13,7 @@ import ManageMedias from '../sections/ManageMedias';
 import RenderMedia from '../sections/RenderMedia';
 import { once } from "../../../../../lib/common";
 import SplashScreen from "../../../../partials/layout/SplashScreen";
+import { isMobile } from '../../../../../_metronic/utils/utils';
 
 const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const users = useSelector(({people})=>people.people);
@@ -312,7 +313,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                   {files.length == 1&&(
                     <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasWidth+"px"}}>
                       <div className="item">
-                        {RenderMedia(files[0])}
+                        <RenderMedia file={files[0]}/>
                       </div>
                     </div>
                   )}
@@ -320,12 +321,12 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                     <>
                       <div className="wrapper" style={{top:0,left:0,width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[0])}
+                          <RenderMedia file={files[0]}/>
                         </div>
                       </div>
                       <div className="wrapper" style={{top:0,left:mediasWidth/2+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[1])}
+                          <RenderMedia file={files[1]}/>
                         </div>
                       </div>
                     </>
@@ -334,7 +335,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                     <>
                       <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth+"px",height:mediasWidth+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[2])}
+                          <RenderMedia file={files[2]}/>
                         </div>
                       </div>
                     </>
@@ -343,12 +344,12 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                     <>
                       <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[2])}
+                          <RenderMedia file={files[2]}/>
                         </div>
                       </div>
                       <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth/2+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[3])}
+                          <RenderMedia file={files[3]}/>
                         </div>
                       </div>
                     </>
@@ -357,17 +358,17 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                     <>
                       <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[2])}
+                          <RenderMedia file={files[2]}/>
                         </div>
                       </div>
                       <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth/3+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[3])}
+                          <RenderMedia file={files[3]}/>
                         </div>
                       </div>
                       <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth * 2/3+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
                         <div className="item">
-                          {RenderMedia(files[4])}
+                          <RenderMedia file={files[4]}/>                          
                         </div>
                         {files.length > 5&&
                           <div className="additional">
@@ -398,25 +399,27 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
               <div className="mt-1" style={{display:"inline-block"}}>
                 Agrega
                 &nbsp;&nbsp;&nbsp;&nbsp;
-                {showEmojis ? (
-                  <span className={"emoji__picker"}  ref={emojiPicker}>
-                    <NimblePicker
-                      onSelect={handleSelectEmoji}
-                      showSkinTones={false}
-                      emojiTooltip={false}
-                      showPreview={false}
-                      sheetSize={32}
-                      data={data}
-                    />
-                  </span>
-                ) : (
-                  <button
-                    className={"emoji__button"}
-                    onClick={() => setShowEmojis(true)}
-                  >
-                    {String.fromCodePoint(0x1f60a)}
-                  </button>
-                )}                
+                {isMobile()===false&&<>
+                  {showEmojis ? (
+                    <span className={"emoji__picker"}  ref={emojiPicker}>
+                      <NimblePicker
+                        onSelect={handleSelectEmoji}
+                        showSkinTones={false}
+                        emojiTooltip={false}
+                        showPreview={false}
+                        sheetSize={32}
+                        data={data}
+                      />
+                    </span>
+                  ) : (
+                    <button
+                      className={"emoji__button"}
+                      onClick={() => setShowEmojis(true)}
+                    >
+                      {String.fromCodePoint(0x1f60a)}
+                    </button>
+                  )}                
+                </>}
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <span className="cursor-pointer" onClick={openTagFollowers}>
                   <i className="fas fa-hashtag" />

@@ -3,10 +3,10 @@ import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
-const SearchPosts = ({posts}) => {
+const SearchPosts = ({posts, keyword}) => {
   return <>
     {posts.length==0?
-      <>There is no items.</>:
+      <>There is no results with keyword "{keyword}".</>:
       posts.map(post=>(
         <div className="item" key={post.id}>
           <NavLink

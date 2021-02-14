@@ -18,39 +18,43 @@ const SearchResult = ({value,clearValue})=>{
   return (
     <>
       <div className={classnames("dropdown-menu",{show:value!=""})}>
-        <div>Personas</div>  
-        {searchResult.people.length == 0?
-          <div className="nothing">Nothing</div>
-        :
-          searchResult.people.map((customer)=>(
-            <NavLink
-              to={"/"+customer.username}
-              className={"dropdown-item"}
-              activeClassName="active"
-              exact
-              key = {customer.id}
-            >
-              {customer.first_name} {customer.last_name}
-            </NavLink>                
-          ))
+        {searchResult.people.length > 0&&
+          <>
+            <div>Personas</div>  
+            {
+              searchResult.people.map((customer)=>(
+                <NavLink
+                  to={"/"+customer.username}
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                  key = {customer.id}
+                >
+                  {customer.first_name} {customer.last_name}
+                </NavLink>                
+              ))
+            }
+          </>
         }
-        <div>Shops</div>  
-        {searchResult.shops.length == 0?
-          <div className="nothing">Nothing</div>
-        :
-          searchResult.shops.map((company)=>(
-            <NavLink
-              to={"/"+company.username}
-              className={"dropdown-item"}
-              activeClassName="active"
-              exact
-              key = {company.id}
-            >
-              {company.name}
-            </NavLink>                
-          ))
+        {searchResult.shops.length > 0&&
+          <>
+            <div className="mt-2">Shops</div>  
+            {
+              searchResult.shops.map((company)=>(
+                <NavLink
+                  to={"/"+company.username}
+                  className={"dropdown-item"}
+                  activeClassName="active"
+                  exact
+                  key = {company.id}
+                >
+                  {company.name}
+                </NavLink>                
+              ))
+            }
+          </>
         }
-        <button className="open-search-button" onClick={openSearchPage}>
+        <button className="open-search-button mt-2" onClick={openSearchPage}>
           <i className="fas fa-search"/> &nbsp;Search for {value}
         </button>
       </div>
