@@ -17,6 +17,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed}) {
     setShowCreatingPost(false);
   }
   const fetchMoreListItems = ()=>{
+    console.log("fetchMoreListItems");
     if(!last)dispatchAction();
     else setIsFetching(false);
   }
@@ -32,7 +33,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed}) {
         </div>
       }
       <div>
-        {posts.length == 0?<div className="tag-post">There is no items</div>:
+        {posts.length > 0&&
           <>{
             posts.map(post=>
               <Post post={post} newsfeed={newsfeed} key={post.id}/>

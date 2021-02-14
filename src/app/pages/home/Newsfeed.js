@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import MetaTags from "react-meta-tags";
 import { useSelector, useDispatch } from "react-redux";
+import SVG from "react-inlinesvg";
+import Sticky from "wil-react-sticky";
 import ThreeColumn from "./layouts/Three";
 import { findNewsfeed, appendNewsfeedAfter, appendSuggestedPosts, convertOldNewsfeed, appendOldNewsfeed, setItemValue } from "./redux/post/actions";
 import Posts from "./social/sections/Posts";
+import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
 
 export default function Newsfeed() {
   const posts = useSelector(({post})=>post.newsfeed);
@@ -18,6 +21,11 @@ export default function Newsfeed() {
   useEffect(()=>{
     dispatch(findNewsfeed());
   },[])
+  useEffect(()=>{
+    if(old){
+      window.scrollTo(0, 0);
+    }
+  },[old])
   const dispatchAction = ()=>{
     dispatch(appendNewsfeedAfter());
   }
@@ -32,10 +40,13 @@ export default function Newsfeed() {
   }
   useEffect(()=>{
     if(posts.length == 0 )setTimeout(()=>dispatch(appendSuggestedPosts()),4000);
-    console.log(oldPosts.length)
   },[oldPosts]);
   const convertOld = ()=>{
     dispatch(convertOldNewsfeed());
+  }
+  const [suggestedSticky, setSuggestedSticky] = useState(false);
+  const handleChangeSuggeted = (isSticky)=>{
+    setSuggestedSticky(isSticky);
   }
   return (
     <>
@@ -47,13 +58,26 @@ export default function Newsfeed() {
       />
       </MetaTags>
       <ThreeColumn>
-        {old ==0?
+        {old == 0?
           <>
             {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true} newsfeed={true}/>}
             {suggestedPosts.length>0&&<>
-              <div className="newsfeed mt-2 mb-4">
-                <span className="font-weight-bold">Suggested Posts</span> 
-                {oldPosts.length>0&&<button className="btn btn-custom-third" style={{float:"right",marginTop:"-15px"}} onClick={convertOld}>View Older Posts</button>}
+              <div className="newsfeed mt-2 mb-4 tag-post">
+                <div className="cursor-pointer align-center mt-1">
+                  <SVG src={toAbsoluteUrl("/media/icons/svg/General/Checked.svg")} />
+                </div>
+                <div className="font-size-14 font-weight-bold align-center mt-1">You’re All Caught Up</div>
+                <div className="font-size-14 align-center mt-1">You’ve seen all new posts from the past 3 days.</div>
+                {oldPosts.length>0&&<div className="font-size-14 font-weight-bold align-center cursor-pointer" style={{color:"#008EB2"}} onClick={convertOld}>View Older Posts</div>}
+              </div>
+              <div className="newsfeed suggested-header">
+                <Sticky offsetTop={62} onChange={handleChangeSuggeted}>
+                  <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Suggested Posts </div>
+                  {(suggestedSticky&&oldPosts.length>0) &&<div className="font-size-14 font-weight-bold cursor-pointer old-posts-button" onClick={convertOld}>
+                      Older Posts
+                    </div>
+                  }
+                </Sticky>
               </div>
               {<Posts posts={suggestedPosts} last={suggestedPostsLast} dispatchAction={dispatchSuggestedAction}  show={false} newsfeed={true}/>}
             </>}

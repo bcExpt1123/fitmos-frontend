@@ -2,7 +2,6 @@ import React,{useEffect, useState} from "react";
 import MetaTags from "react-meta-tags";
 import {Row} from "react-bootstrap";
 import {Col} from "react-bootstrap";
-import SVG from "react-inlinesvg";
 
 import TwoColumn from "./layouts/Two";
 import PageHeader from "./layouts/PageHeader";
