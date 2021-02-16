@@ -15,6 +15,8 @@ import {
   registerWithPassword,
   registerWithFacebook,
   registerWithGoogle,
+  registerWithApple,
+  registrationAppleFailed,
 } from "./actions";
 import { addAlertMessage } from "../alert/actions";
 import { signInUser } from "../auth/actions";
@@ -479,7 +481,97 @@ function* onRegisterWithGoogle({ payload }) {
 
   return { response };
 }
+/* Apple */
 
+const appleRequest = ({
+  accessToken,
+  first_name,
+  last_name,
+  email,
+  gender = "u",
+  applicationSource = "workout",
+  returnTo,
+  referralId,
+  level,
+  place,
+  goal,
+  birthday,
+  weight,
+  weightUnit,
+  height,
+  heightUnit,
+  couponCode,
+  invitationEmail
+}) =>
+  http({
+    method: "POST",
+    app: "user",
+    path: "apple/register",
+    data: {
+      //      user: {
+      access_token: accessToken,
+      first_name,
+      last_name,
+      email,
+      gender,
+      level,
+      place,
+      goal,
+      birthday,
+      weight,
+      weightUnit,
+      height,
+      heightUnit,
+      emails_allowed: true,
+      terms_acceptance: true,
+      platform_source: "web",
+      application_source: applicationSource,
+      couponCode,
+      invitationEmail,
+      //      },
+      return_to: returnTo,
+      referral_id: referralId
+    },
+    skipAuthentication: true
+  });
+
+function* onRegisterWithApple({ payload }){
+  const {
+    gender,
+    level,
+    place,
+    goal,
+    info: { birthday, weight, weightUnit, height, heightUnit }
+  } = payload.profile;
+
+  let couponCode = reactLocalStorage.get('publicCoupon');
+  const referralCode = reactLocalStorage.get('referralCode');
+  if(referralCode) couponCode = referralCode;
+  const invitationEmail = reactLocalStorage.get('invitationEmail');
+  payload.invitationEmail = invitationEmail;
+  let response;
+  try {
+    response = yield call(appleRequest, {
+      ...payload,
+      accessToken: payload.id_token,
+      gender,
+      level,
+      place,
+      goal,
+      birthday,
+      weight,
+      weightUnit,
+      height,
+      heightUnit,
+      couponCode,
+      invitationEmail
+    });
+  } catch (error) {
+    return { error: getApiErrorMessage(error) };
+  }
+
+  return { response };
+}
 const registrationTypes = {
   [registerWithPassword]: {
     provider: "email",
@@ -495,6 +587,11 @@ const registrationTypes = {
     provider: "google",
     trackingProvider: "google",
     requestFunction: onRegisterWithGoogle
+  },
+  [registerWithApple]: {
+    provider: "apple",
+    trackingProvider: "apple",
+    requestFunction: onRegisterWithApple
   }
 };
 
@@ -593,7 +690,7 @@ function* onRegister({ type, payload }) {
     // If user is fully authenthicated just redirect to desired page
     if (standardAuthentication) {
       //const { returnTo } = payload;
-      // redirect to pricing page or customer dashboard
+      payload.history.push("/");
     } else {
       //yield put(setStep(REGISTRATION_STEPS.CONFIRMATION));
     }
@@ -601,12 +698,17 @@ function* onRegister({ type, payload }) {
     yield put(trackError(error));
   }
 }
-
+function* onRegistrationAppleFailed({payload}){
+  if(payload.error!='popup_closed_by_user'){
+    yield put(addAlertMessage({ type: "error", message: {id:"RegistrationForm.Error.Apple.error" }}));
+  }
+}
 export default function* rootSaga() {
   yield all([
     takeLatest(
-      [registerWithPassword, registerWithFacebook, registerWithGoogle],
+      [registerWithPassword, registerWithFacebook, registerWithGoogle, registerWithApple],
       onRegister
     )
   ]);
+  yield takeLatest( registrationAppleFailed, onRegistrationAppleFailed);
 }

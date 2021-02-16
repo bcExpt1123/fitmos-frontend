@@ -4,6 +4,7 @@ import { bindActionCreators } from "redux";
 import { FormattedMessage } from "react-intl";
 import { Formik, Form, Field } from "formik";
 import PropTypes from "prop-types";
+import { useHistory } from "react-router-dom";
 
 import { registerWithPassword } from "../../../redux/registration/actions";
 
@@ -64,7 +65,7 @@ const RegistrationForm = ({
     info: { birthday, weight, weightUnit, height, heightUnit }
   } = profile;
   const [focused, setFocused] = useState({});
-
+  const history = useHistory();
   const onSubmit = (
     { email, password, firstName, lastName },
     { setSubmitting }
@@ -85,7 +86,8 @@ const RegistrationForm = ({
       weight,
       weightUnit,
       height,
-      heightUnit
+      heightUnit,
+      history
     });
     setSubmitting(false);
   };

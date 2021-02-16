@@ -1,14 +1,17 @@
 import React, { useEffect } from "react";
 import PropTypes from "prop-types";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import RegistrationForm from "../Auth/RegistrationForm";
 import FacebookButton from "../Auth/FacebookButton";
 import GoogleButton from "../Auth/GoogleButton";
+import AppleButton from "../Auth/AppleButton";
 import {
   registerWithFacebook,
   registerWithGoogle,
+  registerWithApple,
+  registrationAppleFailed,
   initialize as initializeRegistration
 } from "../../redux/registration/actions";
 import useBodyClass from "../../../../../lib/bodyClassModify";
@@ -25,6 +28,15 @@ const StepForm = ({
   useEffect(() => {
     actions.initializeRegistration();
   });
+  const appleHandleSuccess = (response)=>{
+    if(response){
+      actions.registerWithApple({profile,id_token:response.authorization.id_token,history});
+    }
+  }
+  const appleHandleError = (error)=>{
+    actions.registrationAppleFailed(error);
+  }
+  const history = useHistory();
   return (
     <main className="row justify-content-md-center">
       <div className="col-12 col-lg-2"></div>
@@ -45,11 +57,12 @@ const StepForm = ({
                 applicationSource,
                 referralId,
                 returnTo,
-                profile
+                profile,
+                history
               })
             }
           >
-            Empezar con Google
+            Google
           </GoogleButton>
           <FacebookButton
             disabled={isRegistering}
@@ -58,12 +71,20 @@ const StepForm = ({
                 applicationSource,
                 referralId,
                 returnTo,
-                profile
+                profile,
+                history
               })
             }
           >
-            Empezar con Facebook
+            Facebook
           </FacebookButton>
+          <AppleButton
+              disabled={isRegistering}
+              onSuccess={appleHandleSuccess}
+              onError={appleHandleError}
+            >
+            Apple
+          </AppleButton>
         </section>
 
         <section className={"email"}>
@@ -100,7 +121,9 @@ StepForm.propTypes = {
   returnTo: PropTypes.string,
   actions: PropTypes.shape({
     registerWithFacebook: PropTypes.func.isRequired,
-    registerWithGoogle: PropTypes.func.isRequired
+    registerWithGoogle: PropTypes.func.isRequired,
+    registerWithApple: PropTypes.func.isRequired,
+    registrationAppleFailed: PropTypes.func.isRequired,
   }).isRequired
 };
 
@@ -113,6 +136,8 @@ const mapDispatchToProps = dispatch => ({
     {
       registerWithFacebook,
       registerWithGoogle,
+      registerWithApple,
+      registrationAppleFailed,
       initializeRegistration
     },
     dispatch

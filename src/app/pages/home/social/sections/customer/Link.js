@@ -23,7 +23,7 @@ const LinkProfile = ({id, display})=>{
       {popupCustomer?
         <NavLink
           to={"/"+popupCustomer.username}
-          className={"link-profile follower-button"}
+          className={"link-profile follower-button font-weight-bold"}
         >
           {popupCustomer.first_name} {popupCustomer.last_name}
         </NavLink>    

@@ -18,6 +18,7 @@ import {
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
 import { start } from "../../redux/checkout/actions";
 import { pulling } from "../../redux/workout/actions";
+import { logOut as logOutAction } from "../../redux/auth/actions";
 import ProofButton from "../../components/ProofButton";
 import { $changeItem } from "../../../../../modules/subscription/service";
 
@@ -32,6 +33,7 @@ class NavBarVariantFull extends React.Component {
       isDrawerOpen: false
     };
     this.toggleisDrawerOpen = this.toggleisDrawerOpen.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
   componentDidMount() {
     //const offset = new Date().toString().match(/([-\+][0-9]+)\s/)[1];
@@ -65,7 +67,9 @@ class NavBarVariantFull extends React.Component {
       isDrawerOpen: !prevState.isDrawerOpen
     }));
   };
-
+  handleLogout = () =>{
+    this.props.logOutAction();
+  }
   render() {
     const { isDrawerOpen } = this.state;
     //const navbarClassnames = "navbar navbar-expand beta-menu navbar-dropdown align-items-center navbar-fixed-top navbar-toggleable-sm transparent ";
@@ -188,14 +192,18 @@ class NavBarVariantFull extends React.Component {
                           </li>
                         :
                           <li className="nav-item">
-                            <NavLink
+                            <a className={"nav-link link text-white display-4"}  onClick={this.handleLogout}>
+                              Cerrar sesión
+                            </a>
+
+                            {/* <NavLink
                               to="/logout"
                               className={"nav-link link text-white display-4"}
                               activeClassName="active"
                               exact
                             >
                               Cerrar Sesión
-                            </NavLink>
+                            </NavLink> */}
                           </li>
                         }
                       </ul>
@@ -308,7 +316,8 @@ export const mapDispatchToProps = {
   setPrivateVoucher,
   $changeItem,
   start,
-  pulling
+  pulling,
+  logOutAction
 };
 
 export default withRouter(NavBarWrapper);

@@ -15,7 +15,7 @@ export default function PostContent({post, newsfeed,modalShow}) {
     const follower = post.contentFollowers.filter(customer=>word===`$${customer.id}$`);
     return <>
       {follower.length>0?
-        <button className="follower-button dropbtn" onClick={handleClick(follower[0])}>
+        <button className="follower-button dropbtn font-weight-bold" onClick={handleClick(follower[0])}>
           {follower[0].first_name+' '+follower[0].last_name}
         </button>
         :
