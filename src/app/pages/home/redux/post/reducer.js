@@ -52,7 +52,7 @@ const reducer = persistReducer(
   {
     storage,
     key: "post",
-    blacklist:['suggested']
+    blacklist:['suggested','suggestedPosts','suggestedPostsLastId','suggestedPostsLast']
   },
   handleActions(
     {

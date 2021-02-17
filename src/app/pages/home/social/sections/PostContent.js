@@ -9,7 +9,7 @@ import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
 
-export default function PostContent({post, newsfeed,modalShow}) {
+export default function PostContent({post, newsfeed,suggested,modalShow}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const renderWord = (word)=>{
     const follower = post.contentFollowers.filter(customer=>word===`$${customer.id}$`);
@@ -49,14 +49,18 @@ export default function PostContent({post, newsfeed,modalShow}) {
     setRefresh(refresh + 1);
   }
   const handleFollow = ()=>{
+    dispatch(setItemValue({name:"suggested",value:1}))
     dispatch(follow(post.customer_id));
     setRefresh(refresh + 1);
   }
   const handleUnfollow = ()=>{
+    dispatch(setItemValue({name:"suggested",value:0}));
     dispatch(unfollow(post.customer_id));
     setRefresh(refresh + 1);
   }
   const handleMute = ()=>{
+    if(suggested)dispatch(setItemValue({name:"suggested",value:1}))
+    else dispatch(setItemValue({name:"suggested",value:0}))
     dispatch(mute(post.customer_id));
     setRefresh(refresh + 1);
   }
@@ -83,7 +87,7 @@ export default function PostContent({post, newsfeed,modalShow}) {
           className={"link-profile"}
         >
           <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
-        </NavLink>        
+        </NavLink>
         <DropDown refresh={refresh}>
           {({show,toggleHandle})=>(
             <div className=" dropdown">
@@ -99,8 +103,8 @@ export default function PostContent({post, newsfeed,modalShow}) {
                   </>
                   :
                   <>
-                    {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                    {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                    {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                    {/* {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>} */}
                     {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
                     <a className={"dropdown-item"} onClick={handleReport}>Report Post</a>
                   </>
@@ -119,6 +123,11 @@ export default function PostContent({post, newsfeed,modalShow}) {
               {post.customer.first_name} {post.customer.last_name}
             </NavLink>
           </span>
+          {(post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
+            <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
+              &nbsp;&nbsp;&nbsp;Follow
+            </span>
+          )}        
           {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span className="font-weight-bold">&nbsp;is</span>}
           {(post.location && post.location!='false')&&<span className="font-weight-bold">&nbsp;in {post.location}</span>}
           {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}

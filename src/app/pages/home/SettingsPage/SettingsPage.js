@@ -10,7 +10,7 @@ import { addAlertMessage } from "../redux/alert/actions";
   updateProfile,
 } from '../redux/userSettings/actions';*/
 import { camelizeResponse } from "../services/api";
-import ThreeColumn from "../layouts/Three";
+import TwoColumn from "../layouts/Two";
 import PageHeader from "../layouts/PageHeader";
 import SubNav from "../components/SubNav";
 import { logOut as logOutAction } from "../redux/auth/actions";
@@ -34,8 +34,8 @@ const SettingsPage = ({ actions, currentUser, profile, section }) => {
     setShowForm(false);
   }
   return (
-    <ThreeColumn>
-      <PageHeader title={`Suscripciones`}/>
+    <TwoColumn>
+      <PageHeader title={`Suscripciones`} backUrl={`/profile`}/>
       <section className={"settings"}>
         <div className="body container mb-5 ">
           <SubNav links={profileLinks} handleLogout={handleShowLogoutModal}/>
@@ -72,7 +72,7 @@ const SettingsPage = ({ actions, currentUser, profile, section }) => {
         </Button>
         </Modal.Footer>          
       </Modal>
-    </ThreeColumn>
+    </TwoColumn>
   );
 };
 

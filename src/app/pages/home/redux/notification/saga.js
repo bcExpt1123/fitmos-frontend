@@ -77,12 +77,12 @@ const followRequest = (customerId)=>
     }
   }).then(response => response.data);
 function* onFollow({payload}){
-  console.log(payload)
   yield put(setItemValue({name:'followDisabled',value:true}));
   try{
     const result = yield call(followRequest, payload);
     yield put(setItemValue({name:'followDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'followDisabled',value:false}));
@@ -96,12 +96,13 @@ const unFollowRequest = (customerId)=>
       customer_id:customerId
     }
   }).then(response => response.data);
-function* onUnollow({payload}){
+function* onUnfollow({payload}){
   yield put(setItemValue({name:'followDisabled',value:true}));
   try{
     const result = yield call(unFollowRequest, payload);
     yield put(setItemValue({name:'followDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'followDisabled',value:false}));
@@ -118,7 +119,8 @@ function* onAccept({payload}){
     const filteredFollows = follows.filter(item=>item.id!==payload);
     yield put(setItemValue({name:'follows',value:[...filteredFollows]}));
     const result = yield call(acceptRequest, payload);
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
   }catch(error){
 
   }
@@ -134,7 +136,8 @@ function* onReject({payload}){
     const filteredFollows = follows.filter(item=>item.id!==payload);
     yield put(setItemValue({name:'follows',value:[...filteredFollows]}));
     const result = yield call(rejectRequest, payload);
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
   }catch(error){
     
   }
@@ -152,7 +155,8 @@ function* onBlock({payload}){
   try{
     const result = yield call(blockRequest, payload);
     yield put(setItemValue({name:'blockDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
   }catch(error){
     yield put(setItemValue({name:'blockDisabled',value:false}));
   }  
@@ -171,7 +175,8 @@ function* onUnblock({payload}){
   try{
     const result = yield call(unblockRequest, payload);
     yield put(setItemValue({name:'blockDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'blockDisabled',value:false}));
@@ -191,7 +196,8 @@ function* onMute({payload}){
   try{
     const result = yield call(muteRequest, payload);
     yield put(setItemValue({name:'muteDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'muteDisabled',value:false}));
@@ -211,7 +217,8 @@ function* onUnmute({payload}){
   try{
     const result = yield call(unmuteRequest, payload);
     yield put(setItemValue({name:'muteDisabled',value:false}));
-    if(result.customer)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const username = yield select(({people})=>people.username);
+    if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'muteDisabled',value:false}));
@@ -221,7 +228,7 @@ export default function* rootSaga() {
   yield takeLeading(searchNotifications,onSearchNotifications);
   yield takeLeading(findFollows,onFindFollows);
   yield takeLeading(follow,onFollow);
-  yield takeLeading(unfollow,onUnollow);
+  yield takeLeading(unfollow,onUnfollow);
   yield takeLeading(accept,onAccept);
   yield takeLeading(reject,onReject);
   yield takeLeading(block,onBlock);

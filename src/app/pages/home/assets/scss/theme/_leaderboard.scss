@@ -45,7 +45,7 @@
         }
       }
       .content{
-        flex:0 0 67%;
+        flex:0 0 66%;
         margin-left: 20px;
         .name{
           font-size: 16px;
@@ -62,7 +62,7 @@
       }
       .position{
         flex:0 0 10%;
-        margin-top:2px;
+        margin-top:5px;
         text-align: right;
         font-size: 24px;
         font-weight: 600;
@@ -83,5 +83,10 @@
         }
       }
     }
+  }
+}
+@media (max-width: 590px) {
+  .leaderboard-front .data .item .content{
+    flex: 0 0 60%;
   }
 }

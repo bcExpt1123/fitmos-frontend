@@ -104,12 +104,12 @@ const EventPage = ({id}) => {
               </div>
               <div>
                 <Map
-                  googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_PAYPAL_GOOGLE_MAP_KEY}
+                  googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
                   loadingElement={<div style={{ height: `100%` }} />}
                   containerElement={<div style={{ height: `400px` }} />}
                   mapElement={<div style={{ height: `100%` }} />}
                   isMarkerShown={event.latitude===null?false:true}
-                  markerPosition={event.latitude===null?null:{ lat: event.latitude, lng: event.longitude }}
+                  markerPosition={event.latitude===null?null:{ lat: parseFloat(event.latitude), lng: parseFloat(event.longitude) }}
                 />
               </div>
             </div>

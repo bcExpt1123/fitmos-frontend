@@ -69,7 +69,7 @@ export default function Leaderboard() {
       />
       </MetaTags>
       <ThreeColumn>
-        <div className="leaderboard-front">
+        <div className="leaderboard-front newsfeed">
           <h2 className="title">
             Leaderboard
           </h2>

@@ -192,7 +192,7 @@ function Main({match,history}) {
                   containerElement={<div style={{ height: `400px` }} />}
                   mapElement={<div style={{ height: `100%` }} />}
                   isMarkerShown={item.latitude===null?false:true}
-                  markerPosition={item.latitude===null?null:{ lat: item.latitude, lng: item.longitude }}
+                  markerPosition={item.latitude===null?null:{ lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) }}
                   onMapClick = {handleMapClick}
                 />
               </div>              

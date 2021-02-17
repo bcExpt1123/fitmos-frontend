@@ -53,6 +53,7 @@ function* onFindNewsfeed(){
       yield put(setItemValue({name:"newsfeedLast",value:true}));
       yield put(setItemValue({name:"suggested", value:1}));
       yield put(appendSuggestedPosts());
+      yield call(convertOldNewsfeed);
       yield put(appendOldNewsfeed());
     }else{
       yield put(setNewsfeed(result.newsfeed));
@@ -1203,44 +1204,56 @@ const replacePosts = (oldPosts)=>(post)=>{
 }
 function* onRefreshPosts(){
   const suggested = yield select(({post})=>post.suggested);
+  const old = yield select(({post})=>post.old);
   let postData;
-  let newsfeed, suggestedPosts, newPosts;
-  if(suggested ===  0 ){
-    const posts = yield select(({post})=>post.newsfeed);
-    postData = posts.map(post=>{
-      const [fromId, toId] = getCommentRange(post);
-      return{
-        id:post.id,
-        from_id:fromId,
-        to_id:toId,
-      }
-    });
+  let newsfeed, suggestedPosts, oldPosts, newPosts;
+  if( old == 0 ){
+    if( suggested ===  0 ){
+      const posts = yield select(({post})=>post.newsfeed);
+      postData = posts.map(post=>{
+        const [fromId, toId] = getCommentRange(post);
+        return{
+          id:post.id,
+          from_id:fromId,
+          to_id:toId,
+        }
+      });
+    }else{
+      const posts = yield select(({post})=>post.suggestedPosts);
+      postData = posts.map(post=>{
+        const [fromId, toId] = getCommentRange(post);
+        return{
+          id:post.id,
+          from_id:fromId,
+          to_id:toId,
+        }
+      });
+    }
   }else{
-    const posts = yield select(({post})=>post.suggestedPosts);
-    postData = posts.map(post=>{
-      const [fromId, toId] = getCommentRange(post);
-      return{
-        id:post.id,
-        from_id:fromId,
-        to_id:toId,
-      }
-    });
+    oldPosts = yield select(({post})=>post.oldNewsfeed);
   }
   try{
     const result = yield call(syncRequest, postData);
-    if(suggested ===  0 ){
-      newsfeed = yield select(({post})=>post.newsfeed);
-      const filteredPosts = result.posts.filter((post)=>post.customer.following!=null&&post.customer.relation!=undefined);
-      newPosts = filteredPosts.map(replacePosts(newsfeed));
-      yield put(setItemValue({name:"newsfeed", value:newPosts}));      
-      if(newPosts.length ==0){
-        yield put(appendSuggestedPosts());
+    if( old == 0 ){
+      if(suggested ===  0 ){
+        newsfeed = yield select(({post})=>post.newsfeed);
+        const filteredPosts = result.posts.filter((post)=>post.customer.following!=null && post.customer.following.status=='accepted' && post.customer.relation!=undefined);
+        newPosts = filteredPosts.map(replacePosts(newsfeed));
+        yield put(setItemValue({name:"newsfeed", value:newPosts}));      
+        if(newPosts.length ==0){
+          yield put(appendSuggestedPosts());
+        }
+      }else{
+        suggestedPosts = yield select(({post})=>post.suggestedPosts);
+        const filteredPosts = result.posts.filter((post)=>(post.customer.following==null || post.customer.following.status=='pending' )&&post.customer.relation!=undefined);
+        newPosts = filteredPosts.map(replacePosts(suggestedPosts));
+        yield put(setItemValue({name:"suggestedPosts", value:newPosts}));      
       }
     }else{
-      suggestedPosts = yield select(({post})=>post.suggestedPosts);
-      const filteredPosts = result.posts.filter((post)=>post.customer.following==null&&post.customer.relation!=undefined);
-      newPosts = filteredPosts.map(replacePosts(suggestedPosts));
-      yield put(setItemValue({name:"suggestedPosts", value:newPosts}));      
+      oldPosts = yield select(({post})=>post.oldNewsfeed);
+      const filteredPosts = result.posts.filter((post)=>post.customer.following!=null&&  post.customer.following.status=='accepted' && post.customer.relation!=undefined);
+      newPosts = filteredPosts.map(replacePosts(oldPosts));
+      yield put(setItemValue({name:"oldNewsfeed", value:newPosts}));
     }
   }catch(e){
     console.log(e)

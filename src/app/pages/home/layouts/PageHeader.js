@@ -1,13 +1,17 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
-const PageHeader = ({title,tagLine, breadcrumb})=>{
+import { toAbsoluteUrl, isMobile } from "../../../../_metronic/utils/utils";
+
+const PageHeader = ({title,tagLine, breadcrumb, backUrl})=>{
   const currentUser = useSelector(({auth})=>auth.currentUser);
+  const history = useHistory();
   return (
     <header className="page-title">
-      <h2>{breadcrumb?(
+      <h2>
+        {backUrl&&isMobile()&&<span className="cursor-pointer back" onClick={()=>history.push(backUrl)}><i className="fas fa-arrow-left" /></span>}        
+        {breadcrumb?(
         breadcrumb.map((item, index)=>
           <NavLink
             title={item.name}

@@ -116,6 +116,7 @@ const EditProfile = ({ show, handleClose }) => {
       dispatch(uploadProfileImage(params));
     });
   };
+  const [showEditWeight,setShowEditWeight] = useState(false);
   return (
     <Modal
       show={show}
@@ -126,234 +127,249 @@ const EditProfile = ({ show, handleClose }) => {
       centered
     >
       <Modal.Header closeButton>
+      {showEditWeight&&<span className="cursor-pointer back" onClick={()=>setShowEditWeight(false)}><i className="fas fa-arrow-left" /></span>}
         <Modal.Title className="text-center w-100">
-          Perfil
+        {showEditWeight?
+          <>Monitoreo de peso corporal</>
+          :
+          <>Perfil</>
+        }
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Formik
-          initialValues={{
-            whatsapp_phone_number: currentUser.customer.whatsapp_phone_number
-              ? currentUser.customer.whatsapp_phone_number
-              : "",
-            username: currentUser.customer.username,  
-            first_name: currentUser.customer.first_name,
-            last_name: currentUser.customer.last_name,
-            current_height:currentUser.customer.current_height,
-            country:currentUser.customer.country,
-            country_code:currentUser.customer.country_code,
-            gender:currentUser.customer.gender,
-            description:currentUser.customer.description
-          }}
-          validate={validate(currentUser.password)}
-          onSubmit={onSubmit}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            isValid,
-            errors
-          }) => (
-            <Form className="auth-form">
-              <Row>
-                <Col xs={12}>
-                  <Avatar
-                    pictureUrls={currentUser.avatarUrls}
-                    size="xl"
-                    className={"userAvatar"}
-                  >
-                    <div className={"userAvatarUpload"}>
-                      <ProfileOverlay url={currentUser.avatarUrls.max} setUploadImage={setUploadImage} onUpload={onUpload} avatar={currentUser.avatar}/>
-                    </div>
-                    {isProfileImageLoading&&(
-                      <div className="loading">
-                        <SVG src={toAbsoluteUrl("/media/icons/svg/Code/Loading.svg")} />
+        {showEditWeight?
+          <EditWeight />
+        :
+          <Formik
+            initialValues={{
+              whatsapp_phone_number: currentUser.customer.whatsapp_phone_number
+                ? currentUser.customer.whatsapp_phone_number
+                : "",
+              username: currentUser.customer.username,  
+              first_name: currentUser.customer.first_name,
+              last_name: currentUser.customer.last_name,
+              current_height:currentUser.customer.current_height,
+              country:currentUser.customer.country,
+              country_code:currentUser.customer.country_code,
+              gender:currentUser.customer.gender,
+              description:currentUser.customer.description
+            }}
+            validate={validate(currentUser.password)}
+            onSubmit={onSubmit}
+          >
+            {({
+              handleSubmit,
+              handleChange,
+              handleBlur,
+              values,
+              touched,
+              isValid,
+              errors
+            }) => (
+              <Form className="auth-form">
+                <Row>
+                  <Col xs={12}>
+                    <Avatar
+                      pictureUrls={currentUser.avatarUrls}
+                      size="xl"
+                      className={"userAvatar"}
+                    >
+                      <div className={"userAvatarUpload"}>
+                        <ProfileOverlay url={currentUser.avatarUrls.max} setUploadImage={setUploadImage} onUpload={onUpload} avatar={currentUser.avatar}/>
                       </div>
-                    )}
-                  </Avatar>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12}>
-                  <FormGroup
-                    hasValue={Boolean(values.username)}
-                    name="username"
-                    htmlFor="username"
-                    label={"Username"}
-                    focused={focused.username}
-                    touched={touched.username}
-                    valid={Boolean(values.username && !errors.username)}
-                  >
-                    <Field
-                      id="username"
-                      type="text"
-                      name="username"
-                      autoComplete="username"
-                      onFocus={handleFocus}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={6}>
-                  <FormGroup
-                    hasValue={Boolean(values.first_name)}
-                    name="first_name"
-                    htmlFor="first_name"
-                    label={"Nombre"}
-                    focused={focused.first_name}
-                    touched={touched.first_name}
-                    valid={Boolean(values.first_name && !errors.first_name)}
-                  >
-                    <Field
-                      id="first_name"
-                      type="text"
+                      {isProfileImageLoading&&(
+                        <div className="loading">
+                          <SVG src={toAbsoluteUrl("/media/icons/svg/Code/Loading.svg")} />
+                        </div>
+                      )}
+                    </Avatar>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6}>
+                    <FormGroup
+                      hasValue={Boolean(values.first_name)}
                       name="first_name"
-                      autoComplete="given-name"
-                      onFocus={handleFocus}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs={6}>
-                  <FormGroup
-                    hasValue={Boolean(values.last_name)}
-                    name="last_name"
-                    htmlFor="last_name"
-                    label={"Apellido"}
-                    focused={focused.last_name}
-                    touched={touched.last_name}
-                    valid={Boolean(values.last_name && !errors.last_name)}
-                  >
-                    <Field
-                      id="last_name"
-                      type="text"
+                      htmlFor="first_name"
+                      label={"Nombre"}
+                      focused={focused.first_name}
+                      touched={touched.first_name}
+                      valid={Boolean(values.first_name && !errors.first_name)}
+                    >
+                      <Field
+                        id="first_name"
+                        type="text"
+                        name="first_name"
+                        autoComplete="given-name"
+                        onFocus={handleFocus}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col xs={6}>
+                    <FormGroup
+                      hasValue={Boolean(values.last_name)}
                       name="last_name"
-                      autoComplete="last_name"
-                      onFocus={handleFocus}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={6}>
-                  <FormGroup
-                    hasValue={Boolean(values.current_height)}
-                    name="current_height"
-                    htmlFor="current_height"
-                    label={"Altura"}
-                    focused={focused.current_height}
-                    touched={touched.current_height}
-                    valid={Boolean(values.current_height && !errors.current_height)}
-                  >
-                    <Field
-                      id="current_height"
-                      type="text"
-                      name="current_height"
-                      autoComplete="current_height"
-                      onFocus={handleFocus}
-                    />
-                  </FormGroup>
-                </Col>
-                <Col xs={6}>
-                  <FormGroup
-                    hasValue={Boolean(values.country_code)}
-                    name="country_code"
-                    htmlFor="country_code"
-                    label={"País"}
-                    focused={focused.country_code}
-                    touched={touched.country_code}
-                    valid={Boolean(values.country_code && !errors.country_code)}
-                  >
-                    <Field 
-                      as="select" 
-                      name="country_code"
-                      id="country_code"
-                      autoComplete="country_code"
-                      onFocus={handleFocus}
+                      htmlFor="last_name"
+                      label={"Apellido"}
+                      focused={focused.last_name}
+                      touched={touched.last_name}
+                      valid={Boolean(values.last_name && !errors.last_name)}
                     >
-                      {
-                        countries.map(country=>(
-                          <option value={country.name} key={country.name}>{country.value}</option>
-                        ))
-                      }
-                    </Field>
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={6} className="">
-                  <FormGroup
-                    hasValue={Boolean(values.gender)}
-                    name="gender"
-                    htmlFor="gender"
-                    label={"Género"}
-                    focused={focused.gender}
-                    touched={touched.gender}
-                    valid={Boolean(values.gender && !errors.gender)}
-                  >
-                    <Field
-                      id="gender"
-                      as="select"
+                      <Field
+                        id="last_name"
+                        type="text"
+                        name="last_name"
+                        autoComplete="last_name"
+                        onFocus={handleFocus}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6}>
+                    <FormGroup
+                      hasValue={Boolean(values.username)}
+                      name="username"
+                      htmlFor="username"
+                      label={"Username"}
+                      focused={focused.username}
+                      touched={touched.username}
+                      valid={Boolean(values.username && !errors.username)}
+                    >
+                      <Field
+                        id="username"
+                        type="text"
+                        name="username"
+                        autoComplete="username"
+                        onFocus={handleFocus}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col xs={6} className="">
+                    <FormGroup
+                      hasValue={Boolean(values.gender)}
                       name="gender"
-                      autoComplete="gender"
-                      onFocus={handleFocus}
+                      htmlFor="gender"
+                      label={"Género"}
+                      focused={focused.gender}
+                      touched={touched.gender}
+                      valid={Boolean(values.gender && !errors.gender)}
                     >
-                      <option value="Male">Masculino</option>
-                      <option value="Female">Femenino</option>
-                    </Field>  
-                  </FormGroup>
-                </Col>
-                <Col xs={6}>
-                  <PhoneInput
-                    country={values.country_code}
-                    localization={es}
-                    id="whatsapp_phone_number"
-                    type="text"
-                    name="whatsapp_phone_number"
-                    value={values.whatsapp_phone_number}
-                    masks={{pa: '.... .... ....'}}
-                    onFocus={handleFocus}
-                    onChange={(phone,country) => {values.whatsapp_phone_number = phone;values.country = country.name;values.country_code=country.countryCode;}}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12} className="description">
-                  <FormGroup
-                    hasValue={Boolean(values.description)}
-                    name="description"
-                    htmlFor="description"
-                    label={"Description"}
-                    focused={focused.description}
-                    touched={touched.description}
-                    valid={Boolean(values.description && !errors.description)}
-                  >
-                    <Field
-                      id="description"
-                      type="text"
+                      <Field
+                        id="gender"
+                        as="select"
+                        name="gender"
+                        autoComplete="gender"
+                        onFocus={handleFocus}
+                      >
+                        <option value="Male">Masculino</option>
+                        <option value="Female">Femenino</option>
+                      </Field>  
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6}>
+                    <FormGroup
+                      hasValue={Boolean(values.country_code)}
+                      name="country_code"
+                      htmlFor="country_code"
+                      label={"País"}
+                      focused={focused.country_code}
+                      touched={touched.country_code}
+                      valid={Boolean(values.country_code && !errors.country_code)}
+                    >
+                      <Field 
+                        as="select" 
+                        name="country_code"
+                        id="country_code"
+                        autoComplete="country_code"
+                        onFocus={handleFocus}
+                      >
+                        {
+                          countries.map(country=>(
+                            <option value={country.name} key={country.name}>{country.value}</option>
+                          ))
+                        }
+                      </Field>
+                    </FormGroup>
+                  </Col>
+                  <Col xs={6}>
+                    <div className="" >
+                      <PhoneInput
+                        country={values.country_code}
+                        localization={es}
+                        id="whatsapp_phone_number"
+                        type="text"
+                        name="whatsapp_phone_number"
+                        value={values.whatsapp_phone_number}
+                        masks={{pa: '.... .... ....'}}
+                        onFocus={handleFocus}
+                        onChange={(phone,country) => {values.whatsapp_phone_number = phone;values.country = country.name;values.country_code=country.countryCode;}}
+                      />
+                    </div>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={6}>
+                    <FormGroup
+                      hasValue={Boolean(values.current_height)}
+                      name="current_height"
+                      htmlFor="current_height"
+                      label={"Altura"}
+                      focused={focused.current_height}
+                      touched={touched.current_height}
+                      valid={Boolean(values.current_height && !errors.current_height)}
+                    >
+                      <Field
+                        id="current_height"
+                        type="text"
+                        name="current_height"
+                        autoComplete="current_height"
+                        onFocus={handleFocus}
+                      />
+                    </FormGroup>
+                  </Col>
+                  <Col xs={6}>
+                    <Button type="button" variant="edit" onClick={()=>setShowEditWeight(true)}>
+                      Editar Peso
+                    </Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12} className="description">
+                    <FormGroup
+                      hasValue={Boolean(values.description)}
                       name="description"
-                      as="textarea"
-                      rows="5"
-                      autoComplete="description"
-                      onFocus={handleFocus}
-                    />
-                  </FormGroup>
-                </Col>
-              </Row>
-              <Row>
-                <Col xs={12}>
-                  <Button type="submit" className="fs-btn">
-                    Actualizar
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          )}
-        </Formik>
-        <EditWeight />
+                      htmlFor="description"
+                      label={"Description"}
+                      focused={focused.description}
+                      touched={touched.description}
+                      valid={Boolean(values.description && !errors.description)}
+                    >
+                      <Field
+                        id="description"
+                        type="text"
+                        name="description"
+                        as="textarea"
+                        rows="5"
+                        autoComplete="description"
+                        onFocus={handleFocus}
+                      />
+                    </FormGroup>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col xs={12}>
+                    <Button type="submit" className="fs-btn">
+                      Actualizar
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
+        }
       </Modal.Body>
     </Modal>
   );

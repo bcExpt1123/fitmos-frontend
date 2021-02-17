@@ -125,6 +125,16 @@
         outline-width: 0;
       }
     }
+    .react-tel-input {
+      .form-control{
+        font-size: revert;
+        width: inherit;
+        color:$basic-text-color;
+      }
+      .flag-dropdown,.form-control{
+        border: 1px solid #b3d139;        
+      }
+    }
     .description{
       .form-control{
         height:122px;

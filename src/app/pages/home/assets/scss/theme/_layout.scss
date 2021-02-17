@@ -244,48 +244,17 @@
   .wrapper {
 		&.three-column{
 			#content{
-        padding-right: 0;
-        width: 100%;
         .page-main{
-          margin-top:40px;
-          padding: 10px 50px 10px 10px;    
         }
 			}
-    }
-		&.two-column{
-			#content{
-        padding-left: 0;
-        width: 100%;
-        .page-main{
-          margin-top:30px;
-          padding: 10px 10px 10px 10px;    
-        }
-			}
-    }
-    #sidebar {
-      display: none;
+      .rightbar {
+        display: none;
+      }
     }
   }
 }
 @media (max-width: 1024px) {
   .wrapper {
-		&.three-column{
-			#content{
-				padding-right: 0;
-        .page-main{
-          margin-top:30px;
-          padding: 10px;    
-        }
-			}
-    }
-    #sidebar {
-      .responsive-menu{
-        display:block;
-      }    
-    }
-    .rightbar{
-      display: none;
-    }
   }
 }
 @media (max-width: 991px) {
@@ -311,44 +280,20 @@
     #show-responive-menu{
       display:block;
     }
-    #sidebar{
-      visibility: hidden;
-      opacity: 0;
-      width: 100%;
-      left: -100%;
-      footer{
-        margin: 0 auto;
-        bottom: 20px;
-        width:100%;
-      }
-    }
-    #sidebar.responsive{
-      visibility: visible;
-      opacity: 1;
-      left: 0;
-      transition: opacity 0.3s linear,left 0.3s ease;  
-      .menu-logo{
-        margin-bottom: 20px;
-      }    
-      #hide-responive-menu{
-        display: block;
-        background: inherit;
-      }
-      ul{
-        li a{
-          margin: 10px 0 0 0;
-          &[href]{
-            margin: 20px 0;
-          }
-        }
-        ul a{
-          margin-top: 15px!important;
-        }
-      } 
-    }
 		#content{
 			padding-left: 0;		
 		}
+		&.three-column{
+			#content{
+        padding-left: 0;
+        width: 100%;
+        .page-main{
+        }
+			}
+      #sidebar {
+        display:none;
+      }  
+    }
     &.two-column{
       #content{
         padding-left: 0;		
@@ -357,6 +302,9 @@
           padding: 10px;    
         }
       }
+      #sidebar {
+        display:none;
+      }  
     }
 	}
 }

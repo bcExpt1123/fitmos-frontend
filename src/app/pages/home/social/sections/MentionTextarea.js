@@ -130,7 +130,7 @@ export default function MentionTextarea({content, setContent, submit,commentForm
     <StylesViaJss>
       <div className="col-12 py-3">
         <div
-          className="comment-input-container px-2 row col-12 mx-auto"
+          className="comment-input-container px-0 row col-12 mx-auto"
           style={comment ? { border: "1px solid #71cee3" } : {}}
         >
           <div className="col-11 px-0">

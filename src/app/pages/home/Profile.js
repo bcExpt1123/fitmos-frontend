@@ -1,4 +1,5 @@
-import React,{useEffect, useState} from "react";
+import React from "react";
+import { useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 import {Row} from "react-bootstrap";
 import {Col} from "react-bootstrap";
@@ -11,23 +12,9 @@ import Objective from "./sections/Profile/Objective";
 import Subscription from "./sections/Profile/Subscription";
 import Email from "./sections/Profile/Email";
 import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
-// import { useSelector, useDispatch } from "react-redux";
-// import ThreeColumn from "./layouts/Three";
-// import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/actions";
-// import Posts from "./social/sections/Posts";
-
 
 const ProfilePage = () => {
-  // const posts = useSelector(({post})=>post.customerPosts);
-  // const currentUser = useSelector(({auth})=>auth.currentUser);
-  // const last = useSelector(({post})=>post.customerPostsLast);
-  // const dispatch = useDispatch();
-  // useEffect(()=>{
-  //   dispatch(findCustomerPosts(currentUser.customer.id));
-  // },[])
-  // const dispatchAction = ()=>{
-  //   dispatch(appendCustomerPostsAfter(currentUser.customer.id));
-  // }
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   return(
   <>
     <MetaTags>
@@ -38,7 +25,7 @@ const ProfilePage = () => {
       />
     </MetaTags>
     <TwoColumn>
-      <PageHeader title={`Mi Cuenta`}/>
+      <PageHeader title={`Mi Cuenta`} backUrl={`/${currentUser.customer.username}`}/>
       <Row className="profile">
         <Col xs={12} md={6}>
           <Account />
@@ -65,7 +52,6 @@ const ProfilePage = () => {
         </a>
 
       </div>
-        {/* {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true}/>} */}
     </TwoColumn>
   </>
 )};

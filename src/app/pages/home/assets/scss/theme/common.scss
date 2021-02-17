@@ -174,3 +174,31 @@ h3 {
     opacity: 0.8;
   }
 }
+.modal-dialog{
+  .back{
+    font-size: 18px;
+    border-radius: 15px;
+    background-color: #E5E7EB;
+    width:30px;
+    margin: -3px 10px 0 0;
+    display: inline-block;
+    i{
+      font-size: 15px;
+      margin-left: 6px;
+    }
+  }
+}
+.page-title{
+  .back{
+    font-size: 24px;
+    border-radius: 15px;
+    background-color: #E5E7EB;
+    width:27px;
+    margin: -3px 10px 0 0;
+    display: inline-block;
+    i{
+      font-size: 18px;
+      margin-left: 5px;
+    }
+  }
+}

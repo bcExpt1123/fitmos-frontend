@@ -86,7 +86,7 @@ export default function HomePage() {
         <Route exact path="/partners" component={Partners} />
         <Route exact path="/benchmarks" component={Benchmarks} />
         <Route exact path="/profile" component={ProfilePage} />
-        <Route exact path="/profile/pictures" component={ProfilePicturesPage} />
+        {/* <Route exact path="/profile/pictures" component={ProfilePicturesPage} /> */}
         <Route exact path="/perfil" component={PerfilPage} />
         <Route exact path="/level" component={LevelPage} />
         <Route exact path="/subscriptions" component={SubscriptionTabs} />

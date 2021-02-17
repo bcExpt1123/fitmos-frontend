@@ -5,6 +5,7 @@ import ThreeColumn from "./layouts/Three";
 import TwoColumn from "./layouts/Two";
 import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/actions";
 import Posts from "./social/sections/Posts";
+import ProfileInfo from "./profile/ProfileInfo";
 
 export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
@@ -29,10 +30,16 @@ export default function Customer({id}) {
       </MetaTags>
       {(username.profile==='public' || username.following && (username.following.status == 'accepted') || username.id == currentUser.customer.id)?
         <ThreeColumn>
+          <div className="customer-profile-section newsfeed">
+            <ProfileInfo customer={username}/>
+          </div>
           {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false}/>}
         </ThreeColumn>
         :
         <TwoColumn>
+          <div className="customer-profile-section newsfeed">
+            <ProfileInfo customer={username}/>
+          </div>
           <div className="absolute center">
             <div className="item">
               <div className="first-text"> Este Perfil es Privado</div>
