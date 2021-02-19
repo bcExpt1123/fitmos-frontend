@@ -2,12 +2,15 @@ import React,{ useState } from 'react';
 import { useDispatch,useSelector } from "react-redux";
 import classnames from "classnames";
 import { NavLink, useHistory } from "react-router-dom";
+import { Tooltip } from '@material-ui/core';
 import Avatar from "../../components/Avatar";
 import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions";
 import { follow, unfollow, mute } from "../../redux/notification/actions";
 import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
+import TagFollowersModal from "./customer/TagFollowersModal";
+import { convertTime } from "../../../../../lib/common";
 
 export default function PostContent({post, newsfeed,suggested,modalShow}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -79,6 +82,14 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
   const onReportModalClose = ()=>{
     setShowReportModal(false);
   }
+  /** tagFollowersModal */
+  const [showTagFollowersModal, setShowTagFollowersModal] = useState(false);
+  const openTagFollowersModal = ()=>{
+    setShowTagFollowersModal(true);
+  }
+  const onCloseTagFollowersModal = ()=>{
+    setShowTagFollowersModal(false);
+  }
   return (
     <>
       <div className="post-header">
@@ -114,7 +125,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           )}
         </DropDown>
         <ReportModal type={"post"} post={post} show={showReportModal} onClose={onReportModalClose}/>
-        <span>
+        <span style={{display:"inline-block",verticalAlign:"super"}}>
           <span className="full-name">
             <NavLink
               to={"/"+post.customer.username}
@@ -133,14 +144,28 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
           &nbsp;
           {
-            post.tagFollowers&&post.tagFollowers.map((follower)=>(
-              <span key={follower.id} className="follower">
-                <span className="follower font-weight-bold"><LinkProfile id={follower.id} display={follower.first_name+' '+follower.last_name}/></span>
-                <span className="spot">, &nbsp;</span>
-              </span>
-            ))
+            post.tagFollowers && post.tagFollowers.length>0 &&<>
+              &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
+              {post.tagFollowers.length>1&&
+                <>
+                  &nbsp;and&nbsp;
+                  <Tooltip title={
+                    post.tagFollowers.map((follower, index)=>{
+                      return index>0&&
+                      <div key={follower.id} className="follower">
+                        {follower.first_name+' '+follower.last_name}
+                      </div>
+                    })
+                  }>
+                    <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
+                  </Tooltip>  
+                  {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+                </>
+              }
+            </>
           }
         </span>
+        <div className="post-time" >{convertTime(post.created_at)}</div>
       </div>
       <div className="post-body">
         {post.json_content && <>

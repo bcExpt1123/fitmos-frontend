@@ -120,7 +120,7 @@ export default class ReadMore extends Component {
     let actionButton = this.getActionButton({showingAll, showLessButton, text, readMoreCharacterLimit, numberOfLines});
 
     return (
-      <div className="read-more" style={style}>
+      <div className="read-more">
         {textToDisplay} {actionButton}
       </div>
     )

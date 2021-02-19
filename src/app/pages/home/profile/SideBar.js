@@ -7,19 +7,6 @@ import { findCustomer, setItemValue } from "../redux/people/actions";
 
 const SideBar = () => {  
   const customer = useSelector(({people})=>people.username);
-  const dispatch = useDispatch();  
-  const match = matchPath(window.location.pathname, {
-    path:'/customers/:id',
-    exact:true,
-    strict:true
-  });  
-  useEffect(()=>{
-    if(match&&match.params){
-      dispatch(findCustomer(match.params.id));
-    }else{
-      dispatch(setItemValue({name:'customer',value:false}));
-    }
-  },[]);// eslint-disable-line react-hooks/exhaustive-deps
   return (  
     <div id="sidebar">
       <Sticky offsetTop={130}>

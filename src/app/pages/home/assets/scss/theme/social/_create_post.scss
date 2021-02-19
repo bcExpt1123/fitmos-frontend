@@ -11,7 +11,9 @@
       max-height: 280px;
       overflow: auto;
       position: absolute;
-      bottom: 14px;
+      strong{
+        background-color: rgb(206, 228, 229);
+      }
     }
     .creating-post-mention__input{
       padding: 9px 0;
@@ -42,12 +44,20 @@
   .modal-dialog{
     width:400px;
     .author{
+      display: block;
       .avatar{
-        margin-right: 10px;        
+        display: inline-block;
+        width: 30px;
+        margin-right: 10px;
+        vertical-align: top;
       }
-      .follower:last-of-type{
-        .spot{
-          display:none;
+      .with-location{
+        display: inline-block;
+        width: calc( 100% - 40px);
+        .follower:last-of-type{
+          .spot{
+            display:none;
+          }
         }
       }
     }
@@ -121,6 +131,7 @@
             justify-content: center;
             display: flex;
             align-items: center;
+            padding-top: 0;
             .item{
               position: relative;
               width: 100%;

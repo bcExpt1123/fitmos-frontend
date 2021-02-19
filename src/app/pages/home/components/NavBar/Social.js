@@ -250,7 +250,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             </li>
             <li className="nav-item">
               <NavLink
-                to={"/customers/"+currentUser.customer.id}
+                to={"/"+currentUser.customer.username}
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 exact

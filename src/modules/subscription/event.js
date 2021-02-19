@@ -68,7 +68,7 @@ const initialState = {
   frontData:null,
   frontMeta: {
     page: 1,
-    pageSize: 6,
+    pageSize: 8,
     pageTotal: 1,
     total: 0
   },

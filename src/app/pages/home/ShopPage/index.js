@@ -25,7 +25,7 @@ const Shop = () => {
       {/* <h4 style={{color:'rgba(51, 51, 51, 0.5)'}}>Todas las semanas publicamos comercios nuevos</h4> */}
       <div className="row">
         {companies&&companies.map((company)=>
-          <article className="col-12 col-md-4"  key={company.id}>
+          <article className="col-12 col-md-3"  key={company.id}>
             <div className="content">
               <NavLink
                 aria-label="Company"

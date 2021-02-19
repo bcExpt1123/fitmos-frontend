@@ -69,7 +69,7 @@ const PostModal = ({show, media, onClose }) => {
       dispatch(setItemValue({name:'modalPost',value:true}));
       setTimeout(()=>{
         if(mentionTextarea.current){
-          const height = 300+window.innerHeight-mentionTextarea.current.offsetTop;
+          const height = 380+window.innerHeight-mentionTextarea.current.offsetTop;
           commentContainer.current.style.height = height+"px";
         }  
       },100);

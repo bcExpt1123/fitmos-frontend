@@ -16,7 +16,7 @@ const Map = compose(
 )
   (props =>
       <GoogleMap
-          defaultZoom={8}
+          defaultZoom={15}
           defaultCenter={{ lat: props.markerPosition===null?8.93:props.markerPosition.lat, lng: props.markerPosition===null?-79.66:props.markerPosition.lng }}
           onClick={props.onMapClick}
       >

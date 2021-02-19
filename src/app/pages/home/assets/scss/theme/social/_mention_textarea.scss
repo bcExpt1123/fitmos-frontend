@@ -9,8 +9,10 @@
     }
     .mentions__highlighter {
       padding: 0 0.5rem;
-      strong[class*="css-8-0-2-"]{
-        background-color: rgb(206, 228, 229);
+      strong[class^="css-"]{
+        &[class*="-0-2-"]{
+          background-color: rgb(206, 228, 229);
+        }
       }
     }
     .mentions__input{

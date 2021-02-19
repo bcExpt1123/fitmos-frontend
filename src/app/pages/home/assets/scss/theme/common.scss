@@ -55,10 +55,10 @@
   }
 }
 .btn-fs-blue{
-  background-color: #1A7998;
+  background-color: $secondary-background-color;
   color:white;
   &:hover {
-    background-color: #1A7998;
+    background-color: $secondary-background-color;
     color:white;
   }
 }
@@ -88,8 +88,8 @@ h3 {
   cursor: pointer;
 }
 .btn-primary, .btn-primary:active {
-  background-color: #1A7998 !important;
-  border-color: #1A7998 !important;
+  background-color: $secondary-background-color !important;
+  border-color: $secondary-background-color !important;
 }
 .btn-custom, .btn-custom:active {
   border: 1px solid #B9B7B7;

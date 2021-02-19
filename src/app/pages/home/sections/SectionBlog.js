@@ -20,7 +20,7 @@ export default function Blog() {
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const changeDimesions = ()=>{
     console.log(window.innerWidth)
-    if(window.innerWidth>900)setHeight(window.innerWidth/3-50);
+    if(window.innerWidth>900)setHeight(window.innerWidth/4-50);
     if(window.innerWidth<768)setHeight(window.innerWidth-150);
   }
   const event = useSelector(({ event }) => event);
@@ -34,7 +34,7 @@ export default function Blog() {
     <section className="blog" id="blog">
       <div className="row">
         {posts&&posts.map((post)=>
-          <article className="col-12 col-md-4"  key={post.id}>
+          <article className="col-12 col-md-3"  key={post.id}>
             <div className="content">
               <NavLink
                   aria-label="Post"

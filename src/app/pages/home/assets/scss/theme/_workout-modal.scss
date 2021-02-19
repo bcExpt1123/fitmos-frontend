@@ -121,8 +121,8 @@
         margin: 10px;
         padding: 12px 40px;
         &.next{
-          border: 1px solid #1A7998;
-          background-color: #1A7998;          
+          border: 1px solid $secondary-background-color;
+          background-color: $secondary-background-color;          
           color:white;
           padding: 12px 80px;
         }
@@ -179,7 +179,7 @@
         font-size: 16px !important;
       }
       .swap{
-        background-color: #1A7998;
+        background-color: $secondary-background-color;
         color:white;
         font-size: 16px!important;
       }

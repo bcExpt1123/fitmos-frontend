@@ -18,6 +18,7 @@ import { isMobile } from '../../../../../_metronic/utils/utils';
 const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const users = useSelector(({people})=>people.people);
   const [content, setContent] = useState("");
+  const textRef = useRef();
   const [type, setType] = useState("post");
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect(()=>{
@@ -58,7 +59,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   }
   const filterPeople=(search, callback)=>{
     if(search.length>1){
-      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search));
+      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search.toLowerCase()));
       callback(filteredPeople.slice(0, 20));
     }else{
       callback(users.slice(0, 20));
@@ -95,6 +96,12 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     // const mediaContainer = document.getElementsByClassName("modal-dialog")[0];
     if(show){
       setMediaWidth(mediaContainerRef.current.clientWidth);
+      if(textRef.current){
+        console.log('focused')
+        textRef.current.focus();
+      }else{
+        console.log('not focused')
+      }
     }
   },[show]);
   useEffect(()=>{
@@ -130,6 +137,10 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const onPublishPost = ()=>{
     const id = post?post.id:false;
     publishPost({files, location, tagFollowers, content,id:id});
+    setContent("");
+    setLocation(false);
+    setFiles([]);
+    setTagFollowers([]);
   }
   const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
     return <div className={classnames("mention-customers",{focused:focused})}>
@@ -279,24 +290,27 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
             }
             <div className="author">
               <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
-              <span className="full-name">{currentUser.name}</span>
-              {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
-              {location&&<>&nbsp;in {location}</>}
-              {tagFollowers.length>0&&<>&nbsp;with</>}
-              &nbsp;
-              {
-                tagFollowers.map((follower)=>(
-                  <span key={follower.id} className="follower">
-                    <span className="follower">{follower.display}</span>
-                    <span className="spot">, &nbsp;</span>
-                  </span>
-                ))
-              }
+              <div className="with-location">
+                <span className="full-name">{currentUser.name}</span>
+                {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
+                {location&&<>&nbsp;in {location}</>}
+                {tagFollowers.length>0&&<>&nbsp;with</>}
+                &nbsp;
+                {
+                  tagFollowers.map((follower)=>(
+                    <span key={follower.id} className="follower">
+                      <span className="follower">{follower.display}</span>
+                      <span className="spot">, &nbsp;</span>
+                    </span>
+                  ))
+                }
+              </div>
             </div>
             <MentionsInput 
               value={content} 
               onChange={handleChange} 
               onBlur={handleBlur} 
+              inputRef={textRef}
               placeholder="Escribe algo..."
               className="creating-post-mention"
             >

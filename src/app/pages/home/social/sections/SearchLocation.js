@@ -60,7 +60,8 @@ export default function SearchLocation({setLocation, onClose}) {
     let active = true;
 
     if (!autocompleteService.current && window.google) {
-      autocompleteService.current = new window.google.maps.places.AutocompleteService();
+      console.log(window.google.maps.places)
+      if(window.google.maps.places)autocompleteService.current = new window.google.maps.places.AutocompleteService();
     }
     if (!autocompleteService.current) {
       return undefined;
@@ -93,7 +94,7 @@ export default function SearchLocation({setLocation, onClose}) {
   return (
     <Autocomplete
       id="openstreetmap"
-      style={{ width: 300, height:300 }}
+      style={{ width: 362, height:300 }}
       getOptionLabel={(option) => (typeof option === 'string' ? option : option.description)}
       filterOptions={(x) => x}
       options={options}

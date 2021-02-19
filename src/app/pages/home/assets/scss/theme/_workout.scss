@@ -107,8 +107,8 @@
         font-size: 16px;
         padding: 12px 40px;
         &.start{
-          border: 1px solid #1A7998;
-          background-color: #1A7998;          
+          border: 1px solid $secondary-background-color;
+          background-color: $secondary-background-color;          
           color:white;
           width: 100%;
           padding: 12px 80px;
@@ -152,8 +152,8 @@
   }
 }
 .blue-btn{
-  border: 1px solid #1A7998;
-  background-color: #1A7998;  
+  border: 1px solid $secondary-background-color;
+  background-color: $secondary-background-color;  
   display:block;
 }
 @media (max-width: 1080px) {

@@ -15,6 +15,7 @@ const CommentView = ({comment})=>{
   const [replyContent, setReplyContent] = useState("");
   const openReplyComment = ()=>{
     // if(!show)setTimeout(()=>commentTextarea.current.focus(),20);
+    setReplyContent(`@[${currentUser.customer.first_name} ${currentUser.customer.last_name}](${currentUser.customer.id})`);
     setShow(!show);
   }
   const commentTextarea = useRef();

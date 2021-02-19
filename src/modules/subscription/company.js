@@ -57,7 +57,7 @@ const initialState = {
   frontData:[],
   frontMeta: {
     page: 1,
-    pageSize: 9,
+    pageSize: 12,
     pageTotal: 1,
     total: 0
   },

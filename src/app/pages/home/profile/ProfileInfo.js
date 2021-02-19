@@ -9,7 +9,7 @@ import ProfileDropdown from "../social/sections/ProfileDropdown";
 import FollowButton from "../social/sections/FollowButton";
 import ReadMore from '../components/ReadMore';
 
-const ProfileInfo = (customer) => {  
+const ProfileInfo = ({customer}) => {  
   const file=false;
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const done = useSelector(({ done }) => done);
@@ -80,7 +80,7 @@ const ProfileInfo = (customer) => {
               {customer.description&&
                 <ReadMore 
                   text={customer.description}
-                  numberOfLines={4}
+                  numberOfLines={8}
                   lineHeight={1}
                   showLessButton={true}
                   onContentChange={getWrapperWidth}

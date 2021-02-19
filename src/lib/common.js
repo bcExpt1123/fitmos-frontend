@@ -61,8 +61,14 @@ const convertTime = (timeString)=>{
     return Math.round(diffTime/3600)+"h";
   }else if(diffTime<3600*24*30){
     return Math.round(diffTime/3600/24)+"d";
+  }else if(diffTime<3600*24*365){
+    let months;
+    months = (now.getFullYear() - other.getFullYear()) * 12;
+    months -= other.getMonth();
+    months += now.getMonth();    
+    return months+"M";
   }else{
-    return timeString;
+    return (now.getFullYear() - other.getFullYear()) + "y";
   }
 }
 export {once, colonsToUnicode, convertTime};

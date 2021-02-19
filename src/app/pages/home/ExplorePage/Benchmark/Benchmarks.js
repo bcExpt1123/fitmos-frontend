@@ -35,7 +35,7 @@ const BenchmarksPage = () => {
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   const changeDimesions = ()=>{
     console.log(window.innerWidth)
-    if(window.innerWidth>900)setHeight(window.innerWidth/3-50);
+    if(window.innerWidth>900)setHeight(window.innerWidth/4-50);
     if(window.innerWidth<768)setHeight(window.innerWidth-150);
   }
 
@@ -51,7 +51,7 @@ const BenchmarksPage = () => {
       <div className="benchmarks">
         <Row>
           {benchmarks.map(benchmark => (
-            <Col xs={12} md={4} key={benchmark.id}>
+            <Col xs={12} md={3} key={benchmark.id}>
               <div
                 className="content"
                 onClick={() => handleShow(benchmark)}
