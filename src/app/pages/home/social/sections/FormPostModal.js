@@ -23,7 +23,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect(()=>{
     if(post){
-      setContent(post.content);
+      if(post.content==null)setContent(""); else setContent(post.content);
       setTagFollowers(post.tagFollowers);
       setFiles(post.medias);
       setLocation(post.location);
@@ -97,10 +97,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     if(show){
       setMediaWidth(mediaContainerRef.current.clientWidth);
       if(textRef.current){
-        console.log('focused')
         textRef.current.focus();
-      }else{
-        console.log('not focused')
       }
     }
   },[show]);

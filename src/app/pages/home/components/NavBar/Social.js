@@ -105,6 +105,16 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   },[window.location.pathname]);
   //edit post
   const editPost = useSelector(({post})=>post.editPost);
+  /** search enter key event */
+  const handleEnterPress = event =>{
+    if(event.keyCode == 13 ) {
+      if(event.shiftKey == false){
+        event.preventDefault();
+        history.push("/search?search="+searchValue);
+        clearSearchValue();            
+      }
+    }
+  }
   return (
     <>
       <Navbar
@@ -142,7 +152,10 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                   <i className="fas fa-search" />
                 </button>
               }
-              <input id="search" placeholder="&#xF002; Buscar...." autoComplete="off" type="text" className={classnames("mt-3 dropbtn",{clickable:clickSearch})} value={searchValue} onChange={(evt)=>setSearchValue(evt.target.value)}/>
+              <input id="search" placeholder="&#xF002; Buscar...." autoComplete="off" type="text" 
+                className={classnames("mt-3 dropbtn",{clickable:clickSearch})} value={searchValue} 
+                onKeyDown={handleEnterPress}
+                onChange={(evt)=>setSearchValue(evt.target.value)}/>
               <div className="search-result dropdown">
                 <SearchResult value={searchValue} clearValue={clearSearchValue}/>
               </div>

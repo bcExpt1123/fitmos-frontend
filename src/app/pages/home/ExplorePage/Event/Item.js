@@ -6,6 +6,7 @@ import Slider from "react-slick";
 import { compose } from "recompose";
 import { withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
 import classnames from "classnames";
+import { useHistory } from "react-router-dom";
 import CommentView from "./CommentView";
 import MentionTextarea from "../../social/sections/MentionTextarea";
 import { $changeItem, $toggleAttend, $createComment, $appendNextReplies, $hideReplies } from "../../../../../modules/subscription/evento";
@@ -65,10 +66,12 @@ const EventPage = ({id}) => {
   const handleHideReplies = (comment)=>()=>{
     dispatch($hideReplies(comment));
   }
+  const history = useHistory();
   return (
     event?
     <div className="event">
       <div className="title">
+        <span className="cursor-pointer back" onClick={()=>history.push("/eventos")}><i className="fas fa-arrow-left" /></span>
         {event.title}
       </div>
       <div className="datetime">

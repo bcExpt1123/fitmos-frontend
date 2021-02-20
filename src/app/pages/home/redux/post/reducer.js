@@ -44,6 +44,10 @@ const initialState = {
   selfMediasLastId:-1,
   selfMediasLast:false,
   openEditModal:false,
+  videoPlayer:false,
+  videoPlayerModalMode:false,
+  videoPlayerOpenModal:false,
+  videoPlayerOpenCurrentTime:0,
 };
 // const containsPost = (posts, post)=>{
 //   posts.every(item=>item.id == post.id)

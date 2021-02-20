@@ -8,7 +8,7 @@ import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
 import ViewableMonitor from '../../components/ViewableMonitor';
-import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost} from "../../redux/post/actions";
+import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
 
 export default function Post({post, newsfeed, suggested, setShowPostModal, setMedia}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -95,10 +95,15 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     return -1;
   }
   /** open post modal */
+  const videoPlayer = useSelector(({post})=>post.videoPlayer);
   const openPostModal = (file)=>(evt)=>{
     if(window.innerWidth>800){
       setShowPostModal(true);
       setMedia(file);
+      if(videoPlayer  === file.id){
+        dispatch(setItemValue({name:"videoPlayerOpenModal",value:file.id}));
+      }
+      dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
     }
   }
   return (
@@ -109,7 +114,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           <div className="medias-container">
             <div className="medias-body">
               <div className="medias" ref={mediaContainerRef}  style={{height:mediaContainerHeight}}>
-              {post.medias.length == 1&&(
+                {post.medias.length == 1&&(
                   <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasWidth+"px"}}>
                     <div className="item cursor-pointer" onClick={openPostModal(post.medias[0])}>
                       <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} status={visible} />

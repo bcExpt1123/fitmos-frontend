@@ -112,6 +112,10 @@
         border-radius: 0;
         .post-body{
           font-size: 14px;
+          &.post-modal-show.read-more-show{
+            max-height: 297px;
+            overflow: auto;
+          }
         }
         .post-comments{
           height: 450px;
@@ -136,6 +140,9 @@
           }
         }
         form.comment-create{
+          .py-3{
+            padding-bottom: 0!important;
+          }
           .comment-input-container.row{
             flex-direction: row;
             font-size: 12px;
@@ -171,7 +178,7 @@
               .slick-slide{
                 width:71vh;
                 height: 71vh;  
-                img{
+                img,.video-react{
                   width: 71vh;
                   height: 71vh;            
                 }
@@ -202,7 +209,7 @@
               .slick-slide{
                 width:60vh;
                 height: 60vh;  
-                img{
+                img,.video-react{
                   width: 60vh;
                   height: 60vh;            
                   margin-left: -57px;                  
@@ -259,7 +266,7 @@
               .slick-slide{
                 width:40vh;
                 height: 40vh;  
-                img{
+                img,.video-react{
                   width: 40vh;
                   height: 40vh;            
                   margin-left: -57px;                  

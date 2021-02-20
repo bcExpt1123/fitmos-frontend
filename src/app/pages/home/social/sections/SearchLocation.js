@@ -60,7 +60,6 @@ export default function SearchLocation({setLocation, onClose}) {
     let active = true;
 
     if (!autocompleteService.current && window.google) {
-      console.log(window.google.maps.places)
       if(window.google.maps.places)autocompleteService.current = new window.google.maps.places.AutocompleteService();
     }
     if (!autocompleteService.current) {

@@ -11,14 +11,16 @@ import SearchPosts from "./social/sections/SearchPosts";
 const Search = () => {
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState("");
+  const searchResults = useSelector(({people})=>people.searchResult);
   useEffect(()=>{
     const parsed = qs.parse(window.location.search);
     if (parsed.search) {
       dispatch(searchAll(parsed.search));
       setKeyword(parsed.search);
+      setResults(searchResults)
     }
-  },[]);
-  const results = useSelector(({people})=>people.searchResult);
+  },[window.location.search]);
+  const [results, setResults] = useState({ people:[], shops:[], posts:[]});
   const searchValue = useSelector(({people})=>people.searchValue);
   return <>
     <MetaTags>

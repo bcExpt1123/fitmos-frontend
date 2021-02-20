@@ -135,6 +135,17 @@
         border: 1px solid #b3d139;        
       }
     }
+    .btn-edit-peso{
+      border: 1px solid #b3d139;
+      margin: 0;
+      justify-content: left;
+      text-align: left;
+      width: 100%;
+      padding: 12px 20px;
+      border-radius: 7px;
+      color: $basic-text-color;
+      font-size: 16px;
+    }
     .description{
       .form-control{
         height:122px;

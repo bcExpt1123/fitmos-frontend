@@ -60,17 +60,21 @@ const PostModal = ({show, media, onClose }) => {
       setActiveSlide(mediaIndex)
       setTimeout(() => {
         setHidden(true);
-      }, 10);
+      }, 400);
     }
   },[post, show]);
+  const [commentContainerHeight, setCommentContainerHeight] = useState(window.innerHeight-59);
+  const [commentContainerReadMoreOffsetHeight, setCommentContainerReadMoreOffsetHeight] = useState(500);
+  const [commentContainerOffsetHeight, setCommentContainerOffsetHeight] = useState(370);
   useEffect(()=>{
     if(show){
       document.body.style.cssText = "overflow:hidden !important";
       dispatch(setItemValue({name:'modalPost',value:true}));
       setTimeout(()=>{
         if(mentionTextarea.current){
-          const height = 380+window.innerHeight-mentionTextarea.current.offsetTop;
+          const height = 391+window.innerHeight-mentionTextarea.current.offsetTop;
           commentContainer.current.style.height = height+"px";
+          setTimeout(()=>setCommentContainerHeight(mentionTextarea.current.offsetTop),10);
         }  
       },100);
     }
@@ -82,6 +86,7 @@ const PostModal = ({show, media, onClose }) => {
   const handleClose = ()=>{
     dispatch(readingPost(post));
     setHidden(false);
+    dispatch(setItemValue({name:"videoPlayerOpenModal",value:false}));
     onClose();
   }
   const [activeSlide, setActiveSlide] = useState(0);
@@ -101,6 +106,54 @@ const PostModal = ({show, media, onClose }) => {
   const sliderRef = useRef();
   const commentContainer = useRef();
   const mentionTextarea = useRef();
+  const setCommentHeight = (readMore, offsetHeight)=>{
+    if(readMore){
+      if(mentionTextarea.current){
+        const height = window.innerHeight-offsetHeight;
+        commentContainer.current.style.height = height+"px";
+      }  
+    }else{
+      if(mentionTextarea.current){
+        const height = window.innerHeight-offsetHeight;
+        commentContainer.current.style.height = height+"px";
+      }  
+    }
+    setTimeout(()=>{
+      recurringSetHeight(readMore);
+    },100)    
+  }
+  const recurringSetHeight = (readMore)=>{
+    if(mentionTextarea.current){
+      if(mentionTextarea.current.offsetTop != commentContainerHeight){
+        let offsetHeight;
+        if(readMore){
+          setCommentContainerReadMoreOffsetHeight(commentContainerReadMoreOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight);
+          offsetHeight = commentContainerReadMoreOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight;
+        }else{
+          setCommentContainerOffsetHeight(commentContainerOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight); 
+          offsetHeight = commentContainerOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight;
+        }
+        setCommentHeight(readMore, offsetHeight)
+      }
+    }
+  }
+  const onToggleReadMore = (readMore)=>{
+    if(readMore){
+      if(mentionTextarea.current){
+        console.log(commentContainerReadMoreOffsetHeight)
+        const height = window.innerHeight-commentContainerReadMoreOffsetHeight;
+        commentContainer.current.style.height = height+"px";
+      }  
+    }else{
+      if(mentionTextarea.current){
+        const height = window.innerHeight-commentContainerOffsetHeight;
+        commentContainer.current.style.height = height+"px";
+      }  
+    }
+    setTimeout(()=>{
+      recurringSetHeight(readMore);
+    },10)
+  }
   return (
     <Modal
       dialogClassName="post-modal"
@@ -119,13 +172,13 @@ const PostModal = ({show, media, onClose }) => {
               <div className="sliders">
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
-                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}><RenderMedia file={media} videoIndex={0} status={activeSlide === index}/></div>
+                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}><RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true}/></div>
                   )}
                 </Slider>
               </div>  
             </div>
             <div className="post social-post">
-              <PostContent post={post} modalShow={true}/>
+              <PostContent post={post} modalShow={true} onToggleReadMore={onToggleReadMore}/>
               <div className="post-footer">
                 <div className="likes">
                   <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>

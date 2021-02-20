@@ -1,8 +1,10 @@
-import React,{ useState } from 'react';
+import React,{ useState, useEffect } from 'react';
 import { useDispatch,useSelector } from "react-redux";
 import classnames from "classnames";
 import { NavLink, useHistory } from "react-router-dom";
 import { Tooltip } from '@material-ui/core';
+import { compose } from "recompose";
+import { withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
 import Avatar from "../../components/Avatar";
 import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions";
 import { follow, unfollow, mute } from "../../redux/notification/actions";
@@ -11,8 +13,21 @@ import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
 import TagFollowersModal from "./customer/TagFollowersModal";
 import { convertTime } from "../../../../../lib/common";
+const Map = compose(
+  withScriptjs,
+  withGoogleMap
+)
+  (props =>
+    <GoogleMap
+      defaultZoom={15}
+      defaultCenter={{ lat: props.markerPosition===null?8.93:props.markerPosition.lat, lng: props.markerPosition===null?-79.66:props.markerPosition.lng }}
+      onClick={props.onMapClick}
+    >
+      {props.isMarkerShown && <Marker position={props.markerPosition} />}
+    </GoogleMap>
+  )
 
-export default function PostContent({post, newsfeed,suggested,modalShow}) {
+export default function PostContent({post, newsfeed,suggested,modalShow, onToggleReadMore}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const renderWord = (word)=>{
     const follower = post.contentFollowers.filter(customer=>word===`$${customer.id}$`);
@@ -71,6 +86,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
   const SHOW_MORE_TEXT = 'Read More';
   const [showMore, setShowMore] = useState(false);
   const toggleReadMore = ()=>{
+    if(onToggleReadMore)onToggleReadMore(!showMore);
     setShowMore(!showMore);
   }
   const [refresh, setRefresh] = useState(false);
@@ -89,6 +105,54 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
   }
   const onCloseTagFollowersModal = ()=>{
     setShowTagFollowersModal(false);
+  }
+  /** google map show */
+  const [position, setPosition] = useState(false);
+  useEffect(()=>{
+    if(post.medias.length == 0 && post.location){
+      fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${post.location}&key=${process.env.REACT_APP_GOOGLE_MAP_KEY}`,{
+        method:"GET",
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.status == 'OK' && data.results.length>0){
+          console.log(data.results[0].geometry);
+          setPosition({lat: data.results[0].geometry.location.lat, lng: data.results[0].geometry.location.lng})
+        }
+      });
+    }
+  },[post.medias.length ,post.location])
+  const postHeader = ()=>{
+    return (<>
+      {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;is</span>}
+      {(post.location && post.location!='false')&&<>
+        &nbsp;in&nbsp;<span className="font-weight-bold">
+          <a href={`http://www.google.com/maps/search/?api=1&query=`+window.encodeURI(post.location)} target="_blank" className="open-map font-size-14 font-weight-bold">{post.location}</a></span>
+        </>}
+      {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
+      &nbsp;
+      {
+        post.tagFollowers && post.tagFollowers.length>0 &&<>
+          &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
+          {post.tagFollowers.length>1&&
+            <>
+              &nbsp;and&nbsp;
+              <Tooltip title={
+                post.tagFollowers.map((follower, index)=>{
+                  return index>0&&
+                  <div key={follower.id} className="follower">
+                    {follower.first_name+' '+follower.last_name}
+                  </div>
+                })
+              }>
+                <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
+              </Tooltip>  
+              {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+            </>
+          }
+        </>
+      }
+    </>)
   }
   return (
     <>
@@ -139,35 +203,21 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               &nbsp;&nbsp;&nbsp;Follow
             </span>
           )}        
-          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span className="font-weight-bold">&nbsp;is</span>}
-          {(post.location && post.location!='false')&&<span className="font-weight-bold">&nbsp;in {post.location}</span>}
-          {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
-          &nbsp;
-          {
-            post.tagFollowers && post.tagFollowers.length>0 &&<>
-              &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
-              {post.tagFollowers.length>1&&
-                <>
-                  &nbsp;and&nbsp;
-                  <Tooltip title={
-                    post.tagFollowers.map((follower, index)=>{
-                      return index>0&&
-                      <div key={follower.id} className="follower">
-                        {follower.first_name+' '+follower.last_name}
-                      </div>
-                    })
-                  }>
-                    <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
-                  </Tooltip>  
-                  {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
-                </>
-              }
-            </>
-          }
+          {!modalShow&&postHeader()}
         </span>
         <div className="post-time" >{convertTime(post.created_at)}</div>
       </div>
-      <div className="post-body">
+      {(post.medias.length==0 && position) &&<div>
+        <Map
+          googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `400px` }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+          isMarkerShown={position.lat===null?false:true}
+          markerPosition={position.lat===null?null:{ lat: parseFloat(position.lat), lng: parseFloat(position.lng) }}
+        />
+      </div>}
+      <div className={classnames("post-body",{'post-modal-show':modalShow,'read-more-show':showMore})}>
         {post.json_content && <>
           {post.json_content.length>5?
           <>
@@ -214,6 +264,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           </>
         }
       </div>
+      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}>{postHeader()}</div>}
     </>
   );
 }

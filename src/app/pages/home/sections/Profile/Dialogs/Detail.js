@@ -312,6 +312,11 @@ const EditProfile = ({ show, handleClose }) => {
                 </Row>
                 <Row>
                   <Col xs={6}>
+                    <Button type="button" variant="edit-peso" onClick={()=>setShowEditWeight(true)}>
+                      Editar Peso
+                    </Button>
+                  </Col>
+                  <Col xs={6}>
                     <FormGroup
                       hasValue={Boolean(values.current_height)}
                       name="current_height"
@@ -329,11 +334,6 @@ const EditProfile = ({ show, handleClose }) => {
                         onFocus={handleFocus}
                       />
                     </FormGroup>
-                  </Col>
-                  <Col xs={6}>
-                    <Button type="button" variant="edit" onClick={()=>setShowEditWeight(true)}>
-                      Editar Peso
-                    </Button>
                   </Col>
                 </Row>
                 <Row>

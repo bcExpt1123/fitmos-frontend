@@ -207,6 +207,11 @@
           display:none;
         }
       }
+      margin-left: -14px;
+      .clickable-button i{
+        font-size: 13px;
+        margin-top: 7px;        
+      }
     }
   }
 }
@@ -220,13 +225,6 @@
         padding: 13px !important;      
         .full-name{
           display:none;
-        }
-      }
-      .dropdown{
-        margin-left: -17px;
-        .clickable-button i{
-          font-size: 13px;
-          margin-top: 7px;        
         }
       }
     }

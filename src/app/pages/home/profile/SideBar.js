@@ -1,17 +1,19 @@
-import React,{useEffect} from 'react';  
-import { useDispatch, useSelector } from "react-redux";
-import { matchPath } from "react-router-dom";
-import Sticky from "wil-react-sticky";
+import React from 'react';  
+import { useSelector } from "react-redux";
+// import Sticky from "wil-react-sticky";
 import ProfileInfo from "./ProfileInfo";
-import { findCustomer, setItemValue } from "../redux/people/actions";
 
 const SideBar = () => {  
   const customer = useSelector(({people})=>people.username);
   return (  
     <div id="sidebar">
-      <Sticky offsetTop={130}>
-        <ProfileInfo customer={customer}/>
-      </Sticky>
+      {/* <Sticky offsetTop={130}> */}
+        <div style={{position:'relative'}}>
+          <div style={{position:'fixed', top:'130px', width:"320px"}}>
+            <ProfileInfo customer={customer}/>
+          </div>
+        </div>
+      {/* </Sticky> */}
     </div>
     )  
 }  

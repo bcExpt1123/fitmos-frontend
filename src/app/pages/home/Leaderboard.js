@@ -1,4 +1,4 @@
-import React,{useState, useEffect} from "react";
+import React,{useState, useEffect, useRef} from "react";
 import MetaTags from "react-meta-tags";
 import DatePicker, { registerLocale } from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -6,7 +6,7 @@ import es from "date-fns/locale/es";
 import { Formik, Form, Field } from "formik";
 import ThreeColumn from "./layouts/Three";
 import { http } from "./services/api";
-import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
+import { toAbsoluteUrl, isMobile } from "../../../_metronic/utils/utils";
 
 const convertString = (today)=>{
   let month = today.getMonth()+1;
@@ -59,6 +59,15 @@ export default function Leaderboard() {
     }
     fetchData();
   },[month,number, gender]);
+  const labelRef = useRef();
+  useEffect(()=>{
+    if(labelRef.current){
+      let height;
+      if(isMobile())height = window.innerHeight-labelRef.current.offsetTop - 80;
+      else height = window.innerHeight-labelRef.current.offsetTop - 140;
+      labelRef.current.style.height = height+"px";
+    }
+  },[]);
   return (
     <>
       <MetaTags>
@@ -105,8 +114,8 @@ export default function Leaderboard() {
           </div>
           <div className="data">
             {records.length === 0?(
-              <div>
-                <div>No Records</div>
+              <div style={{display:'flex',alignItems: 'center',justifyContent: 'center'}} ref={labelRef}>
+                <div style={{maxWidth: '50%',fontSize:'15px',fontWeight:'600'}}>No Records</div>
               </div>
             ):(
               records.map(record=>(

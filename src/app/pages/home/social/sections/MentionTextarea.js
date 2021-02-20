@@ -10,9 +10,10 @@ import data from "emoji-mart/data/google.json";
 import Avatar from "../../components/Avatar";
 import { isMobile } from '../../../../../_metronic/utils/utils';
 
-export default function MentionTextarea({content, setContent, submit,commentForm}) {
+export default function MentionTextarea({content, setContent, submit,commentForm, focus}) {
   const [comment, setComment] = useState(content);
   const [showEmojis, setShowEmojis] = useState(false);
+  const textRef = useRef();
   const emojiPicker = useRef(null);
   const filterPeople=(search, callback)=>{
     if(search.length>1){
@@ -90,6 +91,12 @@ export default function MentionTextarea({content, setContent, submit,commentForm
   useEffect(() => {
     if(content == "")setComment("")
   }, [content]);
+  useEffect(()=>{
+    if(textRef.current && focus){
+      textRef.current.focus();
+      textRef.current.setSelectionRange(textRef.current.value.length,textRef.current.value.length);
+    }
+  },[]);
   const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
     return <div className={classnames("mention-customers",{focused:focused})}>
       <div className="avatar">
@@ -138,6 +145,7 @@ export default function MentionTextarea({content, setContent, submit,commentForm
               value={comment}
               onChange={handleChange}
               onKeyDown={handleEnterPress}
+              inputRef={textRef}
               className="mentions"
               placeholder="Leave a comment..."
               allowSuggestionsAboveCursor={true}

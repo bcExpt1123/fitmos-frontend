@@ -15,7 +15,7 @@ const CommentView = ({comment})=>{
   const [replyContent, setReplyContent] = useState("");
   const openReplyComment = ()=>{
     // if(!show)setTimeout(()=>commentTextarea.current.focus(),20);
-    setReplyContent(`@[${currentUser.customer.first_name} ${currentUser.customer.last_name}](${currentUser.customer.id})`);
+    setReplyContent(`@[${currentUser.customer.first_name} ${currentUser.customer.last_name}](${currentUser.customer.id}) `);
     setShow(!show);
   }
   const commentTextarea = useRef();
@@ -78,7 +78,7 @@ const CommentView = ({comment})=>{
           {showEdit?
             <>
               <form onSubmit={onEditFormSubmit}>
-                <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit}/>
+                <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit} focus={true}/>
               </form>
             </>
             :
@@ -97,7 +97,7 @@ const CommentView = ({comment})=>{
         </div>
         {show&&(
           <form onSubmit={onReplyFormSubmit}>
-            <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit}/>
+            <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit} focus={true}/>
           </form>        
         )}
       </div>

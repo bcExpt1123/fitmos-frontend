@@ -58,6 +58,7 @@ function* onFindNewsfeed(){
     }else{
       yield put(setNewsfeed(result.newsfeed));
     }
+    yield put(setItemValue({name:'videoPlayer',value:false}));
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
