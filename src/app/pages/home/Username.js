@@ -6,9 +6,10 @@ import {findUsername, setItemValue} from "./redux/people/actions";
 import Company from "./ShopPage/Company";
 import Customer from "./Customer";
 
-const ShopPage = ({match}) => {
+const UsernamePage = ({match}) => {
   const dispatch = useDispatch();
   const username = useSelector(({people})=>people.username);
+  console.log(username)
   const history = useHistory();
   useEffect(()=>{
     dispatch(findUsername(match.params.username))
@@ -18,11 +19,10 @@ const ShopPage = ({match}) => {
   }
   useEffect(()=>{
     return ()=>{
-      dispatch(setItemValue({name:'username',value:'username'}));
+      // dispatch(setItemValue({name:'username',value:'username'}));
     }  
   },[])
   return (<>
-      {/* <PageHeader title={`Las mejores tiendas de Fitness`}/> */}
       {username?<>
         {username.type === 'company'&&(
           <OneColumn>          
@@ -41,4 +41,4 @@ const ShopPage = ({match}) => {
   </>
 )};
 
-export default ShopPage;
+export default UsernamePage;

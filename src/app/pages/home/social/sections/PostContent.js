@@ -5,6 +5,7 @@ import { NavLink, useHistory } from "react-router-dom";
 import { Tooltip } from '@material-ui/core';
 import { compose } from "recompose";
 import { withGoogleMap, withScriptjs, GoogleMap, Marker } from 'react-google-maps';
+import SVG from "react-inlinesvg";
 import Avatar from "../../components/Avatar";
 import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions";
 import { follow, unfollow, mute } from "../../redux/notification/actions";
@@ -13,6 +14,7 @@ import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
 import TagFollowersModal from "./customer/TagFollowersModal";
 import { convertTime } from "../../../../../lib/common";
+import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 const Map = compose(
   withScriptjs,
   withGoogleMap
@@ -27,7 +29,7 @@ const Map = compose(
     </GoogleMap>
   )
 
-export default function PostContent({post, newsfeed,suggested,modalShow, onToggleReadMore}) {
+export default function PostContent({post, newsfeed,suggested,modalShow}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const renderWord = (word)=>{
     const follower = post.contentFollowers.filter(customer=>word===`$${customer.id}$`);
@@ -86,7 +88,6 @@ export default function PostContent({post, newsfeed,suggested,modalShow, onToggl
   const SHOW_MORE_TEXT = 'Read More';
   const [showMore, setShowMore] = useState(false);
   const toggleReadMore = ()=>{
-    if(onToggleReadMore)onToggleReadMore(!showMore);
     setShowMore(!showMore);
   }
   const [refresh, setRefresh] = useState(false);
@@ -207,16 +208,6 @@ export default function PostContent({post, newsfeed,suggested,modalShow, onToggl
         </span>
         <div className="post-time" >{convertTime(post.created_at)}</div>
       </div>
-      {(post.medias.length==0 && position) &&<div>
-        <Map
-          googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
-          loadingElement={<div style={{ height: `100%` }} />}
-          containerElement={<div style={{ height: `400px` }} />}
-          mapElement={<div style={{ height: `100%` }} />}
-          isMarkerShown={position.lat===null?false:true}
-          markerPosition={position.lat===null?null:{ lat: parseFloat(position.lat), lng: parseFloat(position.lng) }}
-        />
-      </div>}
       <div className={classnames("post-body",{'post-modal-show':modalShow,'read-more-show':showMore})}>
         {post.json_content && <>
           {post.json_content.length>5?
@@ -264,7 +255,17 @@ export default function PostContent({post, newsfeed,suggested,modalShow, onToggl
           </>
         }
       </div>
-      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}>{postHeader()}</div>}
+      {(post.medias.length==0 && position) &&<div>
+        <Map
+          googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
+          loadingElement={<div style={{ height: `100%` }} />}
+          containerElement={<div style={{ height: `400px` }} />}
+          mapElement={<div style={{ height: `100%` }} />}
+          isMarkerShown={position.lat===null?false:true}
+          markerPosition={position.lat===null?null:{ lat: parseFloat(position.lat), lng: parseFloat(position.lng) }}
+        />
+      </div>}
+      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}><SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>{postHeader()}</div>}
     </>
   );
 }

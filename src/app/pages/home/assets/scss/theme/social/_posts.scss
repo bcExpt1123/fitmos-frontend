@@ -73,6 +73,14 @@
       margin-left: 40px;
       margin-top:-12px;
     }
+    span span .open-map, span span .follower-button{
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;              
+      text-overflow: ellipsis;
+      display: inline-block;
+      vertical-align: bottom;
+    }
   }
   .post-body{
     padding: 0 23px 15px 23px;
@@ -122,7 +130,7 @@
     }
   }
   .post-footer{
-    padding:23px;
+    padding:23px 23px 10px 23px;
     @include post-footer;
   }
   .post-comments{
@@ -145,6 +153,7 @@
         width:calc( 100% - 48px);
         padding-left: 5px;
         display: inline-block;
+        margin-top: -3px;
         .author{
           font-weight: bold;
         }

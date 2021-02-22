@@ -33,6 +33,21 @@
           margin: 10vh auto auto auto;
           width: 80vh;
           height: 80vh;
+          position: relative;
+          .loading-container{
+            position: absolute;
+            bottom:0;
+            width: 80vh;
+            height: 80vh;
+            padding-left: 5vh;            
+            // background-color: rgba(black, 0.8);
+            img{
+              display: block;
+              width:160px;
+              padding-top: calc(40vh - 80px);
+              margin:auto;
+            }
+          }
           // margin: auto;
           // width: 500px;
           .slick-slider{
@@ -69,7 +84,6 @@
               }
               .image-hidden{
                 opacity: 1;
-                transition: opacity 0.8s ease-in;
               }      
               img{
                 margin: auto;
@@ -110,36 +124,40 @@
         height: calc( 100vh - 2px);
         margin-bottom: 0;
         border-radius: 0;
-        .post-body{
-          font-size: 14px;
-          &.post-modal-show.read-more-show{
-            max-height: 297px;
-            overflow: auto;
+        .post-content{
+          height: calc(100vh - 45px);
+          overflow-y: auto;
+          overflow-x: hidden;
+          .post-body{
+            font-size: 14px;
           }
-        }
-        .post-comments{
-          height: 450px;
-          overflow: auto;
-          .comment-view{
-            form{
-              margin-right: -43px;
-              .comment-input-container.row{
-                flex-direction: row;
-                .col-11{
-                  flex: 0 0 87.66667%;
-                  max-width: 87.66667%;
-                }
-                .col-1{
-                  flex: 0 0 12.33333%;
-                  max-width: 12.33333%;
-                  padding-left: 0;
-                  padding-right: 0;
+          .post-comments{
+            .comment-view{
+              form{
+                margin-right: -43px;
+                .comment-input-container.row{
+                  flex-direction: row;
+                  .col-11{
+                    flex: 0 0 87.66667%;
+                    max-width: 87.66667%;
+                  }
+                  .col-1{
+                    flex: 0 0 12.33333%;
+                    max-width: 12.33333%;
+                    padding-left: 0;
+                    padding-right: 0;
+                  }    
                 }    
-              }    
+              }
             }
           }
         }
         form.comment-create{
+          position: fixed;
+          bottom: 0px;
+          width: 340px;
+          background-color: white;
+          z-index: 50;          
           .py-3{
             padding-bottom: 0!important;
           }
@@ -173,7 +191,15 @@
           .sliders{
             margin: 14vh auto auto auto;
             width: 71vh;
-            height: 71vh;            
+            height: 71vh;  
+            .loading-container{
+              width: 71vh;
+              height: 71vh;  
+              padding-left: 0vh;
+              img{
+                padding-top: calc(35.5vh - 80px);
+              }
+            }  
             .slick-slider{
               .slick-slide{
                 width:71vh;
@@ -204,7 +230,14 @@
           .sliders{
             margin: 20vh auto auto auto;
             width: 60vh;
-            height: 60vh;            
+            height: 60vh;      
+            .loading-container{
+              width: 60vh;
+              height: 60vh;      
+              img{
+                padding-top: calc(30vh - 80px);
+              }
+            }  
             .slick-slider{
               .slick-slide{
                 width:60vh;
@@ -262,6 +295,13 @@
             margin: 30vh auto auto auto;
             width: 40vh;
             height: 40vh;            
+            .loading-container{
+              width: 40vh;
+              height: 40vh;            
+              img{
+                padding-top: calc(20vh - 80px);
+              }
+            }  
             .slick-slider{
               .slick-slide{
                 width:40vh;

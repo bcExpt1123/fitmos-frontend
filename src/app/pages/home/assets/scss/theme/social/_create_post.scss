@@ -111,6 +111,12 @@
           .info{
             display: inline-block;
             margin-top: 2px;
+            .full-name{
+              width: 300px;
+              white-space: nowrap;
+              overflow: hidden;              
+              text-overflow: ellipsis;
+            }
             .username{
               margin-top: -3px;
               color:rgba($basic-text-color, 0.5);

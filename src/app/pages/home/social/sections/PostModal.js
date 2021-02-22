@@ -56,27 +56,22 @@ const PostModal = ({show, media, onClose }) => {
   useEffect(()=>{
     if(sliderRef.current){
       const mediaIndex = post.medias.findIndex((file) =>file.id === media.id);
-      sliderRef.current.slickGoTo(mediaIndex);
-      setActiveSlide(mediaIndex)
-      setTimeout(() => {
-        setHidden(true);
-      }, 400);
+      if(mediaIndex === -1){
+        console.log('no')
+      }else{
+        console.log('yes')
+        sliderRef.current.slickGoTo(mediaIndex);
+        setActiveSlide(mediaIndex)
+        if(mediaIndex === 0 )setTimeout(() => {
+          setHidden(true);
+        }, 100);
+      }
     }
   },[post, show]);
-  const [commentContainerHeight, setCommentContainerHeight] = useState(window.innerHeight-59);
-  const [commentContainerReadMoreOffsetHeight, setCommentContainerReadMoreOffsetHeight] = useState(500);
-  const [commentContainerOffsetHeight, setCommentContainerOffsetHeight] = useState(370);
   useEffect(()=>{
     if(show){
       document.body.style.cssText = "overflow:hidden !important";
       dispatch(setItemValue({name:'modalPost',value:true}));
-      setTimeout(()=>{
-        if(mentionTextarea.current){
-          const height = 391+window.innerHeight-mentionTextarea.current.offsetTop;
-          commentContainer.current.style.height = height+"px";
-          setTimeout(()=>setCommentContainerHeight(mentionTextarea.current.offsetTop),10);
-        }  
-      },100);
     }
     else {
       document.body.style.cssText = "overflow:auto";
@@ -101,59 +96,27 @@ const PostModal = ({show, media, onClose }) => {
     slidesToShow: 1,
     centerMode:true,
     slidesToScroll: 1,
-    afterChange: (current) => setActiveSlide(current),
+    afterChange: (current) => {
+      setActiveSlide(current);
+    },
+    beforeChange: (oldIndex, newIndex) =>{
+      if(newIndex === activeSlide){
+        setTimeout(() => {
+          setHidden(true);
+        }, 400);
+        console.log('activeSlide',activeSlide)
+      }
+      console.log(oldIndex, newIndex, )
+    }
   };
+  useEffect(()=>{
+    if(hidden){
+      // console.log(sliderRef.current);
+    }
+  },[hidden])
   const sliderRef = useRef();
   const commentContainer = useRef();
   const mentionTextarea = useRef();
-  const setCommentHeight = (readMore, offsetHeight)=>{
-    if(readMore){
-      if(mentionTextarea.current){
-        const height = window.innerHeight-offsetHeight;
-        commentContainer.current.style.height = height+"px";
-      }  
-    }else{
-      if(mentionTextarea.current){
-        const height = window.innerHeight-offsetHeight;
-        commentContainer.current.style.height = height+"px";
-      }  
-    }
-    setTimeout(()=>{
-      recurringSetHeight(readMore);
-    },100)    
-  }
-  const recurringSetHeight = (readMore)=>{
-    if(mentionTextarea.current){
-      if(mentionTextarea.current.offsetTop != commentContainerHeight){
-        let offsetHeight;
-        if(readMore){
-          setCommentContainerReadMoreOffsetHeight(commentContainerReadMoreOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight);
-          offsetHeight = commentContainerReadMoreOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight;
-        }else{
-          setCommentContainerOffsetHeight(commentContainerOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight); 
-          offsetHeight = commentContainerOffsetHeight + mentionTextarea.current.offsetTop - commentContainerHeight;
-        }
-        setCommentHeight(readMore, offsetHeight)
-      }
-    }
-  }
-  const onToggleReadMore = (readMore)=>{
-    if(readMore){
-      if(mentionTextarea.current){
-        console.log(commentContainerReadMoreOffsetHeight)
-        const height = window.innerHeight-commentContainerReadMoreOffsetHeight;
-        commentContainer.current.style.height = height+"px";
-      }  
-    }else{
-      if(mentionTextarea.current){
-        const height = window.innerHeight-commentContainerOffsetHeight;
-        commentContainer.current.style.height = height+"px";
-      }  
-    }
-    setTimeout(()=>{
-      recurringSetHeight(readMore);
-    },10)
-  }
   return (
     <Modal
       dialogClassName="post-modal"
@@ -172,45 +135,52 @@ const PostModal = ({show, media, onClose }) => {
               <div className="sliders">
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
-                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}><RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true}/></div>
+                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}>
+                      <RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true}/>
+                    </div>
                   )}
                 </Slider>
+                {hidden==false&&<div className="loading-container">
+                  <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
+                </div>}
               </div>  
             </div>
             <div className="post social-post">
-              <PostContent post={post} modalShow={true} onToggleReadMore={onToggleReadMore}/>
-              <div className="post-footer">
-                <div className="likes">
-                  <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
-                  <span><i className="far fa-comment" /> {post.commentsCount}</span>
+              <div className="post-content">
+                <PostContent post={post} modalShow={true}/>
+                <div className="post-footer">
+                  <div className="likes">
+                    <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
+                    <span><i className="far fa-comment" /> {post.commentsCount}</span>
+                  </div>
+                  <div className="share">
+                    <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
+                  </div>
                 </div>
-                <div className="share">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
-                </div>
-              </div>
-              <div className="post-comments" ref={commentContainer}>
-                {post.comments.length>0&&post.comments.map(comment=>
-                  <React.Fragment  key={comment.id}>
-                    <div className={classnames("comment-view")}>
-                      <CommentView comment={comment}/>
-                    </div>
-                    {(comment.children.length>0) && 
-                      <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
-                    }
-                    <div className={"comment-replies"}>
-                      {
-                        comment.children.map((reply)=>
-                          <div className={classnames("comment-view reply")}  key={reply.id}>
-                            <CommentView comment={reply}/>
-                          </div>
-                        )
+                <div className="post-comments" ref={commentContainer}>
+                  {post.comments.length>0&&post.comments.map(comment=>
+                    <React.Fragment  key={comment.id}>
+                      <div className={classnames("comment-view")}>
+                        <CommentView comment={comment}/>
+                      </div>
+                      {(comment.children.length>0) && 
+                        <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
                       }
-                    </div>
-                    {(comment.nextChildrenCount>0) && 
-                      <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
-                    }
-                  </React.Fragment>
-                )}
+                      <div className={"comment-replies"}>
+                        {
+                          comment.children.map((reply)=>
+                            <div className={classnames("comment-view reply")}  key={reply.id}>
+                              <CommentView comment={reply}/>
+                            </div>
+                          )
+                        }
+                      </div>
+                      {(comment.nextChildrenCount>0) && 
+                        <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
+                      }
+                    </React.Fragment>
+                  )}
+                </div>
               </div>
               <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
                   <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>

@@ -93,7 +93,7 @@ const CommentView = ({comment})=>{
             &nbsp;
             likes
           </span>
-          <button className="reply-comment" onClick={openReplyComment}>Replay</button>      
+          <button className="reply-comment" onClick={openReplyComment}>Reply</button>      
         </div>
         {show&&(
           <form onSubmit={onReplyFormSubmit}>

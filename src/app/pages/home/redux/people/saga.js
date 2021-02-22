@@ -133,6 +133,9 @@ const findUsernameRequest = (username)=>
     method: "GET"
   }).then(response => response.data);
 function* onFindUsername({payload}){
+  const username = yield select(({people})=>people.username);
+  if(username && payload == username.username) return;
+  console.log(payload)
   try{
     const result = yield call(findUsernameRequest, payload);
     if(result.id)yield put(setItemValue({name:"username",value:result}));

@@ -15,7 +15,6 @@ const RenderMedia = ({file, videoIndex, modal, status}) => {
   /** visibleMonistor */
   const [visible, setVisible] = useState(false);
   const visibleChange = (status)=>{
-    console.log(status)
     setVisible(status);
   }
   useEffect(()=>{
@@ -29,10 +28,10 @@ const RenderMedia = ({file, videoIndex, modal, status}) => {
         dispatch(setItemValue({name:"videoPlayerOpenCurrentTime",value:0}));
       }
       if(modal){
-        setTimeout(()=>player.current.play(),100)
-      }else player.current.play();
-      dispatch(setItemValue({name:"videoPlayer",value:file.id}));
+        setTimeout(()=>{if(player && player.current)player.current.play()},100)
+      }else if(videoPlayerOpenModal === false)player.current.play();
       dispatch(setItemValue({name:"videoPlayerModalMode",value:modal}));
+      dispatch(setItemValue({name:"videoPlayer",value:file.id}));
     }
   }
   const playVideos = ()=>{

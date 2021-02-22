@@ -72,7 +72,7 @@ export default function Newsfeed() {
               </div>
               <div className="newsfeed suggested-header">
                 <Sticky offsetTop={62} onChange={handleChangeSuggeted}>
-                  <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Suggested Posts </div>
+                  {suggestedPosts.length>0 && <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Suggested Posts </div>}
                   {(suggestedSticky&&oldPosts.length>0) &&<div className="font-size-14 font-weight-bold cursor-pointer old-posts-button" onClick={convertOld}>
                       Older Posts
                     </div>

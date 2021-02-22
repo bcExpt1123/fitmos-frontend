@@ -312,8 +312,9 @@ const EditProfile = ({ show, handleClose }) => {
                 </Row>
                 <Row>
                   <Col xs={6}>
+                    <label className="edit-peso">Editar Peso</label>
                     <Button type="button" variant="edit-peso" onClick={()=>setShowEditWeight(true)}>
-                      Editar Peso
+                      {currentUser.customer.current_weight}{currentUser.customer.current_weight_unit}
                     </Button>
                   </Col>
                   <Col xs={6}>

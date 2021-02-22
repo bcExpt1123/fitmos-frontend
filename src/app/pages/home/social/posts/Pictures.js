@@ -25,7 +25,7 @@ const PicturesPage = () => {
       dispatch(findUsername(match.params.username));
     }
     return ()=>{
-      dispatch(setItemValue({name:'username',value:'username'}));
+      // dispatch(setItemValue({name:'username',value:'username'}));
     }      
   },[])
   useEffect(()=>{

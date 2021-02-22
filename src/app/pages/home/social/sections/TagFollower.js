@@ -45,37 +45,39 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
             <div className="tagged">
               {tagFollowers.map((customer)=>
                 <span key={customer.id}>
-                  <Chip label={customer.display} onDelete={handleDeleteTag(customer)} color="primary" variant="outlined" />
+                  <Chip label={customer.display?customer.display:customer.first_name+' '+customer.last_name} onDelete={handleDeleteTag(customer)} color="primary" variant="outlined" />
                 </span>
               )}
             </div>
           </div>
         }
-        <div>
-          <label>Search</label>
-          {searchCustomers.length>0?
-            <ul>
-              {searchCustomers.map((customer)=>
-                <li key={customer.id} className="cursor-pointer" onClick={handleClickSearchCustomers(customer)}>
-                  <div className="avatar">
-                    <Avatar
-                      pictureUrls={customer.avatarUrls}
-                      size="xs"
-                      className={"userAvatar"}
-                    />
-                  </div>
-                  <div className="info">
-                    <div>{customer.first_name} {customer.last_name}</div>
-                    <div className="username">{customer.username}</div>
-                  </div>
-                </li>
-              )}
-            </ul>
-            :<div>
-              No people found
-            </div>
-          }
-        </div>
+        {searchName&&
+          <div>
+            <label>Search</label>
+            {searchCustomers.length>0?
+              <ul>
+                {searchCustomers.map((customer)=>
+                  <li key={customer.id} className="cursor-pointer" onClick={handleClickSearchCustomers(customer)}>
+                    <div className="avatar">
+                      <Avatar
+                        pictureUrls={customer.avatarUrls}
+                        size="xs"
+                        className={"userAvatar"}
+                      />
+                    </div>
+                    <div className="info">
+                      <div className="full-name">{customer.first_name} {customer.last_name}</div>
+                      <div className="username">{customer.username}</div>
+                    </div>
+                  </li>
+                )}
+              </ul>
+              :<div>
+                No people found
+              </div>
+            }
+          </div>
+        }
       </div>
     </div>
   );

@@ -296,7 +296,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                 {
                   tagFollowers.map((follower)=>(
                     <span key={follower.id} className="follower">
-                      <span className="follower">{follower.display}</span>
+                      <span className="follower">{follower.display?follower.display:follower.first_name+' '+follower.last_name}</span>
                       <span className="spot">, &nbsp;</span>
                     </span>
                   ))

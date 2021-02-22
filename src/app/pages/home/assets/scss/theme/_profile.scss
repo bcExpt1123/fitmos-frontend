@@ -135,6 +135,17 @@
         border: 1px solid #b3d139;        
       }
     }
+    .edit-peso{
+      transform: translate3d(8px, -6px, 0) scale(0.8);
+      color: #696969;
+      font-weight: 400; 
+      position: absolute;
+      z-index: 3;           
+      background-color: white;
+      padding: 0 10px;
+      top: -5px;
+      left: 0px;
+    }
     .btn-edit-peso{
       border: 1px solid #b3d139;
       margin: 0;
