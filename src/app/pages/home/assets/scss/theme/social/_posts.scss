@@ -16,6 +16,14 @@
       color:#008EB2;      
     }
   }
+  .loading-container{
+    position: relative;
+    img{
+      display: block;
+      width:100px;
+      margin:auto;
+    }
+  }
 }
 .suggested-header + .newsfeed{
   .social-post{
@@ -79,7 +87,10 @@
       overflow: hidden;              
       text-overflow: ellipsis;
       display: inline-block;
-      vertical-align: bottom;
+      vertical-align: top;
+    }
+    span span .open-map{
+      vertical-align: top;
     }
   }
   .post-body{
@@ -281,8 +292,51 @@
     margin-right: -10px;
   }
   .social-post{
+    .post-header {
+      span{
+        .full-name{
+          .link-profile{
+            white-space: nowrap;
+            overflow: hidden;              
+            text-overflow: ellipsis;
+            display: inline-block;
+            vertical-align: top;      
+            max-width: 150px;
+          }
+        }
+        span {
+          .open-map{
+            max-width: 70px;
+          }
+          .follower-button{
+            max-width: 70px;
+          }
+        }
+      }
+    }
     .post-comments form{
       margin:0 -20px -35px -30px      
+    }
+  }
+}
+@media (max-width: 490px) {
+  .social-post{
+    .post-header {
+      span{
+        .full-name{
+          .link-profile{
+            max-width: 100px;
+          }
+        }
+        span {
+          .open-map{
+            max-width: 50px;
+          }
+          .follower-button{
+            max-width: 50px;
+          }
+        }
+      }
     }
   }
 }

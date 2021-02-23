@@ -52,9 +52,9 @@ const CommentView = ({comment})=>{
     setShowEdit(false);
   }
   const handleLike = e=>{
-    if(comment.customer_id != currentUser.customer.id ){
+    // if(comment.customer_id != currentUser.customer.id ){
       dispatch(toggleLike(comment));
-    }
+    // }
   }
   return (
     comment.customer?
@@ -108,12 +108,13 @@ const CommentView = ({comment})=>{
               {({show,toggleHandle,setShow})=>(
                 <div className=" dropdown">
                   <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-                    <i className="fas fa-ellipsis-h dropbtn" />
+                    <i className="fal fa-ellipsis-h dropbtn" />
                   </button>
                   <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                       <>
                         <a className={"dropdown-item"} onClick={openEditComment}>Edit Comment</a>
                         <a className={"dropdown-item"} onClick={handleDelete}>Delete Comment</a>
+                        <span className={"dropdown-item"} onClick={handleLike}><i className={classnames("fa-heart cursor-pointer",{like:comment.like,fas:comment.like,far:comment.like==false})}/></span>
                       </>
                   </div>
                 </div>  

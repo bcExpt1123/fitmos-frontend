@@ -10,7 +10,7 @@ import {isMobile} from '../../../../../_metronic/utils/utils';
 import { convertVideo,convertContent, setVideo } from "../../redux/workout/actions";
 import { stopRunning } from "../../redux/done/actions";
 
-const ModalView = ({ isOpen, onClose }) => {
+const ModalView = ({ isOpen, onClose, onOpenPost }) => {
   const dispatch = useDispatch();
   const workouts = useSelector(({done})=>done.workouts);
   const step = useSelector(({workout})=>workout.step);
@@ -129,7 +129,7 @@ const ModalView = ({ isOpen, onClose }) => {
         }
         <Modal.Body>
           <div className={classnames({'d-none':view!=='content'})}>{
-              workouts&&workouts.current.blocks.map((block, index) => (
+              (workouts&&workouts.current.blocks)&&workouts.current.blocks.map((block, index) => (
                 step!==0 && step === index && (
                   <ModalBlock key={index}
                     block={block}
@@ -139,9 +139,9 @@ const ModalView = ({ isOpen, onClose }) => {
               )
               )
             }
-            {workouts && step!==0 && step === workouts.current.blocks.length&&
+            {workouts && workouts.current.blocks && step!==0 && step === workouts.current.blocks.length&&
               <>
-                <CompleteView onClose={onClose}/>
+                <CompleteView onClose={onOpenPost}/>
               </> 
             }
           </div>

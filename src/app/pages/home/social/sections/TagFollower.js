@@ -35,7 +35,7 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
   return (
     <div className="tag-followers">
       <div>
-        <input className="search" name="search" placeholder="Search for friends" autocomplete="off" value={searchName} onChange={handleSearchName}/>
+        <input className="search" name="search" placeholder="Search for friends" autoComplete="off" value={searchName} onChange={handleSearchName}/>
         <button className="btn btn-primary" onClick={onClose}>Done</button>
       </div>
       <div className="tag-content">

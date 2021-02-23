@@ -49,7 +49,7 @@ const LeaderboardReport = () => {
         path: "reports/customer-workouts?from="+from+"&to="+to+"&number="+number
       });
       if(res.data){
-        setRecords(res.data);
+        setRecords(res.data.data);
         setIsLoading(true);
       }
     }

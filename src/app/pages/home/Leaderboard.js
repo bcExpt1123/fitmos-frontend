@@ -20,6 +20,7 @@ registerLocale("es", es);
 
 export default function Leaderboard() {
   const [month, setMonth] = useState(new Date());
+  const [change, setChange] = useState(false);
   const [gender, setGender] = useState('all');
   const [records, setRecords] = useState([]);
   const [isLoading,setIsLoading] = useState();
@@ -31,10 +32,10 @@ export default function Leaderboard() {
   });
   const [to, setTo] = useState(convertString(new Date()));
   const handleMonthChange=(date)=>{
-    setMonth(date)
+    setMonth(date);
+    setChange(true);
   } 
   const handleGenderChange = (event)=>{
-    console.log(event.target.value)
     setGender(event.target.value)
   }
   const onSubmit = ()=>{
@@ -42,19 +43,28 @@ export default function Leaderboard() {
   }
   useEffect( () => {
     async function fetchData(){
-      let today = new Date(+month);
-      today.setDate(1);
-      const from = convertString(today);
-      today.setDate(1);
-      let nextMonth = new Date(today.setMonth(today.getMonth()+1));
-      nextMonth.setDate(0);
-      const to = convertString(nextMonth);
+      let path;
+      if(change){
+        let today = new Date(+month);
+        today.setDate(1);
+        const from = convertString(today);
+        today.setDate(1);
+        let nextMonth = new Date(today.setMonth(today.getMonth()+1));
+        nextMonth.setDate(0);
+        const to = convertString(nextMonth);  
+        path = "reports/customer-workouts?from="+from+"&to="+to+"&number="+number+"&gender="+gender; 
+      }else{
+        path = "reports/customer-workouts?&number="+number+"&gender="+gender; 
+      }
       const res = await http({
-        path: "reports/customer-workouts?from="+from+"&to="+to+"&number="+number+"&gender="+gender
+        path
       });
       if(res.data){
-        setRecords(res.data);
+        setRecords(res.data.data);
         setIsLoading(true);
+        if(!change){
+          if(res.data.month && convertString(month)!==res.data.month)setMonth(new Date(res.data.month));
+        }
       }
     }
     fetchData();

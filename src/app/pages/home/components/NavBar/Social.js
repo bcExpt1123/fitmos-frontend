@@ -144,12 +144,12 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             }
             {clickSearch&&
               <button className="back-button"  onClick={()=>setClickSearch(false)}>
-                <i className="fas fa-arrow-left" />
+                <i className="fal fa-arrow-left" />
               </button>
             }
             <div className="search">
              {!clickSearch&&<button className="search-button" onClick={()=>setClickSearch(true)}>
-                  <i className="fas fa-search" />
+                  <i className="fal fa-search" />
                 </button>
               }
               <input id="search" placeholder="&#xF002; Buscar...." autoComplete="off" type="text" 
@@ -172,12 +172,8 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 activeClassName="active"
                 exact
               >
-                <span className="svg-icon menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout.svg")} />
-                </span>
-                <span className="svg-icon-active menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/workout-active.svg")} style={{marginTop:"4px"}}/>
-                </span>
+                <i className="fal fa-heartbeat" />
+                <i className="fa fa-heartbeat" />
                 <span className="menu-text">Workout</span>
               </NavLink>
             </li>
@@ -188,12 +184,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 activeClassName="active"
                 exact
               >
-                <span className="svg-icon menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/newsfeed.svg")} />
-                </span>
-                <span className="svg-icon-active menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/newsfeed-active.svg")} />
-                </span>
+                <i className="fal fa-home-alt" />
                 <span className="menu-text">Newsfeed</span>
               </NavLink>
             </li>
@@ -204,12 +195,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 activeClassName="active"
                 exact
               >
-                <span className="svg-icon menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/leaderboard.svg")} />
-                </span>
-                <span className="svg-icon-active menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/leaderboard-active.svg")} />
-                </span>
+                <i className="fal fa-browser" />
                 <span className="menu-text">Leaderboard</span>
               </NavLink>
             </li>
@@ -222,12 +208,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                   return (location.pathname.match('/\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/'))
                 }}                
               >
-                <span className="svg-icon menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/explore.svg")} />
-                </span>
-                <span className="svg-icon-active menu-icon">
-                  <SVG src={toAbsoluteUrl("/media/icons/svg/Menus/explore-active.svg")} />
-                </span>
+                <i className="fal fa-compass" />
                 <span className="menu-text">Explore</span>
               </NavLink>
             </li>
@@ -241,7 +222,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
           >
             <li className="nav-item">
               <button type="button" className={"clickable-button"} onClick={OpenCreatingPost}>
-                <i className="far fa-plus-square" />
+                <i className="fal fa-plus-square" />
               </button>
             </li>
             <li className="nav-item">
@@ -251,7 +232,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 activeClassName="active"
                 exact
               >
-                <i className="far fa-comments" />
+                <i className="fal fa-comment-lines" />
               </NavLink>
             </li>
             <li className="nav-item">

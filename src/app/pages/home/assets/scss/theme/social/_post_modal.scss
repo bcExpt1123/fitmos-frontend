@@ -128,6 +128,18 @@
           height: calc(100vh - 45px);
           overflow-y: auto;
           overflow-x: hidden;
+          .post-header{
+            .full-name{
+              .link-profile{
+                max-width: 230px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: inline-block;
+                vertical-align: bottom;                
+              }
+            }
+          }
           .post-body{
             font-size: 14px;
           }

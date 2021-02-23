@@ -9,6 +9,7 @@ import SVG from "react-inlinesvg";
 import Avatar from "../../components/Avatar";
 import {deletePost, openEditModal, setItemValue} from "../../redux/post/actions";
 import { follow, unfollow, mute } from "../../redux/notification/actions";
+import { findWorkouts,initialBlock } from "../../redux/done/actions";
 import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
@@ -123,32 +124,46 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
       });
     }
   },[post.medias.length ,post.location])
+  const redirectWorkoutPage = ()=>{
+    if(post.type === 'workout'){
+      dispatch(findWorkouts(post.workout_date));
+      dispatch(initialBlock());
+      history.push("/");
+    }
+  }
   const postHeader = ()=>{
     return (<>
-      {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;is</span>}
-      {(post.location && post.location!='false')&&<>
-        &nbsp;in&nbsp;<span className="font-weight-bold">
-          <a href={`http://www.google.com/maps/search/?api=1&query=`+window.encodeURI(post.location)} target="_blank" className="open-map font-size-14 font-weight-bold">{post.location}</a></span>
-        </>}
-      {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
-      &nbsp;
-      {
-        post.tagFollowers && post.tagFollowers.length>0 &&<>
-          &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
-          {post.tagFollowers.length>1&&
-            <>
-              &nbsp;and&nbsp;
-              <Tooltip title={
-                post.tagFollowers.map((follower, index)=>{
-                  return index>0&&
-                  <div key={follower.id} className="follower">
-                    {follower.first_name+' '+follower.last_name}
-                  </div>
-                })
-              }>
-                <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
-              </Tooltip>  
-              {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+      {post.type=="workout"?
+        <>
+          &nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_date}</span>
+        </>:
+        <>
+          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;is</span>}
+          {(post.location && post.location!='false')&&<>
+            &nbsp;in&nbsp;<span className="font-weight-bold">
+              <a href={`http://www.google.com/maps/search/?api=1&query=`+window.encodeURI(post.location)} target="_blank" className="open-map font-size-14 font-weight-bold">{post.location}</a></span>
+            </>}
+          {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
+          &nbsp;
+          {
+            post.tagFollowers && post.tagFollowers.length>0 &&<>
+              &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
+              {post.tagFollowers.length>1&&
+                <>
+                  &nbsp;and&nbsp;
+                  <Tooltip title={
+                    post.tagFollowers.map((follower, index)=>{
+                      return index>0&&
+                      <div key={follower.id} className="follower">
+                        {follower.first_name+' '+follower.last_name}
+                      </div>
+                    })
+                  }>
+                    <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
+                  </Tooltip>  
+                  {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+                </>
+              }
             </>
           }
         </>
@@ -168,7 +183,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           {({show,toggleHandle})=>(
             <div className=" dropdown">
               <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-                <i className="fas fa-ellipsis-h dropbtn" />
+                <i className="fal fa-ellipsis-h dropbtn" />
               </button>
               <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                 {
@@ -265,7 +280,10 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           markerPosition={position.lat===null?null:{ lat: parseFloat(position.lat), lng: parseFloat(position.lng) }}
         />
       </div>}
-      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}><SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>{postHeader()}</div>}
+      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}>
+      {(post.tagFollowers&&post.tagFollowers.length>0 || post.location || post.type==="workout")&&<SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>}
+        {postHeader()}</div>
+      }
     </>
   );
 }

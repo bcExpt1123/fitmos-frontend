@@ -90,7 +90,7 @@ const CommentView = ({comment})=>{
               {({show,toggleHandle,setShow})=>(
                 <div className=" dropdown">
                   <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-                    <i className="fas fa-ellipsis-h dropbtn" />
+                    <i className="fal fa-ellipsis-h dropbtn" />
                   </button>
                   <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                       <>

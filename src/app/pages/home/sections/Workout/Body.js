@@ -9,6 +9,7 @@ import Blog from "./Blog";
 import Blocks from "./Blocks";
 import Block from "./Block";
 import ModalView from "./ModalView";
+import CreatePostModal from "../../social/posts/CreatingModal";
 import { initialModalBlock, convertContent,convertVideo,setVideo,  confirmModalNo, confirmModalYes } from "../../redux/workout/actions";
 
 const Body = ()=>{
@@ -76,50 +77,63 @@ const Body = ()=>{
     dispatch(confirmModalYes());
     dispatch(initialModalBlock());
   }
+  /** from workout to create post */
+  const [showCreatingPost, setShowCreatingPost] = useState(false);
+  const onOpenPostModal = () =>{
+    console.log('onOpenPostModal')
+    setShow(false);
+    if(!workouts.current.hasPost)setShowCreatingPost(true);
+  }
+  const handleCreatingModalClose = () => {
+    setShowCreatingPost(false);
+  }
   return (
     <div className="workout-body">
     {
-      workouts&&workouts.current&&(
-        workouts.current.blog?(
-          <Blog renderLine={renderLine}/>
-        ):(
-          all?(
-            <Blocks renderLine={renderLine} setAll={setAll} handleOpen = {openModal}/>
+      workouts&&workouts.current&&
+        <>
+          {workouts.current.blog?(
+            <Blog renderLine={renderLine}/>
           ):(
-            (workout !== 'update')?
-              <>{workouts.current.blocks.map( (block,index)=>(
-                step===index&&(
-                  <Block key={index} 
-                    block={block} 
-                    renderLine={renderLine} 
-                    setAll={setAll}
-                  />
-                )                    
-              ))}
-              </>
-            :
-              (workouts.current.blocks.map( (block,index)=>(
-                step===index&&(
-                  <Block key={index} 
-                    block={block} 
-                    renderLine={renderLine} 
-                    handleOpen = {openModal}
-                    setAll={setAll}
-                  />
-                )                    
-              ))
-          ))
-        )
-      )
+            all?(
+              <Blocks renderLine={renderLine} setAll={setAll} handleOpen = {openModal}/>
+            ):(
+              (workout !== 'update')?
+                <>{workouts.current.blocks &&workouts.current.blocks.map( (block,index)=>(
+                  step===index&&(
+                    <Block key={index} 
+                      block={block} 
+                      renderLine={renderLine} 
+                      setAll={setAll}
+                    />
+                  )                    
+                ))}
+                </>
+              :
+                (workouts.current.blocks && workouts.current.blocks.map( (block,index)=>(
+                  step===index&&(
+                    <Block key={index} 
+                      block={block} 
+                      renderLine={renderLine} 
+                      handleOpen = {openModal}
+                      setAll={setAll}
+                    />
+                  )                    
+                ))
+            ))
+          )
+        }
+        {workout === 'update'?(
+          <ModalView isOpen={show} step={step} onClose={() => {
+            dispatch(convertContent());
+            setShow(false)
+          }} onOpenPost={onOpenPostModal}/>
+        ):(
+          <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)}/>
+        )}
+        {workouts&&workouts.current&&<CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose} workout={workouts.current}/>}
+      </>
     }
-    {workout === 'update'?(
-      <ModalView isOpen={show} step={step} onClose={() => {
-        dispatch(convertContent());
-        setShow(false)
-      }} />
-    ):(
-      <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)} />
-    )}
   </div>
 )}
 export default Body;

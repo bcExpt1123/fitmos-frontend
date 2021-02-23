@@ -4,6 +4,7 @@ import Post from "./Post";
 import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
+import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
 export default function Posts({posts,last,dispatchAction, show, newsfeed, suggested}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
@@ -18,11 +19,11 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
     setShowCreatingPost(false);
   }
   const fetchMoreListItems = ()=>{
-    console.log("fetchMoreListItems");
+    console.log(last, isFetching)
     if(!last)dispatchAction();
     else setIsFetching(false);
   }
-  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
+  const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems, last);
   /** post modal */
   const [showPostModal, setShowPostModal] = useState(false);
   const [media, setMedia] = useState(false);
@@ -38,7 +39,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
         <div className="tag-post cursor-pointer" onClick={OpenCreatingPost}>
           What's on your mind? {currentUser.customer.first_name}
           <button type="button" className={"clickable-button"}>
-            <i className="far fa-plus-square" />
+            <i className="fal fa-plus-square" />
           </button>
         </div>
       }
@@ -48,7 +49,9 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
             posts.map(post=>
               <Post post={post} newsfeed={newsfeed} key={post.id} suggested={suggested} setMedia={setMedia} setShowPostModal={setShowPostModal}/>
             )}
-            {isFetching && 'Obteniendo más elementos de la lista...'}
+            {isFetching && <div className="loading-container">
+              <img src={toAbsoluteUrl("/media/loading/loading.gif")} alt="loading..." />
+            </div>}
           </>
         }
       </div>

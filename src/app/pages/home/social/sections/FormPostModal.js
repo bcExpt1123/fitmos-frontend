@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { MentionsInput, Mention } from 'react-mentions';
 import classnames from "classnames";
 import { NimblePicker, emojiIndex } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
+import { useHistory } from "react-router-dom";
 import TagFollower from '../sections/TagFollower';
 import Avatar from "../../components/Avatar";
 import SearchLocation from '../sections/SearchLocation';
@@ -14,12 +15,14 @@ import RenderMedia from '../sections/RenderMedia';
 import { once } from "../../../../../lib/common";
 import SplashScreen from "../../../../partials/layout/SplashScreen";
 import { isMobile } from '../../../../../_metronic/utils/utils';
+import { findWorkouts,initialBlock } from "../../redux/done/actions";
 
-const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
+const FormPostModal = ({show,title,handleClose, publishPost, post, saving, workout}) => {
   const users = useSelector(({people})=>people.people);
   const [content, setContent] = useState("");
   const textRef = useRef();
   const [type, setType] = useState("post");
+  const [postType, setPostType] = useState("general");
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect(()=>{
     if(post){
@@ -27,6 +30,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
       setTagFollowers(post.tagFollowers);
       setFiles(post.medias);
       setLocation(post.location);
+      setPostType(post.type);
     }
   },[post]);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(()=>{
@@ -133,7 +137,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const [location, setLocation] = useState(false);
   const onPublishPost = ()=>{
     const id = post?post.id:false;
-    publishPost({files, location, tagFollowers, content,id:id});
+    publishPost({files, location, tagFollowers, content,id:id, workout_date:workout?workout.today:false});
     setContent("");
     setLocation(false);
     setFiles([]);
@@ -227,7 +231,21 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     }
     return emoj;
   };
-
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const redirectWorkoutPage = ()=>{
+    if(workout){
+      dispatch(findWorkouts(workout.today));
+      dispatch(initialBlock());
+      history.push("/");
+      return;
+    }
+    if(postType === 'workout'){
+      dispatch(findWorkouts(post.workout_date));
+      dispatch(initialBlock());
+      history.push("/");
+    }
+  }
   return (
     <Modal
       show={show}
@@ -289,18 +307,27 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
               <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
               <div className="with-location">
                 <span className="full-name">{currentUser.name}</span>
-                {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
-                {location&&<>&nbsp;in {location}</>}
-                {tagFollowers.length>0&&<>&nbsp;with</>}
-                &nbsp;
-                {
-                  tagFollowers.map((follower)=>(
-                    <span key={follower.id} className="follower">
-                      <span className="follower">{follower.display?follower.display:follower.first_name+' '+follower.last_name}</span>
-                      <span className="spot">, &nbsp;</span>
-                    </span>
-                  ))
-                }
+                {(workout || post.type=="workout")?<>
+                  {post.type=="workout"?
+                    <>&nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_date}</span> </>
+                    :
+                    <>&nbsp;completes <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {workout.short_date}</span> </>
+                  }
+                  
+                </>:<>
+                  {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
+                  {location&&<>&nbsp;in {location}</>}
+                  {tagFollowers.length>0&&<>&nbsp;with</>}
+                  &nbsp;
+                  {
+                    tagFollowers.map((follower)=>(
+                      <span key={follower.id} className="follower">
+                        <span className="follower">{follower.display?follower.display:follower.first_name+' '+follower.last_name}</span>
+                        <span className="spot">, &nbsp;</span>
+                      </span>
+                    ))
+                  }
+                </>}
               </div>
             </div>
             <MentionsInput 

@@ -104,11 +104,12 @@
         i{
           font-size: 25px;
           color:#DDDDD7;
+          line-height: 20px;
         }  
       }
       input{
         &::placeholder{
-          font-family: "Font Awesome 5 Free", sans-serif;        
+          font-family: "Font Awesome 5 Pro", sans-serif;        
           font-weight: 600;
           color:rgba($basic-text-color, 0.5)
         }
@@ -147,15 +148,24 @@
         .svg-icon-active{
           display:none;
         }
+        i{
+          font-size: 24px;
+          &.fa.fa-heartbeat{
+            display: none;
+          }
+        }
         &.active{
+          i{
+            color:#afca32;
+            &.fal.fa-heartbeat{
+              display: none;
+            }            
+            &.fa.fa-heartbeat{
+              display: inline;
+            }
+          }
           border-bottom: 4px solid #afca32;
           padding-left: 25px;          
-          .svg-icon{
-            display:none;
-          }
-          .svg-icon-active{
-            display: inline;
-          }
           .menu-text{
             font-weight: bold;
           }
@@ -166,6 +176,7 @@
           margin-left: 15px;
           font-weight: normal;          
           color:#DDDDD7;
+          vertical-align: text-top;
         }
       }
       &.dropdown{
@@ -257,7 +268,7 @@
     .menu-first{
       .back-button{
         i{
-          font-size: 25px;
+          font-size: 20px;
           color:#DDDDD7;
         }
       }
@@ -329,7 +340,10 @@
     }
     .menu-third{
       .link{
-        padding: 13px !important;        
+        padding: 13px !important;       
+        i{
+          font-size: 20px;
+        } 
       }
     }
   }

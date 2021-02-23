@@ -61,7 +61,7 @@ export default function Newsfeed() {
         {old == 0?
           <>
             {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true} newsfeed={true}/>}
-            {( suggestedPosts.length>0 || oldPosts.length>0) && <>
+            {( suggestedPosts.length>0 || oldPosts.length>0) && last && <>
               <div className="newsfeed mt-2 mb-4 tag-post">
                 <div className="cursor-pointer align-center mt-1">
                   <SVG src={toAbsoluteUrl("/media/icons/svg/General/Checked.svg")} />

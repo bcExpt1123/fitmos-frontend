@@ -4,8 +4,6 @@ import {useLocation} from "react-router-dom";
 import { injectIntl } from "react-intl";
 import { makeStyles } from "@material-ui/core";
 import { Button, Paper, FormLabel, TextField, Grid, FormControlLabel, FormControl, RadioGroup, Radio, Box, Tooltip} from "@material-ui/core";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
 import {
 	$updateItemValue,
 	$setNewItem,
@@ -313,10 +311,7 @@ const Main =({history}) =>{
 					<Paper className={classes.root}  style={{ padding: "25px",borderRadius:"15px" }}>
 						<Grid container xs={12} item>
 							<label htmlFor='multi-image' style={{textAlign:"center"}}>
-								<FontAwesomeIcon icon={faImage} 
-									style={{cursor:"pointer"}} 
-									color='#6d84b4' 
-									size='4x' />
+                <i className="cursor-pointer fas fa-image" style={{color:"#6d84b4",fontSize:'4em'}}/>
 							</label>
 						</Grid>		
 						<Box display="flex" flexWrap="wrap" justifyContent="flex-start">

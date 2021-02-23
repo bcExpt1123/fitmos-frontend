@@ -6,7 +6,7 @@ const BasicSubmenu = ({show,open})=>{
   return (
     <>
       <button type="button" className={"clickable-button dropbtn"} onClick={open}>
-        <i className="fas fa-ellipsis-h dropbtn" />
+        <i className="fal fa-ellipsis-h dropbtn" />
       </button>
       <div className={classnames("dropdown-menu",{show:show})}>
         <NavLink

@@ -2,7 +2,6 @@ import React, {useEffect, useState} from "react";
 import classnames from "classnames";
 import {  useDispatch,useSelector } from "react-redux";
 
-
 const CompleteView = ({onClose})=>{
   const workouts = useSelector(({done})=>done.workouts);
   const renderImage = (url)=>{

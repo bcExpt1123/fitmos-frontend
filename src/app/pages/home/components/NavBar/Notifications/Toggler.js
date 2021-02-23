@@ -21,7 +21,7 @@ const NotificationToggler = ()=>{
         className="kt-header__topbar-icon"
         id="kt_quick_panel_toggler_btn"
       >
-        <i className="far fa-bell" />
+        <i className="fal fa-bell" />
       </span>
     </>
   );

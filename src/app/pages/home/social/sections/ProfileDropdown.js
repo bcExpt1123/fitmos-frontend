@@ -41,7 +41,7 @@ const ProfileDropdown = ()=>{
         {({show,toggleHandle,setShow})=>(
           <div className=" dropdown">
             <button type="button" className={"btn btn-custom-secondary dropbtn"} onClick={toggleHandle}>
-              <i className="fas fa-ellipsis-h dropbtn" />
+              <i className="fal fa-ellipsis-h dropbtn" />
             </button>
             <div className={classnames("dropdown-menu",{show})}>
               {customer.relation === 'blocked'?
