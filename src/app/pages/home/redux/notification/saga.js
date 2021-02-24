@@ -10,7 +10,9 @@ import {
   block,
   unblock,
   mute,
-  unmute
+  unmute,
+  showFollows,
+  appendFollows
 } from "./actions";
 import {
   setItemValue as setPeopleValue,
@@ -224,6 +226,52 @@ function* onUnmute({payload}){
     yield put(setItemValue({name:'muteDisabled',value:false}));
   }    
 }
+function* onShowFollows({payload}){
+  let follows; 
+  if(payload === 'followings'){
+    follows = yield select(({notification})=>notification.followings);
+  }else{
+    follows = yield select(({notification})=>notification.followers);
+  }
+  if(follows.length===0){
+    yield put(appendFollows(payload));
+  }
+}
+const followsRequest = (type, pageNumber)=>
+http({
+  path: "follows/customer?type="+type+"&=page_number="+pageNumber,
+  method: "GET"
+}).then(response => response.data);
+function* onAppendFollows({payload}){
+  let follows; 
+  let pageNumber;
+  let last;
+  if(payload === 'followings'){
+    follows = yield select(({notification})=>notification.followings);
+    pageNumber = yield select(({notification})=>notification.followingsLastPageNumber);
+    last = yield select(({notification})=>notification.followingsLast);
+  }else{
+    follows = yield select(({notification})=>notification.followers);
+    pageNumber = yield select(({notification})=>notification.followersLastPageNumber);
+    last = yield select(({notification})=>notification.followersLast);
+  }
+  if(!last){
+    try{
+      const result = yield call(followsRequest, payload,pageNumber);
+      if(result.follows.length>0){
+        follows = follows.concat(result.follows);
+        pageNumber++;
+        yield put(setItemValue({name:payload,value:follows}));
+        yield put(setItemValue({name:payload+'LastPageNumber',value:pageNumber}));
+        if(result.next==0)yield put(setItemValue({name:payload+'Last',value:true}));
+      }else{
+        yield put(setItemValue({name:payload+'Last',value:true}));
+      }
+    }catch(e){
+
+    }
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(searchNotifications,onSearchNotifications);
   yield takeLeading(findFollows,onFindFollows);
@@ -235,4 +283,6 @@ export default function* rootSaga() {
   yield takeLeading(unblock,onUnblock);
   yield takeLeading(mute,onMute);
   yield takeLeading(unmute,onUnmute);
+  yield takeLeading(showFollows,onShowFollows);
+  yield takeLeading(appendFollows, onAppendFollows);
 }

@@ -309,7 +309,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
                 <span className="full-name">{currentUser.name}</span>
                 {(workout || post.type=="workout")?<>
                   {post.type=="workout"?
-                    <>&nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_date}</span> </>
+                    <>&nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_spanish_short_date}</span> </>
                     :
                     <>&nbsp;completes <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {workout.short_date}</span> </>
                   }

@@ -103,15 +103,14 @@ const PostModal = ({show, media, onClose }) => {
       if(newIndex === activeSlide){
         setTimeout(() => {
           setHidden(true);
-        }, 400);
-        console.log('activeSlide',activeSlide)
+        }, 500);
       }
-      console.log(oldIndex, newIndex, )
     }
   };
   useEffect(()=>{
+    console.log(hidden)
     if(hidden){
-      // console.log(sliderRef.current);
+      
     }
   },[hidden])
   const sliderRef = useRef();
@@ -154,7 +153,7 @@ const PostModal = ({show, media, onClose }) => {
                     <span><i className="far fa-comment" /> {post.commentsCount}</span>
                   </div>
                   <div className="share">
-                    <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
+                    <i className="fal fa-paper-plane" />
                   </div>
                 </div>
                 <div className="post-comments" ref={commentContainer}>

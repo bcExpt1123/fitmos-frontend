@@ -8,6 +8,7 @@ import DetailModal from "../sections/Profile/Dialogs/Detail";
 import ProfileDropdown from "../social/sections/ProfileDropdown";
 import FollowButton from "../social/sections/FollowButton";
 import ReadMore from '../components/ReadMore';
+import FollowingListModal from './FollowingListModal';
 
 const ProfileInfo = ({customer}) => {  
   const file=false;
@@ -48,6 +49,16 @@ const ProfileInfo = ({customer}) => {
     } else {
       console.log('get wrapper - no wrapper');
     }
+  }
+  /**following modal */
+  const [followingModalShow, setFollowingModalShow] = useState(false);
+  const [tabKey, setTabKey] = useState("followings");
+  const openFollowingModal = (key)=>()=>{
+    setFollowingModalShow(true);
+    setTabKey(key);
+  }
+  const handleFollowingListClose = ()=>{
+    setFollowingModalShow(false);
   }
   return (  
     <>
@@ -108,12 +119,12 @@ const ProfileInfo = ({customer}) => {
           </div>
         }
         <div className="social-info row">
-          <div className="col-4">
+          <div className="col-4" onClick={openFollowingModal("followings")}>
             <div className="value">{check()?customer.followings&&customer.followings.length:currentUser.customer.followings&&currentUser.customer.followings.length}
             </div>
             <div className="label">Following</div>
           </div>
-          <div className="col-4">
+          <div className="col-4" onClick={openFollowingModal("followers")}>
             <div className="value">{check()?customer.followers&&customer.followers.length:currentUser.customer.followers&&currentUser.customer.followers.length}
             {/* <span className="unit">K</span> */}
             </div>
@@ -209,7 +220,7 @@ const ProfileInfo = ({customer}) => {
               }
             </div>
             <div className="progress-bar-body">
-              <span className="label">Completados Nov.</span>
+              <span className="label">Completados {customer.medals&&customer.medals.monthShortName}.</span>
               {check()?
                 <>
                   <span className="value">{customer.medals.monthWorkoutCount}/{customer.medals.monthWorkoutTotal}</span>
@@ -226,6 +237,7 @@ const ProfileInfo = ({customer}) => {
         </div>
       </div>
       <DetailModal show={show} handleClose={handleClose}/>
+      {followingModalShow && <FollowingListModal show={followingModalShow}  onClose={handleFollowingListClose} tabKey={tabKey} customer={customer}/>}
     </>
   )  
 }  

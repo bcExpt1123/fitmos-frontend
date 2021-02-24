@@ -14,6 +14,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const mediaContainerRef = useRef();
   const [mediasWidth,setMediaWidth] = useState(100);
+  const [mediasHeight,setMediasHeight] = useState(100);
   const [mediaContainerHeight,setMediaContainerHeight] = useState('auto');
   const changeDimesions = ()=>{
     if(mediaContainerRef.current){
@@ -24,7 +25,15 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           setMediaContainerHeight("auto");
           break;
         case 1:
+          setMediasHeight(width);
           setMediaContainerHeight(width+"px");
+          if(post.medias[0].width){
+            if(parseFloat(post.medias[0].width)>parseFloat(post.medias[0].height)){
+              const w = mediaContainerRef.current.clientWidth;
+              setMediaContainerHeight(w/parseFloat(post.medias[0].width)*parseFloat(post.medias[0].height)+"px");
+              setMediasHeight(w/parseFloat(post.medias[0].width)*parseFloat(post.medias[0].height));
+            }
+          }
           break;
         case 2:
           setMediaContainerHeight(width/2+"px");
@@ -96,7 +105,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
   }
   /** open post modal */
   const videoPlayer = useSelector(({post})=>post.videoPlayer);
-  const openPostModal = (file)=>(evt)=>{
+  const openPostModal = (file)=>{
     if(window.innerWidth>800){
       setShowPostModal(true);
       setMedia(file);
@@ -106,31 +115,38 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
       dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
     }
   }
+  // const setSize = (width,height)=>{
+  //   if(post.medias.length == 1 && width>height){
+  //     const w = mediaContainerRef.current.clientWidth;
+  //     setMediaContainerHeight(w/width*height+"px");
+  //     setMediasHeight(w/width*height);
+  //   }
+  // }
   return (
-    <ViewableMonitor visibleChange = {visibleChange}>
-      {isViewable =>
+      <ViewableMonitor visibleChange = {visibleChange}>
+        {isViewable =>
         <div className="social-post">
           <PostContent post={post} newsfeed={newsfeed} suggested={suggested}/>
           <div className="medias-container">
             <div className="medias-body">
               <div className="medias" ref={mediaContainerRef}  style={{height:mediaContainerHeight}}>
                 {post.medias.length == 1&&(
-                  <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasWidth+"px"}}>
-                    <div className="item cursor-pointer" onClick={openPostModal(post.medias[0])}>
-                      <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} status={visible} />
+                  <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasHeight+"px",backgroundColor:"black"}}>
+                    <div className="item cursor-pointer">
+                      <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} status={visible} onOpenModal={openPostModal}/>
                     </div>
                   </div>
                 )}
                 {post.medias.length > 1&&(
                   <>
                     <div className="wrapper" style={{top:0,left:0,width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[0])}>
-                        <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                     <div className="wrapper" style={{top:0,left:mediasWidth/2+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[1])}>
-                        <RenderMedia file={post.medias[1]} videoIndex = {findVideoIndex(post.medias[1].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[1]} videoIndex = {findVideoIndex(post.medias[1].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                   </>
@@ -138,8 +154,8 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                 {post.medias.length == 3&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth+"px",height:mediasWidth/2+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[2])}>
-                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                   </>
@@ -147,13 +163,13 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                 {post.medias.length == 4&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[2])}>
-                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                     <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth/2+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[3])}>
-                        <RenderMedia file={post.medias[3]} videoIndex = {findVideoIndex(post.medias[3].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[3]} videoIndex = {findVideoIndex(post.medias[3].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                   </>
@@ -161,18 +177,18 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                 {post.medias.length > 4&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[2])}>
-                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[2]} videoIndex = {findVideoIndex(post.medias[2].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                     <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth/3+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[3])}>
-                        <RenderMedia file={post.medias[3]} videoIndex = {findVideoIndex(post.medias[3].id)} status={visible} />
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[3]} videoIndex = {findVideoIndex(post.medias[3].id)} status={visible} onOpenModal={openPostModal}/>
                       </div>
                     </div>
                     <div className="wrapper" style={{top:mediasWidth/2,left:mediasWidth * 2/3+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
-                      <div className="item cursor-pointer" onClick={openPostModal(post.medias[4])}>
-                        <RenderMedia file={post.medias[4]} videoIndex = {findVideoIndex(post.medias[4].id)} status={visible} />                        
+                      <div className="item cursor-pointer">
+                        <RenderMedia file={post.medias[4]} videoIndex = {findVideoIndex(post.medias[4].id)} status={visible} onOpenModal={openPostModal}/>                        
                       </div>
                       {post.medias.length > 5&&
                         <div className="additional">
@@ -191,7 +207,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
               <span><i className="far fa-comment" />&nbsp;&nbsp;&nbsp;{post.commentsCount}</span>
             </div>
             <div className="share">
-              <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
+              <i className="fal fa-paper-plane" />
             </div>
           </div>
           <div className="post-comments">

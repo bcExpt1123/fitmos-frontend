@@ -146,8 +146,11 @@
               .video-react{
                 position: unset;
                 background-color: transparent;              
+                .video-react-video{
+                  object-fit: cover;  
+                }
               }
-              &>img,&>video{
+              &>img{
                 width:100%;
                 height: 100%;
                 object-fit: cover;

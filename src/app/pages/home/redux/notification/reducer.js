@@ -10,11 +10,18 @@ const initialState = {
   followDisabled:false,
   muteDisabled:false,
   blockDisabled:false,
-  follows:[],
+  follows:[],//notification
   followLastId:-1,
   notifications:[],
   notificationLastId:-1,
   notificationLast:false,
+  followings:[],
+  followingsLastPageNumber:0,
+  followingsLast:false,
+  followers:[],
+  followersLastPageNumber:0,
+  followersLast:false,
+  followCustomerId:false,
 };
 const reducer = persistReducer(
   {

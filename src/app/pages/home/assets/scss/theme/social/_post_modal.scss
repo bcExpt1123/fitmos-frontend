@@ -99,6 +99,13 @@
                 top: 50%;
                 transform: translate(-50%, -50%);                 
                 background-color: transparent;
+                &.video-react-fullscreen{
+                  .video-react-control-bar{
+                    bottom:0 !important;
+                    left: 0 !important;
+                    width: 100% !important;
+                  }
+                }
                 video{
                 }
                 .video-react-big-play-button{
@@ -136,7 +143,8 @@
                 overflow: hidden;
                 text-overflow: ellipsis;
                 display: inline-block;
-                vertical-align: bottom;                
+                vertical-align: bottom;      
+                font-size: 14px;          
               }
             }
           }

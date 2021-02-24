@@ -135,7 +135,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     return (<>
       {post.type=="workout"?
         <>
-          &nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_date}</span>
+          &nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_spanish_short_date}</span>
         </>:
         <>
           {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;is</span>}

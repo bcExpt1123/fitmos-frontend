@@ -11,7 +11,9 @@ export const {
   block,
   unblock,
   mute,
-  unmute
+  unmute,
+  showFollows,
+  appendFollows,
 } = createActions(
   "SET_ITEM_VALUE",
   "FIND_FOLLOWS",
@@ -24,5 +26,7 @@ export const {
   "UNBLOCK",
   "MUTE",
   "UNMUTE",
+  "SHOW_FOLLOWS",
+  "APPEND_FOLLOWS",
   { prefix: "NOTIFICATION" }
 );
