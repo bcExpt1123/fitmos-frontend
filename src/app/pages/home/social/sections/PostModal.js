@@ -57,9 +57,9 @@ const PostModal = ({show, media, onClose }) => {
     if(sliderRef.current){
       const mediaIndex = post.medias.findIndex((file) =>file.id === media.id);
       if(mediaIndex === -1){
-        console.log('no')
+        // console.log('no')
       }else{
-        console.log('yes')
+        // console.log('yes')
         sliderRef.current.slickGoTo(mediaIndex);
         setActiveSlide(mediaIndex)
         if(mediaIndex === 0 )setTimeout(() => {
@@ -81,10 +81,10 @@ const PostModal = ({show, media, onClose }) => {
   const handleClose = ()=>{
     dispatch(readingPost(post));
     setHidden(false);
-    dispatch(setItemValue({name:"videoPlayerOpenModal",value:false}));
+    setActiveSlide(-1);
     onClose();
   }
-  const [activeSlide, setActiveSlide] = useState(0);
+  const [activeSlide, setActiveSlide] = useState(-1);
   const settings = {
     arrows: true,
     infinite: true,
@@ -98,6 +98,13 @@ const PostModal = ({show, media, onClose }) => {
     slidesToScroll: 1,
     afterChange: (current) => {
       setActiveSlide(current);
+      if(post.medias[current]){
+        if(post.medias[current].type==='video'){
+          dispatch(setItemValue({name:"videoPlayerOpenModal",value:post.medias[current].id}));
+        }else{
+          dispatch(setItemValue({name:"videoPlayerOpenModal",value:false}));
+        }
+      }
     },
     beforeChange: (oldIndex, newIndex) =>{
       if(newIndex === activeSlide){
@@ -108,7 +115,6 @@ const PostModal = ({show, media, onClose }) => {
     }
   };
   useEffect(()=>{
-    console.log(hidden)
     if(hidden){
       
     }
@@ -134,7 +140,7 @@ const PostModal = ({show, media, onClose }) => {
               <div className="sliders">
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
-                    <div key={media.id} className={classnames('post-media',{'image-hidden':hidden})}>
+                    <div key={'modal'+media.id} className={classnames('post-media',{'image-hidden':hidden})}>
                       <RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true}/>
                     </div>
                   )}

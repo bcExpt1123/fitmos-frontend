@@ -111,9 +111,26 @@
         }
       }
     }
+    hr{
+      height: 2px;      
+      background-color:#DDDDD7;
+      border:0;
+      margin:40px -60px -23px -60px;
+    }
     .actions{
       display: flex; 
-      justify-content: flex-end;
+      justify-content: center;
+      flex-direction: column;
+      .open-create-post-modal{
+        margin: 30px auto;
+        width:300px;
+        display: block;
+        color:$basic-text-color;
+        padding: 14px;
+        border: 0;
+        border-radius: 5px;
+        background-color: #F4F4F2;
+      }
       button{
         border-radius: 3px;
         box-sizing: border-box;

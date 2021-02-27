@@ -1,10 +1,95 @@
 .following-list{
   .tab-content{
     #list-tabpane-followings, #list-tabpane-followers{
-      min-height: 200px;
-      max-height: 500px;
-      overflow-y: auto;
-      overflow-x: hidden;      
+      >div{
+        min-height: 100px;
+        max-height: 500px;
+        overflow-y: auto;
+        overflow-x: hidden;      
+        .follow{
+          display: flex;
+          flex-direction:row;
+          .link-profile{
+            display: block;
+            width:250px;
+            &:hover{
+              color:$basic-text-color;
+            }
+            .avatar{
+              display: inline-block;
+              vertical-align: top;
+              padding-right: 10px;
+              margin-top: 5px;
+            }
+            .info{
+              display: inline-block;
+              .full-name{
+                max-width: 200px;
+                white-space: nowrap;
+                overflow: hidden;              
+                text-overflow: ellipsis;
+                vertical-align: top;
+              }
+            }
+          }
+          >div{
+            display: block;
+            flex-grow: 4;
+            text-align: center;
+            vertical-align: text-bottom;
+            span{
+              display: inline-block;
+              margin-top: 10px;
+            }
+            button{
+              padding:15px 15px;
+              &.unfollow{
+                background-color:$secondary-background-color;
+                color:white;
+              }
+              &.accept{
+                margin-top: 10px;
+                padding:5px 15px;
+                background-color:$green-yellow-color;
+              }
+              &.reject{
+                margin-top: 10px;
+                padding:5px 15px;
+              }
+            }
+          }
+        }
+        .loading-container{
+          position: relative;
+          img{
+            display: block;
+            width:40px;
+            margin:auto;
+          }
+        }      
+      }      
+    }
+  }
+}
+@media (max-width: 768px) {
+  .following-list{
+    .tab-content{
+      #list-tabpane-followings, #list-tabpane-followers{
+        >div{
+          max-height: none;
+          height: calc(100vh - 169px);
+          .follow{
+            .link-profile{
+              width:200px;
+              .info{
+                .full-name{
+                  max-width: 150px;
+                }
+              }  
+            }
+          }
+        }
+      }
     }
   }
 }

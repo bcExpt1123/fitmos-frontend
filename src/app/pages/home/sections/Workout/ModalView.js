@@ -141,7 +141,7 @@ const ModalView = ({ isOpen, onClose, onOpenPost }) => {
             }
             {workouts && workouts.current.blocks && step!==0 && step === workouts.current.blocks.length&&
               <>
-                <CompleteView onClose={onOpenPost}/>
+                <CompleteView onClose={onClose} openCreatingPost={onOpenPost}/>
               </> 
             }
           </div>

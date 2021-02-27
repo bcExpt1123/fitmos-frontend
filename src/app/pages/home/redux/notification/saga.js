@@ -105,6 +105,19 @@ function* onUnfollow({payload}){
     yield put(setItemValue({name:'followDisabled',value:false}));
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const currentUser = yield select(({auth})=>auth.currentUser);
+    const followCustomerId = yield select(({notification})=>notification.followCustomerId);
+    if(followCustomerId!=false){
+      if(followCustomerId == currentUser.customer.id ){
+        const followings = yield select(({notification})=>notification.followings);
+        const filteredFollowings = followings.filter((follow)=>!(follow.follower_id==followCustomerId && follow.customer_id==payload));
+        yield put(setItemValue({name:'followings',value:filteredFollowings}));
+      }else{
+        const followers = yield select(({notification})=>notification.followers);
+        const filteredFollowers = followers.filter((follow)=>!(follow.customer_id==followCustomerId && follow.follower_id==payload));
+        yield put(setItemValue({name:'followers',value:filteredFollowers}));
+      }
+    }
     yield put(refreshPosts());
   }catch(error){
     yield put(setItemValue({name:'followDisabled',value:false}));
@@ -123,6 +136,25 @@ function* onAccept({payload}){
     const result = yield call(acceptRequest, payload);
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const currentUser = yield select(({auth})=>auth.currentUser);
+    const followCustomerId = yield select(({notification})=>notification.followCustomerId);
+    if(followCustomerId!=false){
+      if(followCustomerId == currentUser.customer.id ){
+        const followers = yield select(({notification})=>notification.followers);
+        const updatedFollowers = followers.map((follow)=>{
+          if(follow.id == payload)follow.status = 'accepted';
+          return follow
+        });
+        yield put(setItemValue({name:'followers',value:updatedFollowers}));
+      }else{
+        const followings = yield select(({notification})=>notification.followings);
+        const updatedFollowings = followings.map((follow)=>{
+          if(follow.id == payload)follow.status = 'accepted';
+          return follow
+        });
+        yield put(setItemValue({name:'followings',value:updatedFollowings}));
+      }
+    }
   }catch(error){
 
   }
@@ -140,6 +172,25 @@ function* onReject({payload}){
     const result = yield call(rejectRequest, payload);
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
+    const currentUser = yield select(({auth})=>auth.currentUser);
+    const followCustomerId = yield select(({notification})=>notification.followCustomerId);
+    if(followCustomerId!=false){
+      if(followCustomerId == currentUser.customer.id ){
+        const followers = yield select(({notification})=>notification.followers);
+        const updatedFollowers = followers.map((follow)=>{
+          if(follow.id == payload)follow.status = 'rejected';
+          return follow
+        });
+        yield put(setItemValue({name:'followers',value:updatedFollowers}));
+      }else{
+        const followings = yield select(({notification})=>notification.followings);
+        const updatedFollowings = followings.map((follow)=>{
+          if(follow.id == payload)follow.status = 'rejected';
+          return follow
+        });
+        yield put(setItemValue({name:'followings',value:updatedFollowings}));
+      }
+    }
   }catch(error){
     
   }
@@ -228,18 +279,30 @@ function* onUnmute({payload}){
 }
 function* onShowFollows({payload}){
   let follows; 
-  if(payload === 'followings'){
-    follows = yield select(({notification})=>notification.followings);
+  const customerId = yield select(({notification})=>notification.followCustomerId);
+  if(payload.customer.id === customerId){
+    if(payload.key === 'followings'){
+      follows = yield select(({notification})=>notification.followings);
+    }else{
+      follows = yield select(({notification})=>notification.followers);
+    }
+    if(follows.length===0){
+      yield put(appendFollows(payload.key));
+    }
   }else{
-    follows = yield select(({notification})=>notification.followers);
-  }
-  if(follows.length===0){
-    yield put(appendFollows(payload));
+    yield put(setItemValue({name:'followings',value:[]}));
+    yield put(setItemValue({name:'followingsLastPageNumber',value:0}));
+    yield put(setItemValue({name:'followingsLast',value:false}));
+    yield put(setItemValue({name:'followers',value:[]}));
+    yield put(setItemValue({name:'followersLastPageNumber',value:0}));
+    yield put(setItemValue({name:'followersLast',value:false}));
+    yield put(setItemValue({name:'followCustomerId',value:payload.customer.id}));
+    yield put(appendFollows(payload.key));
   }
 }
-const followsRequest = (type, pageNumber)=>
+const followsRequest = (type, pageNumber,customerId)=>
 http({
-  path: "follows/customer?type="+type+"&=page_number="+pageNumber,
+  path: "follows/customer?type="+type+"&page_number="+pageNumber+"&customer_id="+customerId,
   method: "GET"
 }).then(response => response.data);
 function* onAppendFollows({payload}){
@@ -255,9 +318,10 @@ function* onAppendFollows({payload}){
     pageNumber = yield select(({notification})=>notification.followersLastPageNumber);
     last = yield select(({notification})=>notification.followersLast);
   }
+  const customerId = yield select(({notification})=>notification.followCustomerId);
   if(!last){
     try{
-      const result = yield call(followsRequest, payload,pageNumber);
+      const result = yield call(followsRequest, payload,pageNumber,customerId);
       if(result.follows.length>0){
         follows = follows.concat(result.follows);
         pageNumber++;

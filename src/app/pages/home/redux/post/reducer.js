@@ -47,7 +47,7 @@ const initialState = {
   videoPlayer:false,
   videoPlayerModalMode:false,
   videoPlayerOpenModal:false,
-  videoPlayerOpenCurrentTime:0,
+  videoPlayerOpenCurrentTime:{id:-1, time:0},
 };
 // const containsPost = (posts, post)=>{
 //   posts.every(item=>item.id == post.id)
@@ -56,7 +56,7 @@ const reducer = persistReducer(
   {
     storage,
     key: "post",
-    blacklist:['suggested','suggestedPosts','suggestedPostsLastId','suggestedPostsLast']
+    blacklist:['suggested','suggestedPosts','suggestedPostsLastId','suggestedPostsLast','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime']
   },
   handleActions(
     {

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Post from "./Post";
 import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import { setItemValue } from "../../redux/post/actions";
 
 export default function Posts({posts,last,dispatchAction, show, newsfeed, suggested}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
@@ -19,7 +20,6 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
     setShowCreatingPost(false);
   }
   const fetchMoreListItems = ()=>{
-    console.log(last, isFetching)
     if(!last)dispatchAction();
     else setIsFetching(false);
   }
@@ -27,8 +27,12 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
   /** post modal */
   const [showPostModal, setShowPostModal] = useState(false);
   const [media, setMedia] = useState(false);
+  const dispatch = useDispatch();
   const onClose = ()=>{
     setShowPostModal(false);
+    setMedia(false);
+    dispatch(setItemValue({name:"videoPlayerOpenModal",value:false}));
+    dispatch(setItemValue({name:"videoPlayerModalMode",value:false}));
     setTimeout(() => {
       console.log(show)
     }, 100);
@@ -56,7 +60,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
         }
       </div>
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
-      <PostModal show={showPostModal} onClose={onClose} media={media}/>
+      {showPostModal && <PostModal show={showPostModal} onClose={onClose} media={media}/>}
     </div>
   );
 }
