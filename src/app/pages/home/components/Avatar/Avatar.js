@@ -18,6 +18,7 @@ const pictureSrc = ({ pictureUrls, size }) => {
     case "lg":
       return pictureUrls.large;
     case "md":
+    case "xm":
       return pictureUrls.medium;
     default:
       return pictureUrls.small;

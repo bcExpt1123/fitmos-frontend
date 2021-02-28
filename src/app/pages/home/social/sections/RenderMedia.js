@@ -155,7 +155,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
     if(object.protocol == 'blob:' || modal == true )return url;
     let filename = object.pathname.split('/').reverse()[0];
     const ext = filename.split('.')[1]; 
-    let replaceFileName = filename.split('.')[0] + '-1024X1024.'+ext;
+    let replaceFileName = filename.split('.')[0] + '-1024.'+ext;
     return url.replace(filename, replaceFileName);
   }
   return (

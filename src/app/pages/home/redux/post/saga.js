@@ -4,6 +4,7 @@ import {
   setNewsfeed,   
   appendNewsfeedAfter,
   addNewsfeedAfter,
+  refreshNewsfeed,
   createPost,
   updatePost,
   openEditModal,
@@ -11,6 +12,7 @@ import {
   appendCustomerPostsAfter,
   addCustomerPostsAfter,
   setCustomerPosts,
+  refreshCustomerPosts, 
   findPost,
   setItemValue,
   findRandomMedias,
@@ -30,9 +32,11 @@ import {
   toggleLike,
   readingPost,
   appendSuggestedPosts,
+  refreshSuggestedPosts, 
   refreshPosts,
   convertOldNewsfeed,
   appendOldNewsfeed,
+  refreshOldNewsfeed,
 } from "./actions";
 import { http } from "../../services/api";
 
@@ -90,6 +94,12 @@ function* onAppendNewsfeedAfter(){
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
   }  
+}
+function* onRefreshNewsfeed(){
+  const visible = yield select(({post})=>post.newsfeedTopVisible);
+  if(visible){
+    yield put(findNewsfeed());
+  }
 }
 const createPostRequest = ({files, location, tagFollowers, content,workout_date})=>{
   let formData =  new FormData;
@@ -182,6 +192,13 @@ function* onAppendCustomerPostsAfter({payload}){
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
   }  
+}
+function* onRefreshCustomerPosts(){
+  const visible = yield select(({post})=>post.customerPostsTopVisible);
+  if(visible){
+    const customer = yield select(({people})=>people.username)
+    if(customer.type=='customer')yield put(findCustomerPosts(customer.id));
+  }
 }
 const findPostRequest = (id,comment)=>
   http({
@@ -1173,6 +1190,12 @@ function* onAppendSuggestedPosts(){
     //yield put(validateVoucherFailed({ token }));
   }  
 }
+function* onRefreshSuggestedPosts(){
+  const visible = yield select(({post})=>post.newsfeedTopVisible);
+  if(visible){
+    yield put(findNewsfeed());
+  }
+}
 const changePost = (newPosts)=>(post)=>{
   const item = newPosts.find(item=>item.id == post.id);
   if(item){
@@ -1293,13 +1316,21 @@ function* onAppendOldNewsfeed(){
     //yield put(validateVoucherFailed({ token }));
   }  
 }
+function* onRefreshOldNewsfeed(){
+  const visible = yield select(({post})=>post.newsfeedTopVisible);
+  if(visible){
+    yield put(findNewsfeed());
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(findNewsfeed,onFindNewsfeed);
   yield takeLeading(appendNewsfeedAfter,onAppendNewsfeedAfter);
+  yield takeLeading(refreshNewsfeed, onRefreshNewsfeed);
   yield takeLeading(createPost, onCreatePost);
   yield takeLeading(updatePost, onUpdatePost);
   yield takeLeading(findCustomerPosts,onFindCustomerPosts);
   yield takeLeading(appendCustomerPostsAfter,onAppendCustomerPostsAfter);
+  yield takeLeading(refreshCustomerPosts, onRefreshCustomerPosts);
   yield takeLeading(findPost,onFindPost);
   yield takeLeading(findRandomMedias, onFindRandomMedias);
   yield takeLeading(appendCustomerPostMediasAfter,onAppendCustomerPostMediasAfter);
@@ -1317,7 +1348,9 @@ export default function* rootSaga() {
   yield takeLeading(  hideReplies, onHideReplies );
   yield takeLeading( readingPost, onReadingPost );
   yield takeLeading( appendSuggestedPosts, onAppendSuggestedPosts );
+  yield takeLeading( refreshSuggestedPosts, onRefreshSuggestedPosts );
   yield takeLeading( refreshPosts, onRefreshPosts);
   yield takeLeading( convertOldNewsfeed, onConvertOldNewsfeed);
   yield takeLeading( appendOldNewsfeed, onAppendOldNewsfeed);
+  yield takeLeading( refreshOldNewsfeed, onRefreshOldNewsfeed );
 }

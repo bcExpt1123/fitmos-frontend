@@ -52,9 +52,9 @@ const findFollowsRequest = (id)=>
     path: "follows",
     method: "GET"
   }).then(response => response.data);
-function* onFindFollows({payload}){
-  const followLastId = yield select(({notification})=>notification.followLastId);
-  if( payload && payload == followLastId) return;
+function* onFindFollows(){
+  // const followLastId = yield select(({notification})=>notification.followLastId);
+  // if( payload && payload == followLastId) return;
   try {
     const result = yield call(findFollowsRequest);
     yield put(setItemValue({name:'follows',value:result.requests}));

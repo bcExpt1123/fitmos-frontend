@@ -4,10 +4,11 @@ import Post from "./Post";
 import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
+import ViewableMonitor from '../../components/ViewableMonitor';
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { setItemValue } from "../../redux/post/actions";
 
-export default function Posts({posts,last,dispatchAction, show, newsfeed, suggested}) {
+export default function Posts({posts,last,dispatchAction, show, newsfeed, suggested, topMonitor}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   useEffect(() => {
     setIsFetching(false);
@@ -37,8 +38,19 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
       console.log(show)
     }, 100);
   }
+  /** visibleMonistor */
+  const visibleChange = (status)=>{
+    console.log(topMonitor, status)
+    if(topMonitor)dispatch(setItemValue({name:topMonitor+"TopVisible",value:status}));
+  }
   return (
     <div className="newsfeed">
+      {topMonitor && <ViewableMonitor visibleChange = {visibleChange}>
+          {isViewable =>
+            <div></div>
+          }
+        </ViewableMonitor>
+      }
       {show&&
         <div className="tag-post cursor-pointer" onClick={OpenCreatingPost}>
           What's on your mind? {currentUser.customer.first_name}

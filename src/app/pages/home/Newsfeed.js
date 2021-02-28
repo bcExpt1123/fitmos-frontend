@@ -60,7 +60,7 @@ export default function Newsfeed() {
       <ThreeColumn>
         {old == 0?
           <>
-            {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true} newsfeed={true}/>}
+            {<Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={true} newsfeed={true} topMonitor={"newsfeed"}/>}
             {( suggestedPosts.length>0 || oldPosts.length>0) && last && <>
               <div className="newsfeed mt-2 mb-4 tag-post">
                 <div className="cursor-pointer align-center mt-1">
@@ -79,7 +79,7 @@ export default function Newsfeed() {
                   }
                 </Sticky>
               </div>
-              {<Posts posts={suggestedPosts} last={suggestedPostsLast} dispatchAction={dispatchSuggestedAction}  show={false} newsfeed={true}/>}
+              {<Posts posts={suggestedPosts} last={suggestedPostsLast} dispatchAction={dispatchSuggestedAction}  show={false} newsfeed={true} topMonitor={"suggestedPosts"}/>}
             </>}
           </>
         :
@@ -87,7 +87,7 @@ export default function Newsfeed() {
             <div className="newsfeed mt-2 mb-4">
               <h3><a onClick={backNewsfeed}><i className="fas fa-arrow-left" /></a> <span className="font-weight-bold">Older Posts</span></h3>
             </div>
-            {<Posts posts={oldPosts} last={oldLast} dispatchAction={dispatchOldAction}  show={false} newsfeed={true} suggested={true}/>}
+            {<Posts posts={oldPosts} last={oldLast} dispatchAction={dispatchOldAction}  show={false} newsfeed={true} suggested={true} topMonitor={"oldNewsfeed"}/>}
           </>
         }
       </ThreeColumn>

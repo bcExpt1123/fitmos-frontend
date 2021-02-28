@@ -21,6 +21,7 @@ const initialState = {
   newsfeed:[],
   newsfeedLastId:-1,
   newsfeedLast:false,
+  newsfeedTopVisible:false,
   suggested:0,
   savingPost:false,
   old:0,
@@ -28,15 +29,18 @@ const initialState = {
   suggestedPosts:[],
   suggestedPostsLastId:-1,
   suggestedPostsLast:false,
+  suggestedPostsTopVisible:false,
   oldNewsfeed:[],
   oldNewsfeedLastId:-1,
   oldNewsfeedLast:false,
+  oldNewsfeedTopVisible:false,
   post:false,
   editPost:false,
   customerPosts:[],
   customerProfile:true,
   customerPostsLastId:-1,
   customerPostsLast:false,
+  customerPostsTopVisible:false,
   launch:false,
   selfRandomMedias:[],
   otherRandomMedias:[],
@@ -56,7 +60,8 @@ const reducer = persistReducer(
   {
     storage,
     key: "post",
-    blacklist:['suggested','suggestedPosts','suggestedPostsLastId','suggestedPostsLast','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime']
+    blacklist:['suggested','newsfeedTopVisible','oldNewsfeedTopVisible','suggestedPosts','suggestedPostsLastId','suggestedPostsLast','suggestedPostsTopVisible',
+    'customerPostsTopVisible','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime']
   },
   handleActions(
     {
