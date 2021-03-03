@@ -212,7 +212,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           </div>
           <div className="post-comments">
             {(post.previousCommentsCount>0) && 
-              <div className="cursor-pointer append" onClick={handlePreviousComments}> Show preview comments</div>
+              <div className="cursor-pointer append" onClick={handlePreviousComments}> Show all&nbsp;{post.previousCommentsCount}&nbsp;{post.previousCommentsCount>1?<>comments</>:<>comment</>}</div>
             }
             {post.comments.length>0&&post.comments.map(comment=>
               <React.Fragment  key={comment.id}>
@@ -232,12 +232,12 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                   }
                 </div>
                 {(comment.nextChildrenCount>0) && 
-                  <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
+                  <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View&nbsp;{comment.nextChildrenCount}&nbsp;{comment.nextChildrenCount>1?<>replies</>:<>reply</>}</div>
                 }
               </React.Fragment>
             )}
             {(post.nextCommentsCount>0) && 
-              <div className="cursor-pointer append" onClick={handleNextComments}> Show next comments</div>
+              <div className="cursor-pointer append" onClick={handleNextComments}> Show &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comments</>:<> comment</>}</div>
             }
             <form onSubmit={onCommentFormSubmit}>
               <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>

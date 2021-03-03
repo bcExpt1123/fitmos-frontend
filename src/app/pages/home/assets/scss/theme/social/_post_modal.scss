@@ -136,6 +136,7 @@
           overflow-y: auto;
           overflow-x: hidden;
           .post-header{
+            padding:16px;
             .full-name{
               .link-profile{
                 max-width: 230px;
@@ -150,6 +151,13 @@
           }
           .post-body{
             font-size: 14px;
+            padding:16px;
+          }
+          .post-footer{
+            border-top:1px solid #E4E4E5;
+            border-bottom:1px solid #E4E4E5;
+            margin:0 16px;
+            padding: 15px 0;
           }
           .post-comments{
             .comment-view{
@@ -196,7 +204,14 @@
             }
           }
         }
-    }
+      }
+      .vh-centered{
+        height: 100vh;
+        img{
+          max-width:50%;
+          width:160px;
+        }
+      }
     }
   }  
 }

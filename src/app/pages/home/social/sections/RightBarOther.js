@@ -29,31 +29,33 @@ const RightBarOther = () => {
   }
   return (  
       <>
-        <div className="wrapper-rightbar event">
-          <div className="label">Eventos <NavLink  className="" to={`/eventos`}>Ver Eventos</NavLink></div>
-          <div className="body">
-            <div className="events">
-              {events.map((event)=>
-                <div key={event.id} className="evento">
-                  <NavLink
-                    to={"/eventos/"+event.id}
-                    className={""}
-                  >
-                    {event.images.length==0?<>
-                      <img src={toAbsoluteUrl("/media/products/no-image.png")} alt="no image" />
-                    </>:
-                      <img src={event.images[0].url} alt={"logo"}/>
-                    }
-                    <div className="info" >
-                      <div className="title">{event.title}</div>
-                      <div className="sub-title">{event.spanish_date}&nbsp;&nbsp;&nbsp;{event.spanish_time}</div>
-                    </div>  
-                  </NavLink>
-                </div>
-              )}
-            </div>            
+        {events.length>0&&
+          <div className="wrapper-rightbar event">
+            <div className="label">Eventos <NavLink  className="" to={`/eventos`}>Ver Eventos</NavLink></div>
+            <div className="body">
+              <div className="events">
+                {events.map((event)=>
+                  <div key={event.id} className="evento">
+                    <NavLink
+                      to={"/eventos/"+event.id}
+                      className={""}
+                    >
+                      {event.images.length==0?<>
+                        <img src={toAbsoluteUrl("/media/products/no-image.png")} alt="no image" />
+                      </>:
+                        <img src={event.images[0].url} alt={"logo"}/>
+                      }
+                      <div className="info" >
+                        <div className="title">{event.title}</div>
+                        <div className="sub-title">{event.spanish_date}&nbsp;&nbsp;&nbsp;{event.spanish_time}</div>
+                      </div>  
+                    </NavLink>
+                  </div>
+                )}
+              </div>            
+            </div>
           </div>
-        </div>
+        }
         <div className="wrapper-rightbar event">
           <div className="label">Noticias <NavLink  className="" to={`/news`}>Ver Blog</NavLink></div>
           <div className="body">

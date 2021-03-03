@@ -82,6 +82,7 @@ const PostModal = ({show, media, onClose }) => {
     dispatch(readingPost(post));
     setHidden(false);
     setActiveSlide(-1);
+    dispatch(setItemValue({name:"post",value:false}))
     onClose();
   }
   const [activeSlide, setActiveSlide] = useState(-1);
@@ -155,7 +156,7 @@ const PostModal = ({show, media, onClose }) => {
                 <PostContent post={post} modalShow={true}/>
                 <div className="post-footer">
                   <div className="likes">
-                    <span><i className={classnames("fas fa-heart cursor-pointer",{like:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
+                    <span><i className={classnames("fa-heart cursor-pointer",{like:post.like,far:!post.like,fas:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
                     <span><i className="far fa-comment" /> {post.commentsCount}</span>
                   </div>
                   <div className="share">
@@ -193,8 +194,8 @@ const PostModal = ({show, media, onClose }) => {
             </div>
           </>
           :
-          <div className="loading" style={{marginTop:"300px"}}>
-            <SplashScreen />
+          <div className="loading-container vh-centered">
+            <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
           </div>
         }    
       </Modal.Body>

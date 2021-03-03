@@ -95,6 +95,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
   }
   const mediaContainerRef = useRef();
   const [mediasWidth,setMediaWidth] = useState(100);
+  const [mediasHeight,setMediasHeight] = useState(100);
   const [mediaContainerHeight,setMediaContainerHeight] = useState('auto');
   useEffect(()=>{
     // const mediaContainer = document.getElementsByClassName("modal-dialog")[0];
@@ -111,7 +112,15 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
         setMediaContainerHeight("auto");
         break;
       case 1:
+        setMediasHeight(mediasWidth);
         setMediaContainerHeight(mediasWidth+"px");
+        if(post.medias && post.medias[0].width){
+          if(parseFloat(post.medias[0].width)>parseFloat(post.medias[0].height)){
+            const w = mediaContainerRef.current.clientWidth;
+            setMediaContainerHeight(w/parseFloat(post.medias[0].width)*parseFloat(post.medias[0].height)+"px");
+            setMediasHeight(w/parseFloat(post.medias[0].width)*parseFloat(post.medias[0].height));
+          }
+        }
         break;
       case 2:
         setMediaContainerHeight(mediasWidth/2+"px");
@@ -246,6 +255,14 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
       history.push("/");
     }
   }
+  const [dimensions,setDimensions] = useState(false);
+  useEffect(()=>{
+    if(dimensions.length>0 && dimensions[0]>dimensions[1]){
+      const w = mediaContainerRef.current.clientWidth;
+      setMediaContainerHeight(w/dimensions[0]*dimensions[1]+"px");
+      setMediasHeight(w/dimensions[0]*dimensions[1]);
+    }
+  },[dimensions]);
   return (
     <Modal
       show={show}
@@ -257,7 +274,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
     >
       {type==="post"?(
         <Modal.Header closeButton>
-          <Modal.Title className="w-100">
+          <Modal.Title className="w-100 mt-1">
             {title}
           </Modal.Title>
         </Modal.Header>
@@ -336,7 +353,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
               onBlur={handleBlur} 
               inputRef={textRef}
               placeholder="Escribe algo..."
-              className="creating-post-mention"
+              className="creating-post-mention mt-1"
             >
               <Mention
                 trigger="@"
@@ -349,9 +366,9 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
               <div className="medias-body">
                 <div className="medias" ref={mediaContainerRef} style={{height:mediaContainerHeight}}>
                   {files.length == 1&&(
-                    <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasWidth+"px"}}>
+                    <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasHeight+"px"}}>
                       <div className="item">
-                        <RenderMedia file={files[0]}/>
+                        <RenderMedia file={files[0]} setDimensions={setDimensions}/>
                       </div>
                     </div>
                   )}

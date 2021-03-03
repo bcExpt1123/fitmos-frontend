@@ -98,9 +98,9 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
       {
         step!==0 && step===workouts.current.blocks.length-1?(
           <div className="actions">
-            <button onClick={previousStep} className="previous">
+            {step>1&&<button onClick={previousStep} className="previous">
               Anterior
-            </button>
+            </button>}
             <button onClick={(e)=>{e.stopPropagation();handleComplete(workouts.current);}} className={classnames("next",{checked:workouts.current.read})}>
               Completar
             </button>

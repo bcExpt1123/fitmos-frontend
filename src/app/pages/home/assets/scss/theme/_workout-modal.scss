@@ -123,13 +123,18 @@
       flex-direction: column;
       .open-create-post-modal{
         margin: 30px auto;
-        width:300px;
-        display: block;
+        width:448px;
         color:$basic-text-color;
         padding: 14px;
         border: 0;
         border-radius: 5px;
         background-color: #F4F4F2;
+        input{
+          display: inline-block;
+          background-color: transparent;
+          width:400px;
+          border: 0;
+        }
       }
       button{
         border-radius: 3px;
@@ -362,6 +367,12 @@
           }
           &.previous{
             padding: 3px 40px;
+          }
+        }
+        .open-create-post-modal{
+          width: calc(100% - 30px);
+          input{
+            width: calc(100% - 30px);
           }
         }
       }  

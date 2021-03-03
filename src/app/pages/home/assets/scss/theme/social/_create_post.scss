@@ -1,7 +1,7 @@
 .creating-post-mention{
   .creating-post-mention__control{
     background-color: #fff;
-    font-size: 12px;
+    font-size: 18px;
     font-weight: normal;
     .creating-post-mention__highlighter{
       padding: 9px 0;
@@ -43,6 +43,9 @@
 .create-post{
   .modal-dialog{
     width:400px;
+    .modal-header{
+      border-bottom: 1px solid #F5F6F7;
+    }
     .author{
       display: block;
       .avatar{
@@ -242,6 +245,9 @@
       left: calc(50% - 50px);
     }
     .create-post-footer{
+      border-top: 1px solid #F5F6F7;
+      margin: auto -17px;
+      padding: 17px 17px 0;      
       button.btn-primary{
         float:right;
         margin: 0;

@@ -634,6 +634,12 @@
   .social {
     > button {
       width: 100%;
+      &.apple{
+        svg{
+          width:24px;
+          height:24px;
+        }
+      }
     }
   }
   section.login{

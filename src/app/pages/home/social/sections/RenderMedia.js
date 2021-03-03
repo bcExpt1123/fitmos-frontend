@@ -7,8 +7,9 @@ import { play } from "video-react/lib/actions/player";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {setItemValue} from "../../redux/post/actions";
 
-const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
+const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimensions}) => {
   const player = useRef();
+  const imageRef = useRef();
   const videoPlayer = useSelector(({post})=>post.videoPlayer);
   const videoPlayerModalMode = useSelector(({post})=>post.videoPlayerModalMode);
   const videoPlayerOpenModal = useSelector(({post})=>post.videoPlayerOpenModal);
@@ -29,7 +30,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
   const [videoTimeIndex, setVideoTimeIndex] = useState(0);
   const findVideoWidth=()=>{
     if(player.current === null || file.width ===null) return;
-    if( player.current.video.video.offsetHeight === 0){
+    if( player.current && player.current.video && player.current.video.video.offsetHeight === 0){
       setTimeout(()=>setIndex(index+1), 100);
     }else{
       if(modal){
@@ -52,6 +53,9 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
         }else{
           setTimeout(()=>setIndex(index+1), 100);
         }
+      }else{
+        if(player.current.video.video.videoWidth == 0 && index <100)setIndex(index + 1);
+        else if(setDimensions)setDimensions([player.current.video.video.videoWidth, player.current.video.video.videoHeight]);
       }
     }
   }
@@ -64,7 +68,13 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
     }
   },[videoTimeIndex])
   useEffect(()=>{
-    if(index>0)findVideoWidth();
+    if(index>0){
+      if(player.current)findVideoWidth();
+      if(imageRef.current){
+        if(imageRef.current.naturalWidth == 0 && index <100)setIndex(index + 1);
+        else if(setDimensions)setDimensions([imageRef.current.naturalWidth, imageRef.current.naturalHeight]);
+      }
+    }
   },[index]);
   const playModalVideo = ()=>{
     if(player && player.current){
@@ -158,8 +168,11 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal}) => {
     let replaceFileName = filename.split('.')[0] + '-1024.'+ext;
     return url.replace(filename, replaceFileName);
   }
+  useEffect(()=>{
+    if(setDimensions)setIndex(index + 1);
+  },[setDimensions]);
   return (
-    file.type === "image"?<img src={convertImageUrl(file.url)} alt="image" onClick={onOpenClick} />:
+    file.type === "image"?<img src={convertImageUrl(file.url)} alt="image" onClick={onOpenClick} ref={imageRef}/>:
     modal?<Player
         ref={player}
         src={file.url}

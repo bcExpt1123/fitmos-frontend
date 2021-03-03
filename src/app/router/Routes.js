@@ -23,6 +23,45 @@ import * as routerHelpers from "../router/RouterHelpers";
 import {validCartId} from "../pages/home/redux/checkout/actions";
 import { setReferralVoucher } from "../pages/home/redux/vouchers/actions";
 
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, errorInfo: null };
+  }
+  
+  componentDidCatch(error, errorInfo) {
+    // Catch errors in any components below and re-render with error message
+    this.setState({
+      error: error,
+      errorInfo: errorInfo
+    })
+    // You can also log error messages to an error reporting service here
+    const environment = process.env.NODE_ENV;
+    if(environment!=='development'){
+      this.props.history.push('/');
+      reactLocalStorage.clear();
+      window.location.reload(true);
+    }
+  }
+  
+  render() {
+    if (this.state.errorInfo) {
+      // Error path
+      return (
+        <div>
+          <h2>Something went wrong.</h2>
+          <details style={{ whiteSpace: 'pre-wrap' }}>
+            {this.state.error && this.state.error.toString()}
+            <br />
+            {this.state.errorInfo.componentStack}
+          </details>
+        </div>
+      );
+    }
+    // Normally, just render children
+    return this.props.children;
+  }  
+}
 export const Routes = withRouter(({ history }) => {
   const lastLocation = useLastLocation();
   routerHelpers.saveLastLocation(lastLocation);
@@ -216,6 +255,7 @@ export const Routes = withRouter(({ history }) => {
   return (
     /* Create `LayoutContext` from current `history` and `menuConfig`. */
     <LayoutContextProvider history={history} menuConfig={menuConfig}>
+      <ErrorBoundary history={history}>
       <Switch>
         <Route path="/error" component={ErrorsPage} />
         {!isAuthorized ? (
@@ -265,6 +305,7 @@ export const Routes = withRouter(({ history }) => {
           <Redirect to="/auth/login" />
         )}
       </Switch>
+      </ErrorBoundary>
     </LayoutContextProvider>
   );
 });
