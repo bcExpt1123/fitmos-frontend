@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
+import { connect, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import { withRouter } from "react-router";
 import { $changeItem } from "../../../modules/subscription/customer";
@@ -9,6 +9,7 @@ import {Tabs, Tab} from "react-bootstrap";
 import CustomerOverview from "./CustomerOverview";
 import { CustomerTransactions } from "./CustomerTransactions";
 import { CustomerInvoices } from "./CustomerInvoices";
+import { can } from "../../../lib/common";
 
 const useStyles = () => {
   return makeStyles(theme => ({
@@ -27,6 +28,7 @@ const useStyles = () => {
 };
 
 function Main({ item, isloading }) {
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   return (
     <Paper style={{ padding: "25px" }}>
       {item ? (
@@ -35,12 +37,14 @@ function Main({ item, isloading }) {
             <Tab eventKey="overview" title="Overview">
               <CustomerOverview />
             </Tab>
-            <Tab eventKey="transactions" title="Transactions">
-              <CustomerTransactions />
-            </Tab>
-            <Tab eventKey="invoices" title="Invoices">
-              <CustomerInvoices />
-            </Tab>
+            {can(currentUser, "customers")&&<>
+              <Tab eventKey="transactions" title="Transactions">
+                <CustomerTransactions />
+              </Tab>
+              <Tab eventKey="invoices" title="Invoices">
+                <CustomerInvoices />
+              </Tab>
+            </>}
           </Tabs>
         </div>
       ) : isloading ? (

@@ -146,7 +146,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
     playVideos();
   },[videoPlayer, videoPlayerModalMode])
   const onOpenClick = (event)=>{
-    onOpenModal(file)
+    if(onOpenModal)onOpenModal(file)
   }
   useEffect(()=>{
     if(!modal){

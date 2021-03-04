@@ -37,7 +37,15 @@ function* onConfirmAlternate(){
   }  
 }
 function* onPulling({payload:{id}}){
-  while (true) {
+  let login = true;
+  while (login) {
+    const currentUser = yield select(({auth}) => auth.currentUser);
+    let customer;
+    if(currentUser && currentUser.customer) customer = currentUser.customer;
+    else {
+      login = false;
+      break;
+    }
     try {
       const newsfeed = yield select(({post})=>post.newsfeed);
       const newsfeedPostIds = newsfeed.map(item=>item.id);
@@ -84,7 +92,6 @@ function* onPulling({payload:{id}}){
           console.error("people username error", username)
         }
       }
-      const customer = yield select(({auth}) => auth.currentUser.customer);
       // const d = new Date(customer.updated_at+" GMT-0500");
       const customerTime = customer.updated_at;
       const publicProfile = yield select(({workout})=>workout.publicProfile);
@@ -94,7 +101,8 @@ function* onPulling({payload:{id}}){
       if(follows.length>0){
         followsIds = follows.map(follow=>follow.id);
       }
-      const data = {ids, newsfeedId, oldNewsfeedId, suggestedPostsId, customerId, customerPostTopId, customerTime, publicProfile, followsIds};
+      const notificationLastId = yield select(({notification})=>notification.notificationLastId);
+      const data = {ids, newsfeedId, oldNewsfeedId, suggestedPostsId, customerId, customerPostTopId, customerTime, publicProfile, followsIds, notificationLastId};
       const response = yield call(() => fetch(process.env.REACT_APP_PULL_API_URL+id,{
         method:"POST",
         body:JSON.stringify(data),

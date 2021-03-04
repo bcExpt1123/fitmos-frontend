@@ -46,6 +46,7 @@ class NavBarVariantFull extends React.Component {
       const loginDate = new Date();
       loginDate.setTime(loginTime);
       if(this.props.currentUser){
+        console.log("PULLINGId")
         this.props.pulling({id:this.props.currentUser.customer.id});
         if (loginDate < new Date()) {
           this.props.regenerateAuthAction();

@@ -112,7 +112,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                   </>
                   }                
                   {following.status === 'accepted'&&<>
-                    {currentUser.customer.id === customer.id&&
+                    {currentUser.type==="customer" && currentUser.customer.id === customer.id&&
                       <div>
                         <button className="btn btn-custom-secondary unfollow" onClick={handleUnfollow(following.customer_id)} disabled={buttonDisabled}>Unfollow</button>
                       </div>

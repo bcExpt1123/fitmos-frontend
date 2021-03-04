@@ -134,11 +134,11 @@ const PostModal = ({show, media, onClose }) => {
       <Modal.Body>
         {post?
           <>
-            <div className="slides">
+            <div className="slides" onClick={handleClose}>
               <div className="close" onClick={handleClose}>
                 <i className="fas fa-times" />
               </div>
-              <div className="sliders">
+              <div className="sliders" onClick={(evt)=>evt.stopPropagation()}>
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
                     <div key={'modal'+media.id} className={classnames('post-media',{'image-hidden':hidden})}>
@@ -188,9 +188,11 @@ const PostModal = ({show, media, onClose }) => {
                   )}
                 </div>
               </div>
-              <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
-                  <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
-              </form>
+              {currentUser.type==="customer" && 
+                <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
+                    <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+                </form>
+              }  
             </div>
           </>
           :

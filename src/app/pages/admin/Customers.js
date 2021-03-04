@@ -8,6 +8,7 @@ import ListAltIcon from "@material-ui/icons/ListAlt";
 import FlagIcon from "@material-ui/icons/Flag";
 import DisableIcon from "@material-ui/icons/Clear";
 import ViewIcon from "@material-ui/icons/Visibility";
+import ViewListIcon from "@material-ui/icons/ViewList";
 import RedoIcon from "@material-ui/icons/Redo";
 import classnames from "classnames";
 import { NavLink } from "react-router-dom";
@@ -21,6 +22,7 @@ import {
   $restore,
   $disable
 } from "../../../modules/subscription/customer";
+import { can } from "../../../lib/common";
 
 const useStyles = makeStyles({
   table: {
@@ -74,6 +76,7 @@ function Main() {
   const actionRestore = id => event => {
     dispatch($restore(id));
   };
+  const currentUser = useSelector(({ auth }) => auth.currentUser);
   return (
     <Paper className={classes.root}>
       <div className={classes.tableWrapper}>
@@ -131,30 +134,47 @@ function Main() {
                         <ViewIcon />
                       </IconButton>
                     </NavLink>  
-                    {row.status === "Disabled" ? (
-                      <>
-                        <IconButton
-                          color="secondary"
-                          className={classes.button}
-                          aria-label="Restore"
-                          title="Restore"
-                          onClick={actionRestore(row.id)}
-                        >
-                          <RedoIcon />
-                        </IconButton>
-                      </>
-                    ) : (
-                      <>
-                        <IconButton
-                          className={classes.button}
-                          aria-label="Disable"
-                          title="Disable"
-                          onClick={actionDisable(row.id)}
-                        >
-                          <DisableIcon color="error" />
-                        </IconButton>
-                      </>
+                    {can(currentUser, "customers")&&(
+                      row.status === "Disabled" ? (
+                        <>
+                          <IconButton
+                            color="secondary"
+                            className={classes.button}
+                            aria-label="Restore"
+                            title="Restore"
+                            onClick={actionRestore(row.id)}
+                          >
+                            <RedoIcon />
+                          </IconButton>
+                        </>
+                      ) : (
+                        <>
+                          <IconButton
+                            className={classes.button}
+                            aria-label="Disable"
+                            title="Disable"
+                            onClick={actionDisable(row.id)}
+                          >
+                            <DisableIcon color="error" />
+                          </IconButton>
+                        </>
+                      )  
                     )}
+                    {can(currentUser, "social")&&
+                      <NavLink
+                          to={`/admin/customers/${row.id}/profile`}
+                          exact
+                        >
+                        <IconButton
+                          className={classes.button}
+                          aria-label="Profile"
+                          title="Profile"
+                          color="primary"
+                        >
+                          <ViewListIcon />
+                        </IconButton>
+                      </NavLink>  
+                    }
                   </TableCell>
                 </TableRow>
               ))}

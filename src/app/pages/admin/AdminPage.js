@@ -3,6 +3,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import { Customers } from "./Customers";
 import { CustomerDetail } from "./CustomerDetail";
+import { CustomerProfile } from "./CustomerProfile";
 import { Subscriptions } from "./Subscriptions";
 import { SubscriptionDetail } from "./SubscriptionDetail";
 import { Transactions } from "./Transactions";
@@ -67,6 +68,7 @@ export default function AdminPage() {
         <Route exact path="/admin/dashboard" component={Dashboard} />
         <Route exact path="/admin/customers" component={Customers} />
         <Route exact path="/admin/customers/:id" component={CustomerDetail} />
+        <Route exact path="/admin/customers/:id/profile" component={CustomerProfile} />
         <Route exact path="/admin/subscriptions" component={Subscriptions} />
         <Route exact path="/admin/subscriptions/:id" component={SubscriptionDetail} />
         <Route exact path="/admin/transactions" component={Transactions} />

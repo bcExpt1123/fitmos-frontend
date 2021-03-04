@@ -7,7 +7,7 @@ import Avatar from "../../components/Avatar";
 import MentionTextarea from "./MentionTextarea";
 import DisplayMentionContent from "./DisplayMentionContent";
 import DropDown from "../../components/DropDown";
-import { convertTime } from "../../../../../lib/common";
+import { convertTime, can } from "../../../../../lib/common";
 
 const CommentView = ({comment})=>{
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -95,7 +95,7 @@ const CommentView = ({comment})=>{
           </span>
           <button className="reply-comment" onClick={openReplyComment}>Reply</button>      
         </div>
-        {show&&(
+        {currentUser.type==="customer" && show&&(
           <form onSubmit={onReplyFormSubmit}>
             <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit} focus={true}/>
           </form>        
@@ -103,7 +103,7 @@ const CommentView = ({comment})=>{
       </div>
       <div className="popup-actions">
         {
-          comment.customer_id == currentUser.customer.id?
+          (currentUser.type==="admin" && can(currentUser, "social")  || currentUser.type==="customer" && comment.customer_id == currentUser.customer.id)?
             <DropDown>
               {({show,toggleHandle,setShow})=>(
                 <div className=" dropdown">
@@ -112,9 +112,9 @@ const CommentView = ({comment})=>{
                   </button>
                   <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                       <>
-                        <a className={"dropdown-item"} onClick={openEditComment}>Edit Comment</a>
-                        <a className={"dropdown-item"} onClick={handleDelete}>Delete Comment</a>
-                        <span className={"dropdown-item"} onClick={handleLike}><i className={classnames("fa-heart cursor-pointer",{like:comment.like,fas:comment.like,far:comment.like==false})}/></span>
+                        <a className={"dropdown-item"} onClick={()=>{openEditComment(); setShow(false);}}>Edit Comment</a>
+                        <a className={"dropdown-item"} onClick={()=>{handleDelete();setShow(false);}}>Delete Comment</a>
+                        {currentUser.type==="customer" && comment.customer_id == currentUser.customer.id && <span className={"dropdown-item"} onClick={handleLike}><i className={classnames("fa-heart cursor-pointer",{like:comment.like,fas:comment.like,far:comment.like==false})}/></span>}
                       </>
                   </div>
                 </div>  

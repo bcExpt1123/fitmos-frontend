@@ -17,6 +17,7 @@ import {
   $page,
   $fetchIndex
 } from "../../../modules/subscription/service";
+import { can } from "../../../lib/common";
 
 const useStyles = makeStyles(theme => ({
   table: {
@@ -72,14 +73,6 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
   const handleChangeRowsPerPage = event => {
     $pageSize(parseInt(event.target.value, 10));
   };
-  const can = permission=>{
-    if(currentUser.type==='admin'&&currentUser.role!=='super'){
-      return currentUser.permissions.indexOf(permission)>-1;
-    }
-    else if(currentUser.type==='admin'&&currentUser.role==='super'){
-      return true;
-    }
-  }
   return (
     <>
       <Paper className={classes.root}>
@@ -126,7 +119,7 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
                       </span>
                     </TableCell>
                     <TableCell align="left">
-                      {can("subscription workout content")&&
+                      {can(currentUser,"subscription workout content")&&
                         <>
                           <NavLink
                             to={`/admin/subscription-cms/${row.id}`}
@@ -156,7 +149,7 @@ function SubscriptionManager({ services, meta, $page, $pageSize }) {
                           </NavLink>
                         </>  
                       }
-                      {can("subscription pricing")&&
+                      {can(currentUser, "subscription pricing")&&
                         <NavLink
                           to={`/admin/subscription-manager/${row.id}`}
                           exact

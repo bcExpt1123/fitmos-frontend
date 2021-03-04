@@ -18,7 +18,7 @@ export default {
         title: "Customers",
         root: true,
         icon: "flaticon2-avatar",
-        can:["customers"],
+        can:["customers","social"],
         page: "admin/customers"
       },
       {
@@ -148,7 +148,7 @@ export default {
         title: "Shop",
         root: true,
         icon: "flaticon2-shopping-cart-1",
-        can:["shop"],
+        can:["shops"],
         page: "admin/companies"
       },
       {

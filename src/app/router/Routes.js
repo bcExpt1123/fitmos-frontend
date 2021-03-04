@@ -135,6 +135,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/dashboard",
     "/admin/customers",
     "/admin/customers/:id",
+    "/admin/customers/:id/profile",
     "/admin/subscriptions",
     "/admin/subscriptions/:id",
     "/admin/transactions",

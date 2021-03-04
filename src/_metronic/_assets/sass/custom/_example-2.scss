@@ -3,7 +3,7 @@
 // Here you can put your custom sass code, use global SASS mixings and variables to override the theme or add new styles according to your requirements.
 // Most of the changes can be achieved via global or layout level sass variable changes.
 //
-
+@import "../../../../app/pages/home/assets/scss/theme/mixin.scss";
 .my-custom-style {
   padding: 1rem 0.5rem;
   color: kt-brand-color();
@@ -20,5 +20,26 @@
     .my-custom-element {
       margin-left: 0.5rem;
     }
+  }
+}
+#customer-profile{
+  background-color: #E4E4E5;
+  padding: 20px 0 20px 20px;
+  .sidebar{
+    background-color: white;
+    position: fixed;
+    width: 320px;
+    height: 750px;
+    color: $basic-text-color;
+    .wrapper-side{
+      background: white;
+      padding: 35px 15px 15px 15px; 
+      @import "../../../../app/pages/home/assets/scss/theme/_leftbar_profile";
+    }
+  }
+  .admin-customer-content{
+    padding-left: 320px;
+    overflow: auto;
+    height: 750px;
   }
 }

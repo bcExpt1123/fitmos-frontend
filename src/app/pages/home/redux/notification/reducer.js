@@ -14,6 +14,7 @@ const initialState = {
   followLastId:-1,
   notifications:[],
   notificationLastId:-1,
+  notificationViewLastId:0,
   notificationLast:false,
   followings:[],
   followingsLastPageNumber:0,

@@ -71,4 +71,12 @@ const convertTime = (timeString)=>{
     return (now.getFullYear() - other.getFullYear()) + "y";
   }
 }
-export {once, colonsToUnicode, convertTime};
+const can = (currentUser,permission)=>{
+  if(currentUser.type==='admin'&&currentUser.role!=='super'){
+    return currentUser.permissions.indexOf(permission)>-1;
+  }
+  else if(currentUser.type==='admin'&&currentUser.role==='super'){
+    return true;
+  }
+}
+export {once, colonsToUnicode, convertTime, can};

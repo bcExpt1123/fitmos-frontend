@@ -14,7 +14,7 @@ import DropDown from "../../components/DropDown";
 import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
 import TagFollowersModal from "./customer/TagFollowersModal";
-import { convertTime } from "../../../../../lib/common";
+import { convertTime, can } from "../../../../../lib/common";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 const Map = compose(
   withScriptjs,
@@ -187,7 +187,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               </button>
               <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                 {
-                  post.customer_id == currentUser.customer.id?
+                  (currentUser.type==="customer" && post.customer_id == currentUser.customer.id || currentUser.type==="admin" && can(currentUser, "social"))?
                   <>
                     <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
                     <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
@@ -214,7 +214,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               {post.customer.first_name} {post.customer.last_name}
             </NavLink>
           </span>
-          {(post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
+          {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
             <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
               &nbsp;&nbsp;&nbsp;Follow
             </span>

@@ -24,6 +24,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
   const [type, setType] = useState("post");
   const [postType, setPostType] = useState("general");
   const currentUser = useSelector(({auth})=>auth.currentUser);
+  const customer = useSelector(({people})=>people.customer);
   useEffect(()=>{
     if(post){
       if(post.content==null)setContent(""); else setContent(post.content);
@@ -321,9 +322,13 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
               </div>
             }
             <div className="author">
-              <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
+              {currentUser.type==="customer" && <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />}
+              {currentUser.type==="admin" && customer && <Avatar pictureUrls={customer.avatarUrls} size="xs" />}
               <div className="with-location">
-                <span className="full-name">{currentUser.name}</span>
+                <span className="full-name">
+                  {currentUser.type==="customer" &&<>{currentUser.name}</>}
+                  {currentUser.type==="admin" && customer &&<>{customer.first_name} {customer.last_name}</>}
+                </span>
                 {(workout || post.type=="workout")?<>
                   {post.type=="workout"?
                     <>&nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_spanish_short_date}</span> </>

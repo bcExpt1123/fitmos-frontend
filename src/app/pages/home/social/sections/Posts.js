@@ -15,6 +15,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
   }, [posts]);// eslint-disable-line react-hooks/exhaustive-deps
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
+    console.log("clicked")
     setShowCreatingPost(true);
   }  
   const handleCreatingModalClose = () => {
@@ -71,7 +72,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
           </>
         }
       </div>
-      <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
+      {currentUser.type==="customer" && <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>}
       {showPostModal && <PostModal show={showPostModal} onClose={onClose} media={media}/>}
     </div>
   );

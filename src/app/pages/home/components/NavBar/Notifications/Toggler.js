@@ -1,5 +1,6 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid */
 import React,{useEffect} from "react";
+import { useSelector } from "react-redux";
 import KTOffcanvas from "../../../../../../_metronic/_assets/js/offcanvas";
 
 const NotificationToggler = ()=>{
@@ -15,6 +16,8 @@ const NotificationToggler = ()=>{
       toggleBy: "kt_quick_panel_toggler_btn"
     });
   });
+  const notifications = useSelector(({notification})=>notification.notifications);
+  const lastId = useSelector(({notification})=>notification.notificationViewLastId);
   return (
     <>
       <span
@@ -23,6 +26,9 @@ const NotificationToggler = ()=>{
       >
         <i className="fal fa-bell" />
       </span>
+      {notifications.length > 0 && lastId != notifications[0].id &&
+        <span className="number">&nbsp;</span>
+      }
     </>
   );
 }

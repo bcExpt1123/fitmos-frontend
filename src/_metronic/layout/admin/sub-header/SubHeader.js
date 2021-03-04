@@ -8,6 +8,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { SubHeaderDashboard } from "../../../../app/pages/admin/Dashboard";
 import { SubHeaderCustomers } from "../../../../app/pages/admin/Customers";
 import { SubHeaderCustomerDetail } from "../../../../app/pages/admin/CustomerDetail";
+import { SubHeaderCustomerProfile } from "../../../../app/pages/admin/CustomerProfile";
 import { SubHeaderSubscriptions } from "../../../../app/pages/admin/Subscriptions";
 import { SubHeaderSubscriptionDetail } from "../../../../app/pages/admin/SubscriptionDetail";
 import { SubHeaderTransactions } from "../../../../app/pages/admin/Transactions";
@@ -84,11 +85,8 @@ class SubHeader extends React.Component {
               path="/admin/customers"
               component={SubHeaderCustomers}
             />
-            <Route
-              exact
-              path="/admin/customers/:id"
-              component={SubHeaderCustomerDetail}
-            />
+            <Route exact path="/admin/customers/:id" component={SubHeaderCustomerDetail}/>
+            <Route exact path="/admin/customers/:id/profile" component={SubHeaderCustomerProfile}/>
             <Route
               exact
               path="/admin/subscriptions"

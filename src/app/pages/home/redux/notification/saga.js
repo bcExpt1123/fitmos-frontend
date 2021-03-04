@@ -30,7 +30,7 @@ const searchNotificationsRequest = ()=>
     method: "GET"
   }).then(response => response.data);
 function* onSearchNotifications({payload}){
-  const notificationLastId = yield select(({notifications})=>notifications.notificationLastId);
+  const notificationLastId = yield select(({notification})=>notification.notificationLastId);
   if(payload == notificationLastId) return;
   try {
     const result = yield call(searchNotificationsRequest);

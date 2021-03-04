@@ -224,6 +224,20 @@
         margin-top: 7px;        
       }
     }
+    .nav-link.link{
+      position: relative;
+      .number{
+        position: absolute;
+        font-size: 8px;
+        right: 4px;
+        background-color: #afca32;
+        display: inline-block;
+        width:10px;
+        height:10px;
+        border-radius: 5px;
+        color:#afca32;
+      }  
+    }
   }
 }
 @media (max-width: 1400px) {

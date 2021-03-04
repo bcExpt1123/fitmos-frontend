@@ -31,13 +31,13 @@ const ProfileInfo = ({customer}) => {
   }
   const [show, setShow] = useState(false);
   const openModal = ()=>{
-    setShow(true);
+    if(currentUser.type==="customer")setShow(true);
   }
   const handleClose = ()=>{
     setShow(false);
   }
   const redirectEditAccountPage = ()=>{
-    history.push('/profile');
+    if(currentUser.type==="customer")history.push('/profile');
   }
   const check = ()=>{
     return customer!="username" && customer.type==="customer";
@@ -97,7 +97,7 @@ const ProfileInfo = ({customer}) => {
                   onContentChange={getWrapperWidth}
                 />
               }
-              {(currentUser.customer.id === customer.id &&customer.description==null)&&<>Enter something about you…</>}
+              {(currentUser.type==="customer" && currentUser.customer.id === customer.id &&customer.description==null)&&<>Enter something about you…</>}
             </div>
           </div>
           :
@@ -136,7 +136,7 @@ const ProfileInfo = ({customer}) => {
           </div>
         </div>
         <div className="actions">
-        {(check() && customer.id !== currentUser.customer.id)?
+        {(check() && currentUser.type==="customer" && customer.id !== currentUser.customer.id)?
           <>
             <FollowButton customer={customer} />
             <button className="btn btn-custom-secondary">
@@ -236,7 +236,7 @@ const ProfileInfo = ({customer}) => {
           </div>
         </div>
       </div>
-      <DetailModal show={show} handleClose={handleClose}/>
+      {currentUser.type==="customer" && <DetailModal show={show} handleClose={handleClose}/>}
       {followingModalShow && <FollowingListModal show={followingModalShow}  onClose={handleFollowingListClose} tabKey={tabKey} customer={customer}/>}
     </>
   )  

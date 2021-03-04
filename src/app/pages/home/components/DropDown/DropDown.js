@@ -16,6 +16,7 @@ const Dropdown = ({children,refresh})=>{
   const [show, setShow] = useState(false);
   const [self, setSelf] = useState(false);
   const toggleHandle = ()=>{
+    console.log(show)
     setShow(!show);
     setSelf(true);
     setTimeout(()=>setSelf(false),100);
