@@ -7,13 +7,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { Modal } from "react-bootstrap";
 import classnames from "classnames";
-import SVG from "react-inlinesvg";
-import SplashScreen from "../../../../../app/partials/layout/SplashScreen";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
-import RenderMedia from "./RenderMedia";
+import RenderModalMedia from "./RenderModalMedia";
 import {findPost, createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
 const PostModal = ({show, media, onClose }) => {
   const post = useSelector(({post})=>post.post);
@@ -121,6 +119,7 @@ const PostModal = ({show, media, onClose }) => {
     }
   },[hidden])
   const sliderRef = useRef();
+  const sliderContainerRef = useRef();
   const commentContainer = useRef();
   const mentionTextarea = useRef();
   return (
@@ -138,12 +137,10 @@ const PostModal = ({show, media, onClose }) => {
               <div className="close" onClick={handleClose}>
                 <i className="fas fa-times" />
               </div>
-              <div className="sliders" onClick={(evt)=>evt.stopPropagation()}>
+              <div className="sliders" ref={sliderContainerRef} onClick={(evt)=>evt.stopPropagation()}>
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
-                    <div key={'modal'+media.id} className={classnames('post-media',{'image-hidden':hidden})}>
-                      <RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true}/>
-                    </div>
+                    <RenderModalMedia key={'modal'+media.id} hidden={hidden} media={media} sliderContainerRef={sliderContainerRef} activeSlide={activeSlide} index={index} handleClose={handleClose}/>
                   )}
                 </Slider>
                 {hidden==false&&<div className="loading-container">

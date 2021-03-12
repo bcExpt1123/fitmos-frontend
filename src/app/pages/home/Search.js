@@ -12,15 +12,14 @@ const Search = () => {
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState("");
   const searchResults = useSelector(({people})=>people.searchResult);
+  const results = useSelector(({people})=>people.searchPageResults);
   useEffect(()=>{
     const parsed = qs.parse(window.location.search);
     if (parsed.search) {
-      dispatch(searchAll(parsed.search));
+      dispatch(searchAll({value:parsed.search,done:true}));
       setKeyword(parsed.search);
-      setResults(searchResults)
     }
   },[window.location.search]);
-  const [results, setResults] = useState({ people:[], shops:[], posts:[]});
   const searchValue = useSelector(({people})=>people.searchValue);
   return <>
     <MetaTags>

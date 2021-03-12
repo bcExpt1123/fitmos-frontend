@@ -37,8 +37,8 @@ function Layout({ children, selfLayout }) {
   return selfLayout !== "blank" ? (
     <>
       <Helmet>
-        {/* <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>         */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162425974-1"></script>
+        <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>        
+        {/* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162425974-1"></script>
         <script>
         {`window.dataLayer = window.dataLayer || [];
           function gtag(){dataLayer.push(arguments);}
@@ -46,7 +46,17 @@ function Layout({ children, selfLayout }) {
 
           gtag('config', 'UA-162425974-1');
           `}
-        </script>
+        </script> */}
+        {/* <!-- Google Tag Manager --> */}
+        <script>{
+          `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+          j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+          'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+          })(window,document,'script','dataLayer','GTM-54DTQLS');`
+        }</script>
+        {/* <!-- End Google Tag Manager --> */}
+
         <script>
         {`!function(f,b,e,v,n,t,s)
           {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -83,9 +93,6 @@ function Layout({ children, selfLayout }) {
           timeout={1000 * 60 * 30} />
       )}
       {children}
-      <noscript>
-        <img height="1" width="1"  src="https://www.facebook.com/tr?id=2657666124456803&ev=PageView&noscript=1" alt="text"/>
-      </noscript>
     </>
   ) : (
     // BLANK LAYOUT

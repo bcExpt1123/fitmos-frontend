@@ -19,7 +19,7 @@ const PostPage = ({match}) => {
       />
     </MetaTags>
     <OneColumn>
-      <div className="post-page">
+      <div className="post-page newsfeed">
         {post&&
           <Post post={post}/>
         }

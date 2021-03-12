@@ -20,7 +20,7 @@ export default function Blog() {
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const changeDimesions = ()=>{
     console.log(window.innerWidth)
-    if(window.innerWidth>900)setHeight(window.innerWidth/4-50);
+    if(window.innerWidth>900)setHeight(window.innerWidth/4-130);
     if(window.innerWidth<768)setHeight(window.innerWidth-150);
   }
   const event = useSelector(({ event }) => event);
@@ -46,16 +46,16 @@ export default function Blog() {
                       <div className="background" 
                         style={{
                           backgroundImage: "url(" + post.image + ")",
-                          height: height+"px",
+                          // height: height+"px",
                         }}
                       >
                         <h6 className="category">{post.category.name}</h6>
-                        <h4 className="post-title">{post.title}</h4>
                       </div>
                   </div>
                 </div>
               </NavLink> 
               <div className="body">
+                <h4 className="post-title">{post.title}</h4>
                 <div className="summury">
                   {post.excerpt}
                 </div>

@@ -99,6 +99,7 @@ const QuickPanel = ()=> {
       history.push("/"+ notification.action.username);
     }
   }
+  console.log(notifications.length === 0 && followRequests.length ===0)
   return (
     <div id="kt_quick_panel" className="kt-quick-panel">
       <a
@@ -120,6 +121,12 @@ const QuickPanel = ()=> {
           }}
         >
           <div className="kt-notification-v2">
+          { (notifications.length === 0 && followRequests.length ===0 )?
+            <div className="notification-title">
+              No Notificaciones
+            </div>              
+            :
+            <>
             {followRequests.length>0&&(followRequests.length==1?<>
                 <FollowItem request={followRequests[0]} />
               </>:
@@ -164,7 +171,9 @@ const QuickPanel = ()=> {
                     </div>
                   </div>
                 </span>
-              )}
+              )}            
+            </>
+            }
           </div>
         </PerfectScrollbar>
       </div>

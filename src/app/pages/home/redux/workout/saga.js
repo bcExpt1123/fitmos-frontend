@@ -36,12 +36,51 @@ function* onConfirmAlternate(){
     //yield put(validateVoucherFailed({ token }));
   }  
 }
+// const init = async ()=> {
+//   const config = [
+//     {
+//       appId: process.env.REACT_APP_CONNECTY_CUBE_APP_ID,
+//       authKey: process.env.REACT_APP_CONNECTY_CUBE_AUTH_KEY,
+//       authSecret: process.env.REACT_APP_CONNECTY_CUBE_AUTH_SECRET,
+//     },
+//     { chat: {
+//       streamManagement: {
+//         enable: true
+//       }
+//     },
+//       debug: {
+//         mode: 1
+//       } 
+//     }
+//   ];    
+//   await ConnectyCube.init(...config)
+// }
+// const signIn = async (params)=> {
+//   const session = await ConnectyCube.createSession(params)
+//   console.log(session)
+//   // this.setUserSession(session)
+//   const token = ConnectyCube.service.sdkInstance.session.token;
+//   await ConnectyCube.chat.connect({ userId:session.id, password:token })
+// }
+
+// const signUp = async (params)=> {
+//   await ConnectyCube.createSession()
+//   await ConnectyCube.users.signup(params)
+//   return this.signIn(params)
+// }
 function* onPulling({payload:{id}}){
   let login = true;
-  while (login) {
+  while (login && false) {
     const currentUser = yield select(({auth}) => auth.currentUser);
     let customer;
-    if(currentUser && currentUser.customer) customer = currentUser.customer;
+    if(currentUser && currentUser.customer) {
+      customer = currentUser.customer;
+      if(customer.id != id){
+        login = false;
+        yield put(pulling({id:customer.id}));
+        break;
+      }
+    }
     else {
       login = false;
       break;
@@ -169,6 +208,16 @@ function* onPulling({payload:{id}}){
       console.log(e);
       // yield put({ type: FETCH_JOKE_FAILURE, message: e.message })
       yield delay(1000);
+      const currentUser = yield select(({auth}) => auth.currentUser);
+      if(currentUser && currentUser.customer) {
+        if(currentUser.customer.id != id){
+          login = false;
+          yield put(pulling({id:customer.id}));
+          break;
+        }
+      }else{
+        login = false;
+      }
     }
   }  
 }

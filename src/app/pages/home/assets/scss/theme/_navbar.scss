@@ -28,6 +28,10 @@
     justify-content: center;
     padding: 0.7rem 0 !important;
     margin: 0rem 0.65rem !important;
+    .avatar.xs{
+      height:30px;
+      width:30px;
+    }
   }
   .nav-item:focus,
   .nav-link:focus {

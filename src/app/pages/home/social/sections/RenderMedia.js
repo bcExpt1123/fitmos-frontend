@@ -7,7 +7,7 @@ import { play } from "video-react/lib/actions/player";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {setItemValue} from "../../redux/post/actions";
 
-const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimensions}) => {
+const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimensions, containerRef}) => {
   const player = useRef();
   const imageRef = useRef();
   const videoPlayer = useSelector(({post})=>post.videoPlayer);
@@ -38,8 +38,18 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
           const width = parseFloat(file.width);
           const height = parseFloat(file.height);
           if(width>height){
-            player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.bottom=(player.current.video.video.offsetHeight/2 - player.current.video.video.offsetWidth * height/width/2)+"px";
+            // player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.bottom=(player.current.video.video.offsetHeight/2 - player.current.video.video.offsetWidth * height/width/2)+"px";
+            const videoHeight = player.current.video.video.offsetWidth * height/width;
+            // containerRef.current.style.height=videoHeight+"px";
+            // containerRef.current.style.marginTop=(window.innerHeight - videoHeight)/2 + "px";
+            player.current.video.video.offsetParent.style.height=videoHeight+"px";
+            // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.height=videoHeight+"px";
           }else{
+            const videoWidth = player.current.video.video.offsetHeight * width/height;
+            // containerRef.current.style.width=videoWidth+"px";
+            // containerRef.current.style.marginTop=(window.innerHeight - videoWidth)/2 + "px";
+            player.current.video.video.offsetParent.style.width=videoWidth+"px";
+            // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.width=videoWidth+"px";
             player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.width=player.current.video.video.offsetHeight * width/height+"px";
             player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.left=(player.current.video.video.offsetWidth/2 - player.current.video.video.offsetHeight * width/height/2)+"px";
           }
@@ -54,7 +64,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
           setTimeout(()=>setIndex(index+1), 100);
         }
       }else{
-        if(player.current.video.video.videoWidth == 0 && index <100)setIndex(index + 1);
+        if(player.current.video.video.videoWidth == 0 && index <100)setTimeout(()=>setIndex(index + 1),100);
         else if(setDimensions)setDimensions([player.current.video.video.videoWidth, player.current.video.video.videoHeight]);
       }
     }
@@ -71,8 +81,21 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
     if(index>0){
       if(player.current)findVideoWidth();
       if(imageRef.current){
-        if(imageRef.current.naturalWidth == 0 && index <100)setIndex(index + 1);
-        else if(setDimensions)setDimensions([imageRef.current.naturalWidth, imageRef.current.naturalHeight]);
+        if(imageRef.current.naturalWidth == 0 && index <100)setTimeout(()=>setIndex(index + 1),100);
+        else {
+          if(setDimensions)setDimensions([imageRef.current.naturalWidth, imageRef.current.naturalHeight]);
+          if(modal){
+            if(imageRef.current.naturalWidth>imageRef.current.naturalHeight){
+              const imageHeight = imageRef.current.offsetWidth * imageRef.current.naturalHeight/imageRef.current.naturalWidth;
+              imageRef.current.style.height = imageHeight + "px";
+              imageRef.current.style.marginTop = (containerRef.current.offsetHeight - imageHeight)/2+"px";
+            }
+          }
+        }
+      }
+    }else{
+      if(modal){
+        setIndex(1);
       }
     }
   },[index]);
@@ -146,7 +169,8 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
     playVideos();
   },[videoPlayer, videoPlayerModalMode])
   const onOpenClick = (event)=>{
-    if(onOpenModal)onOpenModal(file)
+    if(onOpenModal)onOpenModal(file);
+    if(modal)event.stopPropagation();
   }
   useEffect(()=>{
     if(!modal){
@@ -162,14 +186,14 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
   },[])
   const convertImageUrl = (url)=>{
     const object = new URL(url);
-    if(object.protocol == 'blob:' || modal == true )return url;
+    if(object.protocol == 'blob:' )return url;
     let filename = object.pathname.split('/').reverse()[0];
     const ext = filename.split('.')[1]; 
     let replaceFileName = filename.split('.')[0] + '-1024.'+ext;
     return url.replace(filename, replaceFileName);
   }
   useEffect(()=>{
-    if(setDimensions)setIndex(index + 1);
+    if(setDimensions)setTimeout(()=>setIndex(index + 1),100);
   },[setDimensions]);
   return (
     file.type === "image"?<img src={convertImageUrl(file.url)} alt="image" onClick={onOpenClick} ref={imageRef}/>:

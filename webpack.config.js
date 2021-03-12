@@ -65,7 +65,7 @@ const mainConfig = function () {
 						MiniCssExtractPlugin.loader,
 						"css-loader",
 						{
-							loader: "sass-loader",
+							loader: "sass-loader?url=false",
 							options: {
 								sourceMap: true,
 							}

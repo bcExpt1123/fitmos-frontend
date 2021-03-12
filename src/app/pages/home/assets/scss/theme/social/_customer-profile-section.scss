@@ -8,7 +8,7 @@
     .wrapper-side{
       background: white;
       padding: 35px 15px 15px 15px; 
-      @import "_leftbar_profile";
+      @import "../_leftbar_profile.scss";
       .btn{
         font-size: 1rem!important;
       }

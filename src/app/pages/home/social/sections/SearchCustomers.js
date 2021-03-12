@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import FollowButton from "./FollowButton";
 const SearchCustomers = ({customers, keyword}) => {
   return <>
     {customers.length==0?
@@ -8,7 +9,7 @@ const SearchCustomers = ({customers, keyword}) => {
         <div className="item" key={customer.id}>
           <div>
             <NavLink
-              to={"/customers/"+customer.id}
+              to={"/"+customer.username}
               className={""}
             >
               <img src={customer.avatarUrls.small}/>
@@ -18,7 +19,7 @@ const SearchCustomers = ({customers, keyword}) => {
               </div>
             </NavLink>    
           </div>
-          <button className="follow">Follow</button>
+          <FollowButton customer={customer} />
         </div>
       ))
     }

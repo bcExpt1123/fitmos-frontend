@@ -4,7 +4,7 @@ import classnames from "classnames";
 import Avatar from "../Avatar";
 import Icon from "../Icon";
 import Logo from "../Logo";
-import CookieConsent from "../CookieConsent";
+// import CookieConsent from "../CookieConsent";
 import { Navbar, Container } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import * as qs from 'query-string';
@@ -297,7 +297,7 @@ const NavBarWrapper = ({ ...props }) => {
         This <CookieConsent /> duplication is used to preserve
         vertical space under fixed nav element.
       */}
-      <CookieConsent />
+      {/* <CookieConsent /> */}
 
       <NavBarVariantFull {...props} isScroll={hideOnNavbar} />
     </section>

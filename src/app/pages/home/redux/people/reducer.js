@@ -21,6 +21,11 @@ const initialState = {
     shops:[],
     posts:[],
   },
+  searchPageResults:{
+    people:[],
+    shops:[],
+    posts:[],
+  },
   searchCustomers:[],
   customerLastId:-1,
   customerLast:false,
@@ -36,7 +41,7 @@ const reducer = persistReducer(
   {
     storage,
     key: "people",
-    blacklist:['customer','username','popupCustomers'],
+    blacklist:['customer','username','popupCustomers','searchResult','searchPageResults'],
   },
   handleActions(
     {

@@ -43,10 +43,11 @@ function searchAllRequest(search){
     }).then(response => response.data);        
 }
 function* onSearchAll({payload}){
-  yield put(setItemValue({name:'searchValue',value:payload}));
+  yield put(setItemValue({name:'searchValue',value:payload.value}));
   try {
-    const { searchResult } = yield call(searchAllRequest,payload);
+    const { searchResult } = yield call(searchAllRequest,payload.value);
     yield put(setSearchResult({searchResult}));
+    if(payload.done)yield put(setItemValue({name:'searchPageResults',value:searchResult}));
   } catch (error) {
 
   }

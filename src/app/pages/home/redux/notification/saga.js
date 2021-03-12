@@ -23,6 +23,7 @@ import {
 
 import { http } from "../../services/api";
 import { ca } from "date-fns/locale";
+import { LiveTvOutlined, SelectAllOutlined } from "@material-ui/icons";
 
 const searchNotificationsRequest = ()=>
   http({
@@ -82,13 +83,29 @@ function* onFollow({payload}){
   yield put(setItemValue({name:'followDisabled',value:true}));
   try{
     const result = yield call(followRequest, payload);
-    yield put(setItemValue({name:'followDisabled',value:false}));
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
+    let searchResult = yield select(({people})=>people.searchResult);
+    let customers = searchResult.people.map(customer=>{
+      if(customer.id == result.customer.id){
+        customer.following = result.customer.following;
+      }
+      return customer;
+    })
+    searchResult.people = customers;
+    yield put(setPeopleValue({name:'searchPageResults',value:searchResult}));
+    let searchCustomers = yield select(({people})=>people.searchCustomers);
+    customers = searchCustomers.map(customer=>{
+      if(customer.id == result.customer.id){
+        customer.following = result.customer.following;
+      }
+      return customer;
+    })
+    yield put(setPeopleValue({name:'searchCustomers',value:customers}));
   }catch(error){
-    yield put(setItemValue({name:'followDisabled',value:false}));
   }
+  yield put(setItemValue({name:'followDisabled',value:false}));
 }
 const unFollowRequest = (customerId)=>
   http({
@@ -102,7 +119,6 @@ function* onUnfollow({payload}){
   yield put(setItemValue({name:'followDisabled',value:true}));
   try{
     const result = yield call(unFollowRequest, payload);
-    yield put(setItemValue({name:'followDisabled',value:false}));
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     const currentUser = yield select(({auth})=>auth.currentUser);
@@ -119,9 +135,26 @@ function* onUnfollow({payload}){
       }
     }
     yield put(refreshPosts());
+    let searchResult = yield select(({people})=>people.searchResult);
+    let customers = searchResult.people.map(customer=>{
+      if(customer.id == result.customer.id){
+        customer.following = result.customer.following;
+      }
+      return customer;
+    })
+    searchResult.people = customers;
+    yield put(setPeopleValue({name:'searchPageResults',value:searchResult}));
+    let searchCustomers = yield select(({people})=>people.searchCustomers);
+    customers = searchCustomers.map(customer=>{
+      if(customer.id == result.customer.id){
+        customer.following = result.customer.following;
+      }
+      return customer;
+    })
+    yield put(setPeopleValue({name:'searchCustomers',value:customers}));
   }catch(error){
-    yield put(setItemValue({name:'followDisabled',value:false}));
   }  
+  yield put(setItemValue({name:'followDisabled',value:false}));
 }
 const acceptRequest = (id)=>
   http({

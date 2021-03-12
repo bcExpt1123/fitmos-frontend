@@ -87,10 +87,14 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
     //   return;
     // }
     target.files.forEach((file, index) => {
-      const type = file.type.includes('image')?"image":"video";
-      const url = URL.createObjectURL(file);
-      const item = {id:'i'+(index + timestamp),url, type, file }
-      clonedFiles.push(item);
+    });
+    target.files.forEach((file, index) => {
+      if(file.type!=="video/quicktime"){
+        const type = file.type.includes('image')?"image":"video";
+        const url = URL.createObjectURL(file);
+        const item = {id:'i'+(index + timestamp),url, type, file }
+        clonedFiles.push(item);
+      }
     });
     setFiles(clonedFiles);
   }
@@ -271,7 +275,6 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
       animation={false}
       className="create-post"
       centered
-      backdrop="static"
     >
       {type==="post"?(
         <Modal.Header closeButton>
@@ -294,7 +297,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
           {type==="medias"&&<Modal.Title className="w-100">
               Edit photos/videos
               <input
-                accept="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"
+                accept="image/*,image/heif,image/heic,video/x-ms-asf,video/x-flv,video/mp4,application/x-mpegURL,video/MP2T,video/3gpp,video/x-msvideo,video/x-ms-wmv,video/avi"
                 style={{ display: "none" }}
                 id="upload-file-button"
                 multiple
@@ -317,7 +320,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
             {saving&&
               <div className="post-saving">
                 <div className="loading">
-                  <SplashScreen />                  
+                  <SplashScreen />
                 </div>
               </div>
             }
@@ -486,7 +489,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
                 </span>
                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                 <input
-                  accept="image/*,image/heif,image/heic,video/*,video/mp4,video/x-m4v,video/x-matroska,.mkv"
+                  accept="image/*,image/heif,image/heic,video/x-ms-asf,video/x-flv,video/mp4,application/x-mpegURL,video/MP2T,video/3gpp,video/x-msvideo,video/x-ms-wmv,video/avi"
                   style={{ display: "none" }}
                   id="upload-file-button"
                   multiple

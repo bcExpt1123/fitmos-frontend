@@ -8,7 +8,7 @@ const SearchCompanies = ({companies, keyword}) => {
       companies.map(company=>(
         <div className="item" key={company.id}>
           <NavLink
-            to={"/shop/companies/"+company.id}
+            to={"/"+company.username}
             className={""}
           >
             <img src={company.logo} alt={company.name + "logo"}/>

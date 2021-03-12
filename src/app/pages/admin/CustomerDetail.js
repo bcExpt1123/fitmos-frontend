@@ -5,7 +5,7 @@ import { withRouter } from "react-router";
 import { $changeItem } from "../../../modules/subscription/customer";
 import { makeStyles } from "@material-ui/core";
 import { Button, Paper} from "@material-ui/core";
-import {Tabs, Tab} from "react-bootstrap";
+import { Tabs, Tab } from "react-bootstrap";
 import CustomerOverview from "./CustomerOverview";
 import { CustomerTransactions } from "./CustomerTransactions";
 import { CustomerInvoices } from "./CustomerInvoices";
@@ -33,19 +33,25 @@ function Main({ item, isloading }) {
     <Paper style={{ padding: "25px" }}>
       {item ? (
         <div id="customer-form">
-          <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
-            <Tab eventKey="overview" title="Overview">
-              <CustomerOverview />
-            </Tab>
-            {can(currentUser, "customers")&&<>
+          {can(currentUser, "customers")?<> 
+            <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
+              <Tab eventKey="overview" title="Overview">
+                <CustomerOverview />
+              </Tab>
               <Tab eventKey="transactions" title="Transactions">
                 <CustomerTransactions />
               </Tab>
               <Tab eventKey="invoices" title="Invoices">
                 <CustomerInvoices />
               </Tab>
-            </>}
-          </Tabs>
+            </Tabs>
+          </>:
+            <Tabs defaultActiveKey="overview" id="uncontrolled-tab-example">
+              <Tab eventKey="overview" title="Overview">
+                <CustomerOverview />
+              </Tab>
+            </Tabs>
+          }
         </div>
       ) : isloading ? (
         <h3 className="kt-subheader__title" style={{ padding: "25px" }}>
@@ -73,7 +79,7 @@ class Sub extends Component {
   componentDidMount() {
     this.id = this.props.match.params.id;
     this.props.$changeItem(this.id);
-    this.classes = useStyles();
+    this.classes = this.useStyles();
   }
   useStyles() {
     return makeStyles(theme => ({

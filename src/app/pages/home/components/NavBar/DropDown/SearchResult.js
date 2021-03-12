@@ -13,7 +13,7 @@ const SearchResult = ({value,clearValue})=>{
     clearValue();
   }
   useEffect(()=>{
-    if(value!="")dispatch(searchAll(value));
+    if(value!="")dispatch(searchAll({value}));
   },[value]);
   return (
     <>

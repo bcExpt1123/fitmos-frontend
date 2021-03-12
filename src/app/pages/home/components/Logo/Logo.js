@@ -1,6 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
+import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
 const Logo = ({ color, className, variant,checkout, ...other }) => {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -13,7 +14,7 @@ const Logo = ({ color, className, variant,checkout, ...other }) => {
   return (
     checkout?(
       <img
-        src={require("../../assets/img/Fitmose-logo1.png")}
+        src={toAbsoluteUrl("/media/logos/Fitmose-logoa.png")}
         alt="Fitemos"
         title=""
       />
@@ -21,7 +22,7 @@ const Logo = ({ color, className, variant,checkout, ...other }) => {
     :(
       <span onClick={handleLink} className="cursor-pointer">
         <img
-          src={require("../../assets/img/Fitmose-logo1.png")}
+          src={toAbsoluteUrl("/media/logos/Fitmose-logoa.png")}
           alt="Fitemos"
           title=""
         />

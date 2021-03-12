@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Chip from '@material-ui/core/Chip';
+import { Chip } from '@material-ui/core';
 import Avatar from "../../components/Avatar";
 
 const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers, setTagFollowers, onClose}) => {

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import SVG from "react-inlinesvg";
+import classnames from "classnames";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
 const SearchPosts = ({posts, keyword}) => {
@@ -23,8 +24,8 @@ const SearchPosts = ({posts, keyword}) => {
               <div className="content">{post.content}</div>
               <div className="post-footer">
                 <div className="likes">
-                  <span><i className="fas fa-heart" /> 1.3K</span>
-                  <span><i className="far fa-comment" /> 162</span>
+                  <span><i className={classnames(" fa-heart cursor-pointer",{like:post.like,fas:post.like,far:post.like==false} )} /> {post.likesCount}</span>
+                  <span><i className="far fa-comment" /> {post.commentsCount}</span>
                 </div>
                 <div className="share">
                   <SVG src={toAbsoluteUrl("/media/icons/svg/Social/share.svg")} />
