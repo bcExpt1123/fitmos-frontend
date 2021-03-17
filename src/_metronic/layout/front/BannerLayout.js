@@ -38,16 +38,6 @@ function Layout({ children, selfLayout }) {
     <>
       <Helmet>
         {/* <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>         */}
-        {/* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162425974-1"></script>
-        <script>
-        {`window.dataLayer = window.dataLayer || [];
-          function gtag(){dataLayer.push(arguments);}
-          gtag('js', new Date());
-
-          gtag('config', 'UA-162425974-1');
-          `}
-        </script> */}
-        {/* <!-- Google Tag Manager --> */}
         <script>{
           `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
           new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],

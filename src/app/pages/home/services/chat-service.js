@@ -133,7 +133,7 @@ class ChatService {
       : dialog.xmpp_room_jid
 
     let msg = {
-      type: dialog.xmpp_type,
+      type: dialog.type === 3 ? 'chat' : dialog.type ? 'groupchat' : '',
       body: text,
       extension: {
         save_to_history: 1,
@@ -145,7 +145,7 @@ class ChatService {
     }
 
     msg.id = chatService.messageUniqueId
-
+console.log(msg, dialog);
     // If send message as Attachment
     if (attachments) {
       return chatService.sendMessageAsAttachment(dialog, recipient_id, msg, attachments, scrollToBottom)

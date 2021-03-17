@@ -1,5 +1,5 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid,no-undef */
-import React, {useEffect} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ConnectyCube from 'connectycube';
@@ -7,6 +7,8 @@ import { fetchDialogs, setItemValue } from "../../redux/dialogs/actions";
 import Avatar from "../../components/Avatar";
 import {lastDate} from "../../../../../lib/common";
 import ChatService from '../../services/chat-service';
+import ContextMenu from './components/ContextMenu';
+
 
 const ListDialog = ()=> {
   const service = ConnectyCube.service;
@@ -15,6 +17,7 @@ const ListDialog = ()=> {
     console.log(service.sdkInstance.session)
     token = service.sdkInstance.session.token;
   }
+  const [contextDialog, setContextDialog] = useState(null);
   useEffect(()=>{
     if(token)ChatService.setUpListeners();
   },[token]);
@@ -34,6 +37,12 @@ const ListDialog = ()=> {
   const newGroupDialog = ()=>{
     dispatch(setItemValue({name:'route',value:'newGroup'}));
   }
+  const handleContextMenu = (dialog)=>(event)=>{
+    event.preventDefault();
+    console.log(dialog);
+    setContextDialog(dialog);
+  }
+  const contextMenuWrapper = useRef();
   return (
     <>
       <PerfectScrollbar
@@ -48,7 +57,7 @@ const ListDialog = ()=> {
       >
         {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
         <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button>
-        <div className="kt-notification-v2">
+        <div className="kt-notification-v2" ref={contextMenuWrapper}>
         { (dialogs.length === 0)?
           <div className="notification-title">
             No Chats
@@ -62,7 +71,7 @@ const ListDialog = ()=> {
             </ViewableMonitor> */}
           
             {dialogs.map(dialog=>
-              <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)}>
+              <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
                 <div className="kt-notification-v2__item-icon">
                   {dialog.type==3 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
                   {/* {dialog.type==2 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>} */}
@@ -89,7 +98,15 @@ const ListDialog = ()=> {
                   </div>
                 </div>
               </span>
-            )}            
+            )}     
+            <ContextMenu wrapper={contextMenuWrapper}>
+              {(contextDialog && contextDialog.type === 2) &&     
+                <ul>
+                  <li>Manage Group</li>
+                  <li>Leave Group</li>
+                </ul>
+              }
+            </ContextMenu>
           </>
           }
         </div>
