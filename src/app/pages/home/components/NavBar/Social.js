@@ -15,6 +15,7 @@ import {
 } from "../../redux/auth/actions";
 import { setPrivateVoucher } from "../../redux/vouchers/actions";
 import { pulling } from "../../redux/workout/actions";
+import { setItemValue } from "../../redux/dialogs/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
 import EditPostModal from "../../social/posts/EditingModal";
@@ -23,7 +24,8 @@ import BasicSubmenu from "./DropDown/BasicSubMenu";
 import Submenu from "./DropDown/SubMenu";
 import SearchResult from "./DropDown/SearchResult";
 import QuickPanel from "../../../../partials/layout/QuickPanel";
-import NotificationToggler from "./Notifications/Toggler";
+import ChatPanel from "../../social/chat/Panel";
+import NotificationToggler from "./Toggles/Notificaiton";
 //import styles from './NavBar.module.css';
 //import Link from '../Link';
 
@@ -79,6 +81,12 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   const OpenCreatingPost = ()=>{
     setShowCreatingPost(true);
     setShowSubmenu(false);
+  }
+  const showChatPanel = useSelector(({dialog})=>dialog.showPanel);
+  const TriggerChatPanel = ()=>{
+    const closeBtn = document.getElementById("kt_quick_panel_close_btn");
+    if(closeBtn)closeBtn.click();
+    dispatch(setItemValue({name:"showPanel",value:!showChatPanel}));
   }
   const handleCreatingModalClose = () => {
     setShowCreatingPost(false);
@@ -226,18 +234,17 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
               </button>
             </li>
             <li className="nav-item">
-              <NavLink
-                to={"/customers/"+currentUser.customer.id}
-                className={"nav-link link text-white display-4"}
-                activeClassName="active"
-                exact
-              >
+              <button type="button" className={"clickable-button chat"} onClick={TriggerChatPanel}>
                 <i className="fal fa-comment-lines" />
-              </NavLink>
+                {true &&
+                  <span className="number">&nbsp;</span>
+                }
+              </button>
             </li>
             <li className="nav-item">
               <a                
                 className={"nav-link link text-white display-4"}
+                onClick={()=>dispatch(setItemValue({name:"showPanel",value:false}))}
               >
                 <NotificationToggler />
               </a>
@@ -262,6 +269,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
       <CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose}/>
       <EditPostModal show={!(editPost===false)} />
       <QuickPanel />
+      <ChatPanel show={showChatPanel}/>
     </>
   );
 }

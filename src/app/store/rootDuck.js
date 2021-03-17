@@ -54,6 +54,8 @@ import workoutReducer from "../pages/home/redux/workout/reducer";
 import peopleReducer from "../pages/home/redux/people/reducer";
 import postReducer from "../pages/home/redux/post/reducer";
 import notificationReducer from "../pages/home/redux/notification/reducer";
+import dialogReducer from "../pages/home/redux/dialogs/reducer";
+import messageReducer from "../pages/home/redux/messages/reducer";
 
 //import accountDeleted from './accountDeleted/saga';
 import alert from "../pages/home/redux/alert/saga";
@@ -81,6 +83,8 @@ import workout from "../pages/home/redux/workout/saga";
 import people from "../pages/home/redux/people/saga";
 import post from "../pages/home/redux/post/saga";
 import notification from "../pages/home/redux/notification/saga";
+import dialog from "../pages/home/redux/dialogs/saga";
+import message from "../pages/home/redux/messages/saga";
 
 
 export const rootReducer = combineReducers({
@@ -126,6 +130,8 @@ export const rootReducer = combineReducers({
   people:peopleReducer,
   post:postReducer,
   notification:notificationReducer,
+  dialog:dialogReducer,
+  message:messageReducer,
 });
 
 export function* rootSaga() {
@@ -169,6 +175,8 @@ export function* rootSaga() {
     people(),
     post(),
     notification(),
+    dialog(),
+    message(),
     survey.saga(),
     company.saga(),
     product.saga(),

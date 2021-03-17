@@ -1,5 +1,5 @@
 import ConnectyCube from 'connectycube';
-import { useSelector, useDispatch } from "react-redux";
+import store from '../../../store/store';
 import { http } from './api';
 
 class AuthService {
@@ -28,13 +28,13 @@ class AuthService {
   }
 
   async autologin() {
-    const checkUserSessionFromStore = await authService.getUserSession()
-    if (checkUserSessionFromStore) {
+    // const checkUserSessionFromStore = await authService.getUserSession()
+    // if (checkUserSessionFromStore) {
       //const data = JSON.parse(checkUserSessionFromStore)
-      const currentUser = useSelector(({auth})=>auth.currentUser);
-      await authService.signIn({ login: currentUser.id, password: currentUser.accessToken })
-      return 'home'
-    } else { return 'auth' }
+      const auth = store.getState().auth;
+      await authService.signIn({ login: auth.currentUser.id, password: auth.accessToken })
+    //   return 'home'
+    // } else { return 'auth' }
   }
 
   async signIn(params, user) {
@@ -79,8 +79,9 @@ class AuthService {
   }
 
   async logout() {
-    localStorage.clear()
-    await ConnectyCube.logout()
+    localStorage.clear();
+    const token = ConnectyCube.service.sdkInstance.session.token;
+    if(token)await ConnectyCube.logout()
   }
 
 

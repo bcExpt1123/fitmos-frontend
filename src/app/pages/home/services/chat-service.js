@@ -1,96 +1,95 @@
-import ConnectyCube from 'connectycube'
-import Dialog from '../models/dialogs'
+import ConnectyCube from 'connectycube';
 import {
   fetchDialogs,
   sortDialogs,
   updateDialog,
   addNewDialog,
-} from '../actions/dialogs'
+  selectedDialog,
+  DIALOG_TYPE
+} from '../redux/dialogs/actions';
 import {
   pushMessage,
   fetchMessages,
   lazyFetchMessages,
   updateMessages,
-} from '../actions/messages'
-import { preparationAttachment } from '../helpers/file'
-import { selectedDialog } from '../actions/selectedDialog'
-import { fetchUsers } from '../actions/users'
-import store from '../store'
-import { Message, FakeMessage } from '../models/message'
-import UserModel from '../models/user'
-import { DIALOG_TYPE } from '../helpers/constants'
-import {
   STATUS_DELIVERED,
   STATUS_READ,
   STATUS_SENT,
   GROUP_CHAT_ALERT_TYPE
-} from '../models/message'
+} from '../redux/messages/actions';
+import { preparationAttachment } from '../social/chat/helper/utils';
+import AuthService from './chat-auth';
+import store from '../../../store/store';
+import { Message, FakeMessage } from '../social/chat/models/Message';
 
 class ChatService {
 
   setUpListeners() {
-    ConnectyCube.chat.onMessageListener = this.onMessageListener.bind(this)
-    ConnectyCube.chat.onSentMessageCallback = this.onSentMessageListener.bind(this)
-    ConnectyCube.chat.onDeliveredStatusListener = this.onDeliveredStatus.bind(this)
-    ConnectyCube.chat.onReadStatusListener = this.onReadStatus.bind(this)
+    if(ConnectyCube.chat){
+      console.log("ConnectyCube.chat")
+      ConnectyCube.chat.onMessageListener = chatService.onMessageListener.bind(this)
+      ConnectyCube.chat.onSentMessageCallback = chatService.onSentMessageListener.bind(this)
+      ConnectyCube.chat.onDeliveredStatusListener = chatService.onDeliveredStatus.bind(this)
+      ConnectyCube.chat.onReadStatusListener = chatService.onReadStatus.bind(this)
+    }
   }
-
+  async autologin (){
+    const auth = store.getState().auth;
+    const dataUser = { login:auth.currentUser.id, password:auth.accessToken }
+    await AuthService.init();
+    await AuthService.signIn(dataUser, auth.currentUser);
+  }
   async fetchDialogsFromServer() {
-    if (store.getState().dialogs.length !== 0) {
-      return store.getState().dialogs
+    let dialogsFromServer;
+    try{
+      dialogsFromServer = await ConnectyCube.chat.dialog.list();
+    }catch(e){
+      await chatService.autologin();
+      dialogsFromServer = await ConnectyCube.chat.dialog.list();
     }
-    const dialogsFromServer = await ConnectyCube.chat.dialog.list()
-    const currentUserId = this.currentUser
-    let privatChatIdsUser = []
-
-    const dialogs = dialogsFromServer.items.map(elem => {
-      if (elem.type === DIALOG_TYPE.PRIVATE) {
-        elem.occupants_ids.forEach(elem => {
-          elem !== currentUserId.id && privatChatIdsUser.push(elem)
-        })
-      }
-      return new Dialog(elem)
-    })
-
-    if (privatChatIdsUser.length !== 0) {
-      const usersInfo = await this.getUsersList(privatChatIdsUser)
-      store.dispatch(fetchUsers(usersInfo))
-    }
-
-    store.dispatch(fetchDialogs(dialogs))
-    return store.getState().dialogs
+    return dialogsFromServer;
   }
 
   async getMessages(dialog) {
-    const isAlredyUpdate = this.getMessagesByDialogId(dialog.id)
+    const isAlredyUpdate = chatService.getMessagesByDialogId(dialog._id)
     let amountMessages = null
 
     // If the first entry into the chat
     if (!dialog.isAlreadyMessageFetch || dialog.unread_messages_count > 0 && !dialog.isAlreadyMessageFetch) {
-      const historyFromServer = await ConnectyCube.chat.message.list({
-        chat_dialog_id: dialog.id,
-        sort_desc: 'date_sent'
-      })
+      let historyFromServer;
+      try{
+        historyFromServer = await ConnectyCube.chat.message.list({
+          chat_dialog_id: dialog._id,
+          sort_desc: 'date_sent'
+        })
+      }catch(e){
+        await chatService.autologin();
+        historyFromServer = await ConnectyCube.chat.message.list({
+          chat_dialog_id: dialog._id,
+          sort_desc: 'date_sent'
+        })
+      }
 
       const messages = []
       historyFromServer.items.forEach(elem => {
         if (!elem.group_chat_alert_type) {
-          messages.push(new Message(elem, this.currentUser.id))
+          const auth = store.getState().auth;
+          messages.push(new Message(elem, auth.currentUser.chat_id))
         }
       })
 
       const newObj = Object.assign(dialog, { isAlreadyMessageFetch: true })
-      this.updateDialogsUnreadMessagesCount(newObj)
-      store.dispatch(fetchMessages(dialog.id, messages))
+      chatService.updateDialogsUnreadMessagesCount(newObj)
+      store.dispatch(fetchMessages({dialogId:dialog._id,history:messages}));
       amountMessages = messages.length
     } else {
       // If the second entry into the chat
       if (dialog.unread_messages_count > 0) {
-        const messages = this.getMessagesByDialogId(dialog.id)
+        const messages = chatService.getMessagesByDialogId(dialog._id)
         const firstUnreadMsg = messages[dialog.unread_messages_count - 1]
-        this.readAllMessages(dialog.id)
-        await this.sendReadStatus(firstUnreadMsg.id, firstUnreadMsg.sender_id, firstUnreadMsg.dialog_id)
-        this.updateDialogsUnreadMessagesCount(dialog)
+        chatService.readAllMessages(dialog._id)
+        await chatService.sendReadStatus(firstUnreadMsg.id, firstUnreadMsg.sender_id, firstUnreadMsg.dialog_id)
+        chatService.updateDialogsUnreadMessagesCount(dialog)
       }
       amountMessages = isAlredyUpdate.length
     }
@@ -99,12 +98,12 @@ class ChatService {
 
   // Message loading if more than 100
   getMoreMessages = async (dialog) => {
-    const currentMessages = this.getMessagesByDialogId(dialog.id)
+    const currentMessages = chatService.getMessagesByDialogId(dialog._id)
     const lastMessageDate = currentMessages[0]
     const updateObj = Object.assign(dialog, { last_messages_for_fetch: lastMessageDate.date_sent })
 
     const filter = {
-      chat_dialog_id: dialog.id,
+      chat_dialog_id: dialog._id,
       date_sent: { lt: lastMessageDate.date_sent },
       sort_desc: 'date_sent'
     }
@@ -114,21 +113,23 @@ class ChatService {
     const messages = []
     moreHistoryFromServer.items.forEach(elem => {
       if (!elem.group_chat_alert_type) {
-        messages.push(new Message(elem, this.currentUser.id))
+        const auth = store.getState().auth;
+        messages.push(new Message(elem, auth.currentUser.chat_id))
       }
     })
 
     store.dispatch(updateDialog(updateObj))
-    const amountMessages = store.dispatch(lazyFetchMessages(dialog.id, messages))
+    const amountMessages = store.dispatch(lazyFetchMessages({dialogId:dialog._id,history:messages}))
     return amountMessages.history.length
   }
 
 
   async sendMessage(dialog, messageText, attachments = false, scrollToBottom) {
-    const user = this.currentUser
+    const auth = store.getState().auth;
+    const user = auth.currentUser;
     const text = messageText.trim()
     const date = Math.floor(Date.now() / 1000)
-    const recipient_id = dialog.type === DIALOG_TYPE.PRIVATE ? dialog.occupants_ids.find(elem => elem != user.id)
+    const recipient_id = dialog.type === DIALOG_TYPE.PRIVATE ? dialog.occupants_ids.find(elem => elem != user.chat_id)
       : dialog.xmpp_room_jid
 
     let msg = {
@@ -136,41 +137,42 @@ class ChatService {
       body: text,
       extension: {
         save_to_history: 1,
-        dialog_id: dialog.id,
-        sender_id: user.id,
+        dialog_id: dialog._id,
+        sender_id: user.chat_id,
         date_sent: date,
       },
       // markable: 1
     }
 
-    msg.id = this.messageUniqueId
+    msg.id = chatService.messageUniqueId
 
     // If send message as Attachment
     if (attachments) {
-      return this.sendMessageAsAttachment(dialog, recipient_id, msg, attachments, scrollToBottom)
+      return chatService.sendMessageAsAttachment(dialog, recipient_id, msg, attachments, scrollToBottom)
     }
 
     const message = new FakeMessage(msg)
 
     const newObjFreez = Object.freeze(message)
 
-    await store.dispatch(pushMessage(newObjFreez, dialog.id))
+    await store.dispatch(pushMessage({dialogId:dialog._id,message:newObjFreez} ))
     scrollToBottom()
     ConnectyCube.chat.send(recipient_id, msg)
-    store.dispatch(sortDialogs(newObjFreez))
+    store.dispatch(sortDialogs({message:newObjFreez}))
   }
 
 
   sendMsgChatAlertOnCreate = async (dialog, message, alertType) => {
     const date = Math.floor(Date.now() / 1000)
-    const recipient_id = dialog.type === DIALOG_TYPE.PRIVATE ? dialog.occupants_ids.find(elem => elem != this.currentUser.id)
+    const auth = store.getState().auth;
+    const recipient_id = dialog.type === DIALOG_TYPE.PRIVATE ? dialog.occupants_ids.find(elem => elem != auth.currentUser.chat_id)
       : dialog.xmpp_room_jid
     const messageExtensions = {
       date_sent: date,
       save_to_history: 1,
-      dialog_id: dialog.id,
+      dialog_id: dialog._id,
       group_chat_alert_type: alertType,
-      sender_id: this.currentUser.id,
+      sender_id: auth.currentUser.chat_id,
     }
     const msg = {
       type: !dialog.xmpp_room_jid ? 'chat' : 'groupchat',
@@ -182,7 +184,7 @@ class ChatService {
 
   sendChatAlertOnCreate(dialog) {
     const message = 'Group is created'
-    this.sendMsgChatAlertOnCreate(dialog, message, GROUP_CHAT_ALERT_TYPE.CREATE)
+    chatService.sendMsgChatAlertOnCreate(dialog, message, GROUP_CHAT_ALERT_TYPE.CREATE)
   }
 
   async sendMessageAsAttachment(dialog, recipient_id, msg, attachments, scrollToBottom) {
@@ -191,57 +193,21 @@ class ChatService {
     msg.extension.attachments = [{ url }]
     msg.body = 'Image attachment'
     const message = new FakeMessage(msg)
-    await store.dispatch(pushMessage(message, dialog.id))
+    await store.dispatch(pushMessage({dialogId:dialog._id,message} ))
     scrollToBottom()
 
     // create real data for attachment
-    const response = await this.uploadPhoto(attachments)
-    const newObjAttach = preparationAttachment(response)
-    msg.extension.attachments = [newObjAttach]
+    const response = await chatService.uploadPhoto(attachments)
+    // const newObjAttach = preparationAttachment(response)
+    // msg.extension.attachments = [newObjAttach]
     await ConnectyCube.chat.send(recipient_id, msg)
-    store.dispatch(sortDialogs(message))
+    store.dispatch(sortDialogs({message}))
     return
   }
 
-  async createPrivateDialog(userId) {
-    const dialogs = store.getState().dialogs
-    let dialog = null
-
-    dialogs.forEach(elem => {
-      if (elem.type === DIALOG_TYPE.PRIVATE && elem.occupants_ids.find(elem => elem === userId)) {
-        dialog = elem
-      }
-    })
-
-    if (!dialog) {
-      const params = {
-        type: DIALOG_TYPE.PRIVATE,
-        occupants_ids: userId,
-      }
-
-      const response = await ConnectyCube.chat.dialog.create(params)
-      dialog = new Dialog(response)
-      if (this.getUserFromReduxById(userId)) {
-        store.dispatch(addNewDialog(dialog))
-        return dialog
-      } else {
-        const usersInfo = await this.getUserFromServerById(userId)
-        usersInfo.user = new UserModel(usersInfo.user)
-        store.dispatch(fetchUsers([usersInfo.user]))
-        store.dispatch(addNewDialog(dialog))
-        return dialog
-      }
-    }
-
-    // If the user is already in the Redux
-    if (this.getUserFromReduxById(userId)) {
-      return dialog
-    } else {
-      const usersInfo = await this.getUserFromServerById(userId)
-      usersInfo.user = new UserModel(usersInfo.user)
-      store.dispatch(fetchUsers([usersInfo.user]))
-      return dialog
-    }
+  async createPrivateDialog(params) {
+    const response = await ConnectyCube.chat.dialog.create(params)
+    return response
   }
 
 
@@ -252,8 +218,9 @@ class ChatService {
   }
 
   async createPublicDialog(occupants_ids, groupName, img) {
-    const currentUser = this.currentUser
-    occupants_ids.unshift(currentUser.id)
+    const auth = store.getState().auth;
+    const currentUser = auth.currentUser
+    occupants_ids.unshift(currentUser.chat_id)
     const params = {
       type: DIALOG_TYPE.GROUP,
       occupants_ids,
@@ -263,10 +230,23 @@ class ChatService {
     if (image) {
       params.photo = image.uid
     }
-    const dialog = await ConnectyCube.chat.dialog.create(params)
-    const newDialog = new Dialog(dialog)
-    store.dispatch(addNewDialog(newDialog))
-    return newDialog
+    const service = ConnectyCube.service;
+    let token;
+    if(service && service.sdkInstance.session){
+      token = service.sdkInstance.session.token;
+    }else{
+      await chatService.autologin();
+    }
+    console.log(token)
+    let dialog;
+    try{
+      dialog = await ConnectyCube.chat.dialog.create(params)
+      store.dispatch(addNewDialog(dialog));
+    }catch(e){
+      console.log(e) 
+    }
+    
+    return dialog;
   }
 
   async readAllMessages(dialogId) {
@@ -277,7 +257,7 @@ class ChatService {
   }
 
   async readMessage(messageId, dialogId) {
-    this.onReadStatus(messageId, dialogId)
+    chatService.onReadStatus(messageId, dialogId)
     return ConnectyCube.chat.message.update(null, {
       chat_dialog_id: dialogId,
       read: 1
@@ -285,30 +265,32 @@ class ChatService {
   }
 
   async onMessageListener(senderId, msg) {
+    console.log(msg)
     const message = new Message(msg)
-    const user = this.currentUser
-    const dialog = this.getSelectedDialog()?.id
-
+    const auth = store.getState().auth;
+    const user = auth.currentUser;
+    const selectedDialog = store.getState().dialog.selectedDialog;
+    const dialog = selectedDialog?._id
     // If group chat alet
     if (msg.extension.group_chat_alert_type) {
       const dialogsFromServer = await ConnectyCube.chat.dialog.list()
       const dialogs = dialogsFromServer.items.map(elem => {
-        return new Dialog(elem)
+        return [...elem];
       })
       store.dispatch(fetchDialogs(dialogs))
       return
     }
-
-    if (senderId !== user.id) {
+    console.log(senderId, user.chat_id,senderId !== user.chat_id)
+    if (senderId !== user.chat_id) {
       if (dialog === message.dialog_id) {
-        store.dispatch(sortDialogs(message))
-        this.readMessage(message.id, message.dialog_id)
-        this.sendReadStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
+        store.dispatch(sortDialogs({message}))
+        chatService.readMessage(message.id, message.dialog_id)
+        chatService.sendReadStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
       } else {
-        this.sendDeliveredStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
-        store.dispatch(sortDialogs(message, true))
+        chatService.sendDeliveredStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
+        store.dispatch(sortDialogs({message,count:true}))
       }
-      store.dispatch(pushMessage(message, message.dialog_id))
+      store.dispatch(pushMessage({dialogId:message.dialog_id,message} ))
     }
   }
 
@@ -317,18 +299,18 @@ class ChatService {
     console.warn('onSentMessageListener')
     if (failedMessage || msg.extension.group_chat_alert_type) {
       return
-    }
-    store.dispatch(updateMessages(msg.extension.dialog_id, msg.id, { send_state: STATUS_SENT }))
+    } 
+    store.dispatch(updateMessages({dialogId:msg.extension.dialog_id, msgId:msg.id, msg:{ send_state: STATUS_SENT }}))
   }
 
   onDeliveredStatus(messageId, dialogId, userId) {
     console.warn('onDeliveredStatus', messageId)
-    store.dispatch(updateMessages(dialogId, messageId, { send_state: STATUS_DELIVERED }))
+    store.dispatch(updateMessages({dialogId, msgId:messageId, msg:{ send_state: STATUS_DELIVERED }}))
   }
 
   onReadStatus(messageId, dialogId, userId) {
     console.warn('onReadStatus', messageId)
-    store.dispatch(updateMessages(dialogId, messageId, { send_state: STATUS_READ }))
+    store.dispatch(updateMessages({dialogId, msgId:messageId, msg:{ send_state: STATUS_READ }}))
   }
 
 
@@ -341,37 +323,12 @@ class ChatService {
     ConnectyCube.chat.sendDeliveredStatus({ messageId, userId, dialogId })
   }
 
-  async getUsersList(ids) {
-    const usersList = await ConnectyCube.users.get({
-      per_page: 100,
-      filter: {
-        field: 'id', param: 'in', value: ids,
-      },
-    })
-
-    return usersList.items.map(elem => {
-      return new UserModel(elem.user)
-    })
-  }
-
-  async getUserFromServerById(id) {
-    return ConnectyCube.users.get(id)
-  }
-
-  setSelectDialog(dialog) {
-    store.dispatch(selectedDialog(dialog))
-  }
-
-  getSelectedDialog() {
-    return store.getState().selectedDialog
-  }
-
   getDialogById(dialogId) {
-    return store.getState().dialogs.find(elem => elem.id === dialogId)
+    // return store.getState().dialogs.find(elem => elem.id === dialogId)
   }
 
   getMessagesByDialogId(dialogId) {
-    const result = store.getState().messages
+    const result = store.getState().message;
     return result[dialogId]
   }
 
@@ -380,11 +337,11 @@ class ChatService {
   }
 
   get currentUser() {
-    return store.getState().currentUser.user
+    // return store.getState().currentUser.user
   }
 
   getUserFromReduxById(id) {
-    return store.getState().users[id]
+    // return store.getState().users[id]
   }
 
   get messageUniqueId() {

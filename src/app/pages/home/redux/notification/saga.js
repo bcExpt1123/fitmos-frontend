@@ -20,6 +20,9 @@ import {
 import {
   refreshPosts
 } from "../post/actions";
+import {
+  createDialog
+} from "../dialogs/actions";
 
 import { http } from "../../services/api";
 import { ca } from "date-fns/locale";
@@ -103,6 +106,9 @@ function* onFollow({payload}){
       return customer;
     })
     yield put(setPeopleValue({name:'searchCustomers',value:customers}));
+    if(result.status === 'accepted'){
+      if(result.customer.chat_id)yield put(createDialog(result.customer.chat_id));
+    }
   }catch(error){
   }
   yield put(setItemValue({name:'followDisabled',value:false}));

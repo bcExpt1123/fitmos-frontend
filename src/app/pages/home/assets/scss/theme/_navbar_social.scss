@@ -201,6 +201,10 @@
     }
     .clickable-button{
       @include clickable-button;
+      &.chat{
+        padding: 13px 3px 13px 17px;  
+        margin-top: 0;
+      }
     }
     .link{
       padding: 13px 17px!important;
@@ -359,6 +363,12 @@
     .menu-third{
       .link{
         padding: 13px !important;       
+        i{
+          font-size: 20px;
+        } 
+      }
+      .clickable-button.chat{
+        margin-top: 3px;
         i{
           font-size: 20px;
         } 

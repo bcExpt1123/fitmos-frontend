@@ -70,7 +70,7 @@ function* onConfirmAlternate(){
 // }
 function* onPulling({payload:{id}}){
   let login = true;
-  while (login && false) {
+  while (login) {
     const currentUser = yield select(({auth}) => auth.currentUser);
     let customer;
     if(currentUser && currentUser.customer) {

@@ -37,7 +37,7 @@ function Layout({ children, selfLayout }) {
   return selfLayout !== "blank" ? (
     <>
       <Helmet>
-        <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>        
+        {/* <script src="https://app.wabi-app.com/widget/js/wabi.js?phone_number=+5078327558&lang=es&position=bottom"></script>         */}
         {/* <script async src="https://www.googletagmanager.com/gtag/js?id=UA-162425974-1"></script>
         <script>
         {`window.dataLayer = window.dataLayer || [];
