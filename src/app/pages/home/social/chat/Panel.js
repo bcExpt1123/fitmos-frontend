@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import ListDialog from "./ListDialog";
 // import NewPrivateDialog from "./NewPrivateDialog";
 import NewGroupDialog from "./NewGroupDialog";
+import EditGroupDialog from "./EditGroupDialog";
 import AddUsers from "./AddUsers";
 import Channel from "./Channel";
-// import ChatService from "../../services/chat-service";
 
 const ChatPanel = ({show})=> {
   const dispatch = useDispatch();
@@ -36,6 +36,7 @@ const ChatPanel = ({show})=> {
             {route==='list'&&<ListDialog />}
             {/* {route==='new'&&<NewPrivateDialog />} */}
             {route==='newGroup'&&<NewGroupDialog />}
+            {route==='editGroup'&&<EditGroupDialog />}
             {route==='addUsers'&&<AddUsers />}
             {route==='channel'&&<Channel />}
           </div>

@@ -12,6 +12,11 @@ export const {
   fetchDialogs,
   sortDialogs,
   updateDialog,
+  editGroupDialog,
+  leaveGroupDialog,
+  deleteGroupDialog,
+  deleteDialog,
+  updateGroupName,
   selectedDialog,  
 } = createActions(
   "SET_ITEM_VALUE",
@@ -20,6 +25,11 @@ export const {
   "FETCH_DIALOGS",
   "SORT_DIALOGS",
   "UPDATE_DIALOG",
+  "EDIT_GROUP_DIALOG",
+  "LEAVE_GROUP_DIALOG",
+  "DELETE_GROUP_DIALOG",
+  "DELETE_DIALOG",
+  "UPDATE_GROUP_NAME",
   "SELECTED_DIALOG",
   { prefix: "DIALOG" }
 );

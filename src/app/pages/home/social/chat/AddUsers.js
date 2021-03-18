@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import ChatHeader from "./ChatHeader";
 import classnames from "classnames";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import { setItemValue } from "../../redux/dialogs/actions"; 
+import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
+import { setItemValue, updateDialog } from "../../redux/dialogs/actions"; 
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import ChatService from "../../services/chat-service";
 import { useSelector, useDispatch } from "react-redux";
@@ -11,7 +12,7 @@ const AddUsers = ()=>{
   const [keyword, setKeyword] = useState("");
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const changeSearch = (event) => (setKeyword(event.target.value));
-  const [isLoader, setIsLoader] = useState("");
+  const [isLoader, setIsLoader] = useState(false);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [originalContactedUsers, setOriginalContactedUsers] = useState([]);
   const [contactedUsers, setContactedUsers] = useState([]);
@@ -19,6 +20,9 @@ const AddUsers = ()=>{
   const dialogs = useSelector(({dialog})=>dialog.dialogs);
   const people = useSelector(({people})=>people.people);
   const groupName = useSelector(({dialog})=>dialog.groupName);
+  const path = useSelector(({dialog})=>dialog.backRouteAddUsers);
+  const returnPath = useSelector(({dialog})=>dialog.backRouteEditDialog);
+  const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const dispatch = useDispatch();
   useEffect(()=>{ 
     let userIds = [];
@@ -28,6 +32,9 @@ const AddUsers = ()=>{
       })
     })
     userIds = userIds.filter((v, i, a) => a.indexOf(v) === i);
+    if(selectedDialog){
+      userIds = userIds.filter(id=>!selectedDialog.occupants_ids.includes(id));
+    }
     const users = userIds.map(chat_id=>{
       const user = people.find(customer=>chat_id==customer.chat_id);
       return user;
@@ -37,7 +44,10 @@ const AddUsers = ()=>{
   },[]);
   const searchUsers = () => {
     let str = keyword.trim();
-    if(str === "") return;
+    if(str === "") {
+      setMoreUsers([]);
+      return;
+    }
     const contactedCustomers = originalContactedUsers.filter(customer=>customer.display.includes(str) || customer.username.includes(str));
     setContactedUsers(contactedCustomers);
     if (str.length > 0) {
@@ -47,6 +57,7 @@ const AddUsers = ()=>{
         if( u ) return false;
         if(customer.user_id == currentUser.id) return false;
         if( customer.chat_id === null )return false;
+        if( selectedDialog && selectedDialog.occupants_ids.includes(customer.chat_id)) return false;
         return (customer.display.includes(str) || customer.username.includes(str));
       });
       setMoreUsers(moreCustomers);
@@ -58,7 +69,7 @@ const AddUsers = ()=>{
   useEffect(()=>{
     searchUsers();
   },[keyword]);
-  const createDialog = () => {
+  const saveDialog = () => {
     let str = groupName.trim()
     if (str.length < 3) {
       // return swal('Warning', 'Enter more than 4 characters for group subject')
@@ -67,7 +78,23 @@ const AddUsers = ()=>{
       return elem.chat_id
     })
     setIsLoader(true);
-    ChatService.createPublicDialog(occupants_ids, str, null)
+    if(selectedDialog){
+      //add users to group
+      ChatService.addUsersDialogs(selectedDialog._id, occupants_ids)
+      .then((dialog) => {
+        setIsLoader(false);
+        dispatch(updateDialog(dialog));
+        dispatch(setItemValue({name:'groupName',value:''}));
+        dispatch(setItemValue({name:'selectedDialog',value:null}));
+        dispatch(setItemValue({name:'route',value:returnPath}));
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLoader(false);
+      })
+    }else{
+      //create group dialog
+      ChatService.createPublicDialog(occupants_ids, str, null)
       .then((newDialog) => {
         setIsLoader(false);
         ChatService.setSelectDialog(newDialog)
@@ -78,7 +105,8 @@ const AddUsers = ()=>{
       .catch((error) => {
         console.log(error);
         setIsLoader(false);
-    })
+      })
+    }
   }
   const _renderSelectedUsers = (elem) => {
     return (
@@ -108,87 +136,89 @@ const AddUsers = ()=>{
     const result =  selectedUsers.filter(selectedUser=>selectedUser.id === user.id)
     return result.length === 0;
   }
-  return <div className="create-dialog-container">
-    <ChatHeader path="newGroup" title="Create new Group">
-      <div className="dialog-btn">
-        <button onClick={createDialog} className="btn-fs-blue" disabled={selectedUsers.length===0}>Done</button>
-      </div>
-    </ChatHeader>
-    {isLoader &&
-      <div className="dialog-loader">
-        <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
-      </div>
-    }
-    <div className="create-dialog-body">
-      <input
-        type="text"
-        value={keyword}
-        onChange={changeSearch}
-        required
-        placeholder="Search"
-        autoComplete="off"
-        className="search-people"
-        name="search" />
-
-
-      {selectedUsers.length > 0 &&
-        <div className="create-dialog-body-selected-users">
-          {selectedUsers.map(elem => (
-            _renderSelectedUsers(elem)
-          ))
-          }
+  return <ConnectyCubeWrapper>
+    <div className="create-dialog-container">
+      <ChatHeader path={path} title={selectedDialog?"Add to Group":"Create new Group"}>
+        <div className="dialog-btn">
+          <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUsers.length===0}>Done</button>
+        </div>
+      </ChatHeader>
+      {isLoader &&
+        <div className="dialog-loader">
+          <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
         </div>
       }
-      <PerfectScrollbar
-        options={{
-          wheelSpeed: 2,
-          wheelPropagation: false
-        }}
-        style={{
-          maxHeight: "calc(100vh - 100px)",
-          position: "relative"
-        }}
-      >
-      { contactedUsers.length>0 && <div className="contacted-users">
-        People
-        {contactedUsers.map(user=>
-          <div className="contacted-user" key={user.id}>
-            <div className="avatar">
-              <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
-            </div>
-            <div className="name">
-              {user.first_name} {user.last_name}
-            </div>
-            <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
-              <i className="fas fa-check-circle" />
-            </div>
+      <div className="create-dialog-body">
+        <input
+          type="text"
+          value={keyword}
+          onChange={changeSearch}
+          required
+          placeholder="Search"
+          autoComplete="off"
+          className="search-people"
+          name="search" />
+
+
+        {selectedUsers.length > 0 &&
+          <div className="create-dialog-body-selected-users">
+            {selectedUsers.map(elem => (
+              _renderSelectedUsers(elem)
+            ))
+            }
           </div>
-        )}
-      </div> }
-      { moreUsers.length>0 && <div className="more-users">
-        More people
-        {moreUsers.map(user=>
-          <div className="more-user" key={user.id}>
-            <div className="avatar">
-              <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
-            </div>
-            <div className="info">
-              <div className="name">{user.first_name} {user.last_name}</div>
-              <div className="username">
-                @{user.username}
+        }
+        <PerfectScrollbar
+          options={{
+            wheelSpeed: 2,
+            wheelPropagation: false
+          }}
+          style={{
+            maxHeight: "calc(100vh - 100px)",
+            position: "relative"
+          }}
+        >
+        { contactedUsers.length>0 && <div className="contacted-users">
+          People
+          {contactedUsers.map(user=>
+            <div className="contacted-user" key={user.id}>
+              <div className="avatar">
+                <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
+              </div>
+              <div className="name">
+                {user.first_name} {user.last_name}
+              </div>
+              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
+                <i className="fas fa-check-circle" />
               </div>
             </div>
-            <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
-              <i className="fas fa-check-circle" />
+          )}
+        </div> }
+        { moreUsers.length>0 && <div className="more-users">
+          More people
+          {moreUsers.map(user=>
+            <div className="more-user" key={user.id}>
+              <div className="avatar">
+                <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
+              </div>
+              <div className="info">
+                <div className="name">{user.first_name} {user.last_name}</div>
+                <div className="username">
+                  @{user.username}
+                </div>
+              </div>
+              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
+                <i className="fas fa-check-circle" />
+              </div>
             </div>
-          </div>
-        )}
-      </div> }
-      {contactedUsers.length === 0 && moreUsers.length === 0 && keyword.trim().length>2&&
-        <> Not found people</>
-      }
-      </PerfectScrollbar>
+          )}
+        </div> }
+        {contactedUsers.length === 0 && moreUsers.length === 0 && keyword.trim().length>2&&
+          <> Not found people</>
+        }
+        </PerfectScrollbar>
+      </div>
     </div>
-  </div>
+  </ConnectyCubeWrapper>
 }
 export default AddUsers;

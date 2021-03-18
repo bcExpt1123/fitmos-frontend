@@ -5,14 +5,19 @@ import {
   setItemValue,
   addNewDialog,
   updateDialog,
+  editGroupDialog,
   sortDialogs,
+  deleteDialog,
 } from "./actions";
 
 const initialState = {
   dialogs:[],//notification
   selectedDialog:null,
   groupName:"",
+  editDialog:null,
   route:'list',
+  backRouteEditDialog:"",
+  backRouteAddUsers:"",
   showPanel:false,
 };
 const reducer = persistReducer(
@@ -66,6 +71,16 @@ const reducer = persistReducer(
         const result = sort(updateDialog)
       
         return {...state, dialogs:result}              
+      },
+      [editGroupDialog]:(state,{payload})=>({
+        ...state,
+        route:payload.route,
+        backRouteEditDialog:payload.backRouteEditDialog,
+        groupName:state.selectedDialog.name,
+      }),
+      [deleteDialog]:(state,{payload})=>{
+        const filteredDialogs = state.dialogs.filter(elem =>elem._id !=payload)
+        return {...state, dialogs:filteredDialogs}              
       },
     },
     initialState

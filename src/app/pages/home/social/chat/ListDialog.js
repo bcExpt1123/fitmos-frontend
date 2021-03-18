@@ -2,25 +2,14 @@
 import React, {useEffect, useState, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
-import ConnectyCube from 'connectycube';
 import { fetchDialogs, setItemValue } from "../../redux/dialogs/actions"; 
 import Avatar from "../../components/Avatar";
+import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import {lastDate} from "../../../../../lib/common";
-import ChatService from '../../services/chat-service';
 import ContextMenu from './components/ContextMenu';
 
 
 const ListDialog = ()=> {
-  const service = ConnectyCube.service;
-  let token;
-  if(service && service.sdkInstance.session){
-    console.log(service.sdkInstance.session)
-    token = service.sdkInstance.session.token;
-  }
-  const [contextDialog, setContextDialog] = useState(null);
-  useEffect(()=>{
-    if(token)ChatService.setUpListeners();
-  },[token]);
   const clickDialog = (dialog)=>{
     dispatch(setItemValue({name:'selectedDialog',value:dialog}));
     dispatch(setItemValue({name:'route',value:'channel'}));
@@ -29,22 +18,41 @@ const ListDialog = ()=> {
   useEffect(()=>{
     dispatch(fetchDialogs(true));
     dispatch(setItemValue({name:'selectedDialog',value:null}));
+    function handleContextMenu(event){
+      if ( !contextMenuWrapper.current.contains(event.target)) {
+        var contentMenus = document.getElementsByClassName("chat-content-menu");
+        var i;
+        for (i = 0; i < contentMenus.length; i++) {
+          var openContextMenu = contentMenus[i];
+          if (openContextMenu.style.opacity === '1') {
+            console.log(openContextMenu.style.opacity, typeof openContextMenu.style.opacity)
+            openContextMenu.style.opacity = 0;
+          }
+        }
+      }
+    }
+    document.addEventListener("contextmenu", handleContextMenu);
+    return ()=>{
+      document.removeEventListener("contextmenu", handleContextMenu);
+    }
   },[]);
   const dialogs = useSelector(({dialog})=>dialog.dialogs);
+  const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const newDialog = ()=>{
     dispatch(setItemValue({name:'route',value:'new'}));
   }
   const newGroupDialog = ()=>{
+    dispatch(setItemValue({name:'groupName',value:''}));
     dispatch(setItemValue({name:'route',value:'newGroup'}));
   }
   const handleContextMenu = (dialog)=>(event)=>{
     event.preventDefault();
-    console.log(dialog);
-    setContextDialog(dialog);
+    dispatch(setItemValue({name:'selectedDialog',value:dialog}));
   }
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   const contextMenuWrapper = useRef();
   return (
-    <>
+    <ConnectyCubeWrapper>
       <PerfectScrollbar
         options={{
           wheelSpeed: 2,
@@ -57,7 +65,7 @@ const ListDialog = ()=> {
       >
         {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
         <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button>
-        <div className="kt-notification-v2" ref={contextMenuWrapper}>
+        <div className="kt-notification-v2 list-dialogs" ref={contextMenuWrapper}>
         { (dialogs.length === 0)?
           <div className="notification-title">
             No Chats
@@ -100,10 +108,14 @@ const ListDialog = ()=> {
               </span>
             )}     
             <ContextMenu wrapper={contextMenuWrapper}>
-              {(contextDialog && contextDialog.type === 2) &&     
+              {(selectedDialog && selectedDialog.type === 2) &&     
                 <ul>
-                  <li>Manage Group</li>
-                  <li>Leave Group</li>
+                  {currentUser.chat_id == selectedDialog.user_id?<>
+                    <li data-action={'editGroupDialogAction'}>Manage Group</li>
+                    <li data-action={'deleteGroupDialogAction'}>Delete Group</li>
+                  </>:<>
+                    <li data-action={'leaveGroupDialogAction'}>Leave Group</li>
+                  </>}
                 </ul>
               }
             </ContextMenu>
@@ -111,7 +123,7 @@ const ListDialog = ()=> {
           }
         </div>
       </PerfectScrollbar>
-    </>
+    </ConnectyCubeWrapper>
   );
 }
 export default ListDialog;

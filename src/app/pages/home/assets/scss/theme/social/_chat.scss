@@ -129,6 +129,7 @@ $fitemos-chat-panel: (
         margin-left: 40px;
         margin-right: 40px;            
         border-bottom: 1px solid rgb(213, 217, 222);
+        display: flex;
         .dialog-name{
           border:0;
           outline: none;
@@ -140,7 +141,65 @@ $fitemos-chat-panel: (
           font-size: 24px;
           text-align: center;
         }
+        .group-name{
+          text-align: center;
+          font-size: 24px;
+          flex-grow: 4;
+        }
+        .action{
+          margin-top: 8px;
+        }
       }      
+      .created-user{
+        color:rgba($basic-text-color, 0.5);
+        text-align: center;
+      }
+    }
+    .participants{
+      margin-top: 20px;
+      label{
+        color:rgba($basic-text-color, 0.5);
+        font-size: 12px;
+        margin-right: 20px;
+      }
+      .participant-info{
+        display: flex;
+        margin:5px 0;
+        &.other{
+          .participant-delete{
+            display:none;
+            cursor: pointer;
+            background-color: white;
+            padding: 0 20px;
+            margin: 10px 0;
+            border-radius: 5px;
+            height: 29px;
+            border: 1px solid rgba(#b2b3b8, 1)
+          }
+          &:hover{
+            .participant-delete{
+              display:block;
+            }
+          }
+        }
+        .avatar{
+          margin:5px 10px 5px 0;
+          img{
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;            
+          }
+        }
+        .name{
+          line-height: 49px;
+          font-size: 23px;
+          font-weight: 500;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;                    
+          flex-grow: 4;
+        }
+      }
     }
     .create-dialog-body-btn{
       margin-top: 40%;
@@ -274,6 +333,29 @@ $fitemos-chat-panel: (
   .kt-notification-v2{
     .menu-container{
       position: fixed;
+      z-index: 10;;
+      background-color: rgba(#f2f3f8, 0.9);
+      border-radius: 3px;
+      ul{
+        list-style-type: none;
+        margin-bottom: 0px;
+        li{
+          margin-left: -40px;
+          padding: 3px 10px;
+          &:hover{
+            cursor: pointer;
+            background-color: rgba($basic-text-color, 0.1);;
+          }
+        }
+      }
+    }
+  }
+  .dialog-loader{
+    img{
+      width: 50px;
+      height: 50px;
+      display: block;
+      margin: auto;
     }
   }
 }

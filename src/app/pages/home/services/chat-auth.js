@@ -50,7 +50,7 @@ class AuthService {
         });      
       }
       authService.setUserSession(session)
-      authService.connect(session.user_id, session.token)
+      await authService.connect(session.user_id, session.token)
     }catch(e){
       if(e.status == 401){
         console.log(params)
@@ -79,9 +79,11 @@ class AuthService {
   }
 
   async logout() {
-    localStorage.clear();
-    const token = ConnectyCube.service.sdkInstance.session.token;
-    if(token)await ConnectyCube.logout()
+    const service = ConnectyCube.service;
+    if(service && service.sdkInstance.session){
+      const token = ConnectyCube.service.sdkInstance.session.token;
+      if(token)await ConnectyCube.logout()
+    }
   }
 
 

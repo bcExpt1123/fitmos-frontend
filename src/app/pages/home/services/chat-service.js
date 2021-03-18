@@ -347,6 +347,23 @@ console.log(msg, dialog);
   get messageUniqueId() {
     return ConnectyCube.chat.helpers.getBsonObjectId()
   }
+  async updateDialogName(dialogId, name){
+    const toUpdateParams = { name };
+    return await ConnectyCube.chat.dialog.update(dialogId, toUpdateParams);
+  }
+  async addUsersDialogs(id, occupants_ids){
+    const toUpdateParams = { push_all: { occupants_ids: occupants_ids } };
+    const dialog = await ConnectyCube.chat.dialog.update(id, toUpdateParams);
+    return dialog;
+  }
+  async leaveUserDialogs(id, occupants_ids){
+    const toUpdateParams = { pull_all: { occupants_ids: occupants_ids } };
+    const dialog = await ConnectyCube.chat.dialog.update(id, toUpdateParams);
+    return dialog;
+  }
+  async deleteGroupDialog(id){
+    await ConnectyCube.chat.dialog.delete(id);
+  }
 }
 
 

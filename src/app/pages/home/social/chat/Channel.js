@@ -2,26 +2,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RecyclerListView, DataProvider } from "recyclerlistview/web";
-import ConnectyCube from 'connectycube';
-import { fetchDialogs, setItemValue } from "../../redux/dialogs/actions"; 
+import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import Avatar from "../../components/Avatar";
 import ChatHeader from "./ChatHeader";
 import ChatInput from './components/ChatInput';
 import Message from './components/Message';
 import ChatService from '../../services/chat-service';
-import {lastDate} from "../../../../../lib/common";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { ChatLayoutUtil } from './helper/utils';
 
 const Channel = ()=> {
-  const service = ConnectyCube.service;
-  let token;
-  if(service && service.sdkInstance.session){
-    token = service.sdkInstance.session.token;
-  }
-  useEffect(()=>{
-    if(token)ChatService.setUpListeners();
-  },[token]);
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const clickDialog = ()=>{
 
@@ -175,7 +165,7 @@ const Channel = ()=> {
   useEffect(()=>{
     updateScrollPosition();
   },[dataProvider]);
-  return (
+  return (<ConnectyCubeWrapper>
     <div className="chat-container" >
       <ChatHeader title="Chat"/>
       <div className="chat-body" id="chat-body">
@@ -198,7 +188,7 @@ const Channel = ()=> {
             />
           </> 
             :           
-          <div className="loading-container vh-centered">
+          <div className="dialog-loader vh-centered">
             <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
           </div>
 
@@ -206,6 +196,7 @@ const Channel = ()=> {
       </div>
       <ChatInput sendMessageCallback={sendMessageCallback} />
     </div>
+  </ConnectyCubeWrapper>  
   )
 }
 export default Channel;
