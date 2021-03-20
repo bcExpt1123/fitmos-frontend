@@ -273,11 +273,7 @@ console.log(msg, dialog);
     const dialog = selectedDialog?._id
     // If group chat alet
     if (msg.extension.group_chat_alert_type) {
-      const dialogsFromServer = await ConnectyCube.chat.dialog.list()
-      const dialogs = dialogsFromServer.items.map(elem => {
-        return [...elem];
-      })
-      store.dispatch(fetchDialogs(dialogs))
+      store.dispatch(fetchDialogs(true))
       return
     }
     console.log(senderId, user.chat_id,senderId !== user.chat_id)
@@ -363,6 +359,18 @@ console.log(msg, dialog);
   }
   async deleteGroupDialog(id){
     await ConnectyCube.chat.dialog.delete(id);
+  }
+  async deleteMessage(id){
+    await ConnectyCube.chat.message.delete([id], {})
+  }
+  async updateMessage(dialogId, id, messageText){
+    const params = {
+      read: 1, // mark message as read
+      delivered: 1, // mark message as delivered
+      message: messageText, // update message body
+      chat_dialog_id: dialogId,
+    };    
+    await ConnectyCube.chat.message.update([id], params)
   }
 }
 

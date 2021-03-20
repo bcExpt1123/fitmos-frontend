@@ -7,6 +7,7 @@ import Avatar from "../../components/Avatar";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import {lastDate} from "../../../../../lib/common";
 import ContextMenu from './components/ContextMenu';
+import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
 
 const ListDialog = ()=> {
@@ -16,7 +17,7 @@ const ListDialog = ()=> {
   }
   const dispatch = useDispatch();
   useEffect(()=>{
-    dispatch(fetchDialogs(true));
+    dispatch(fetchDialogs());
     dispatch(setItemValue({name:'selectedDialog',value:null}));
     function handleContextMenu(event){
       if ( !contextMenuWrapper.current.contains(event.target)) {
@@ -51,6 +52,7 @@ const ListDialog = ()=> {
   }
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const contextMenuWrapper = useRef();
+  const actionLoading = useSelector(({dialog})=>dialog.actionLoading);
   return (
     <ConnectyCubeWrapper>
       <PerfectScrollbar
@@ -66,60 +68,66 @@ const ListDialog = ()=> {
         {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
         <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button>
         <div className="kt-notification-v2 list-dialogs" ref={contextMenuWrapper}>
-        { (dialogs.length === 0)?
-          <div className="notification-title">
-            No Chats
-          </div>              
+        { 
+          actionLoading?
+          <div className="dialog-loader vh-centered">
+              <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
+            </div>
           :
-          <>
-            {/* <ViewableMonitor visibleChange = {visibleChange}>
-            {isViewable =>
-              <span>&nbsp;</span>
-            }
-            </ViewableMonitor> */}
-          
-            {dialogs.map(dialog=>
-              <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
-                <div className="kt-notification-v2__item-icon">
-                  {dialog.type==3 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
-                  {/* {dialog.type==2 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>} */}
-                </div>
-                <div className="kt-notification-v2__itek-wrapper">
-                  <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>
-                    <div className="info-left">
-                      <h5>
-                        {dialog.type==3 && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
-                        {dialog.type==2 && <>{dialog.name}</>}
-                      </h5>
-                      <span>{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>
-                    </div>
-                    <div className="info-right">
-                      <p>{lastDate({
-                        lastDate: dialog.last_message_date_sent || Date.parse(dialog.updated_at) / 1000 || Date.parse(dialog.created_at) / 1000,
-                        lastMessage: dialog.last_message || '',
-                        updatedDate: Date.parse(dialog.updated_at) || Date.now(),
-                      })}</p>
-                      {dialog.unread_messages_count > 0 &&
-                        <span>{dialog.unread_messages_count}</span>
-                      }
+          (dialogs.length === 0)?
+            <div className="notification-title">
+              No Chats
+            </div>              
+            :
+            <>
+              {/* <ViewableMonitor visibleChange = {visibleChange}>
+              {isViewable =>
+                <span>&nbsp;</span>
+              }
+              </ViewableMonitor> */}
+            
+              {dialogs.map(dialog=>
+                <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
+                  <div className="kt-notification-v2__item-icon">
+                    {dialog.type==3 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
+                    {/* {dialog.type==2 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>} */}
+                  </div>
+                  <div className="kt-notification-v2__itek-wrapper">
+                    <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>
+                      <div className="info-left">
+                        <h5>
+                          {dialog.type==3 && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
+                          {dialog.type==2 && <>{dialog.name}</>}
+                        </h5>
+                        <span>{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>
+                      </div>
+                      <div className="info-right">
+                        <p>{lastDate({
+                          lastDate: dialog.last_message_date_sent || Date.parse(dialog.updated_at) / 1000 || Date.parse(dialog.created_at) / 1000,
+                          lastMessage: dialog.last_message || '',
+                          updatedDate: Date.parse(dialog.updated_at) || Date.now(),
+                        })}</p>
+                        {dialog.unread_messages_count > 0 &&
+                          <span>{dialog.unread_messages_count}</span>
+                        }
+                      </div>
                     </div>
                   </div>
-                </div>
-              </span>
-            )}     
-            <ContextMenu wrapper={contextMenuWrapper}>
-              {(selectedDialog && selectedDialog.type === 2) &&     
-                <ul>
-                  {currentUser.chat_id == selectedDialog.user_id?<>
-                    <li data-action={'editGroupDialogAction'}>Manage Group</li>
-                    <li data-action={'deleteGroupDialogAction'}>Delete Group</li>
-                  </>:<>
-                    <li data-action={'leaveGroupDialogAction'}>Leave Group</li>
-                  </>}
-                </ul>
-              }
-            </ContextMenu>
-          </>
+                </span>
+              )}     
+              <ContextMenu wrapper={contextMenuWrapper}>
+                {(selectedDialog && selectedDialog.type === 2) &&     
+                  <ul>
+                    {currentUser.chat_id == selectedDialog.user_id?<>
+                      <li data-action={'editGroupDialogAction'}>Manage Group</li>
+                      <li data-action={'deleteGroupDialogAction'}>Delete Group</li>
+                    </>:<>
+                      <li data-action={'leaveGroupDialogAction'}>Leave Group</li>
+                    </>}
+                  </ul>
+                }
+              </ContextMenu>
+            </>
           }
         </div>
       </PerfectScrollbar>

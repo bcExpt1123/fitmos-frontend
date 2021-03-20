@@ -16,6 +16,10 @@ export const {
   lazyFetchMessages,
   updateMessages,
   deleteAllMessages,
+  updateMessageBody,
+  updatedMessageBody,
+  deleteMessage,
+  deletedMessage,
 } = createActions(
   "SET_ITEM_VALUE",
   "PUSH_MESSAGE",
@@ -23,5 +27,9 @@ export const {
   "LAZY_FETCH_MESSAGES",
   "UPDATE_MESSAGES",
   "DELETE_ALL_MESSAGES",
+  "UPDATE_MESSAGE_BODY",
+  "UPDATED_MESSAGE_BODY",
+  "DELETE_MESSAGE",
+  "DELETED_MESSAGE",
   { prefix: "MESSAGE" }
 );

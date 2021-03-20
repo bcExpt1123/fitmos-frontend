@@ -16,6 +16,7 @@ import { once } from "../../../../../lib/common";
 import SplashScreen from "../../../../partials/layout/SplashScreen";
 import { isMobile } from '../../../../../_metronic/utils/utils';
 import { findWorkouts,initialBlock } from "../../redux/done/actions";
+import { colonsToUnicode } from '../../services/emoji';
 
 const FormPostModal = ({show,title,handleClose, publishPost, post, saving, workout}) => {
   const users = useSelector(({people})=>people.people);
@@ -203,48 +204,6 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [emojiPicker]);
-  const colonsToUnicode = text => {
-    const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
-    let newText = text;
-
-    let match = colonsRegex.exec(text);
-
-    if (match !== null) {
-      let colons = match[2];
-      let offset = match.index + match[1].length;
-
-      newText =
-        newText.slice(0, offset) + getEmoji(colons) + newText.slice(offset + 2);
-    }
-    return newText;
-  };
-
-  const getEmoji = emoji => {
-    let emoj;
-    switch (emoji) {
-      case "D":
-        emoj = emojiIndex.search(":)")[1].native;
-        break;
-      case ")":
-        emoj = emojiIndex.search(":)")[0].native;
-        break;
-      case "(":
-        emoj = emojiIndex.search(":(")[0].native;
-        break;
-      case "P":
-        emoj = emojiIndex.search(":P")[0].native;
-        break;
-      case "o":
-        emoj = emojiIndex.search("Hushed")[0].native;
-        break;
-      case "O":
-        emoj = emojiIndex.search("Hushed")[0].native;
-        break;
-      default:
-        emoj = "";
-    }
-    return emoj;
-  };
   const history = useHistory();
   const dispatch = useDispatch();
   const redirectWorkoutPage = ()=>{

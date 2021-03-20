@@ -49,6 +49,9 @@ $fitemos-chat-panel: (
 .fitemos-chat-panel{
   margin-left: auto;
   right:0!important;
+  &.modal.show{
+    display: contents !important;
+  }
   .notification-title{
     margin: 10px 30px;
     font-size: 20px;
@@ -105,24 +108,32 @@ $fitemos-chat-panel: (
       }
     }
   }
+  .create-dialog-header{
+    display:flex;
+    margin-bottom: 10px;
+    width: 100%;
+    button{
+      background-color: transparent;
+      border: 0;
+    }
+    h3{
+      display: inline-block;
+      text-align: center;
+      width: 90%;
+    }
+    .participants{
+      white-space: nowrap;
+      overflow: hidden;              
+      text-overflow: ellipsis;
+      color:rgba($basic-text-color, 0.5);
+      cursor: pointer;
+    }
+    .dialog-btn{
+
+    }
+  }
   .create-dialog-container{
     padding: 1rem;
-    .create-dialog-header{
-      display:flex;
-      margin-bottom: 10px;
-      button{
-        background-color: transparent;
-        border: 0;
-      }
-      h3{
-        display: inline-block;
-        text-align: center;
-        width: 90%;
-      }
-      .dialog-btn{
-
-      }
-    }
     .create-dialog-body-groupinfo{
       .form-wrapper{
         margin-top: 20px;

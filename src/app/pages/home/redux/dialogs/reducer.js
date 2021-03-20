@@ -8,6 +8,7 @@ import {
   editGroupDialog,
   sortDialogs,
   deleteDialog,
+  createdDialog,
 } from "./actions";
 
 const initialState = {
@@ -19,12 +20,18 @@ const initialState = {
   backRouteEditDialog:"",
   backRouteAddUsers:"",
   showPanel:false,
+  selectedMessageId:null,
+  openDropdownMenu:false,
+  editMessageState:false,
+  actionLoading:false,
+  listLoading:true,// dialog list change
+  selectedMessageTop:100,
 };
 const reducer = persistReducer(
   {
     storage,
     key: "dialogs",
-    blacklist:[],
+    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading' ],
   },
   handleActions(
     {
@@ -82,6 +89,7 @@ const reducer = persistReducer(
         const filteredDialogs = state.dialogs.filter(elem =>elem._id !=payload)
         return {...state, dialogs:filteredDialogs}              
       },
+      [createdDialog]:(state,{payload})=>({...state, selectedDialog:payload,route:'channel',groupName:''}),
     },
     initialState
   )

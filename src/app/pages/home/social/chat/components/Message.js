@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import classnames from "classnames";
 import { getTime } from '../../../../../../lib/common';
 import Avatar from '../../../components/Avatar';
 import MessageSendState from './MessageStatus';
 import { GetMaxWidthMsg } from '../helper/utils';
-
+import Line from './DisplayLine';
+import { setItemValue } from "../../../redux/dialogs/actions";
 
 export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
@@ -17,12 +19,21 @@ export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
   const people = useSelector(({people})=>people.people);
 
   const sender = people.find(customer=>customer.chat_id == message.sender_id);
-
+  const dispatch = useDispatch();
+  const selectMessage=()=>{
+    dispatch(setItemValue({name:'selectedMessageId', value:message.id}));
+    dispatch(setItemValue({name:'openDropdownMenu', value:true}));
+    dispatch(setItemValue({name:'selectedMessageTop', value:rightMenuRef.current.getClientRects()[0].top + rightMenuRef.current.getClientRects()[0].height}));
+  }
+  const rightMenuRef  = useRef();
   const _renderAsStr = (whoIsSender) => {
     if (whoIsSender === 1) {
       return (
         <>
-          <span style={{ wordWrap: 'break-word' }}>{message.body}</span>
+          <span style={{ wordWrap: 'break-word' }}>
+            <Line line={message.body} />
+            <i className="fal fa-ellipsis-v dropbtn"  ref={rightMenuRef} onClick={selectMessage}/>
+          </span>
           <div className="chat-message-right-footer">
             <span>
               <>
@@ -38,7 +49,7 @@ export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
     } else {
       return (
         <>
-          <span style={{ wordWrap: 'break-word' }}>{message.body}</span>
+          <span style={{ wordWrap: 'break-word' }}><Line line={message.body} /></span>
           <div className="chat-message-left-footer">
             <span>{getTime(message.date_sent)}</span>
           </div>

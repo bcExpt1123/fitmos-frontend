@@ -32,6 +32,7 @@ export class ChatLayoutUtil {
         return arr;
       },
       (type, dim, index) => {
+        if (store.getState().message[dialogId][index] == undefined) return;
         if (store.getState().message[dialogId][index].attachment) {
           // if send messages as attachment
           dim.width = width

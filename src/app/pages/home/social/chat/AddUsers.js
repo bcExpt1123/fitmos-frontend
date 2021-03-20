@@ -3,7 +3,7 @@ import ChatHeader from "./ChatHeader";
 import classnames from "classnames";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
-import { setItemValue, updateDialog } from "../../redux/dialogs/actions"; 
+import { setItemValue, updateDialog, createdDialog, addedUsersDialog } from "../../redux/dialogs/actions"; 
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import ChatService from "../../services/chat-service";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,7 +21,6 @@ const AddUsers = ()=>{
   const people = useSelector(({people})=>people.people);
   const groupName = useSelector(({dialog})=>dialog.groupName);
   const path = useSelector(({dialog})=>dialog.backRouteAddUsers);
-  const returnPath = useSelector(({dialog})=>dialog.backRouteEditDialog);
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const dispatch = useDispatch();
   useEffect(()=>{ 
@@ -83,10 +82,7 @@ const AddUsers = ()=>{
       ChatService.addUsersDialogs(selectedDialog._id, occupants_ids)
       .then((dialog) => {
         setIsLoader(false);
-        dispatch(updateDialog(dialog));
-        dispatch(setItemValue({name:'groupName',value:''}));
-        dispatch(setItemValue({name:'selectedDialog',value:null}));
-        dispatch(setItemValue({name:'route',value:returnPath}));
+        dispatch(addedUsersDialog(dialog));
       })
       .catch((error) => {
         console.log(error);
@@ -97,10 +93,8 @@ const AddUsers = ()=>{
       ChatService.createPublicDialog(occupants_ids, str, null)
       .then((newDialog) => {
         setIsLoader(false);
-        ChatService.setSelectDialog(newDialog)
         ChatService.sendChatAlertOnCreate(newDialog)
-        dispatch(setItemValue({name:'route',value:'chat'}));
-        dispatch(setItemValue({name:'groupName',value:''}));
+        dispatch(createdDialog(newDialog));
       })
       .catch((error) => {
         console.log(error);

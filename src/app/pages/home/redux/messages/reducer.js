@@ -8,6 +8,8 @@ import {
   lazyFetchMessages,
   updateMessages,
   deleteAllMessages,  
+  deletedMessage,
+  updatedMessageBody,
 } from "./actions";
 
 const initialState = {
@@ -67,6 +69,35 @@ const reducer = persistReducer(
         ...state,
         [dialogId]: []
       }),
+      [deletedMessage]:(state, {payload:{dialogId,messageId}})=>{
+        let messages = state[dialogId];
+        if(messages){
+          messages = messages.filter(message=>message.id!=messageId);
+          return {...state,
+            [dialogId]: messages
+            }
+        }
+        return state;
+      },
+      [updatedMessageBody]:(state, {payload:{dialogId,msgId, text}})=>{
+        if (Object.keys(state).length === 0) {
+          return state
+        }
+      
+        const updateMessages = state[dialogId].map((elem, index) => {
+          if (elem.id === msgId) {
+            const msg = { ...elem }
+            msg.body = text
+            return { ...msg }
+          }
+          return elem
+        })
+      
+        return {
+          ...state,
+          [dialogId]: updateMessages
+        }          
+      },
     },
     initialState
   )

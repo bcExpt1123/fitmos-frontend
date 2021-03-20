@@ -9,6 +9,7 @@ import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
 import Avatar from "../../components/Avatar";
 import { isMobile } from '../../../../../_metronic/utils/utils';
+import { colonsToUnicode } from '../../services/emoji';
 
 export default function MentionTextarea({content, setContent, submit,commentForm, focus}) {
   const [comment, setComment] = useState(content);
@@ -35,48 +36,6 @@ export default function MentionTextarea({content, setContent, submit,commentForm
     setContent(text);
   };
 
-  const colonsToUnicode = text => {
-    const colonsRegex = new RegExp("(^|\\s):([)|D|(|P|O|o])+", "g");
-    let newText = text;
-
-    let match = colonsRegex.exec(text);
-
-    if (match !== null) {
-      let colons = match[2];
-      let offset = match.index + match[1].length;
-
-      newText =
-        newText.slice(0, offset) + getEmoji(colons) + newText.slice(offset + 2);
-    }
-    return newText;
-  };
-
-  const getEmoji = emoji => {
-    let emoj;
-    switch (emoji) {
-      case "D":
-        emoj = emojiIndex.search(":)")[1].native;
-        break;
-      case ")":
-        emoj = emojiIndex.search(":)")[0].native;
-        break;
-      case "(":
-        emoj = emojiIndex.search(":(")[0].native;
-        break;
-      case "P":
-        emoj = emojiIndex.search(":P")[0].native;
-        break;
-      case "o":
-        emoj = emojiIndex.search("Hushed")[0].native;
-        break;
-      case "O":
-        emoj = emojiIndex.search("Hushed")[0].native;
-        break;
-      default:
-        emoj = "";
-    }
-    return emoj;
-  };
   useEffect(() => {
     function handleClickOutside(event) {
       if (emojiPicker.current && !emojiPicker.current.contains(event.target)) {

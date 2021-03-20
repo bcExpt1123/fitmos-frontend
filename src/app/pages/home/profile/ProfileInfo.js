@@ -9,6 +9,7 @@ import ProfileDropdown from "../social/sections/ProfileDropdown";
 import FollowButton from "../social/sections/FollowButton";
 import ReadMore from '../components/ReadMore';
 import FollowingListModal from './FollowingListModal';
+import OpenPrivateMessageButton from './components/OpenPrivateMessage';
 
 const ProfileInfo = ({customer}) => {  
   const file=false;
@@ -59,6 +60,9 @@ const ProfileInfo = ({customer}) => {
   }
   const handleFollowingListClose = ()=>{
     setFollowingModalShow(false);
+  }
+  const openPrivateMessage = ()=>{
+
   }
   return (  
     <>
@@ -139,9 +143,7 @@ const ProfileInfo = ({customer}) => {
         {(check() && currentUser.type==="customer" && customer.id !== currentUser.customer.id)?
           <>
             <FollowButton customer={customer} />
-            <button className="btn btn-custom-secondary">
-              Message
-            </button>
+            <OpenPrivateMessageButton customer={customer}/>
             <ProfileDropdown />
           </>
           :

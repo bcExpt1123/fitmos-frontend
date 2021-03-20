@@ -10,9 +10,20 @@ import Message from './components/Message';
 import ChatService from '../../services/chat-service';
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { ChatLayoutUtil } from './helper/utils';
+import { editGroupDialog, setItemValue } from '../../redux/dialogs/actions';
+import { deleteMessage, updateMessageBody } from "../../redux/messages/actions";
+
 
 const Channel = ()=> {
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
+  let title;
+  if(selectedDialog){
+    if(selectedDialog.type==3){
+      title = selectedDialog.users[0].display;
+    }else{
+      title = selectedDialog.name;
+    }
+  }
   const clickDialog = ()=>{
 
   }
@@ -47,21 +58,24 @@ const Channel = ()=> {
     }
   }
   const handleResize = () => {
-    setScrollWidth(document.getElementById('chat-body').clientWidth);
-    setScrollHeight(document.getElementById('chat-body').clientHeight);
-    if (!timer) {
-      const dialog = selectedDialog;
-      const timerId = setTimeout(() => {
-        clearTimeout(timer)
-        setTimer(timer)
-        setIsAlready(true);
-        setLayoutProvider(ChatLayoutUtil.getChatLayoutProvider({
-          width: scrollWidth,
-          dialogId: dialog._id,
-          currentUserId: currentUser.chat_id
-        }));
-      }, 500)
-      setTimer(timerId)
+    const chatBody = document.getElementById('chat-body');
+    if(chatBody){
+      setScrollWidth(chatBody.clientWidth);
+      setScrollHeight(chatBody.clientHeight);
+      if (!timer) {
+        const dialog = selectedDialog;
+        const timerId = setTimeout(() => {
+          clearTimeout(timer)
+          setTimer(timer)
+          setIsAlready(true);
+          setLayoutProvider(ChatLayoutUtil.getChatLayoutProvider({
+            width: scrollWidth,
+            dialogId: dialog._id,
+            currentUserId: currentUser.chat_id
+          }));
+        }, 500)
+        setTimer(timerId)
+      }
     }
   }
   const scrollToBottom = () => {
@@ -88,7 +102,7 @@ const Channel = ()=> {
       />
     )
   }
-  const [amountMessages, setAmountMessages] = useState(false);
+  const [amountMessages, setAmountMessages] = useState(-1);
   const setDataProviders = (dialog, count)=>{
     if(dialog && messages[dialog._id]){
       count === 100 ? setNeedToGetMoreMessage(true) : setNeedToGetMoreMessage(false);
@@ -107,7 +121,7 @@ const Channel = ()=> {
     }
   }
   useEffect(()=>{
-    if(amountMessages){
+    if(amountMessages>-1){
       setDataProviders(selectedDialog, amountMessages);
     }
   },[amountMessages]);
@@ -139,20 +153,37 @@ const Channel = ()=> {
       updateScrollPosition();
     }
   },[updateScollPositionIndex]);
+  const editMessageState = useSelector(({dialog})=>dialog.editMessageState);
+  const selectedMessageId = useSelector(({dialog})=>dialog.selectedMessageId);
   const sendMessageCallback = async (messageText, img) => {
     const dialog = selectedDialog;
-    console.log(img);
     if (messageText.length <= 0 && !img) return
-    await ChatService.sendMessage(dialog, messageText, img, scrollToBottom)
+    if(editMessageState) {
+      dispatch(updateMessageBody(messageText));
+    }
+    else await ChatService.sendMessage(dialog, messageText, img, scrollToBottom)
+  }
+  const handleDocumentClick = (event)=>{
+    if(event.target.className == 'fal fa-ellipsis-v dropbtn'){
+      console.log(event.target.tagName);
+    }else{
+      dispatch(setItemValue({name:'openDropdownMenu', value:false}));
+    }
   }
   useEffect(()=>{
-    window.addEventListener('resize', handleResize);
-    setScrollWidth(document.getElementById('chat-body').clientWidth);
-    setScrollHeight(document.getElementById('chat-body').clientHeight);
+    setIsFetchingMsg(false);
     getDialogInfo();
     setIsAlready(true);
+    console.log(isAlready,isFetchingMsg);
+  },[selectedDialog]);
+  useEffect(()=>{
+    window.addEventListener('resize', handleResize);
+    window.addEventListener('click', handleDocumentClick);
+    setScrollWidth(document.getElementById('chat-body').clientWidth);
+    setScrollHeight(document.getElementById('chat-body').clientHeight);
     return ()=>{
-      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('click', handleDocumentClick);
     }
   },[]);
   useEffect(()=>{
@@ -160,14 +191,27 @@ const Channel = ()=> {
       const provider = dataProvider.cloneWithRows(messages[selectedDialog._id]);
       setDataProvider(provider);
     }    
-    console.log(messages);
   },[messages]);
   useEffect(()=>{
     updateScrollPosition();
   },[dataProvider]);
+  const editGroup = ()=>{
+    dispatch(editGroupDialog({route:'editGroup',backRouteEditDialog:'channel'}));
+  }
+  const top = useSelector(({dialog})=>dialog.selectedMessageTop);
+  const openDropdownMenu =  useSelector(({dialog})=>dialog.openDropdownMenu);
+  const actionLoading =  useSelector(({dialog})=>dialog.actionLoading);
+  const openEdit = ()=>{
+    dispatch(setItemValue({name:'editMessageState',value:true}));
+  }
+  const handleDelete = ()=>{
+    dispatch(deleteMessage());
+  }
   return (<ConnectyCubeWrapper>
     <div className="chat-container" >
-      <ChatHeader title="Chat"/>
+      <ChatHeader title={title}>
+        {selectedDialog.type==2&&<div className="participants" onClick={editGroup}>{selectedDialog.occupants_ids.length} participants</div>}
+      </ChatHeader>
       <div className="chat-body" id="chat-body">
         {isAlready && isFetchingMsg ?
           dataProvider._data.length > 0 &&
@@ -186,6 +230,17 @@ const Channel = ()=> {
                 lazyLoadMessages(elem, y)
               }}
             />
+            {selectedMessageId&&openDropdownMenu&&
+              <div className="chat-drop-down" style={{position:"absolute",top:top+'px',right:'5px'}}>
+                <a className={"dropdown-item"} onClick={openEdit}>Edit</a>
+                <a className={"dropdown-item"} onClick={handleDelete}>Remove</a>
+              </div>
+            }
+            {actionLoading&&
+              <div className="chat-action" style={{position:"absolute",top:top+'px',right:'5px'}}>
+                <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
+              </div>
+            }
           </> 
             :           
           <div className="dialog-loader vh-centered">
