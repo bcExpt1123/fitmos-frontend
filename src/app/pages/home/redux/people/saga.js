@@ -29,8 +29,9 @@ const getFriends = (date) =>{
 
 function* onFindFriends(){
   try {
-    const { people } = yield call(getFriends);
+    const { people, privateProfiles } = yield call(getFriends);
     yield put(setPeople({people}));
+    yield put(setItemValue({name:'privateProfiles', value:privateProfiles}));
   } catch (error) {
     // yield put(trackError(error));
   }

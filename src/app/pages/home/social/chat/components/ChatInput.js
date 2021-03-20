@@ -27,15 +27,18 @@ export default function({sendMessageCallback}) {
   const [showEmojis, setShowEmojis] = useState(false);
   const textRef = useRef();
   const emojiPicker = useRef(null);
-  const dialogUsers = useSelector(({dialog})=>dialog.selectedDialog.users);  
+  const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);  
+  const dialogUsers = selectedDialog.users;  
   let users = dialogUsers.map((user)=>({id:user.id, display:user.display}));
   users = [{id:0,display:'all'},...users];
   const filterPeople=(search, callback)=>{
-    if(search.length>1){
-      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search));
-      callback(filteredPeople.slice(0, 20));
-    }else{
-      callback(users.slice(0, 20));
+    if(selectedDialog.type===2){
+      if(search.length>1){
+        const filteredPeople = users.filter((customer)=> customer.display.toLowerCase().includes(search));
+        callback(filteredPeople.slice(0, 20));
+      }else{
+        callback(users.slice(0, 20));
+      }
     }
   }
   const handleSelectEmoji = emoji => {
@@ -95,7 +98,6 @@ export default function({sendMessageCallback}) {
   const editMessageState = useSelector(({dialog})=>dialog.editMessageState);
   const selectedMessageId = useSelector(({dialog})=>dialog.selectedMessageId);
   const messages = useSelector(({message})=>message);
-  const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   useEffect(()=>{
     if(editMessageState){
       if(selectedMessageId && selectedDialog){

@@ -13,6 +13,7 @@ import {
 const initialState = {
   customer:false,
   people:[],//tag following, mentions
+  privateProfiles:[],// private profiles except unfollow 
   // followers:[],
   popupCustomers:[],
   searchValue:"",

@@ -46,7 +46,9 @@ function* onFetchDialogs(){
     try{
       const result = yield call(ChatService.fetchDialogsFromServer);
       const items = result.items;
-      const customers = yield select(({people})=>people.people);
+      let customers = yield select(({people})=>people.people);
+      const privateProfiles = yield select(({people})=>people.privateProfiles);
+      customers = [...customers, ...privateProfiles];
       const currentUser = yield select(({auth})=>auth.currentUser);
       yield put(setItemValue({name:'actionLoading', value:false}));
       if(currentUser){

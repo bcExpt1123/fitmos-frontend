@@ -35,6 +35,7 @@ function* onUpdateMessageBody({payload}){
     yield put(setItemValue({name:'selectedMessageId', value:null}));
     yield put(setItemValue({name:'openDropdownMenu', value:false}));
     yield put(setItemValue({name:'actionLoading', value:false}));
+    yield put(setItemValue({name:'editMessageState', value:false}));
     yield put(updatedMessageBody({dialogId:selectedDialog._id,msgId:messageId, text:payload}))
   }
   catch(e){

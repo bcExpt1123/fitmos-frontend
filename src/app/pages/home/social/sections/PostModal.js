@@ -76,7 +76,12 @@ const PostModal = ({show, media, onClose }) => {
       dispatch(setItemValue({name:'modalPost',value:false}));
     }
   },[show]);
-  const handleClose = ()=>{
+  const handleClose = (e)=>{
+    console.log(e.target.tagName, e.target.className)
+    if(['VIDEO',"IMG",'BUTTON'].includes(e.target.tagName) 
+    || e.target.className.includes('video-react')
+    ) return;
+    e.preventDefault();
     dispatch(readingPost(post));
     setHidden(false);
     setActiveSlide(-1);

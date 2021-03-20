@@ -16,7 +16,9 @@ export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
 
   const [selectedImg, setSelectedImg] = useState(null);
 
-  const people = useSelector(({people})=>people.people);
+  let  people = useSelector(({people})=>people.people);
+  const privateProfiles = useSelector(({people})=>people.privateProfiles);
+  people = [...people,...privateProfiles];
 
   const sender = people.find(customer=>customer.chat_id == message.sender_id);
   const dispatch = useDispatch();
