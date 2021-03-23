@@ -6,6 +6,8 @@ import TwoColumn from "./layouts/Two";
 import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/actions";
 import Posts from "./social/sections/Posts";
 import ProfileInfo from "./profile/ProfileInfo";
+import SharingPostPopup from "./social/sections/SharingPostPopup";
+import LikersModal from "./social/sections/LikersModal";
 
 export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
@@ -34,6 +36,8 @@ export default function Customer({id}) {
             <ProfileInfo customer={username}/>
           </div>
           <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
+          <SharingPostPopup />
+          <LikersModal />
         </ThreeColumn>
         :
         <TwoColumn>

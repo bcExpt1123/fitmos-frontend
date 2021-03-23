@@ -27,15 +27,15 @@ class AuthService {
     // return authService.autologin()
   }
 
-  async autologin() {
-    // const checkUserSessionFromStore = await authService.getUserSession()
-    // if (checkUserSessionFromStore) {
-      //const data = JSON.parse(checkUserSessionFromStore)
-      const auth = store.getState().auth;
-      await authService.signIn({ login: auth.currentUser.id, password: auth.accessToken })
-    //   return 'home'
-    // } else { return 'auth' }
-  }
+  // async autologin() {
+  //   // const checkUserSessionFromStore = await authService.getUserSession()
+  //   // if (checkUserSessionFromStore) {
+  //     //const data = JSON.parse(checkUserSessionFromStore)
+  //     const auth = store.getState().auth;
+  //     await authService.signIn({ login: auth.currentUser.id, password: auth.accessToken })
+  //   //   return 'home'
+  //   // } else { return 'auth' }
+  // }
 
   async signIn(params, user) {
     try {

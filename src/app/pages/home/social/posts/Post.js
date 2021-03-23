@@ -4,6 +4,9 @@ import { useSelector, useDispatch } from "react-redux";
 import OneColumn from "../../layouts/One";
 import { findPost } from "../../redux/post/actions";
 import Post from "../sections/Post";
+import SharingPostPopup from "../sections/SharingPostPopup";
+import LikersModal from "../sections/LikersModal";
+
 const PostPage = ({match}) => {
   const dispatch = useDispatch();
   useEffect(()=>{
@@ -21,7 +24,11 @@ const PostPage = ({match}) => {
     <OneColumn>
       <div className="post-page newsfeed">
         {post&&
-          <Post post={post}/>
+          <>
+            <Post post={post}/>
+            <SharingPostPopup />
+            <LikersModal />
+          </>
         }
       </div>
     </OneColumn>

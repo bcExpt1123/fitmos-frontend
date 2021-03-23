@@ -5,7 +5,7 @@ import * as qs from 'query-string';
 import OneColumn from "./layouts/One";
 import { searchCustomers } from "./redux/people/actions";
 import SearchCustomers from "./social/sections/SearchCustomers";
-import useInfiniteScroll from "../../../lib/useInfiniteScroll";
+import { useInfiniteScroll } from "../../../lib/useInfiniteScroll";
 
 const SearchCustomersPage = () => {
   const dispatch = useDispatch();

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "./Post";
-import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
+import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
 import ViewableMonitor from '../../components/ViewableMonitor';

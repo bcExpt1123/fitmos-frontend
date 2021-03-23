@@ -12,6 +12,7 @@ import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
 import RenderModalMedia from "./RenderModalMedia";
+import ShareDropDown from "./ShareDropDown";
 import {findPost, createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
 const PostModal = ({show, media, onClose }) => {
   const post = useSelector(({post})=>post.post);
@@ -118,11 +119,12 @@ const PostModal = ({show, media, onClose }) => {
       }
     }
   };
+  const sharingPostStart = useSelector(({post})=>post.sharingPostStart);
   useEffect(()=>{
-    if(hidden){
-      
+    if(sharingPostStart){
+      onClose();
     }
-  },[hidden])
+  },[sharingPostStart])
   const sliderRef = useRef();
   const sliderContainerRef = useRef();
   const commentContainer = useRef();
@@ -161,9 +163,7 @@ const PostModal = ({show, media, onClose }) => {
                     <span><i className={classnames("fa-heart cursor-pointer",{like:post.like,far:!post.like,fas:post.like} )}  onClick={handleLike}/> {post.likesCount}</span>
                     <span><i className="far fa-comment" /> {post.commentsCount}</span>
                   </div>
-                  <div className="share">
-                    <i className="fal fa-paper-plane" />
-                  </div>
+                  <ShareDropDown post={post} />
                 </div>
                 <div className="post-comments" ref={commentContainer}>
                   {post.comments.length>0&&post.comments.map(comment=>

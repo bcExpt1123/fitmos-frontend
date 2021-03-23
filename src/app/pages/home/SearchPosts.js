@@ -5,7 +5,10 @@ import * as qs from 'query-string';
 import OneColumn from "./layouts/One";
 import { searchPosts } from "./redux/people/actions";
 import SearchPosts from "./social/sections/SearchPosts";
-import useInfiniteScroll from "../../../lib/useInfiniteScroll";
+import { useInfiniteScroll } from "../../../lib/useInfiniteScroll";
+import SharingPostPopup from "./social/sections/SharingPostPopup";
+import LikersModal from "./social/sections/LikersModal";
+
 const Search = () => {
   const dispatch = useDispatch();
   useEffect(()=>{
@@ -40,6 +43,8 @@ const Search = () => {
           <SearchPosts posts = {posts} />
         </div>
       </div>
+      <SharingPostPopup />
+      <LikersModal />
     </OneColumn>
   </>
 };

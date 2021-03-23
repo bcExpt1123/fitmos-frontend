@@ -7,6 +7,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
+import ShareDropDown from "./ShareDropDown";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
 
@@ -122,6 +123,11 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
   //     setMediasHeight(w/width*height);
   //   }
   // }
+  const openLikersModal = ()=>{
+    if(post.likesCount>0){
+      dispatch(setItemValue({name:"likersOpenSetting", value:{show:true,activityId:post.activity_id}}));
+    }
+  }
   return (
       <ViewableMonitor visibleChange = {visibleChange} threshold={0.3}>
         {isViewable =>
@@ -203,12 +209,12 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           </div>
           <div className="post-footer">
             <div className="likes">
-              <span><i className={classnames(" fa-heart cursor-pointer",{like:post.like,fas:post.like,far:post.like==false} )}  onClick={handleLike}/>&nbsp;&nbsp;&nbsp;{post.likesCount}</span>
+              <span><i className={classnames(" fa-heart cursor-pointer",{like:post.like,fas:post.like,far:post.like==false} )}  onClick={handleLike}/>&nbsp;&nbsp;&nbsp;
+                <span className={classnames({"cursor-pointer":post.likesCount>0})} onClick={openLikersModal}>{post.likesCount}</span>
+              </span>
               <span><i className="far fa-comment" />&nbsp;&nbsp;&nbsp;{post.commentsCount}</span>
             </div>
-            <div className="share">
-              <i className="fal fa-paper-plane" />
-            </div>
+            <ShareDropDown post={post} />
           </div>
           <div className="post-comments">
             {(post.previousCommentsCount>0) && 

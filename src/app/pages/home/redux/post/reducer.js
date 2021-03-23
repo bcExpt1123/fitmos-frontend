@@ -52,6 +52,10 @@ const initialState = {
   videoPlayerModalMode:false,
   videoPlayerOpenModal:false,
   videoPlayerOpenCurrentTime:{id:-1, time:0},
+  openShareCustomers:false,
+  selectedPostId:null,
+  sharingPostStart:false,
+  likersOpenSetting:{show:false, activityId:null}
 };
 // const containsPost = (posts, post)=>{
 //   posts.every(item=>item.id == post.id)
@@ -61,7 +65,8 @@ const reducer = persistReducer(
     storage,
     key: "post",
     blacklist:['suggested','newsfeedTopVisible','oldNewsfeedTopVisible','suggestedPosts','suggestedPostsLastId','suggestedPostsLast','suggestedPostsTopVisible',
-    'customerPostsTopVisible','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime']
+    'customerPostsTopVisible','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime'
+    ,'openShareCustomers','sharingPostStart','likersOpenSetting']
   },
   handleActions(
     {

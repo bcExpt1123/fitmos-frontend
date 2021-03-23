@@ -19,6 +19,7 @@ const AddUsers = ()=>{
   const [moreUsers, setMoreUsers] = useState([]);
   const dialogs = useSelector(({dialog})=>dialog.dialogs);
   const people = useSelector(({people})=>people.people);
+  const privateProfiles = useSelector(({people})=>people.privateProfiles);
   const groupName = useSelector(({dialog})=>dialog.groupName);
   const path = useSelector(({dialog})=>dialog.backRouteAddUsers);
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
@@ -36,7 +37,9 @@ const AddUsers = ()=>{
     }
     const users = userIds.map(chat_id=>{
       const user = people.find(customer=>chat_id==customer.chat_id);
-      return user;
+      if(user)return user;
+      const privateUser = privateProfiles.find(customer=>chat_id==customer.chat_id);
+      return privateUser;
     }).filter(customer=> {if(customer && customer.id)return customer});
     setOriginalContactedUsers(users);
     setContactedUsers(users);
@@ -47,7 +50,7 @@ const AddUsers = ()=>{
       setMoreUsers([]);
       return;
     }
-    const contactedCustomers = originalContactedUsers.filter(customer=>customer.display.includes(str) || customer.username.includes(str));
+    const contactedCustomers = originalContactedUsers.filter(customer=>customer.display.toLowerCase().includes(str.toLowerCase()) || customer.username.toLowerCase().includes(str.toLowerCase()));
     setContactedUsers(contactedCustomers);
     if (str.length > 0) {
       setIsLoader(true);
@@ -57,7 +60,7 @@ const AddUsers = ()=>{
         if(customer.user_id == currentUser.id) return false;
         if( customer.chat_id === null )return false;
         if( selectedDialog && selectedDialog.occupants_ids.includes(customer.chat_id)) return false;
-        return (customer.display.includes(str) || customer.username.includes(str));
+        return (customer.display.toLowerCase().includes(str.toLowerCase()) || customer.username.toLowerCase().includes(str.toLowerCase()));
       });
       setMoreUsers(moreCustomers);
       setIsLoader(false);

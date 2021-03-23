@@ -4,33 +4,10 @@ import classnames from "classnames";
 import { Tab, Tabs, Modal } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
 import Avatar from "../components/Avatar";
+import CustomerInfo from "./components/CustomerInfo";
 import { unfollow, accept, reject, showFollows, appendFollows } from "../redux/notification/actions";
 import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";
-
-const useInfiniteScrollContainer = (callback,target) => {
-  const [isFetching, setIsFetching] = useState(false);
-
-  useEffect(() => {
-    if(target.current)target.current.addEventListener('scroll', handleScroll);
-    return () => {if(target.current)target.current.removeEventListener('scroll', handleScroll)};
-  },[target,target.current]);
-
-  useEffect(() => {
-    if (!isFetching) return;
-    callback(() => {
-      console.log('called back');
-    });
-  }, [isFetching,callback]);
-
-  function handleScroll() {
-    if (target.current.offsetHeight + target.current.scrollTop !== target.current.scrollHeight 
-      || isFetching) return;
-    setIsFetching(true);
-  }
-
-  return [isFetching, setIsFetching];
-};
-
+import { useInfiniteScrollContainer } from "../../../../lib/useInfiniteScroll";
 
 const NoRecords = ()=>
   <div style={{display:'flex',alignItems: 'center',justifyContent: 'center',height:"200px"}}>
@@ -97,13 +74,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                     to={"/"+following.customer.username}
                     className={"link-profile"}
                   >
-                    <div className="avatar">
-                      <Avatar pictureUrls={following.customer.avatarUrls} size="xs" />
-                    </div>
-                    <div className="info">
-                      <div className="full-name">{following.customer.first_name} {following.customer.last_name}</div>
-                      <div className="username">{following.customer.username}</div>
-                    </div>
+                    <CustomerInfo customer={following.customer} />
                   </NavLink>
                   {following.status === 'pending'&&<>
                     <div>
@@ -134,13 +105,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                   to={"/"+follower.follower.username}
                   className={"link-profile"}
                 >
-                  <div className="avatar">
-                    <Avatar pictureUrls={follower.follower.avatarUrls} size="xs" />
-                  </div>
-                  <div className="info">
-                    <div className="full-name">{follower.follower.first_name} {follower.follower.last_name}</div>
-                    <div className="username">{follower.follower.username}</div>
-                  </div>
+                  <CustomerInfo customer={follower.follower} />
                 </NavLink>
                 {follower.status === 'pending'&&<div>
                   <button className="btn btn-custom-secondary accept" onClick={handleAccept(follower.id)} disabled={buttonDisabled}>Accept</button>

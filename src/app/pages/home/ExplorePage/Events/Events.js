@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import MetaTags from "react-meta-tags";
 import { $frontPage, $fetchFrontIndex } from "../../../../../modules/subscription/evento";
-import useInfiniteScroll from "../../../../../lib//useInfiniteScroll";
+import { useInfiniteScroll } from "../../../../../lib//useInfiniteScroll";
 
 const EventsPage = () => {
   const dispatch = useDispatch();

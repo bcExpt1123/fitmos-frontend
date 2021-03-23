@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Chip } from '@material-ui/core';
-import Avatar from "../../components/Avatar";
+import CustomerInfo from "../../profile/components/CustomerInfo";
 
 const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers, setTagFollowers, onClose}) => {
   /** tag */
@@ -58,17 +58,7 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
               <ul>
                 {searchCustomers.map((customer)=>
                   <li key={customer.id} className="cursor-pointer" onClick={handleClickSearchCustomers(customer)}>
-                    <div className="avatar">
-                      <Avatar
-                        pictureUrls={customer.avatarUrls}
-                        size="xs"
-                        className={"userAvatar"}
-                      />
-                    </div>
-                    <div className="info">
-                      <div className="full-name">{customer.first_name} {customer.last_name}</div>
-                      <div className="username">{customer.username}</div>
-                    </div>
+                    <CustomerInfo customer={customer} />
                   </li>
                 )}
               </ul>

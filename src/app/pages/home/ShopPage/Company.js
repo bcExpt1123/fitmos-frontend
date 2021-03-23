@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import SectionProduct from "./SectionProduct";
 import { $fetchFrontIndex, $frontPage,$cleanCompanyId } from "../../../../modules/subscription/product";
-import useInfiniteScroll from "../../../../lib/useInfiniteScroll";
+import { useInfiniteScroll } from "../../../../lib/useInfiniteScroll";
 
 
 const Company = ({id}) => {

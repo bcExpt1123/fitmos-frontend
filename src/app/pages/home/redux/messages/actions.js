@@ -20,6 +20,7 @@ export const {
   updatedMessageBody,
   deleteMessage,
   deletedMessage,
+  sharePost,
 } = createActions(
   "SET_ITEM_VALUE",
   "PUSH_MESSAGE",
@@ -31,5 +32,6 @@ export const {
   "UPDATED_MESSAGE_BODY",
   "DELETE_MESSAGE",
   "DELETED_MESSAGE",
+  "SHARE_POST",
   { prefix: "MESSAGE" }
 );

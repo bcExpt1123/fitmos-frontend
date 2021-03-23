@@ -9,6 +9,7 @@ import {
   sortDialogs,
   deleteDialog,
   createdDialog,
+  addPostMessageIds
 } from "./actions";
 
 const initialState = {
@@ -26,12 +27,14 @@ const initialState = {
   actionLoading:false,
   listLoading:true,// dialog list change
   selectedMessageTop:100,
+  postMessageIds:[],
+  postMessageCount:0,
 };
 const reducer = persistReducer(
   {
     storage,
     key: "dialogs",
-    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading' ],
+    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading','postMessageIds' ],
   },
   handleActions(
     {
@@ -90,6 +93,15 @@ const reducer = persistReducer(
         return {...state, dialogs:filteredDialogs}              
       },
       [createdDialog]:(state,{payload})=>({...state, selectedDialog:payload,route:'channel',groupName:''}),
+      [addPostMessageIds]:(state,{payload})=>{
+        if(payload){
+          let ids = state.postMessageIds;        
+          if(!state.postMessageIds.includes(payload))ids = [...ids, payload];
+          return {...state,postMessageIds:ids,postMessageCount:state.postMessageCount+1}
+        }else{
+          return state;
+        }
+      }
     },
     initialState
   )

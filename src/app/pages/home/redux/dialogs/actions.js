@@ -21,6 +21,8 @@ export const {
   deleteDialog,
   updateGroupName,
   selectedDialog,  
+  addPostMessageIds,
+  pulling,
 } = createActions(
   "SET_ITEM_VALUE",
   "ADD_NEW_DIALOG",
@@ -37,5 +39,7 @@ export const {
   "DELETE_DIALOG",
   "UPDATE_GROUP_NAME",
   "SELECTED_DIALOG",
+  "ADD_POST_MESSAGE_IDS",
+  "PULLING",
   { prefix: "DIALOG" }
 );

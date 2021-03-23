@@ -68,6 +68,13 @@
         margin-right: 10px;        
       }
     }
+    &>div{
+      &>div{
+        &>div>div{
+          width:400px;
+        }
+      }
+    }
   }
   .chat-no-selected-dialog{
     display: flex;
@@ -159,8 +166,8 @@
   i.fal.fa-ellipsis-v{
     position: absolute;
     top: 20px;
-    right: 5px;
-    display:none;
+    right: 15px;
+    visibility: hidden;
     width: 20px;
     height: 20px;
     cursor: pointer;
@@ -168,7 +175,7 @@
   }
   &:hover{
     i.fal.fa-ellipsis-v{
-      display:block;
+      visibility: visible;
     }
   }
 }
@@ -179,12 +186,12 @@
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 15px;
-  background-color: #435f7a;
+  background-color:white;
   align-items: center;
   margin: 10px 0 10px 0;
   padding: 5px;
   &>span {
-    color: #f5f5f5;
+    color: #435f7a;
     font-weight: 100;
     padding: 0 5px;
     font-size: 16px;

@@ -6,6 +6,8 @@ import Sticky from "wil-react-sticky";
 import ThreeColumn from "./layouts/Three";
 import { findNewsfeed, appendNewsfeedAfter, appendSuggestedPosts, convertOldNewsfeed, appendOldNewsfeed, setItemValue } from "./redux/post/actions";
 import Posts from "./social/sections/Posts";
+import SharingPostPopup from "./social/sections/SharingPostPopup";
+import LikersModal from "./social/sections/LikersModal";
 import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
 
 export default function Newsfeed() {
@@ -90,6 +92,8 @@ export default function Newsfeed() {
             {<Posts posts={oldPosts} last={oldLast} dispatchAction={dispatchOldAction}  show={false} newsfeed={true} suggested={true} topMonitor={"oldNewsfeed"}/>}
           </>
         }
+        <SharingPostPopup />
+        <LikersModal />
       </ThreeColumn>
     </>
   );

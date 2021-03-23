@@ -12,6 +12,7 @@ import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { ChatLayoutUtil } from './helper/utils';
 import { editGroupDialog, setItemValue } from '../../redux/dialogs/actions';
 import { deleteMessage, updateMessageBody } from "../../redux/messages/actions";
+import { convertTimeSeconds } from "../../../../../lib/common";
 
 
 const Channel = ()=> {
@@ -79,10 +80,20 @@ const Channel = ()=> {
     }
   }
   const scrollToBottom = () => {
-    if (messagesListRef && messagesListRef.current && false) {
-      messagesListRef.current.scrollToIndex(dataProvider._data.length - 1, false)
+    if (messagesListRef && messagesListRef.current) {
+      console.log(messagesListRef.current);
+      // messagesListRef.current.scrollToOffset(0,1000);
     }
   }
+  const [extendedState, setExtendedState] = useState({ids:[],count:0});
+  const postMessageIds = useSelector(({dialog})=>dialog.postMessageIds);
+  const count = useSelector(({dialog})=>dialog.postMessageCount);
+  useEffect(()=>{
+    setTimeout(()=>setExtendedState({ids:postMessageIds,count}),400);
+  },[postMessageIds,count])
+  useEffect(()=>{ 
+    setUpdateScollPositionIndex(updateScollPositionIndex+1)    
+  },[extendedState]);
   const _renderMessage = (type, item) => {
     // 1 - current sender & 2 - other sender
     const whoIsSender = currentUser.chat_id === item.sender_id ? 1 : 2
@@ -97,6 +108,7 @@ const Channel = ()=> {
       <Message
         whoIsSender={whoIsSender}
         message={item}
+        extendedState={extendedState}
         notRenderAvatar={notRenderAvatar}
         widthScroll={scrollWidth}
       />
@@ -142,7 +154,7 @@ const Channel = ()=> {
     if(chatBody.children.length>0 && chatBody.children[0].children.length && chatBody.children[0].children[0].children.length>0){
       const getElement = document.getElementById('chat-body').children[0].children[0].children[0].style.height;
       const fullScrollHeight = getElement.slice(0, getElement.length - 2)
-      const newOffset = recyclerY + (fullScrollHeight - contentHeight)
+      const newOffset = recyclerY + (fullScrollHeight - contentHeight);
       messagesListRef.current.scrollToOffset(0, newOffset);
     }else{
       setTimeout(()=>setUpdateScollPositionIndex(updateScollPositionIndex+1), 100);
@@ -211,6 +223,7 @@ const Channel = ()=> {
     <div className="chat-container" >
       <ChatHeader title={title}>
         {selectedDialog.type==2&&<div className="participants" onClick={editGroup}>{selectedDialog.occupants_ids.length} participants</div>}
+        {selectedDialog.type==3&&<div className="participants">{selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
       </ChatHeader>
       <div className="chat-body" id="chat-body">
         {isAlready && isFetchingMsg ?
@@ -226,9 +239,12 @@ const Channel = ()=> {
               dataProvider={dataProvider}
               layoutProvider={layoutProvider}
               rowRenderer={_renderMessage}
+              extendedState={extendedState}
+              forceNonDeterministicRendering={true}
               onScroll={(elem, x, y) => {
                 lazyLoadMessages(elem, y)
               }}
+              onViewContainerSizeChange={(dim, index)=>{console.log('OnRecreateParams',dim)}}
             />
             {selectedMessageId&&openDropdownMenu&&
               <div className="chat-drop-down" style={{position:"absolute",top:top+'px',right:'5px'}}>

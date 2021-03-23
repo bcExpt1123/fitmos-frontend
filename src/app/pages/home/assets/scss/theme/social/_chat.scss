@@ -52,6 +52,10 @@ $fitemos-chat-panel: (
   &.modal.show{
     display: contents !important;
   }
+  .modal-dialog{
+    width: 0;
+    height: 0;
+  }
   .notification-title{
     margin: 10px 30px;
     font-size: 20px;
@@ -119,7 +123,7 @@ $fitemos-chat-panel: (
     h3{
       display: inline-block;
       text-align: center;
-      width: 90%;
+      width: 60%;
     }
     .participants{
       white-space: nowrap;
@@ -368,5 +372,10 @@ $fitemos-chat-panel: (
       display: block;
       margin: auto;
     }
+  }
+}
+@media (max-width: 767px){
+  .fitemos-chat-panel {
+    width: 100% !important;
   }
 }

@@ -1,0 +1,14 @@
+.likers-modal{
+  .likers{
+    min-height: 100px;
+    max-height: 150px;
+    overflow-y: auto;
+    overflow-x: hidden;      
+  }
+  .dialog-loader{
+    height:30px;
+    img{
+      height:30px;
+    }
+  }
+}

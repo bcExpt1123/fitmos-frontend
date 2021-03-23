@@ -4,7 +4,7 @@ import {
   sortDialogs,
   updateDialog,
   addNewDialog,
-  selectedDialog,
+  pulling,
   DIALOG_TYPE
 } from '../redux/dialogs/actions';
 import {
@@ -38,6 +38,7 @@ class ChatService {
     const dataUser = { login:auth.currentUser.id, password:auth.accessToken }
     await AuthService.init();
     await AuthService.signIn(dataUser, auth.currentUser);
+    store.dispatch(pulling(auth.currentUser.chat_id));
   }
   async fetchDialogsFromServer() {
     let dialogsFromServer;
@@ -124,7 +125,14 @@ class ChatService {
   }
 
 
-  async sendMessage(dialog, messageText, attachments = false, scrollToBottom) {
+  async sendMessage(dialog, messageText, attachments = false, scrollToBottom=undefined) {
+    const service = ConnectyCube.service;    
+    if(service && service.sdkInstance.session){
+      const token = service.sdkInstance.session.token;
+      console.log(token);
+    }else{
+      await chatService.autologin();
+    }
     const auth = store.getState().auth;
     const user = auth.currentUser;
     const text = messageText.trim()
@@ -156,7 +164,7 @@ console.log(msg, dialog);
     const newObjFreez = Object.freeze(message)
 
     await store.dispatch(pushMessage({dialogId:dialog._id,message:newObjFreez} ))
-    scrollToBottom()
+    if(scrollToBottom)scrollToBottom()
     ConnectyCube.chat.send(recipient_id, msg)
     store.dispatch(sortDialogs({message:newObjFreez}))
   }
@@ -265,28 +273,30 @@ console.log(msg, dialog);
   }
 
   async onMessageListener(senderId, msg) {
-    console.log(msg)
-    const message = new Message(msg)
-    const auth = store.getState().auth;
-    const user = auth.currentUser;
-    const selectedDialog = store.getState().dialog.selectedDialog;
-    const dialog = selectedDialog?._id
-    // If group chat alet
-    if (msg.extension.group_chat_alert_type) {
-      store.dispatch(fetchDialogs(true))
-      return
-    }
-    console.log(senderId, user.chat_id,senderId !== user.chat_id)
-    if (senderId !== user.chat_id) {
-      if (dialog === message.dialog_id) {
-        store.dispatch(sortDialogs({message}))
-        chatService.readMessage(message.id, message.dialog_id)
-        chatService.sendReadStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
-      } else {
-        chatService.sendDeliveredStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
-        store.dispatch(sortDialogs({message,count:true}))
+    if(msg.body){
+      console.log(msg)
+      const message = new Message(msg)
+      const auth = store.getState().auth;
+      const user = auth.currentUser;
+      const selectedDialog = store.getState().dialog.selectedDialog;
+      const dialog = selectedDialog?._id
+      // If group chat alet
+      if (msg.extension.group_chat_alert_type) {
+        store.dispatch(fetchDialogs(true))
+        return
       }
-      store.dispatch(pushMessage({dialogId:message.dialog_id,message} ))
+      console.log(senderId, user.chat_id,senderId !== user.chat_id)
+      if (senderId !== user.chat_id) {
+        if (dialog === message.dialog_id) {
+          store.dispatch(sortDialogs({message}))
+          chatService.readMessage(message.id, message.dialog_id)
+          chatService.sendReadStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
+        } else {
+          chatService.sendDeliveredStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
+          store.dispatch(sortDialogs({message,count:true}))
+        }
+        store.dispatch(pushMessage({dialogId:message.dialog_id,message} ))
+      }
     }
   }
 
@@ -361,7 +371,8 @@ console.log(msg, dialog);
     await ConnectyCube.chat.dialog.delete(id);
   }
   async deleteMessage(id){
-    await ConnectyCube.chat.message.delete([id], {})
+    const params = {force:1}
+    await ConnectyCube.chat.message.delete([id], params)
   }
   async updateMessage(dialogId, id, messageText){
     const params = {
@@ -371,6 +382,9 @@ console.log(msg, dialog);
       chat_dialog_id: dialogId,
     };    
     await ConnectyCube.chat.message.update([id], params)
+  }
+  async getLastUserActivity(userId){
+    return await ConnectyCube.chat.getLastUserActivity(userId);
   }
 }
 

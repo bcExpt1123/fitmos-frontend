@@ -89,14 +89,14 @@ const ListDialog = ()=> {
               {dialogs.map(dialog=>
                 <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
                   <div className="kt-notification-v2__item-icon">
-                    {dialog.type==3 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
+                    {dialog.type==3 && dialog.users && dialog.users[0] && dialog.users[0].avatarUrls && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
                     {/* {dialog.type==2 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>} */}
                   </div>
                   <div className="kt-notification-v2__itek-wrapper">
                     <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>
                       <div className="info-left">
                         <h5>
-                          {dialog.type==3 && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
+                          {dialog.type==3 && dialog.users && dialog.users[0] && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
                           {dialog.type==2 && <>{dialog.name}</>}
                         </h5>
                         <span>{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>

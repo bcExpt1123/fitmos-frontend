@@ -71,6 +71,27 @@ const convertTime = (timeString)=>{
     return (now.getFullYear() - other.getFullYear()) + "y";
   }
 }
+const convertTimeSeconds = (diffTime)=>{
+  const now = new Date();
+  const other =  now.setTime(now.getTime() - diffTime * 1000);
+  if(diffTime<1800){
+    return "";
+  }else if(diffTime<3600){
+    return "Last seen "+Math.round(diffTime/60)+"m ago";
+  }else if(diffTime<3600*24){
+    return "Last seen "+Math.round(diffTime/3600)+"h ago";
+  }else if(diffTime<3600*24*30){
+    return "Last seen "+Math.round(diffTime/3600/24)+"d ago";
+  }else if(diffTime<3600*24*365){
+    let months;
+    months = (now.getFullYear() - other.getFullYear()) * 12;
+    months -= other.getMonth();
+    months += now.getMonth();    
+    return "Last seen "+months+"M ago";
+  }else{
+    return (now.getFullYear() - other.getFullYear()) + "y ago";
+  }
+}
 const can = (currentUser,permission)=>{
   if(currentUser.type==='admin'&&currentUser.role!=='super'){
     return currentUser.permissions.indexOf(permission)>-1;
@@ -114,4 +135,14 @@ export function getTime(dateSent) {
   return `${(hours > 9) ? hours : ('0' + hours)}:${(minutes > 9) ? minutes : ('0' + minutes)}`
 }
 
-export {once, colonsToUnicode, convertTime, can, lastDate};
+export function getRandomSubarray(arr, size) {
+  var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;
+  while (i-- > min) {
+      index = Math.floor((i + 1) * Math.random());
+      temp = shuffled[index];
+      shuffled[index] = shuffled[i];
+      shuffled[i] = temp;
+  }
+  return shuffled.slice(min);
+}
+export {once, colonsToUnicode, convertTime,convertTimeSeconds, can, lastDate};

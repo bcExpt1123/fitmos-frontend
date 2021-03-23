@@ -31,10 +31,11 @@ export default function({sendMessageCallback}) {
   const dialogUsers = selectedDialog.users;  
   let users = dialogUsers.map((user)=>({id:user.id, display:user.display}));
   users = [{id:0,display:'all'},...users];
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   const filterPeople=(search, callback)=>{
     if(selectedDialog.type===2){
       if(search.length>1){
-        const filteredPeople = users.filter((customer)=> customer.display.toLowerCase().includes(search));
+        const filteredPeople = users.filter((customer)=> customer.display.toLowerCase().includes(search.toLowerCase()));
         callback(filteredPeople.slice(0, 20));
       }else{
         callback(users.slice(0, 20));
@@ -61,11 +62,24 @@ export default function({sendMessageCallback}) {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [emojiPicker]);
+  const [blocked, setBlocked] = useState(false)
+  useEffect(()=>{
+    if(selectedDialog.type===3 && currentUser.customer.blockedChatIds && currentUser.customer.blockedChatIds.length>0){
+      if(currentUser.customer.blockedChatIds && currentUser.customer.blockedChatIds.includes(selectedDialog.users[0].chat_id)){
+        setBlocked(true);
+        if(textRef.current)textRef.current.disabled=true;
+      }
+      else {
+        setBlocked(false);
+        if(textRef.current)textRef.current.disabled=false;
+      }
+    }
+  },[currentUser.customer.blockedChatIds]);
   useEffect(()=>{
     if(textRef.current){
       textRef.current.focus();
       textRef.current.setSelectionRange(textRef.current.value.length,textRef.current.value.length);
-    }
+    }    
   },[]);
   const renderPeopleSuggestion = (entry, search, highlightedDisplay, index, focused)=>{
     return <div className={classnames("mention-customers",{focused:focused})}>
@@ -123,7 +137,7 @@ export default function({sendMessageCallback}) {
           onKeyDown={handleEnterPress}
           inputRef={textRef}
           className="mentions"
-          placeholder="Leave a messageText..."
+          placeholder={blocked?"Blocked":"Leave a messageText..."}
           allowSuggestionsAboveCursor={true}
         >
           <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion} displayTransform = {(id, display)=>{return '@' + display}}/>
@@ -152,7 +166,7 @@ export default function({sendMessageCallback}) {
         <div className="chat-attachment">
           {/* <ImagePicker pickAsAttachment getImage={getImage} /> */}
         </div>
-        <button className="send" onClick={sendMessage}>
+        <button className="send" onClick={sendMessage} disabled={blocked}>
           <i className="fas fa-paper-plane" />
         </button>
       </form>

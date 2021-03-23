@@ -1,0 +1,35 @@
+.sharing-post-popup{
+  .search-field{
+    margin-left: 12px;
+    border: 1px solid rgba($basic-text-color, 0.5);
+    border-radius: 20px;
+    padding:5px 10px;
+    .search{
+      border: 0;
+      outline: none;
+      width:90%;
+    }  
+  }
+  .filtered-customers{
+    min-height: 250px;
+    .avatar{
+      display: inline-block;
+      margin: 5px;
+      vertical-align: top;
+    }
+    .info{
+      display: inline-block;
+      margin-top: 2px;
+      .full-name{
+        width: 300px;
+        white-space: nowrap;
+        overflow: hidden;              
+        text-overflow: ellipsis;
+      }
+      .username{
+        margin-top: -3px;
+        color:rgba($basic-text-color, 0.5);
+      }
+    }
+  }
+}

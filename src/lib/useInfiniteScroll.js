@@ -26,5 +26,29 @@ const useInfiniteScroll = (callback,last) => {
 
   return [isFetching, setIsFetching];
 };
+const useInfiniteScrollContainer = (callback,target) => {
+  const [isFetching, setIsFetching] = useState(false);
 
-export default useInfiniteScroll;
+  useEffect(() => {
+    if(target.current)target.current.addEventListener('scroll', handleScroll);
+    return () => {if(target.current)target.current.removeEventListener('scroll', handleScroll)};
+  },[target,target.current]);
+
+  useEffect(() => {
+    if (!isFetching) return;
+    callback(() => {
+      console.log('called back');
+    });
+  }, [isFetching,callback]);
+
+  function handleScroll() {
+    if (target.current.offsetHeight + target.current.scrollTop !== target.current.scrollHeight 
+      || isFetching) return;
+    setIsFetching(true);
+  }
+
+  return [isFetching, setIsFetching];
+};
+
+
+export { useInfiniteScroll, useInfiniteScrollContainer };

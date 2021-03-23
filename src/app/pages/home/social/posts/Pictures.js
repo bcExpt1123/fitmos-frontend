@@ -7,7 +7,7 @@ import { appendCustomerPostMediasAfter} from "../../redux/post/actions";
 import {findUsername, setItemValue} from "../../redux/people/actions";
 import ClickableMedia from "../sections/ClickableMedia";
 import PostModal from "../sections/PostModal";
-import useInfiniteScroll from "../../../../../lib/useInfiniteScroll";
+import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
 
 const PicturesPage = () => {
   const match = matchPath(window.location.pathname, {

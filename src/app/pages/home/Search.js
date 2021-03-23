@@ -8,6 +8,9 @@ import { searchAll } from "./redux/people/actions";
 import SearchCustomers from "./social/sections/SearchCustomers";
 import SearchCompanies from "./social/sections/SearchCompanies";
 import SearchPosts from "./social/sections/SearchPosts";
+import SharingPostPopup from "./social/sections/SharingPostPopup";
+import LikersModal from "./social/sections/LikersModal";
+
 const Search = () => {
   const dispatch = useDispatch();
   const [keyword, setKeyword] = useState("");
@@ -82,6 +85,8 @@ const Search = () => {
           <SearchPosts posts = {results.posts} keyword = {keyword}/>
         </div>
       </div>
+      <SharingPostPopup />
+      <LikersModal />
     </OneColumn>
   </>
 };

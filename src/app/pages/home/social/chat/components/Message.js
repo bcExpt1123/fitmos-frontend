@@ -9,7 +9,7 @@ import { GetMaxWidthMsg } from '../helper/utils';
 import Line from './DisplayLine';
 import { setItemValue } from "../../../redux/dialogs/actions";
 
-export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
+function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScroll}) {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   // 1 - current & 2 - other
   const [isModal, setIsModal] = useState(false);
@@ -51,7 +51,7 @@ export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
     } else {
       return (
         <>
-          <span style={{ wordWrap: 'break-word' }}><Line line={message.body} /></span>
+          <span style={{ wordWrap: 'break-word' }}><Line line={message.body} messageId={message.id}/></span>
           <div className="chat-message-left-footer">
             <span>{getTime(message.date_sent)}</span>
           </div>
@@ -152,3 +152,6 @@ export default function({message, whoIsSender, notRenderAvatar, widthScroll}) {
     </>
   )
 }
+export default React.memo(Message, (props, nextProps) => {
+  if(!nextProps.extendedState.ids.includes(nextProps.message.id))return true;
+});
