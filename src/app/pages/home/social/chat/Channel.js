@@ -96,7 +96,7 @@ const Channel = ()=> {
   },[extendedState]);
   const _renderMessage = (type, item) => {
     // 1 - current sender & 2 - other sender
-    const whoIsSender = currentUser.chat_id === item.sender_id ? 1 : 2
+    const whoIsSender = currentUser.chat_id == item.sender_id ? 1 : 2
     let notRenderAvatar = null
 
     if (type > 0 && whoIsSender !== 1 &&

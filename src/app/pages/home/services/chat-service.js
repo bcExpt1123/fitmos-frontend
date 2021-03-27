@@ -3,7 +3,6 @@ import {
   fetchDialogs,
   sortDialogs,
   updateDialog,
-  addNewDialog,
   pulling,
   DIALOG_TYPE
 } from '../redux/dialogs/actions';
@@ -249,7 +248,6 @@ console.log(msg, dialog);
     let dialog;
     try{
       dialog = await ConnectyCube.chat.dialog.create(params)
-      store.dispatch(addNewDialog(dialog));
     }catch(e){
       console.log(e) 
     }

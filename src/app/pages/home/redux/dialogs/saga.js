@@ -1,7 +1,9 @@
 import { call, takeLeading, select,put, delay, race } from "redux-saga/effects";
 import {
   setItemValue,
+  addNewDialog,
   createDialog,
+  createdDialog,
   fetchDialogs,
   updateDialog,
   sortDialogs,
@@ -218,8 +220,24 @@ function* onPulling({payload}){
     }
   }  
 }
+function* onAddNewDialog({payload}){
+  let customers = yield select(({people})=>people.people);
+  const privateProfiles = yield select(({people})=>people.privateProfiles);
+  customers = [...customers, ...privateProfiles];
+  const currentUser = yield select(({auth})=>auth.currentUser);
+  payload.users = payload.occupants_ids.map(chat_id=>{
+    const user = customers.find(customer=>chat_id==customer.chat_id);
+    return user;
+  }).filter(customer=> {if(customer && customer.id && currentUser.customer.id!=customer.id)return customer});
+  payload.owner = payload.users.find(customer=> {return(customer && customer.id && payload.user_id!=customer.id)});
+  let dialogs = yield select(({dialog})=>dialog.dialogs);
+  dialogs = [payload, ...dialogs];
+  yield put(setItemValue({name:'dialogs',value:dialogs}))
+  yield put(createdDialog(payload));
+}
 export default function* rootSaga() {
   yield takeLeading(createDialog,onCreateDialog);
+  yield takeLeading(addNewDialog,onAddNewDialog);
   yield takeLeading(fetchDialogs,onFetchDialogs);
   yield takeLeading(updateGroupName, onUpdateGroupName);
   yield takeLeading(leaveGroupDialog, onLeaveGroupDialog);

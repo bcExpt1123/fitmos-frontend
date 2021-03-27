@@ -236,6 +236,7 @@ $fitemos-chat-panel: (
     }
     .create-dialog-body-selected-users{
       display: flex;
+      height:67px;
       button{
         outline: none;
         border: 0;
@@ -371,6 +372,30 @@ $fitemos-chat-panel: (
       height: 50px;
       display: block;
       margin: auto;
+    }
+  }
+  .dialogs-header{
+    text-align: right;
+    padding: 10px;
+    i{
+      color:#B9B7B7;
+      margin-right: 10px;
+    }
+    .search-controls{
+      margin-left: 70px;
+      text-align: left;
+      input{
+        border-radius: 4px;
+        padding:10px;
+        border: 1px solid rgba($secondary-background-color, 0.8);
+        outline: none;
+        &:focus{
+          border:1px solid rgba($secondary-background-color, 1);
+        }
+      }
+      .search-close{
+        padding: 5px;
+      }
     }
   }
 }

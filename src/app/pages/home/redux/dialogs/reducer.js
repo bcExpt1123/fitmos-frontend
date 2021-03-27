@@ -46,10 +46,6 @@ const reducer = persistReducer(
         ...state,
         [name]:value
       }),
-      [addNewDialog]:(state,{payload})=>({
-        ...state,
-        dialogs:[payload,...state.dialogs]
-      }),
       [updateDialog]:(state,{payload})=>{
         const alreadyUpdatedDialog = state.dialogs.map(elem => {
           if (elem._id === payload._id) {

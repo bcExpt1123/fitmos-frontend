@@ -3,7 +3,7 @@ import ChatHeader from "./ChatHeader";
 import classnames from "classnames";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
-import { setItemValue, updateDialog, createdDialog, addedUsersDialog } from "../../redux/dialogs/actions"; 
+import { setItemValue, addNewDialog, createdDialog, addedUsersDialog } from "../../redux/dialogs/actions"; 
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import ChatService from "../../services/chat-service";
 import { useSelector, useDispatch } from "react-redux";
@@ -97,6 +97,7 @@ const AddUsers = ()=>{
       .then((newDialog) => {
         setIsLoader(false);
         ChatService.sendChatAlertOnCreate(newDialog)
+        dispatch(addNewDialog(newDialog));
         dispatch(createdDialog(newDialog));
       })
       .catch((error) => {

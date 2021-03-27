@@ -89,18 +89,18 @@ const ProfileOverlay = (props) => {//setUploadImage
     }
   }
   const _crop=()=>{
-    if (typeof cropperRef.current.getCroppedCanvas() !== 'undefined') {
+    if (cropperRef.current && cropperRef.current.cropper) {
       onCroped(
-        cropperRef.current
+        cropperRef.current.cropper
       );
     }
   }
   const onCrop = () => {
-    if (typeof cropperRef.current.getCroppedCanvas() !== 'undefined') {
+    if (typeof cropperRef.current.cropper.getCroppedCanvas() !== 'undefined') {
       onDropChange({
         ...dropState,
-        result: cropperRef.current.getCroppedCanvas().toDataURL(dropState.filetype),
-        cropper:cropperRef.current
+        result: cropperRef.current.cropper.getCroppedCanvas().toDataURL(dropState.filetype),
+        cropper:cropperRef.current.cropper
       });
     }
   };

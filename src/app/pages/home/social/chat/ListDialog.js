@@ -16,6 +16,8 @@ const ListDialog = ()=> {
     dispatch(setItemValue({name:'route',value:'channel'}));
   }
   const dispatch = useDispatch();
+  const dialogs = useSelector(({dialog})=>dialog.dialogs);
+  const [filteredDialgos, setFilteredDialogs] = useState([]);
   useEffect(()=>{
     dispatch(fetchDialogs());
     dispatch(setItemValue({name:'selectedDialog',value:null}));
@@ -37,10 +39,12 @@ const ListDialog = ()=> {
       document.removeEventListener("contextmenu", handleContextMenu);
     }
   },[]);
-  const dialogs = useSelector(({dialog})=>dialog.dialogs);
+  useEffect(()=>{
+    if(dialogs.length>0)setFilteredDialogs(dialogs);
+  },[dialogs]);
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const newDialog = ()=>{
-    dispatch(setItemValue({name:'route',value:'new'}));
+    dispatch(setItemValue({name:'route',value:'newPrivate'}));
   }
   const newGroupDialog = ()=>{
     dispatch(setItemValue({name:'groupName',value:''}));
@@ -53,6 +57,35 @@ const ListDialog = ()=> {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const contextMenuWrapper = useRef();
   const actionLoading = useSelector(({dialog})=>dialog.actionLoading);
+  const [searchFieldShow, setSearchFieldShow] = useState(false);
+  const searchFieldDisplay=()=>{
+    setSearchFieldShow(!searchFieldShow);
+  }
+  useEffect(()=>{
+    if(searchFieldShow) searchRef.current.focus();
+  },[searchFieldShow])
+  const searchFieldClose=()=>{
+    setSearchFieldShow(false);
+    setSearchValue("");
+  }
+  const [searchValue, setSearchValue] = useState("");
+  const handleSearchValue = (evt)=>{
+    setSearchValue(evt.target.value);
+    if(evt.target.value!=""){
+      const filtered = dialogs.filter(dialog=>{
+        const users = dialog.users.filter(customer=>customer.display.toLowerCase().includes(evt.target.value.toLowerCase()));
+        if(users.length>0) return true;
+        if(dialog.type==2){
+          return dialog.name.toLowerCase().includes(evt.target.value.toLowerCase());
+        }
+        return false;
+      });
+      setFilteredDialogs(filtered);
+    }else{
+      setFilteredDialogs(dialogs);
+    }
+  }
+  const searchRef = useRef();
   return (
     <ConnectyCubeWrapper>
       <PerfectScrollbar
@@ -66,7 +99,16 @@ const ListDialog = ()=> {
         }}
       >
         {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
-        <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button>
+        <div className="dialogs-header">
+          <i className="cursor-pointer fal fa-search"  onClick={searchFieldDisplay}/>
+          <i className="cursor-pointer fal fa-plus-circle"  onClick={newDialog}/>
+          <i className="cursor-pointer fal fa-user-friends"  onClick={newGroupDialog}/>
+          {searchFieldShow && <div className="search-controls">
+              <input className="" value={searchValue} onChange={handleSearchValue} ref={searchRef}/>
+              <button className="search-close btn" onClick={searchFieldClose}>Cancel</button>
+            </div>}
+        </div>
+        {/* <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button> */}
         <div className="kt-notification-v2 list-dialogs" ref={contextMenuWrapper}>
         { 
           actionLoading?
@@ -74,7 +116,7 @@ const ListDialog = ()=> {
               <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
             </div>
           :
-          (dialogs.length === 0)?
+          (filteredDialgos.length === 0)?
             <div className="notification-title">
               No Chats
             </div>              
@@ -86,7 +128,7 @@ const ListDialog = ()=> {
               }
               </ViewableMonitor> */}
             
-              {dialogs.map(dialog=>
+              {filteredDialgos.map(dialog=>
                 <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
                   <div className="kt-notification-v2__item-icon">
                     {dialog.type==3 && dialog.users && dialog.users[0] && dialog.users[0].avatarUrls && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
