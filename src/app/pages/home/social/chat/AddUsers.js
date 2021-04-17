@@ -71,6 +71,7 @@ const AddUsers = ()=>{
   useEffect(()=>{
     searchUsers();
   },[keyword]);
+  const img = useSelector(({dialog})=>dialog.groupImage);
   const saveDialog = () => {
     let str = groupName.trim()
     if (str.length < 3) {
@@ -93,7 +94,8 @@ const AddUsers = ()=>{
       })
     }else{
       //create group dialog
-      ChatService.createPublicDialog(occupants_ids, str, null)
+      const newImage = img?img.file:null;
+      ChatService.createPublicDialog(occupants_ids, str, newImage)
       .then((newDialog) => {
         setIsLoader(false);
         ChatService.sendChatAlertOnCreate(newDialog)

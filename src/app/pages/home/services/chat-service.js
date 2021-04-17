@@ -20,6 +20,7 @@ import { preparationAttachment } from '../social/chat/helper/utils';
 import AuthService from './chat-auth';
 import store from '../../../store/store';
 import { Message, FakeMessage } from '../social/chat/models/Message';
+import { getSpanishDate } from '../../../../lib/common';
 
 class ChatService {
 
@@ -51,6 +52,7 @@ class ChatService {
   }
 
   async getMessages(dialog) {
+    console.log("getMessages", dialog)
     const isAlredyUpdate = chatService.getMessagesByDialogId(dialog._id)
     let amountMessages = null
 
@@ -60,28 +62,39 @@ class ChatService {
       try{
         historyFromServer = await ConnectyCube.chat.message.list({
           chat_dialog_id: dialog._id,
-          sort_desc: 'date_sent'
+          sort_desc: 'date_sent',
+          limit:21,
         })
       }catch(e){
         await chatService.autologin();
         historyFromServer = await ConnectyCube.chat.message.list({
           chat_dialog_id: dialog._id,
-          sort_desc: 'date_sent'
+          sort_desc: 'date_sent',
+          limit:21,
         })
       }
 
-      const messages = []
-      historyFromServer.items.forEach(elem => {
-        if (!elem.group_chat_alert_type) {
+      const messages = [];
+      historyFromServer.items.forEach((elem, index) => {
+        if (!elem.group_chat_alert_type && index<20) {
           const auth = store.getState().auth;
           messages.push(new Message(elem, auth.currentUser.chat_id))
+          if(historyFromServer.items[index+1]!=undefined){
+            if(getSpanishDate(elem.date_sent)!=getSpanishDate(historyFromServer.items[index+1].date_sent)){
+              const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+              messages.push(new Message(dateElem, -1))
+            }
+          }else{
+            const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+            messages.push(new Message(dateElem, -1))
+          }
         }
       })
 
       const newObj = Object.assign(dialog, { isAlreadyMessageFetch: true })
       chatService.updateDialogsUnreadMessagesCount(newObj)
       store.dispatch(fetchMessages({dialogId:dialog._id,history:messages}));
-      amountMessages = messages.length
+      amountMessages = historyFromServer.items.length
     } else {
       // If the second entry into the chat
       if (dialog.unread_messages_count > 0) {
@@ -91,13 +104,14 @@ class ChatService {
         await chatService.sendReadStatus(firstUnreadMsg.id, firstUnreadMsg.sender_id, firstUnreadMsg.dialog_id)
         chatService.updateDialogsUnreadMessagesCount(dialog)
       }
-      amountMessages = isAlredyUpdate.length
+      if(isAlredyUpdate && isAlredyUpdate.length)amountMessages = isAlredyUpdate.length
+      else amountMessages = 0;
     }
     return amountMessages
   }
 
   // Message loading if more than 100
-  getMoreMessages = async (dialog) => {
+  async getMoreMessages(dialog){
     const currentMessages = chatService.getMessagesByDialogId(dialog._id)
     const lastMessageDate = currentMessages[0]
     const updateObj = Object.assign(dialog, { last_messages_for_fetch: lastMessageDate.date_sent })
@@ -105,22 +119,32 @@ class ChatService {
     const filter = {
       chat_dialog_id: dialog._id,
       date_sent: { lt: lastMessageDate.date_sent },
-      sort_desc: 'date_sent'
+      sort_desc: 'date_sent',
+      limit:21,
     }
 
     const moreHistoryFromServer = await ConnectyCube.chat.message.list(filter)
 
     const messages = []
-    moreHistoryFromServer.items.forEach(elem => {
-      if (!elem.group_chat_alert_type) {
+    moreHistoryFromServer.items.forEach((elem, index) => {
+      if (!elem.group_chat_alert_type && index<20) {
         const auth = store.getState().auth;
         messages.push(new Message(elem, auth.currentUser.chat_id))
+        if(moreHistoryFromServer.items[index+1]!=undefined){
+          if(getSpanishDate(elem.date_sent)!=getSpanishDate(moreHistoryFromServer.items[index+1].date_sent)){
+            const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+            messages.push(new Message(dateElem, -1))
+          }
+        }else{
+          const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+          messages.push(new Message(dateElem, -1))
+        }
       }
     })
 
     store.dispatch(updateDialog(updateObj))
-    const amountMessages = store.dispatch(lazyFetchMessages({dialogId:dialog._id,history:messages}))
-    return amountMessages.history.length
+    store.dispatch(lazyFetchMessages({dialogId:dialog._id,history:messages}))
+    return moreHistoryFromServer.items.length
   }
 
 
@@ -205,8 +229,8 @@ console.log(msg, dialog);
 
     // create real data for attachment
     const response = await chatService.uploadPhoto(attachments)
-    // const newObjAttach = preparationAttachment(response)
-    // msg.extension.attachments = [newObjAttach]
+    const newObjAttach = preparationAttachment(response)
+    msg.extension.attachments = [newObjAttach]
     await ConnectyCube.chat.send(recipient_id, msg)
     store.dispatch(sortDialogs({message}))
     return
@@ -233,7 +257,7 @@ console.log(msg, dialog);
       occupants_ids,
       name: groupName,
     }
-    const image = img ? await this.uploadPhoto(img) : null
+    const image = img ? await chatService.uploadPhoto(img) : null
     if (image) {
       params.photo = image.uid
     }
@@ -353,6 +377,10 @@ console.log(msg, dialog);
   }
   async updateDialogName(dialogId, name){
     const toUpdateParams = { name };
+    return await ConnectyCube.chat.dialog.update(dialogId, toUpdateParams);
+  }
+  async updateDialogPhoto(dialogId, photo){
+    const toUpdateParams = { photo };
     return await ConnectyCube.chat.dialog.update(dialogId, toUpdateParams);
   }
   async addUsersDialogs(id, occupants_ids){

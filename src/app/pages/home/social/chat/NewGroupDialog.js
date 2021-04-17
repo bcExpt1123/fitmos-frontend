@@ -8,17 +8,26 @@ import { setItemValue } from "../../redux/dialogs/actions";
 const NewGroupDialog = ()=>{
   const groupName = useSelector(({dialog})=>dialog.groupName);
   const dispatch = useDispatch();
-  const [image, setImage] =  useState(false);
   const changeDialogName = (event) => (dispatch(setItemValue({name:"groupName",value:event.target.value})));
   const nextScreen=() =>{
     dispatch(setItemValue({name:"route",value:"addUsers"}));
     dispatch(setItemValue({name:"backRouteAddUsers",value:"newGroup"}));
   }
+  const img = useSelector(({dialog})=>dialog.groupImage);
   const onUpload = (cropper)=>{
     cropper.getCroppedCanvas().toBlob((blob) => {
-      const cropedImage = new File([blob], "image");
-      console.log(cropedImage);
-      setImage(cropedImage);
+      const cropedImage = new File([blob], "image.jpg", { type: 'image/jpeg' });
+      const image = {
+        file:{
+          size: cropedImage.size,
+          type: cropedImage.type,
+          file: cropedImage,
+          name: 'croped_image.jpg',
+          public: false
+        },
+        url: URL.createObjectURL(blob)
+      }
+      dispatch(setItemValue({name:'groupImage',value:image}));
     });
 
   }
@@ -28,7 +37,7 @@ const NewGroupDialog = ()=>{
         <ChatHeader title="New Group Chat"/>
       <div className="create-dialog-body">
         <div className="create-dialog-body-groupinfo">
-          {/* <ImagePicker onUpload={onUpload}/> */}
+          {img?<ImagePicker onUpload={onUpload} url={img.url}/>:<ImagePicker onUpload={onUpload}/>}
           <div className="form-wrapper">
             <input
               type="text"

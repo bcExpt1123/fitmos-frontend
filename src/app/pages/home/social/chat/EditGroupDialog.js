@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import ChatHeader from "./ChatHeader";
-import { updateGroupName, setItemValue, leaveGroupDialog } from "../../redux/dialogs/actions"; 
+import ImagePicker from "./components/ImagePicker";
+import { updateGroupName, setItemValue, leaveGroupDialog, updateGroupDialogImage } from "../../redux/dialogs/actions"; 
 import { Remove } from '@material-ui/icons';
+import { getImageLinkFromUID } from './helper/utils';
 
 const EditGroupDialog = ()=>{
   const groupName = useSelector(({dialog})=>dialog.groupName);
@@ -24,12 +26,26 @@ const EditGroupDialog = ()=>{
   const removeUser = (user)=>()=>{
     dispatch(leaveGroupDialog(user));
   }
+  const onUpload = (cropper)=>{
+    cropper.getCroppedCanvas().toBlob((blob) => {
+      const cropedImage = new File([blob], "image.jpg", { type: 'image/jpeg' });
+      const image = {
+        size: cropedImage.size,
+        type: cropedImage.type,
+        file: cropedImage,
+        name: 'croped_image.jpg',
+        public: false
+      }
+      dispatch(updateGroupDialogImage(image));
+    });
+
+  }
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
       <ChatHeader title="Edit Group Chat" path={path}/>
       <div className="create-dialog-body">
         <div className="create-dialog-body-groupinfo">
-          {/* <ImagePicker getImage={this.getImage} /> */}
+          <ImagePicker onUpload={onUpload} url={getImageLinkFromUID(selectedDialog.photo)} />
           <div className="form-wrapper">
             {editShow ?<>
                 <div className="group-name">

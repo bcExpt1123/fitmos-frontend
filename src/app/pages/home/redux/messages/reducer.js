@@ -14,13 +14,7 @@ import {
 
 const initialState = {
 };
-const reducer = persistReducer(
-  {
-    storage,
-    key: "messages",
-    blacklist:[],
-  },
-  handleActions(
+const reducer = handleActions(
     {
       "@@INIT": state => ({
         ...initialState,
@@ -100,6 +94,5 @@ const reducer = persistReducer(
       },
     },
     initialState
-  )
-);
+  );
 export default reducer;

@@ -10,7 +10,7 @@ import AddUsers from "./AddUsers";
 import Channel from "./Channel";
 import ConnectyCubeWrapper from "./components/ConnectyCubeWrapper";
 
-const ChatPanel = ({show})=> {
+const Panel = ({show})=> {
   const dispatch = useDispatch();
   const route = useSelector(({dialog})=>dialog.route);
   return (
@@ -48,4 +48,4 @@ const ChatPanel = ({show})=> {
     </ConnectyCubeWrapper> 
   );
 }
-export default ChatPanel;
+export default Panel;

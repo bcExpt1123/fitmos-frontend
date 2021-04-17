@@ -3,11 +3,11 @@ import React, {useEffect, useState, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { fetchDialogs, setItemValue } from "../../redux/dialogs/actions"; 
-import Avatar from "../../components/Avatar";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import {lastDate} from "../../../../../lib/common";
 import ContextMenu from './components/ContextMenu';
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import { getImageLinkFromUID } from './helper/utils';
 
 
 const ListDialog = ()=> {
@@ -86,6 +86,16 @@ const ListDialog = ()=> {
     }
   }
   const searchRef = useRef();
+  const lastActivityClassName = (diffTime)=>{
+    const className = "fas fa-circle";
+    if(diffTime<1800){
+      return className + " online";  
+    }
+    if(diffTime<3600){
+      return className;
+    }
+    return className + " offline";
+  }
   return (
     <ConnectyCubeWrapper>
       <PerfectScrollbar
@@ -131,8 +141,11 @@ const ListDialog = ()=> {
               {filteredDialgos.map(dialog=>
                 <span className="kt-notification-v2__item cursor-pointer" key={dialog._id} onClick={()=>clickDialog(dialog)} onContextMenu={handleContextMenu(dialog)}>
                   <div className="kt-notification-v2__item-icon">
-                    {dialog.type==3 && dialog.users && dialog.users[0] && dialog.users[0].avatarUrls && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
-                    {/* {dialog.type==2 && <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>} */}
+                    {dialog.type==3 && dialog.users && dialog.users[0] && dialog.users[0].avatarUrls && <>
+                      <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>
+                      {dialog.last_activity&&<i className={lastActivityClassName(dialog.last_activity)} />}
+                    </>}
+                    {dialog.type==2 && dialog.photo && <img src={getImageLinkFromUID(dialog.photo)} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
                   </div>
                   <div className="kt-notification-v2__itek-wrapper">
                     <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>
@@ -141,7 +154,7 @@ const ListDialog = ()=> {
                           {dialog.type==3 && dialog.users && dialog.users[0] && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
                           {dialog.type==2 && <>{dialog.name}</>}
                         </h5>
-                        <span>{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>
+                        <span className="last-message">{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>
                       </div>
                       <div className="info-right">
                         <p>{lastDate({
@@ -149,8 +162,9 @@ const ListDialog = ()=> {
                           lastMessage: dialog.last_message || '',
                           updatedDate: Date.parse(dialog.updated_at) || Date.now(),
                         })}</p>
-                        {dialog.unread_messages_count > 0 &&
-                          <span>{dialog.unread_messages_count}</span>
+                        {dialog.unread_messages_count > 0 ?
+                          <span className="unread-message">{dialog.unread_messages_count}</span>
+                          :<span>&nbsp;</span>
                         }
                       </div>
                     </div>

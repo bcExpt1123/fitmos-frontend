@@ -66,20 +66,20 @@ export class ChatLayoutUtil {
 export class GetMaxWidthMsg {
   constructor(maxScrollWidth) {
     if (maxScrollWidth < 550) {
-      this.currentSender = 300
-      this.otherSender = 250
+      this.currentSender = 330
+      this.otherSender = 330
     }
     if (maxScrollWidth > 550 && maxScrollWidth < 768) {
-      this.currentSender = 420
-      this.otherSender = 470
-    }
-    if (maxScrollWidth > 768 && maxScrollWidth < 960) {
-      this.currentSender = 450
+      this.currentSender = 500
       this.otherSender = 500
     }
+    if (maxScrollWidth > 768 && maxScrollWidth < 960) {
+      this.currentSender = 530
+      this.otherSender = 530
+    }
     if (maxScrollWidth > 960) {
-      this.currentSender = 650
-      this.otherSender = 600
+      this.currentSender = 630
+      this.otherSender = 630
     }
   }
 }
@@ -88,7 +88,12 @@ export function getImageLinkFromUID(uid) {
   if (!uid) {
     return null
   }
-  return ConnectyCube.storage.privateUrl(uid)
+  try{
+    if(ConnectyCube && ConnectyCube.storage)return ConnectyCube.storage.privateUrl(uid);
+  }catch(error){
+    console.log(error);
+  }
+  return null;
 }
 
 

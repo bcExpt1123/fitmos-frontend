@@ -23,6 +23,7 @@ export const {
   updateGroupName,
   selectedDialog,  
   addPostMessageIds,
+  updateGroupDialogImage,
   pulling,
 } = createActions(
   "SET_ITEM_VALUE",
@@ -42,6 +43,7 @@ export const {
   "UPDATE_GROUP_NAME",
   "SELECTED_DIALOG",
   "ADD_POST_MESSAGE_IDS",
+  "UPDATE_GROUP_DIALOG_IMAGE",
   "PULLING",
   { prefix: "DIALOG" }
 );

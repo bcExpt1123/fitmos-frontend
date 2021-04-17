@@ -1,19 +1,22 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid,no-undef */
 import React, { useState, useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
+import classnames from "classnames";
 import { RecyclerListView, DataProvider } from "recyclerlistview/web";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
-import Avatar from "../../components/Avatar";
 import ChatHeader from "./ChatHeader";
 import ChatInput from './components/ChatInput';
 import Message from './components/Message';
 import ChatService from '../../services/chat-service';
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { ChatLayoutUtil } from './helper/utils';
-import { editGroupDialog, setItemValue } from '../../redux/dialogs/actions';
+import { editGroupDialog, setItemValue, deleteGroupDialog } from '../../redux/dialogs/actions';
 import { deleteMessage, updateMessageBody } from "../../redux/messages/actions";
+import { mute, unmute } from "../../redux/notification/actions";
 import { convertTimeSeconds } from "../../../../../lib/common";
-
+import { getImageLinkFromUID } from './helper/utils';
+import DropDown from "../../components/DropDown";
 
 const Channel = ()=> {
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
@@ -24,9 +27,6 @@ const Channel = ()=> {
     }else{
       title = selectedDialog.name;
     }
-  }
-  const clickDialog = ()=>{
-
   }
   const [isAlready, setIsAlready] = useState(false);
   const [isFetchingMsg, setIsFetchingMsg] = useState(false);
@@ -39,7 +39,6 @@ const Channel = ()=> {
   const [recyclerY, setRecyclerY] = useState(0);
   const [contentHeight, setContentHeight] = useState(0);
   const messages = useSelector(({message})=>message);
-  const users = [];
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const [dataProvider, setDataProvider] = useState(()=>new DataProvider((r1, r2) => {
     return r1 !== r2 || r1.send_state !== r2.send_state
@@ -49,11 +48,12 @@ const Channel = ()=> {
   const lazyLoadMessages = (elem, y) => {
     setRecyclerY(y);
     setContentHeight(elem.nativeEvent.contentSize.height);
-    if (listenerLazyLoad && needToGetMoreMessage && y < 2000) {
+    console.log(listenerLazyLoad , needToGetMoreMessage , y < 20)
+    if (listenerLazyLoad && needToGetMoreMessage && y < 20) {
       setListenerLazyLoad(false);
       ChatService.getMoreMessages(selectedDialog)
         .then(amountMessages => {
-          amountMessages === 100 ? setNeedToGetMoreMessage(true) : setNeedToGetMoreMessage(false);
+          amountMessages === 21 ? setNeedToGetMoreMessage(true) : setNeedToGetMoreMessage(false);
           setListenerLazyLoad(true);
         })
     }
@@ -81,7 +81,6 @@ const Channel = ()=> {
   }
   const scrollToBottom = () => {
     if (messagesListRef && messagesListRef.current) {
-      console.log(messagesListRef.current);
       // messagesListRef.current.scrollToOffset(0,1000);
     }
   }
@@ -96,7 +95,8 @@ const Channel = ()=> {
   },[extendedState]);
   const _renderMessage = (type, item) => {
     // 1 - current sender & 2 - other sender
-    const whoIsSender = currentUser.chat_id == item.sender_id ? 1 : 2
+    let whoIsSender = currentUser.chat_id == item.sender_id ? 1 : 2;
+    if(item.sender_id === -1)whoIsSender = 0;
     let notRenderAvatar = null
 
     if (type > 0 && whoIsSender !== 1 &&
@@ -117,7 +117,7 @@ const Channel = ()=> {
   const [amountMessages, setAmountMessages] = useState(-1);
   const setDataProviders = (dialog, count)=>{
     if(dialog && messages[dialog._id]){
-      count === 100 ? setNeedToGetMoreMessage(true) : setNeedToGetMoreMessage(false);
+      count === 21 ? setNeedToGetMoreMessage(true) : setNeedToGetMoreMessage(false);
       setIsFetchingMsg(true);
       setLayoutProvider(ChatLayoutUtil.getChatLayoutProvider({
         width: scrollWidth,
@@ -127,7 +127,7 @@ const Channel = ()=> {
       const provider = dataProvider.cloneWithRows(messages[dialog._id]);
       setDataProvider(provider);
       scrollToBottom();
-      setListenerLazyLoad(false);
+      setListenerLazyLoad(true);
     }else{
       setAmountMessages(count);
     }
@@ -219,11 +219,59 @@ const Channel = ()=> {
   const handleDelete = ()=>{
     dispatch(deleteMessage());
   }
+  let avatar;
+  if(selectedDialog.type==2){
+    avatar = getImageLinkFromUID(selectedDialog.photo);
+  }else if(selectedDialog.type==3){
+    avatar = selectedDialog.users[0].avatarUrls['small'];
+  }
+  const history = useHistory();
+  const viewProfile = ()=>{
+    history.push('/'+ selectedDialog.owner.username);
+  }
+  const handleMute = ()=>{
+    dispatch(mute(selectedDialog.owner.id));
+  }
+  const handleUnmute = ()=>{
+    dispatch(unmute(selectedDialog.owner.id));
+  }
+  const deleteChat = ()=>{
+    dispatch(deleteGroupDialog({id:currentUser.chat_id}));
+    dispatch(setItemValue({name:'route',value:'list'}));
+    dispatch(setItemValue({name:'selectedDialog', value:null}));
+  }
   return (<ConnectyCubeWrapper>
     <div className="chat-container" >
-      <ChatHeader title={title}>
-        {selectedDialog.type==2&&<div className="participants" onClick={editGroup}>{selectedDialog.occupants_ids.length} participants</div>}
-        {selectedDialog.type==3&&<div className="participants">{selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
+      <ChatHeader avatar = {avatar}>
+        <div className="chat-title">
+          <h3>{title}</h3>
+          {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participants</div>}
+          {selectedDialog.type==3&&<div className="participants">{selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
+        </div>
+        <DropDown>
+          {({show,toggleHandle,setShow})=>(
+            <div className=" dropdown">
+              <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
+                <i className="far fa-bars" />
+                
+              </button>
+              <div className={classnames("dropdown-menu dropdown-menu-right" ,{showmenu:show})}>
+                {selectedDialog.type==3&&<a className={"dropdown-item"} onClick={viewProfile}>View Profile</a>}
+                {selectedDialog.type==3&&<>
+                  {selectedDialog.owner.relation == 'muted'?<a className={"dropdown-item"} onClick={handleMute}>Unmute</a>
+                  :
+                  <a className={"dropdown-item"} onClick={handleUnmute}>Mute</a>}
+                </>}
+                {selectedDialog.type==2&&<>{
+                  selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Delete Chat</a>
+                  :
+                  <a className={"dropdown-item"} onClick={editGroup}>Manage Dialog</a>
+                }
+                </>}
+              </div>
+            </div>  
+          )}    
+        </DropDown>        
       </ChatHeader>
       <div className="chat-body" id="chat-body">
         {isAlready && isFetchingMsg ?

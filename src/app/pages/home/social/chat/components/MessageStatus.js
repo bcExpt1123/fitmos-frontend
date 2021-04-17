@@ -10,14 +10,14 @@ import {
 export default function MessageSendState({ send_state }) {
   switch (send_state) {
     case STATUS_PENDING:
-      return (<i className="far fa-clock" color='grehy'/>)
+      return (<i className="far fa-clock message-status-pending" color='grey'/>)
     case STATUS_SENT:
-      return (<i className="far fa-check" color='grehy'/>)
+      return (<i className="far fa-check message-status-sent" color='grey'/>)
     case STATUS_DELIVERED:
-      return (<i className="far fa-check-double" color='grehy'/>)
+      return (<i className="far fa-check-double message-status-delivered" color='grey'/>)
     case STATUS_READ:
-      return (<i className="far fa-check-double" color='#27ae60'/>)
+      return (<i className="far fa-check-double message-status-read" color='#27ae60'/>)
 
-    default: return (<i className="far fa-clock" color='white'/>)
+    default: return (<i className="far fa-clock message-status-default" color='white'/>)
   }
 }

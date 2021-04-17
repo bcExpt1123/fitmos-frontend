@@ -37,7 +37,7 @@ import LevelPage from "./Level";
 import SubscriptionTabs from "./Subscriptions";
 import NewsfeedPage from "./Newsfeed";
 import LeaderboardPage from "./Leaderboard";
-import Customer from "./Customer";
+// import Customer from "./Customer";
 import SearchPage from "./Search";
 import SearchCustomersPage from "./SearchCustomers";
 import SearchCompaniesPage from "./SearchCompanies";
@@ -99,7 +99,7 @@ export default function HomePage() {
         <Route exact path="/posts/:id" component={SocialPostPage} />
         <Route exact path="/eventos" component={Events} />
         <Route exact path="/eventos/:id" component={Event} />
-        <Route exact path="/:username" component={UsernamePage} />
+        {/* <Route exact path="/chat" component={ChatPage} /> */}
         <Route exact path="/:username/pictures" component={ProfilePicturesPage} />        
       </Switch>
     </Suspense>

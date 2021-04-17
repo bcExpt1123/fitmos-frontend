@@ -134,6 +134,18 @@ export function getTime(dateSent) {
   const minutes = date.getMinutes()
   return `${(hours > 9) ? hours : ('0' + hours)}:${(minutes > 9) ? minutes : ('0' + minutes)}`
 }
+export function getSpanishDate(dateSent) {
+  const date = dateSent ? new Date(dateSent * 1000) : new Date()
+  var options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };    
+  const today = (new Date()).toLocaleDateString('es-ES', options);
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayString = yesterday.toLocaleDateString('es-ES', options);
+  const dateString = date.toLocaleDateString('es-ES', options);
+  if(today === dateString) return "hoy";
+  if(yesterdayString === dateString) return "ayer";
+  return dateString;
+}
 
 export function getRandomSubarray(arr, size) {
   var shuffled = arr.slice(0), i = arr.length, min = i - size, temp, index;

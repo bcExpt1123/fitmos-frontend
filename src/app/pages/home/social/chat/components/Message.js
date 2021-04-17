@@ -1,16 +1,13 @@
 import React, { useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
-import classnames from "classnames";
 import { getTime } from '../../../../../../lib/common';
-import Avatar from '../../../components/Avatar';
 import MessageSendState from './MessageStatus';
 import { GetMaxWidthMsg } from '../helper/utils';
 import Line from './DisplayLine';
 import { setItemValue } from "../../../redux/dialogs/actions";
 
-function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScroll}) {
-  const currentUser = useSelector(({auth})=>auth.currentUser);
+function Message({message, whoIsSender, widthScroll}) {
   // 1 - current & 2 - other
   const [isModal, setIsModal] = useState(false);
 
@@ -19,7 +16,7 @@ function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScr
   let  people = useSelector(({people})=>people.people);
   const privateProfiles = useSelector(({people})=>people.privateProfiles);
   people = [...people,...privateProfiles];
-
+  const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   const sender = people.find(customer=>customer.chat_id == message.sender_id);
   const dispatch = useDispatch();
   const selectMessage=()=>{
@@ -36,7 +33,7 @@ function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScr
             <Line line={message.body} />
             <i className="fal fa-ellipsis-v dropbtn"  ref={rightMenuRef} onClick={selectMessage}/>
           </span>
-          <div className="chat-message-right-footer">
+          <span className="chat-message-right-footer">
             <span>
               <>
                 {getTime(message.date_sent)}
@@ -45,16 +42,16 @@ function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScr
                 {<MessageSendState send_state={message.send_state} />}
               </>
             </span>
-          </div>
+          </span>
         </>
       )
     } else {
       return (
         <>
           <span style={{ wordWrap: 'break-word' }}><Line line={message.body} messageId={message.id}/></span>
-          <div className="chat-message-left-footer">
+          <span className="chat-message-left-footer">
             <span>{getTime(message.date_sent)}</span>
-          </div>
+          </span>
         </>
       )
     }
@@ -124,34 +121,36 @@ function Message({message, whoIsSender, extendedState, notRenderAvatar, widthScr
         </Modal>
       }
       <div className="chat-message-layout">
-        {whoIsSender === 1 ?
-          <div className="chat-message-wrap chat-message-wrap-right">
-            <div style={{ maxWidth: `${withMsg.currentSender}px` }} className="chat-message-container-position-right">
-              {message.attachment ?
-                _renderAsAttachment(1) :
-                _renderAsStr(1)
-              }
+        {whoIsSender === 0 ?<div className="chat-date">
+            {message.body}
+          </div>:
+          whoIsSender === 1 ?
+            <div className="chat-message-wrap chat-message-wrap-right">
+              <div style={{ maxWidth: `${withMsg.currentSender}px` }} className="chat-message-container-position-right">
+                {message.attachment ?
+                  _renderAsAttachment(1) :
+                  _renderAsStr(1)
+                }
+              </div>
+            </div> :
+            <div className="chat-message-wrap chat-message-wrap-left">
+              {/* <div className="chat-message-avatar">
+              </div> */}
+              <div style={{ maxWidth: `${message.attachment ? withMsg.otherSender + 60 : withMsg.otherSender}px` }} className="chat-message-container-position-left">
+                {selectedDialog.type===2&&<div><span className="username">@{sender.username}</span>&nbsp;<span className="fullname">{sender.first_name} {sender.last_name}</span></div>}                
+                {message.attachment ?
+                  _renderAsAttachment(2) :
+                  _renderAsStr(2)
+                }
+              </div>
             </div>
-          </div> :
-          <div className="chat-message-wrap chat-message-wrap-left">
-            <div className="chat-message-avatar">
-              {notRenderAvatar &&
-                whoIsSender===1?<Avatar pictureUrls={currentUser.avatarUrls} size="xs" />:
-                <Avatar pictureUrls={sender.avatarUrls} size="xs" />
-              }
-            </div>
-            <div style={{ maxWidth: `${message.attachment ? withMsg.otherSender + 60 : withMsg.otherSender}px` }} className="chat-message-container-position-left">
-              {message.attachment ?
-                _renderAsAttachment(2) :
-                _renderAsStr(2)
-              }
-            </div>
-          </div>
         }
       </div>
     </>
   )
 }
-export default React.memo(Message, (props, nextProps) => {
-  if(!nextProps.extendedState.ids.includes(nextProps.message.id))return true;
-});
+export default Message;
+// export default React.memo(Message, (props, nextProps) => {
+//   return false;
+//   // if(!nextProps.extendedState.ids.includes(nextProps.message.id))return true;
+// });

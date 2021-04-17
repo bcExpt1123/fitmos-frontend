@@ -14,6 +14,8 @@ import {
   deleteDialog,
   addedUsersDialog,
   openPrivateDialog,
+  updateGroupDialogImage,
+  deleteGroupDialogImage,
   pulling,
   DIALOG_TYPE,
 } from "./actions";
@@ -235,6 +237,34 @@ function* onAddNewDialog({payload}){
   yield put(setItemValue({name:'dialogs',value:dialogs}))
   yield put(createdDialog(payload));
 }
+function* onUpdateGroupDialogImage({payload}){
+  const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+  try{
+    const response = yield call(ChatService.uploadPhoto, payload);
+    console.log(response);
+    const result = yield call(ChatService.updateDialogPhoto, selectedDialog._id, response.uid);
+    yield put(updateDialog(result));
+    const dialog = {...selectedDialog,photo:result.photo};
+    yield put(setItemValue({name:'selectedDialog',value:dialog}));
+  }catch(e){
+    console.log(e)
+  } 
+}
+function* onDeleteGroupDialogImage(){
+  const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+  if(selectedDialog){
+    try{
+      const result = yield call(ChatService.updateDialogPhoto, selectedDialog._id, null);
+      yield put(updateDialog(result));
+      const dialog = {...selectedDialog,photo:result.photo};
+      yield put(setItemValue({name:'selectedDialog',value:dialog}));
+    }catch(e){
+      console.log(e)
+    } 
+  }else{
+    yield put(setItemValue({name:'groupImage',value:null}));
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(createDialog,onCreateDialog);
   yield takeLeading(addNewDialog,onAddNewDialog);
@@ -245,4 +275,6 @@ export default function* rootSaga() {
   yield takeLeading(addedUsersDialog, onAddedUsersDialog);
   yield takeLeading(openPrivateDialog, onOpenPrivateDialog);
   yield takeLeading(pulling,onPulling);
+  yield takeLeading(updateGroupDialogImage,onUpdateGroupDialogImage);
+  yield takeLeading(deleteGroupDialogImage,onDeleteGroupDialogImage);
 }

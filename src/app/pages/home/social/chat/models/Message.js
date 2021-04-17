@@ -26,10 +26,15 @@ export class Message {
     this.group_chat_alert_type = msg.group_chat_alert_type || null
     this.dialog_id = msg.chat_dialog_id || (msg.extension && msg.extension.dialog_id)
     this.date_sent = msg.date_sent || (msg.extension && msg.extension.date_sent) || Math.floor(Date.now() / 1000)
-    this.send_state = Message.getSendState(msg, currentUser)
     this.attachment = Message.getAttachment(msg)
-    this.sender_id = msg.sender_id || (msg.extension && msg.extension.sender_id)
-    this.sender = msg.sender_id
+    if(currentUser === -1){
+      this.sender_id = -1;
+      this.sender = -1;
+    }else{
+      this.send_state = Message.getSendState(msg, currentUser)
+      this.sender_id = msg.sender_id || (msg.extension && msg.extension.sender_id)
+      this.sender = msg.sender_id
+    }
   }
 
   static getAttachment(msg) {

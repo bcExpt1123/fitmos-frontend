@@ -221,3 +221,15 @@ h3 {
   align-items: center;
   justify-content: center;  
 }
+.dropdown-menu.showmenu{
+  display: block;
+}
+.image-picker{
+  outline: none;
+  label{
+    outline: none;
+    div{
+      outline: none;
+    }
+  }
+}

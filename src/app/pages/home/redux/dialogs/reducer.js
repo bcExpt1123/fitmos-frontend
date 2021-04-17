@@ -29,12 +29,13 @@ const initialState = {
   selectedMessageTop:100,
   postMessageIds:[],
   postMessageCount:0,
+  groupImage:null,
 };
 const reducer = persistReducer(
   {
     storage,
     key: "dialogs",
-    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading','postMessageIds' ],
+    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading','postMessageIds','groupImage' ],
   },
   handleActions(
     {
