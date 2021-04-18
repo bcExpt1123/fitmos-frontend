@@ -3,6 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { getTime } from '../../../../../../lib/common';
 import MessageSendState from './MessageStatus';
+import Avatar from '../../../components/Avatar';
 import { GetMaxWidthMsg } from '../helper/utils';
 import Line from './DisplayLine';
 import { setItemValue } from "../../../redux/dialogs/actions";
@@ -134,8 +135,11 @@ function Message({message, whoIsSender, widthScroll}) {
               </div>
             </div> :
             <div className="chat-message-wrap chat-message-wrap-left">
-              {/* <div className="chat-message-avatar">
-              </div> */}
+              {selectedDialog.type===2&&
+                <div className="chat-message-avatar">
+                  <Avatar pictureUrls={sender.avatarUrls} size="xs" />
+                </div>
+              }
               <div style={{ maxWidth: `${message.attachment ? withMsg.otherSender + 60 : withMsg.otherSender}px` }} className="chat-message-container-position-left">
                 {selectedDialog.type===2&&<div><span className="username">@{sender.username}</span>&nbsp;<span className="fullname">{sender.first_name} {sender.last_name}</span></div>}                
                 {message.attachment ?

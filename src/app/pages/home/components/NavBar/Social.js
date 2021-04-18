@@ -84,8 +84,8 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   }
   const showChatPanel = useSelector(({dialog})=>dialog.showPanel);
   const TriggerChatPanel = ()=>{
-    const closeBtn = document.getElementById("kt_quick_panel_close_btn");
-    if(closeBtn)closeBtn.click();
+    // const closeBtn = document.getElementById("kt_quick_panel_close_btn");
+    // if(closeBtn)closeBtn.click();
     dispatch(setItemValue({name:"showPanel",value:!showChatPanel}));
   }
   const handleCreatingModalClose = () => {
@@ -123,6 +123,8 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
       }
     }
   }
+  const dialogs = useSelector(({dialog})=>dialog.dialogs);
+  const unreadMessagesCount = dialogs.reduce((accumulator, dialog)=>accumulator + dialog.unread_messages_count, 0);
   return (
     <>
       <Navbar
@@ -236,7 +238,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             <li className="nav-item">
               <button type="button" className={"clickable-button chat"} onClick={TriggerChatPanel}>
                 <i className="fal fa-comment-lines" />
-                {true &&
+                {unreadMessagesCount>0 &&
                   <span className="number">&nbsp;</span>
                 }
               </button>

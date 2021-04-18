@@ -34,7 +34,7 @@
     }        
   }  
   .chat-body{
-    width: 400px;
+    width: 430px;
     height: calc(100vh - 219px);
     display: flex;
     align-items: center;
@@ -150,7 +150,10 @@
   justify-content: flex-start;
   text-align: start;
 }
-
+.chat-message-avatar {
+  width: 30px;
+  margin: 10px 5px 0 -10px;
+}
 
 .chat-message-container-position-right {
   min-width: 120px;

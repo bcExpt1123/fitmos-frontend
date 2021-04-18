@@ -25,6 +25,17 @@
     font-size: 24px;
   }   
 }
+@mixin notification-number{
+  position: absolute;
+  font-size: 8px;
+  right: 4px;
+  background-color: #afca32;
+  display: inline-block;
+  width:10px;
+  height:10px;
+  border-radius: 5px;
+  color:#afca32;
+}
 
 .fitemos-menu-social {
   .navbar {
@@ -204,6 +215,9 @@
       &.chat{
         padding: 13px 3px 13px 17px;  
         margin-top: 0;
+        .number{
+          @include notification-number;  
+        }
       }
     }
     .link{
@@ -231,15 +245,7 @@
     .nav-link.link{
       position: relative;
       .number{
-        position: absolute;
-        font-size: 8px;
-        right: 4px;
-        background-color: #afca32;
-        display: inline-block;
-        width:10px;
-        height:10px;
-        border-radius: 5px;
-        color:#afca32;
+        @include notification-number;
       }  
       .avatar.xs{
         height:30px;

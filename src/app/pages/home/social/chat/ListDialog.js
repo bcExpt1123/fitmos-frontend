@@ -96,6 +96,9 @@ const ListDialog = ()=> {
     }
     return className + " offline";
   }
+  const handleChatClose = ()=>{
+    dispatch(setItemValue({name:"showPanel",value:false}));
+  }
   return (
     <ConnectyCubeWrapper>
       <PerfectScrollbar
@@ -110,9 +113,17 @@ const ListDialog = ()=> {
       >
         {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
         <div className="dialogs-header">
-          <i className="cursor-pointer fal fa-search"  onClick={searchFieldDisplay}/>
-          <i className="cursor-pointer fal fa-plus-circle"  onClick={newDialog}/>
-          <i className="cursor-pointer fal fa-user-friends"  onClick={newGroupDialog}/>
+          <div className="sub-header">
+            <div className="title">
+              <i className="cursor-pointer fal fa-window-close" onClick={handleChatClose}/>
+              <span>Chat</span>
+            </div>
+            <div className="actions">
+              <i className="cursor-pointer fal fa-search"  onClick={searchFieldDisplay}/>
+              <i className="cursor-pointer fal fa-plus-circle"  onClick={newDialog}/>
+              <i className="cursor-pointer fal fa-user-friends"  onClick={newGroupDialog}/>
+            </div>
+          </div>
           {searchFieldShow && <div className="search-controls">
               <input className="" value={searchValue} onChange={handleSearchValue} ref={searchRef}/>
               <button className="search-close btn" onClick={searchFieldClose}>Cancel</button>
