@@ -19,8 +19,6 @@ const NewPrivateDialog = ()=>{
   const [moreUsers, setMoreUsers] = useState([]);
   const dialogs = useSelector(({dialog})=>dialog.dialogs);
   const people = useSelector(({people})=>people.people);
-  const privateProfiles = useSelector(({people})=>people.privateProfiles);
-  const path = useSelector(({dialog})=>dialog.backRouteAddUsers);
   const dispatch = useDispatch();
   useEffect(()=>{ 
     let userIds = [];
@@ -88,7 +86,7 @@ const NewPrivateDialog = ()=>{
   const searchRef = useRef();
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
-      <ChatHeader path={path} title={"Create new Chat"}>
+      <ChatHeader title={"Create new Chat"}>
         <div className="dialog-btn">
           <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUser===null}>Done</button>
         </div>
@@ -110,9 +108,9 @@ const NewPrivateDialog = ()=>{
           ref = {searchRef}
           name="search" />
 
-        <div className="create-dialog-body-selected-users">
-          {selectedUser &&
-            <button
+        {selectedUser &&
+          <div className="create-dialog-body-selected-users">
+          <button
               className="create-dialog-body-selected-avatar"
               onClick={triggerUser(selectedUser)}
             >
@@ -124,8 +122,8 @@ const NewPrivateDialog = ()=>{
               </div>
               <div className="first_name">{selectedUser.first_name}</div>
             </button>            
-          }
-        </div>
+          </div>
+        }
 
         <PerfectScrollbar
           options={{

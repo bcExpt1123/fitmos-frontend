@@ -99,7 +99,7 @@ export default function HomePage() {
         <Route exact path="/posts/:id" component={SocialPostPage} />
         <Route exact path="/eventos" component={Events} />
         <Route exact path="/eventos/:id" component={Event} />
-        {/* <Route exact path="/chat" component={ChatPage} /> */}
+        <Route exact path="/:username" component={UsernamePage} />
         <Route exact path="/:username/pictures" component={ProfilePicturesPage} />        
       </Switch>
     </Suspense>

@@ -203,11 +203,9 @@ function* onPulling({payload:{id}}){
         }
       }
       if(process.env.APP_ENV !== "production")yield delay(5000);
-      else yield delay(10000);
     } catch (e) {
       console.log(e);
       // yield put({ type: FETCH_JOKE_FAILURE, message: e.message })
-      yield delay(1000);
       const currentUser = yield select(({auth}) => auth.currentUser);
       if(currentUser && currentUser.customer) {
         if(currentUser.customer.id != id){

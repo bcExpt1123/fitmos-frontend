@@ -161,25 +161,25 @@ function Main({
   const activateWorkout = (dayNumber, column) => {
     switch (dayNumber) {
       case 0:
-        if (column === "blog" || column === "activo") return false;
+        if (column !== "blog") return false;
         break;
       case 1:
-        if (column === "blog") return false;
-        break;
-      case 2:
         if (column === "blog" || column === "activo") return false;
         break;
-      case 3:
-        if (column !== "blog") return false;
-        break;
-      case 4:
+      case 2:
         if (column === "blog") return false;
         break;
+      case 3:
+        if (column === "blog" || column === "activo") return false;
+        break;
+      case 4:
+        if (column !== "blog") return false;
+        break;
       case 5:
-        if (column === "activo") return false;
+        if (column === "blog") return false;
         break;
       case 6:
-        if (column !== "blog") return false;
+        if (column === "activo") return false;
         break;
       default:  
     }
