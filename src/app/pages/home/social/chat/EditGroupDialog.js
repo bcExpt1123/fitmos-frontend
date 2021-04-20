@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import ChatHeader from "./ChatHeader";
 import ImagePicker from "./components/ImagePicker";
-import { updateGroupName, setItemValue, leaveGroupDialog, updateGroupDialogImage } from "../../redux/dialogs/actions"; 
-import { Remove } from '@material-ui/icons';
+import { updateGroupName, setItemValue, leaveGroupDialog, updateGroupDialogImage, deleteGroupDialog } from "../../redux/dialogs/actions"; 
 import { getImageLinkFromUID } from './helper/utils';
 
 const EditGroupDialog = ()=>{
@@ -38,7 +37,12 @@ const EditGroupDialog = ()=>{
       }
       dispatch(updateGroupDialogImage(image));
     });
-
+  }
+  const deleteDialog = ()=>{
+    if(window.confirm("Are you sure to delete this group?")){
+      dispatch(deleteGroupDialog({id:currentUser.chat_id}));
+      dispatch(setItemValue({name:"route",value:"list"}));
+    }
   }
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
@@ -82,6 +86,10 @@ const EditGroupDialog = ()=>{
           <label>{selectedDialog.occupants_ids.length} PARTICIPANTS</label>
           <button onClick={nextScreen} className="btn-fs-blue" disabled={groupName==="" || groupName.length<3}>
             Add Users
+          </button>
+          &nbsp;&nbsp;&nbsp;
+          <button onClick={deleteDialog} className="btn-fs-waring">
+            Delete Chat
           </button>
           {selectedDialog.users.map(user=><div className="participant-info other" key={user.id}>
             <div className="avatar">

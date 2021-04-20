@@ -5,10 +5,6 @@ export const STATUS_SENT = 1
 export const STATUS_DELIVERED = 2
 export const STATUS_READ = 3
 
-export const GROUP_CHAT_ALERT_TYPE = {
-  CREATE: "create"
-}
-
 const defaultMessage = {
   id: '',
   body: '',

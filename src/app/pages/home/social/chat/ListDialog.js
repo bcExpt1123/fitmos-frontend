@@ -156,7 +156,7 @@ const ListDialog = ()=> {
                       <img src={dialog.users[0].avatarUrls['small']} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>
                       {dialog.last_activity&&<i className={lastActivityClassName(dialog.last_activity)} />}
                     </>}
-                    {dialog.type==2 && dialog.photo && <img src={getImageLinkFromUID(dialog.photo)} alt={dialog.users[0].first_name +' '+ dialog.users[0].last_name}/>}
+                    {dialog.type==2 && dialog.photo && <img src={getImageLinkFromUID(dialog.photo)} alt={dialog.name}/>}
                   </div>
                   <div className="kt-notification-v2__itek-wrapper">
                     <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>

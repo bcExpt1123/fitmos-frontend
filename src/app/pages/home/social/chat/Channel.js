@@ -23,7 +23,8 @@ const Channel = ()=> {
   let title;
   if(selectedDialog){
     if(selectedDialog.type==3){
-      title = selectedDialog.users[0].display;
+      if(selectedDialog.users[0])title = selectedDialog.users[0].first_name + selectedDialog.users[0].last_name;
+      else title="";
     }else{
       title = selectedDialog.name;
     }
@@ -81,7 +82,11 @@ const Channel = ()=> {
   }
   const scrollToBottom = () => {
     if (messagesListRef && messagesListRef.current) {
-      // messagesListRef.current.scrollToOffset(0,1000);
+      try{
+        messagesListRef.current.scrollToIndex(dataProvider._data.length - 1, false)
+      }catch(e){
+        console.log(e);
+      }
     }
   }
   const [extendedState, setExtendedState] = useState({ids:[],count:0});
@@ -223,7 +228,7 @@ const Channel = ()=> {
   if(selectedDialog.type==2){
     avatar = getImageLinkFromUID(selectedDialog.photo);
   }else if(selectedDialog.type==3){
-    avatar = selectedDialog.users[0].avatarUrls['small'];
+    if(selectedDialog.users[0])avatar = selectedDialog.users[0].avatarUrls['small'];
   }
   const history = useHistory();
   const viewProfile = ()=>{
@@ -240,6 +245,18 @@ const Channel = ()=> {
     dispatch(setItemValue({name:'route',value:'list'}));
     dispatch(setItemValue({name:'selectedDialog', value:null}));
   }
+  const readMessageCount = useSelector(({dialog})=>dialog.readMessageCount);
+  useEffect(()=>{
+    setLayoutProvider(ChatLayoutUtil.getChatLayoutProvider({
+      width: scrollWidth,
+      dialogId: selectedDialog._id,
+      currentUserId: currentUser.chat_id
+    }));
+    setTimeout(()=>{
+      updateScrollPosition();
+      scrollToBottom();
+    },100)
+  },[readMessageCount]);
   return (<ConnectyCubeWrapper>
     <div className="chat-container" >
       <ChatHeader avatar = {avatar}>
@@ -263,7 +280,7 @@ const Channel = ()=> {
                   <a className={"dropdown-item"} onClick={handleUnmute}>Mute</a>}
                 </>}
                 {selectedDialog.type==2&&<>{
-                  selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Delete Chat</a>
+                  selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Leave Chat</a>
                   :
                   <a className={"dropdown-item"} onClick={editGroup}>Manage Dialog</a>
                 }
@@ -282,7 +299,7 @@ const Channel = ()=> {
                 width: scrollWidth,
                 height: scrollHeight,
               }}
-              useWindowScroll={false}
+              // useWindowScroll={false}
               ref={messagesListRef}
               dataProvider={dataProvider}
               layoutProvider={layoutProvider}

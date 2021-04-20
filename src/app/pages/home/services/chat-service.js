@@ -1,8 +1,10 @@
 import ConnectyCube from 'connectycube';
 import {
   fetchDialogs,
+  fetchDialog,
   sortDialogs,
   updateDialog,
+  setItemValue,
   pulling,
   DIALOG_TYPE
 } from '../redux/dialogs/actions';
@@ -22,11 +24,16 @@ import store from '../../../store/store';
 import { Message, FakeMessage } from '../social/chat/models/Message';
 import { getSpanishDate } from '../../../../lib/common';
 
+const dateMessage = (elem)=>{
+  return {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent};
+}
+const leaveGroupMessage = (elem)=>{
+  return {message:elem.message, date_sent:elem.date_sent};
+}
 class ChatService {
 
   setUpListeners() {
     if(ConnectyCube.chat){
-      console.log("ConnectyCube.chat")
       ConnectyCube.chat.onMessageListener = chatService.onMessageListener.bind(this)
       ConnectyCube.chat.onSentMessageCallback = chatService.onSentMessageListener.bind(this)
       ConnectyCube.chat.onDeliveredStatusListener = chatService.onDeliveredStatus.bind(this)
@@ -40,19 +47,22 @@ class ChatService {
     await AuthService.signIn(dataUser, auth.currentUser);
     store.dispatch(pulling(auth.currentUser.chat_id));
   }
-  async fetchDialogsFromServer() {
+  async fetchDialogsFromServer(id) {
     let dialogsFromServer;
+    let filter = {};
+    if(id){
+      filter._id=id; 
+    }
     try{
-      dialogsFromServer = await ConnectyCube.chat.dialog.list();
+      dialogsFromServer = await ConnectyCube.chat.dialog.list(filter);
     }catch(e){
       await chatService.autologin();
-      dialogsFromServer = await ConnectyCube.chat.dialog.list();
+      dialogsFromServer = await ConnectyCube.chat.dialog.list(filter);
     }
     return dialogsFromServer;
   }
 
   async getMessages(dialog) {
-    console.log("getMessages", dialog)
     const isAlredyUpdate = chatService.getMessagesByDialogId(dialog._id)
     let amountMessages = null
 
@@ -76,12 +86,16 @@ class ChatService {
 
       const messages = [];
       historyFromServer.items.forEach((elem, index) => {
-        if (!elem.group_chat_alert_type && index<20) {
+        if ((!elem.group_chat_alert_type || elem.group_chat_alert_type===GROUP_CHAT_ALERT_TYPE.LEAVE) && index<20) {
           const auth = store.getState().auth;
-          messages.push(new Message(elem, auth.currentUser.chat_id))
+          if(elem.group_chat_alert_type===GROUP_CHAT_ALERT_TYPE.LEAVE){
+            const leaveMessage = leaveGroupMessage(elem);            
+            messages.push(new Message(leaveMessage, -1))
+          }
+          else messages.push(new Message(elem, auth.currentUser.chat_id))
           if(historyFromServer.items[index+1]!=undefined){
             if(getSpanishDate(elem.date_sent)!=getSpanishDate(historyFromServer.items[index+1].date_sent)){
-              const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+              const dateElem = dateMessage(elem);
               messages.push(new Message(dateElem, -1))
             }
           }else{
@@ -129,14 +143,18 @@ class ChatService {
     moreHistoryFromServer.items.forEach((elem, index) => {
       if (!elem.group_chat_alert_type && index<20) {
         const auth = store.getState().auth;
-        messages.push(new Message(elem, auth.currentUser.chat_id))
+        if(elem.group_chat_alert_type===GROUP_CHAT_ALERT_TYPE.LEAVE){
+          const leaveMessage = leaveGroupMessage(elem);            
+          messages.push(new Message(leaveMessage, -1))
+        }
+        else messages.push(new Message(elem, auth.currentUser.chat_id))
         if(moreHistoryFromServer.items[index+1]!=undefined){
           if(getSpanishDate(elem.date_sent)!=getSpanishDate(moreHistoryFromServer.items[index+1].date_sent)){
-            const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+            const dateElem = dateMessage(elem);
             messages.push(new Message(dateElem, -1))
           }
         }else{
-          const dateElem = {message:getSpanishDate(elem.date_sent), date_sent:elem.date_sent}
+          const dateElem = dateMessage(elem);
           messages.push(new Message(dateElem, -1))
         }
       }
@@ -187,7 +205,8 @@ console.log(msg, dialog);
     const newObjFreez = Object.freeze(message)
 
     await store.dispatch(pushMessage({dialogId:dialog._id,message:newObjFreez} ))
-    if(scrollToBottom)scrollToBottom()
+    const count = store.getState().dialog.readMessageCount;
+    store.dispatch(setItemValue({name:'readMessageCount',value:count+1}));
     ConnectyCube.chat.send(recipient_id, msg)
     store.dispatch(sortDialogs({message:newObjFreez}))
   }
@@ -216,6 +235,31 @@ console.log(msg, dialog);
   sendChatAlertOnCreate(dialog) {
     const message = 'Group is created'
     chatService.sendMsgChatAlertOnCreate(dialog, message, GROUP_CHAT_ALERT_TYPE.CREATE)
+  }
+
+  sendMsgChatAlertOnLeave = async (dialog, message, alertType) => {
+    const date = Math.floor(Date.now() / 1000)
+    const auth = store.getState().auth;
+    const recipient_id = dialog.type === DIALOG_TYPE.PRIVATE ? dialog.occupants_ids.find(elem => elem != auth.currentUser.chat_id)
+      : dialog.xmpp_room_jid
+    const messageExtensions = {
+      date_sent: date,
+      save_to_history: 1,
+      dialog_id: dialog._id,
+      group_chat_alert_type: alertType,
+      sender_id: auth.currentUser.chat_id,
+    }
+    const msg = {
+      type: 'groupchat',
+      body: message,
+      extension: messageExtensions,
+    }
+    ConnectyCube.chat.send(recipient_id, msg)
+  }
+
+  sendChatAlertOnLeave(dialog, username) {
+    const message = '@'+ username + ' leaves this group';
+    chatService.sendMsgChatAlertOnLeave(dialog, message, GROUP_CHAT_ALERT_TYPE.LEAVE);
   }
 
   async sendMessageAsAttachment(dialog, recipient_id, msg, attachments, scrollToBottom) {
@@ -296,28 +340,36 @@ console.log(msg, dialog);
 
   async onMessageListener(senderId, msg) {
     if(msg.body){
-      console.log(msg)
-      const message = new Message(msg)
+      console.warn('onMessageListener')
+      let message;
+      if(msg.extension.group_chat_alert_type===GROUP_CHAT_ALERT_TYPE.LEAVE){
+        message = new Message(msg, -1)
+      }
+      else message = new Message(msg);
       const auth = store.getState().auth;
       const user = auth.currentUser;
       const selectedDialog = store.getState().dialog.selectedDialog;
       const dialog = selectedDialog?._id
-      // If group chat alet
+      // If group chat alert
       if (msg.extension.group_chat_alert_type) {
         store.dispatch(fetchDialogs(true))
-        return
+        if(msg.extension.group_chat_alert_type!=GROUP_CHAT_ALERT_TYPE.LEAVE)return;
       }
-      console.log(senderId, user.chat_id,senderId !== user.chat_id)
-      if (senderId !== user.chat_id) {
+      if (senderId !== parseInt(user.chat_id)) {
         if (dialog === message.dialog_id) {
           store.dispatch(sortDialogs({message}))
           chatService.readMessage(message.id, message.dialog_id)
           chatService.sendReadStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
+          const count = store.getState().dialog.readMessageCount;
+          store.dispatch(setItemValue({name:'readMessageCount',value:count+1}));
         } else {
           chatService.sendDeliveredStatus(msg.extension.message_id, msg.extension.sender_id, msg.dialog_id)
           store.dispatch(sortDialogs({message,count:true}))
         }
         store.dispatch(pushMessage({dialogId:message.dialog_id,message} ))
+        if(msg.extension.group_chat_alert_type===GROUP_CHAT_ALERT_TYPE.LEAVE){
+          store.dispatch(fetchDialog(message.dialog_id));
+        }
       }
     }
   }

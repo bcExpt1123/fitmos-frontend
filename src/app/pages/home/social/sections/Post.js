@@ -84,9 +84,9 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     dispatch(hideReplies(comment));
   }
   const handleLike = e=>{
-    if(post.customer_id != currentUser.customer.id ){
+    // if(post.customer_id != currentUser.customer.id ){
       dispatch(toggleLike(post));
-    }
+    // }
   }
   /** visibleMonistor */
   const [visible, setVisible] = useState(false);

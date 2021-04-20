@@ -92,7 +92,7 @@ const ProfileInfo = ({customer}) => {
             <div className="full-name">{customer.first_name} {customer.last_name}</div>
             <div className="username">@{customer.username}</div>
             <div className="summary">
-              {customer.description&&
+              {customer.description!=='null'&&customer.description&&
                 <ReadMore 
                   text={customer.description}
                   numberOfLines={8}
@@ -109,7 +109,7 @@ const ProfileInfo = ({customer}) => {
             <div className="full-name cursor-pointer" onClick={redirectProfile}>{currentUser.customer.first_name} {currentUser.customer.last_name}</div>
             <div className="username" onClick={redirectProfile}>@{currentUser.customer.username}</div>
             <div className="summary" ref={summaryRef}>
-              {currentUser.customer.description?
+              {customer.description!=='null'&&currentUser.customer.description?
                 <ReadMore 
                   text={currentUser.customer.description}
                   numberOfLines={4}

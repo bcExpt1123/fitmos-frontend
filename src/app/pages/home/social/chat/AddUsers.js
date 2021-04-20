@@ -181,14 +181,14 @@ const AddUsers = ()=>{
         { contactedUsers.length>0 && <div className="contacted-users">
           People
           {contactedUsers.map(user=>
-            <div className="contacted-user" key={user.id}>
+            <div className="contacted-user" key={user.id}  onClick={triggerUsers(user)}>
               <div className="avatar">
                 <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
               </div>
               <div className="name">
                 {user.first_name} {user.last_name}
               </div>
-              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
+              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})}>
                 <i className="fas fa-check-circle" />
               </div>
             </div>
@@ -197,7 +197,7 @@ const AddUsers = ()=>{
         { moreUsers.length>0 && <div className="more-users">
           More people
           {moreUsers.map(user=>
-            <div className="more-user" key={user.id}>
+            <div className="more-user" key={user.id} onClick={triggerUsers(user)}>
               <div className="avatar">
                 <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
               </div>
@@ -207,7 +207,7 @@ const AddUsers = ()=>{
                   @{user.username}
                 </div>
               </div>
-              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUsers(user)}>
+              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})}>
                 <i className="fas fa-check-circle" />
               </div>
             </div>

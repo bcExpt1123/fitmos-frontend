@@ -6,8 +6,7 @@ import {
   createdDialog,
   fetchDialogs,
   updateDialog,
-  sortDialogs,
-  selectedDialog,  
+  fetchDialog,
   updateGroupName, 
   leaveGroupDialog,
   deleteGroupDialog,
@@ -77,6 +76,40 @@ function* onFetchDialogs(){
     }catch(e){
       yield put(setItemValue({name:'actionLoading', value:false}));
     }
+  }else{
+    try{
+      const result = yield call(ChatService.fetchDialogsFromServer);
+      const items = result.items;
+      let customers = yield select(({people})=>people.people);
+      const privateProfiles = yield select(({people})=>people.privateProfiles);
+      customers = [...customers, ...privateProfiles];
+      const currentUser = yield select(({auth})=>auth.currentUser);
+      yield put(setItemValue({name:'actionLoading', value:false}));
+      if(currentUser){
+        const previousDialogs = yield select(({dialog})=>dialog.dialogs);
+        const dialogs = items.map(dialog=>{
+          dialog.users = dialog.occupants_ids.map(chat_id=>{
+            const user = customers.find(customer=>chat_id==customer.chat_id);
+            return user;
+          }).filter(customer=> {if(customer && customer.id && currentUser.customer.id!=customer.id)return customer});
+          dialog.owner = dialog.users.find(customer=> {return(customer && customer.id && dialog.user_id!=customer.id)});
+          const previousDialog = previousDialogs.find(element=>element._id === dialog._id);
+          if(previousDialog) dialog.last_activity = previousDialog.last_activity;
+          return dialog;
+        });
+        yield put(setItemValue({name:'dialogs',value:dialogs}));
+        // const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+        // if(selectedDialog){
+        //   const dialog = dialogs.find(element=>element._id === selectedDialog._id);
+        //   if(dialog)yield put(setItemValue({name:'dialogs',value:dialogs}));
+        // }
+      }else{
+        yield put(setItemValue({name:'dialogs',value:[]}));
+      }
+      yield put(setItemValue({name:'listLoading',value:false}));
+    }catch(e){
+      yield put(setItemValue({name:'actionLoading', value:false}));
+    }
   }
 }
 function* onUpdateGroupName(){
@@ -115,7 +148,9 @@ function* onLeaveGroupDialog({payload}){
 }
 function* onDeleteGroupDialog(){
   const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+  const currentUser = yield select(({auth})=>auth.currentUser);
   try{
+    if(selectedDialog.user_id!=currentUser.chat_id)yield call(ChatService.sendChatAlertOnLeave, selectedDialog, currentUser.customer.username);
     yield call(ChatService.deleteGroupDialog, selectedDialog._id);
     yield put(deleteDialog(selectedDialog._id));
     yield put(setItemValue({name:'selectedDialog',value:null}));
@@ -141,7 +176,7 @@ function* onAddedUsersDialog({payload}){
   yield put(setItemValue({name:'route',value:returnPath}));
 }
 function* onOpenPrivateDialog({payload}){//customer
-  const chatUserId = payload.chat_id || payload.user&&payload.user.chat_id;
+  const chatUserId = parseInt(payload.chat_id) || payload.user&&parseInt(payload.user.chat_id);
   const showPanel = yield select(({dialog})=>dialog.showPanel);
   let dialogs = yield select(({dialog})=>dialog.dialogs);
   if(showPanel){
@@ -203,12 +238,17 @@ function* onPulling({payload}){
           }
         }
       }
-      if(process.env.APP_ENV !== "production")yield delay(30000);
-      else yield delay(30000);
+      yield put(fetchDialogs());
+      // const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+      // if(selectedDialog){
+      //   yield put(fetchDialog(selectedDialog._id));
+      // }
+      if(process.env.APP_ENV !== "production")yield delay(100000);
+      else yield delay(100000);
     } catch (e) {
       console.log(e);
       // yield put({ type: FETCH_JOKE_FAILURE, message: e.message })
-      yield delay(30000);
+      yield delay(10000);
       const currentUser = yield select(({auth}) => auth.currentUser);
       if(currentUser && currentUser.customer) {
         if(currentUser.chat_id != payload){
@@ -265,6 +305,37 @@ function* onDeleteGroupDialogImage(){
     yield put(setItemValue({name:'groupImage',value:null}));
   }
 }
+function* onFetchDialog({payload}){
+  yield delay(200);
+  try{
+    const result = yield call(ChatService.fetchDialogsFromServer, payload);
+    const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+    let customers = yield select(({people})=>people.people);
+    const privateProfiles = yield select(({people})=>people.privateProfiles);
+    customers = [...customers, ...privateProfiles];
+    const currentUser = yield select(({auth})=>auth.currentUser);
+    const previousDialogs = yield select(({dialog})=>dialog.dialogs);
+    const dialog = result.items[0];
+    if(dialog){
+      dialog.users = dialog.occupants_ids.map(chat_id=>{
+        const user = customers.find(customer=>chat_id==customer.chat_id);
+        return user;
+      }).filter(customer=> {if(customer && customer.id && currentUser.customer.id!=customer.id)return customer});
+      dialog.owner = dialog.users.find(customer=> {return(customer && customer.id && dialog.user_id!=customer.id)});
+      if( selectedDialog && selectedDialog._id === dialog._id){
+        const item = {...selectedDialog, ...dialog};
+        yield put(setItemValue({name:'selectedDialog',value:item}));
+      }
+      const previousDialog = previousDialogs.find(element=>element._id === dialog._id);
+      if(previousDialog) {
+        const updatedDialog = {...previousDialog, ...dialog};
+        yield put(updateDialog(updatedDialog));
+      }
+    }
+  }catch(e){
+
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(createDialog,onCreateDialog);
   yield takeLeading(addNewDialog,onAddNewDialog);
@@ -277,4 +348,5 @@ export default function* rootSaga() {
   yield takeLeading(pulling,onPulling);
   yield takeLeading(updateGroupDialogImage,onUpdateGroupDialogImage);
   yield takeLeading(deleteGroupDialogImage,onDeleteGroupDialogImage);
+  yield takeLeading(fetchDialog, onFetchDialog);
 }

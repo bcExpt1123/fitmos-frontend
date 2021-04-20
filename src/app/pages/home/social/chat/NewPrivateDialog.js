@@ -138,7 +138,7 @@ const NewPrivateDialog = ()=>{
         { moreUsers.length>0 && <div className="more-users">
           People
           {moreUsers.map(user=>
-            <div className="more-user" key={user.id}>
+            <div className="more-user" key={user.id} onClick={triggerUser(user)}>
               <div className="avatar">
                 <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
               </div>
@@ -148,7 +148,7 @@ const NewPrivateDialog = ()=>{
                   @{user.username}
                 </div>
               </div>
-              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})} onClick={triggerUser(user)}>
+              <div className={classnames("checkbox",{uncheck:uncheckUsers(user)})}>
                 <i className="fas fa-check-circle" />
               </div>
             </div>

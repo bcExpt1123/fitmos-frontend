@@ -62,6 +62,14 @@
     color:white;
   }
 }
+.btn-fs-waring {
+  background: #B62602;
+  &:hover {
+    background: #d62302;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
+  }
+}
+
 .header-title {
   font-size: $bg-title-size;
   font-weight: 700;

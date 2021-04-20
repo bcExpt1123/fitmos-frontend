@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
+import { NavLink } from "react-router-dom";
 import { getTime } from '../../../../../../lib/common';
 import MessageSendState from './MessageStatus';
 import Avatar from '../../../components/Avatar';
@@ -141,7 +142,16 @@ function Message({message, whoIsSender, widthScroll}) {
                 </div>
               }
               <div style={{ maxWidth: `${message.attachment ? withMsg.otherSender + 60 : withMsg.otherSender}px` }} className="chat-message-container-position-left">
-                {selectedDialog.type===2&&<div><span className="username">@{sender.username}</span>&nbsp;<span className="fullname">{sender.first_name} {sender.last_name}</span></div>}                
+                {selectedDialog.type===2&&
+                  <div>
+                    <NavLink
+                      to={"/"+sender.username}
+                      className={"link-profile"}
+                    >
+                      <span className="username">@{sender.username}</span>&nbsp;<span className="fullname">{sender.first_name} {sender.last_name}</span>
+                    </NavLink>
+                  </div>
+                }                
                 {message.attachment ?
                   _renderAsAttachment(2) :
                   _renderAsStr(2)

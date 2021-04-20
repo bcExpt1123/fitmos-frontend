@@ -47,10 +47,10 @@ const PostModal = ({show, media, onClose }) => {
     history.push(window.location.pathname);
   }
   const handleLike = e=>{
-    if(post.customer_id != currentUser.customer.id ){
+    // if(post.customer_id != currentUser.customer.id ){
       dispatch(toggleLike(post));
       history.push(window.location.pathname);
-    }
+    // }
   }
   useEffect(()=>{
     if(sliderRef.current){

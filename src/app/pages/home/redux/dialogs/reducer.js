@@ -30,6 +30,7 @@ const initialState = {
   postMessageIds:[],
   postMessageCount:0,
   groupImage:null,
+  readMessageCount:0,
 };
 const reducer = persistReducer(
   {
