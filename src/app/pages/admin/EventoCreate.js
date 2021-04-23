@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { injectIntl } from "react-intl";
 import { makeStyles } from "@material-ui/core";
 import { Button, Paper, InputLabel, MenuItem, FormControl, TextField, Select, Grid, IconButton, Checkbox, FormControlLabel} from "@material-ui/core";
-import CKEditor from "@ckeditor/ckeditor5-react";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import { compose } from "recompose";
@@ -200,7 +200,7 @@ function Main({match,history}) {
               <CKEditor
                 editor={ClassicEditor}
                 data={item.description}
-                onInit={editor => {
+                onReady={editor => {
                   // You can store the "editor" and use when it is needed.
                   editor.setData( item.description );
                   //console.log("Editor is ready to use!", editor);

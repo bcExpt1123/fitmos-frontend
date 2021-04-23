@@ -15,7 +15,8 @@ import {
   $openPreviewCell,
   $updateItemValue,
   $submitContent,
-  $updateImage
+  $updateImage,
+  $removeImage,
 } from "../../../modules/subscription/cms";
 import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
 import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
@@ -72,6 +73,7 @@ function Main({
   $updateItemValue,
   $submitContent,
   $updateImage,
+  $removeImage,
   $openPreviewCell,
   previewContent
 }) {
@@ -161,27 +163,27 @@ function Main({
   const activateWorkout = (dayNumber, column) => {
     switch (dayNumber) {
       case 0:
-        if (column !== "blog") return false;
+        if (column === "blog" || column === "activo") return false;
         break;
       case 1:
-        if (column === "blog" || column === "activo") return false;
+        if (column === "blog") return false;
         break;
       case 2:
-        if (column === "blog") return false;
-        break;
-      case 3:
         if (column === "blog" || column === "activo") return false;
         break;
-      case 4:
+      case 3:
         if (column !== "blog") return false;
         break;
-      case 5:
+      case 4:
         if (column === "blog") return false;
         break;
-      case 6:
+      case 5:
         if (column === "activo") return false;
         break;
-      default:  
+      case 6:
+        if (column !== "blog") return false;
+        break;
+        default:  
     }
     return true;
   };
@@ -343,7 +345,7 @@ function Main({
                     })}
                   >
                     {data[row+'_timer_type'] !== undefined &&
-                      data[row+'_timer_type'][col] !== undefined && data[row+'_timer_type'][col] !== "" && data[row+'_timer_type'][col] !== null && (
+                      data[row+'_timer_type'][col] !== undefined && data[row+'_timer_type'][col] !== "" && data[row+'_timer_type'][col] !== "null" && data[row+'_timer_type'][col] !== null && (
                         <div className={classes.timer}>
                           {data[row+'_timer_type'][col]!='tabata'?
                             <>
@@ -412,6 +414,7 @@ function Main({
         updateImage={$updateImage}
         handleChange={handleChange}
         handleSave={handleSave}
+        removeImage={$removeImage}
       />
       <WorkoutEditDialog 
         open={openBlog} 
@@ -489,6 +492,7 @@ const mapDispatchToProps = {
   $updateItemValue,
   $submitContent,
   $updateImage,
+  $removeImage,
 };
 const WeeklyEditor = injectIntl(
   connect(mapStateToProps, mapDispatchToProps)(Main)

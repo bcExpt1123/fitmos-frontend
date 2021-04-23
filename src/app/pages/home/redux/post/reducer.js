@@ -55,7 +55,8 @@ const initialState = {
   openShareCustomers:false,
   selectedPostId:null,
   sharingPostStart:false,
-  likersOpenSetting:{show:false, activityId:null}
+  likersOpenSetting:{show:false, activityId:null},
+  birthdayPost:null,
 };
 // const containsPost = (posts, post)=>{
 //   posts.every(item=>item.id == post.id)
@@ -66,7 +67,7 @@ const reducer = persistReducer(
     key: "post",
     blacklist:['suggested','newsfeedTopVisible','oldNewsfeedTopVisible','suggestedPosts','suggestedPostsLastId','suggestedPostsLast','suggestedPostsTopVisible',
     'customerPostsTopVisible','videoPlayerModalMode','videoPlayerOpenModal','videoPlayerOpenCurrentTime'
-    ,'openShareCustomers','sharingPostStart','likersOpenSetting']
+    ,'openShareCustomers','sharingPostStart','likersOpenSetting','birthdayPost']
   },
   handleActions(
     {
@@ -89,7 +90,7 @@ const reducer = persistReducer(
         clonedNewsfeedAfter = clonedNewsfeedAfter.concat(filteredPostsAfter);
         let minId = state.newsfeedLastId;
         if(filteredPostsAfter.length>0){
-          const ids = filteredPostsAfter.map(item=>item.id);
+          const ids = filteredPostsAfter.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
           minId = Math.min(...ids);
         }
         console.log(filteredPostsAfter.length)
@@ -103,7 +104,7 @@ const reducer = persistReducer(
       [setNewsfeed]:(state, actions) =>{
         let mId = state.newsfeedLastId;
         if(actions.payload.length>0){
-          const ids = actions.payload.map(item=>item.id);
+          const ids = actions.payload.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
           mId = Math.min(...ids);
           console.log(mId)
         }
@@ -121,7 +122,7 @@ const reducer = persistReducer(
         clonedCustomerPostsAfter = clonedCustomerPostsAfter.concat(filteredPostsAfter);
         let minId = state.customerPostsLastId;
         if(filteredPostsAfter.length>0){
-          const ids = filteredPostsAfter.map(item=>item.id);
+          const ids = filteredPostsAfter.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
           minId = Math.min(...ids);
         }
         return {
@@ -134,7 +135,7 @@ const reducer = persistReducer(
       [setCustomerPosts]:(state, actions) =>{
         let mId = state.customerPostsLastId;
         if(actions.payload&&actions.payload.length>0){
-          const ids = actions.payload.map(item=>item.id);
+          const ids = actions.payload.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
           mId = Math.min(...ids);
           console.log(mId)
         }

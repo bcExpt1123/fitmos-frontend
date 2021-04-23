@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField, Button, IconButton} from "@material-ui/core";
 import { Row, Col} from "react-bootstrap";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import DeleteIcon from "@material-ui/icons/Delete";
 export default function WorkoutEditDialog(props) {
   const [file,setFile] = useState(null);
   const [hash,setHash] = useState(Date.now());
@@ -22,6 +23,9 @@ export default function WorkoutEditDialog(props) {
     setTimeout(()=>{
       setHash(Date.now());
     },1000);
+  }
+  const removeImage = ()=>{
+    if(window.confirm("Are you sure?"))props.removeImage();
   }
   return(
     <Dialog
@@ -68,6 +72,11 @@ export default function WorkoutEditDialog(props) {
                 <PhotoCamera />
               </IconButton>
             </label>
+            {props.image&&
+              <IconButton color="default" component="span" onClick={removeImage}>
+                <DeleteIcon />
+              </IconButton>              
+            }
             <div>
               {file ? (
                 <img src={file} alt='props' width="200px" />

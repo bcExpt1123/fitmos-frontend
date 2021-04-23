@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "./Post";
+import BirthdayPost from "./BirthdayPost";
 import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
@@ -64,7 +65,10 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
         {posts.length > 0&&
           <>{
             posts.map(post=>
-              <Post post={post} newsfeed={newsfeed} key={post.id} suggested={suggested} setMedia={setMedia} setShowPostModal={setShowPostModal}/>
+              post.type==='birthday'?
+                <BirthdayPost key={post.id}  post={post} />
+                :
+                <Post post={post} newsfeed={newsfeed} key={post.id} suggested={suggested} setMedia={setMedia} setShowPostModal={setShowPostModal}/>
             )}
             {isFetching && <div className="loading-container">
               <img src={toAbsoluteUrl("/media/loading/loading.gif")} alt="loading..." />

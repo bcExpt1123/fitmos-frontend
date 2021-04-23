@@ -152,7 +152,7 @@ export default function WorkoutEditDialog(props) {
                 onChange={props.handleTimerTypeChange}
                 style={{width:'150px'}}
               >
-                <MenuItem value="null">None</MenuItem>
+                <MenuItem value="null">No Timer</MenuItem>
                 <MenuItem value="amrap">Amrap</MenuItem>
                 <MenuItem value="for_time">For time</MenuItem>
                 <MenuItem value="tabata">Tabata</MenuItem>

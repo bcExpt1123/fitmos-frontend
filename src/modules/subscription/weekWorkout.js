@@ -17,7 +17,9 @@ export const actionTypes = {
   WEEKWORKOUT_TAKE_CONTENT: "WEEKWORKOUT_TAKE_CONTENT",
   WEEKWORKOUT_SET_VALUE: "WEEKWORKOUT_SET_VALUE",
   WEEKWORKOUT_TAKE_VALUE: "WEEKWORKOUT_TAKE_VALUE",
-  WEEKWORKOUT_UPLOAD_IMAGE: "WEEKWORKOUT_UPLOAD_IMAGE"
+  WEEKWORKOUT_UPLOAD_IMAGE: "WEEKWORKOUT_UPLOAD_IMAGE",
+  WEEKWORKOUT_REMOVE_IMAGE: "WEEKWORKOUT_REMOVE_IMAGE",
+  WEEKWORKOUT_SET_ITEM_VALUE: "WEEKWORKOUT_SET_ITEM_VALUE",
 };
 
 const initialState = {
@@ -131,7 +133,9 @@ export const reducer = persistReducer(
         return { ...state, [action.key]: action.value };
       case actionTypes.WEEKWORKOUT_UPLOAD_IMAGE:
         return { ...state, uploadImage: action.image };
-        default:
+      case actionTypes.WEEKWORKOUT_SET_ITEM_VALUE:
+        return { ...state, [action.name]: action.value };  
+      default:
         return state;
     }
   }
@@ -158,6 +162,9 @@ export function $submitContent(weekDay) {
 }
 export function $updateImage(image){
   return { type: actionTypes.WEEKWORKOUT_UPLOAD_IMAGE, image };
+}
+export function $removeImage(weekDay){
+  return { type: actionTypes.WEEKWORKOUT_REMOVE_IMAGE, weekDay };
 }
 function* changeItem({ id, history }) {
   try {
@@ -365,9 +372,60 @@ function* previewContent({ weekDay, column,day }) {
     }
   } catch (ex) { }
 }
+const removeImageRequest = (fromDate,weekDate) => {
+  const formData = new FormData();
+  formData.append("from_date", fromDate);
+  formData.append("weekdate", weekDate);
+  return http({
+    path: `services/pendingworkout-remove-image`,
+    method: "POST",
+    data: formData
+  }).then(res => res.data);
+};
+function* removeImage({weekDay}){
+  const weekWorkout = yield select(store => store.weekWorkout);  
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: true
+  });
+  try {
+    const result = yield call(
+      removeImageRequest,
+      weekDay,
+      weekWorkout.day
+    );
+    
+    if (result.id) {
+      yield put({
+        type: actionTypes.WEEKWORKOUT_TAKE_VALUE,
+        weekDay,
+        name: 'image_path',
+        value: null
+      });
+      yield put({
+        type: actionTypes.WEEKWORKOUT_SET_ITEM_VALUE,
+        name:'image',
+        value:''
+      })    
+    }
+  } catch (ex) { 
+  }
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: false
+  });
+  yield put({
+    type: actionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "uploadImage",
+    value: null
+  });
+}
 export function* saga() {
   yield takeLeading(actionTypes.WEEKWORKOUT_CHANGE_ITEM, changeItem);
   yield takeLeading(actionTypes.WEEKWORKOUT_FETCH_REQUEST, fetchRequest);
   yield takeLeading(actionTypes.WEEKWORKOUT_SAVE_CONTENT, saveContent);
   yield takeLeading(actionTypes.WEEKWORKOUT_PREVIEW_DATE, previewContent);
+  yield takeLeading(actionTypes.WEEKWORKOUT_REMOVE_IMAGE, removeImage);
 }

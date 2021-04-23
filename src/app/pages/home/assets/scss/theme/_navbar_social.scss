@@ -382,52 +382,41 @@
     }
   }
 }
-@media (max-width: 370px) {
+@media (max-width: 390px) {
   .fitemos-menu-social {
-    .menu-first{
-      width:219px;
-      .navbar-logo{
-        >span{
-          display: none;
-          &.mini-logo{
-            display:block;
-          }  
-        }        
-      }
-    }
-    .menu-second{
-      &.clickable{
-        display:none;
-      }
-      .nav-item{
-        .link{
-          display:none;
-          &.active{
-            display:block;
-          }
-        }
-        &.dropdown{
-          display: block;    
-          .clickable-button{
-            display: block;
-            padding: 6px 12px 18px 12px;
-          }        
-          .dropdown-menu{
-            padding: 0;
-          }
-        }
-      }
-    }
     .menu-third{
       .link{
-        padding: 5px !important;       
+        padding: 13px 10px !important;       
         i{
           font-size: 20px;
         } 
       }
       .dropdown{
         .clickable-button{
-          margin-top: 6px;          
+          margin-top: 12px;          
+        }
+      }
+    }
+  }
+}
+@media (max-width: 370px) {
+  .fitemos-menu-social {
+    .menu-third{
+      .nav-item:nth-of-type(3){
+        .link{
+          padding-top: 12px!important;
+          padding-right: 0px!important;
+        }
+      }
+      .link{
+        padding: 10px !important;       
+        i{
+          font-size: 20px;
+        } 
+      }
+      .dropdown{
+        .clickable-button{
+          margin-top: 9px;          
         }
       }
     }

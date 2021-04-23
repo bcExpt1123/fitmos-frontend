@@ -5,12 +5,6 @@ import { useHistory } from "react-router-dom";
 import { injectIntl } from "react-intl";
 import { makeStyles, withStyles } from "@material-ui/core";
 import { Button, Paper, TextField, Grid, InputLabel, IconButton } from "@material-ui/core";
-import LocalMovies from "@material-ui/icons/LocalMovies";
-import {Rating,Autocomplete} from '@material-ui/lab';
-import FavoriteIcon from '@material-ui/icons/Brightness1';
-import CKEditor from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Player, ControlBar } from 'video-react';
 import "video-react/dist/video-react.css";
 import {
   $setNewItem,

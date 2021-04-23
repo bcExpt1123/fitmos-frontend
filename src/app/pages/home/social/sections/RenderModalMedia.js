@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import classnames from "classnames";
 import RenderMedia from "./RenderMedia";
 
-const RenderModalMedia = ({hidden, media, sliderContainerRef,activeSlide, index,handleClose }) => {
+const RenderModalMedia = ({hidden, media, sliderContainerRef,activeSlide, index,handleClose, postType }) => {
   const itemRef = useRef();
   useEffect(()=>{
     if(itemRef.current){
@@ -16,7 +16,7 @@ const RenderModalMedia = ({hidden, media, sliderContainerRef,activeSlide, index,
   },[itemRef])
   return (
     <div className={classnames('post-media',{'image-hidden':hidden})} ref={itemRef}>
-      <RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true} containerRef={sliderContainerRef}/>
+      <RenderMedia file={media} videoIndex={media.type=="video"?0:-1} status={activeSlide === index} modal={true} containerRef={sliderContainerRef} postType={postType}/>
     </div>
   );
 }

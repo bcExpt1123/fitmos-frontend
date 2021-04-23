@@ -75,7 +75,7 @@ const convertTimeSeconds = (diffTime)=>{
   const now = new Date();
   const other =  now.setTime(now.getTime() - diffTime * 1000);
   if(diffTime<1800){
-    return "";
+    return "en línea";
   }else if(diffTime<3600){
     return "Last seen "+Math.round(diffTime/60)+"m ago";
   }else if(diffTime<3600*24){

@@ -147,7 +147,7 @@ const PostModal = ({show, media, onClose }) => {
               <div className="sliders" ref={sliderContainerRef} onClick={(evt)=>evt.stopPropagation()}>
                 <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
-                    <RenderModalMedia key={'modal'+media.id} hidden={hidden} media={media} sliderContainerRef={sliderContainerRef} activeSlide={activeSlide} index={index} handleClose={handleClose}/>
+                    <RenderModalMedia key={'modal'+media.id} hidden={hidden} media={media} sliderContainerRef={sliderContainerRef} activeSlide={activeSlide} index={index} handleClose={handleClose} postType={post.type}/>
                   )}
                 </Slider>
                 {hidden==false&&<div className="loading-container">

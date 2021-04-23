@@ -26,7 +26,9 @@ export const actionTypes = {
   CMS_TAKE_CONTENT: "CMS_TAKE_CONTENT",
   CMS_SET_VALUE: "CMS_SET_VALUE",
   CMS_TAKE_VALUE: "CMS_TAKE_VALUE",
-  CMS_UPLOAD_IMAGE: "CMS_UPLOAD_IMAGE"
+  CMS_UPLOAD_IMAGE: "CMS_UPLOAD_IMAGE",
+  CMS_REMOVE_IMAGE: "CMS_REMOVE_IMAGE",
+  CMS_SET_ITEM_VALUE: "CMS_SET_ITEM_VALUE",
 };
 
 const d = new Date();
@@ -153,6 +155,8 @@ export const reducer = persistReducer(
         return { ...state, [action.key]: action.value };
       case actionTypes.CMS_UPLOAD_IMAGE:
         return { ...state, uploadImage: action.image };
+      case actionTypes.CMS_SET_ITEM_VALUE:
+        return { ...state, [action.name]: action.value };
       default:
         return state;
     }
@@ -196,6 +200,9 @@ export function $submitContent() {
 }
 export function $updateImage(image){
   return { type: actionTypes.CMS_UPLOAD_IMAGE, image };
+}
+export function $removeImage(){
+  return { type: actionTypes.CMS_REMOVE_IMAGE };
 }
 function* redirectEditor({ pickedDate, history }) {
   yield put({ type: actionTypes.CMS_DATE_CHANGED, pickedDate });
@@ -500,6 +507,49 @@ function* previewContent({ editorDate, column }) {
     }
   } catch (ex) {}
 }
+const removeImageRequest = (date) => {
+  const itemDate = date.toLocaleDateString("en", options);
+  return http({
+    path: `services/remove-image?date=`+itemDate,
+    method: "POST"
+  }).then(res => res.data);
+};
+function* removeImage(){
+  const cms = yield select(store => store.cms);
+  yield put({
+    type: weekWorkoutActionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: true
+  });
+  try {
+    const result = yield call(
+      removeImageRequest,
+      cms.editorDate,
+    );
+    if (result.id) {
+      yield put({
+        type: actionTypes.CMS_TAKE_VALUE,
+        name: 'image_path',
+        value: null
+      });
+      yield put({
+        type: actionTypes.CMS_SET_ITEM_VALUE,
+        name:'image',
+        value:null
+      })
+    }
+  } catch (ex) {}
+  yield put({
+    type: weekWorkoutActionTypes.WEEKWORKOUT_SET_VALUE,
+    key: "isSaving",
+    value: false
+  });
+  yield put({
+    type: actionTypes.CMS_SET_VALUE,
+    key: "uploadImage",
+    value: null
+  });
+}
 export function* saga() {
   yield takeLatest(actionTypes.CMS_REDIRECT, redirectEditor);
   yield takeLatest(actionTypes.CMS_CHANGE_ITEM, changeItem);
@@ -510,4 +560,5 @@ export function* saga() {
   yield takeLatest(actionTypes.CMS_WEEKLY_FETCH_REQUEST, fetchWeekly);
   yield takeLatest(actionTypes.CMS_SAVE_CONTENT, saveContent);
   yield takeLeading(actionTypes.CMS_PREVIEW_DATE, previewContent);
+  yield takeLeading(actionTypes.CMS_REMOVE_IMAGE, removeImage);
 }

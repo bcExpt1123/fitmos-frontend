@@ -5,16 +5,23 @@ const DisplayLine = ({line, messageId})=>{
   const [words, setWords] = useState([]);
   useEffect(()=>{
     if (line !== "" && line!==undefined && line!==null) {
-      // const regexp = /@\[(.+?)\]\(([0-9]+)\)/g;
-      const mentionPattern = "(@\[.+?\]\([0-9]+\))";
+      const regexp = /(@\[.+?\]\([0-9]+\))/g;
+      // const mentionPattern = "(@\[.+?\]\([0-9]+\))";
       const postPattern = `(${window.location.origin}/posts/[0-9]+)`;
       // const postPattern = `http:\/\/localhost:3000\/posts\/[0-9]+`;
       // const regexp = /(@\[.+?\]\([0-9]+\))|http:\/\/localhost:3000\/posts\/[0-9]+/g;
-      const regexp = new RegExp(mentionPattern+'|'+postPattern, 'g');
+      const regexpPostPattern = new RegExp(postPattern, 'g');
       const mentionReg = /@\[(.+?)\]\(([0-9]+)\)/g;
       const postReg = /(http|https):\/\/(localhost:[0-9]+|www\.fitemos\.com|dev\.fitemos\.com)\/posts\/([0-9]+)/g;
       let content = line;
-      let newWords = content.split(regexp);    
+      let newWords;
+      if(content.search(mentionReg)>-1){
+        newWords = content.split(regexp);
+      }else if(content.search(regexpPostPattern)>-1){
+        newWords = content.split(regexpPostPattern);
+      }else{
+        newWords = [content];
+      }
       let jsonWords = [];
       // console.log(newWords, line, postPattern);return;
       for(let i = 0; i < newWords.length; i++){

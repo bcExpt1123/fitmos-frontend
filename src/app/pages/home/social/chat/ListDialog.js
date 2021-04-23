@@ -99,6 +99,35 @@ const ListDialog = ()=> {
   const handleChatClose = ()=>{
     dispatch(setItemValue({name:"showPanel",value:false}));
   }
+  const convertMessage = (message)=>{
+    if(message === null )return "";
+    const regexp = /(@\[.+?\]\([0-9]+\))/g;
+    const mentionReg = /@\[(.+?)\]\(([0-9]+)\)/g;
+    const content = message;
+    const newWords = content.split(regexp);
+    let jsonWords = [];
+    for(let i = 0; i < newWords.length; i++){
+      let word;
+      if(newWords[i]!=="" && newWords[i]!==undefined){
+        const matches = [...newWords[i].matchAll(mentionReg)];
+        if(matches.length>0){
+          word = {
+            type:"customer",
+            // word:newWords[i],
+            id:matches[0][2],
+            word:'@'+matches[0][1]
+          }
+        }else{
+          word = {
+            type:"p",
+            word:newWords[i]
+          }
+        }
+        jsonWords[i] = word;
+      }
+    }
+    return jsonWords.map(word=>word.word).join(' ');
+  }
   return (
     <ConnectyCubeWrapper>
       <PerfectScrollbar
@@ -116,18 +145,20 @@ const ListDialog = ()=> {
           <div className="sub-header">
             <div className="title">
               <i className="cursor-pointer fal fa-window-close" onClick={handleChatClose}/>
+              {searchFieldShow ? <div className="search-controls">
+                <input className="" value={searchValue} onChange={handleSearchValue} ref={searchRef}/>
+                <button className="search-close btn" onClick={searchFieldClose}>Cancel</button>
+              </div>
+              :
               <span>Chat</span>
+              }
             </div>
             <div className="actions">
-              <i className="cursor-pointer fal fa-search"  onClick={searchFieldDisplay}/>
-              <i className="cursor-pointer fal fa-plus-circle"  onClick={newDialog}/>
-              <i className="cursor-pointer fal fa-user-friends"  onClick={newGroupDialog}/>
+              <i className="cursor-pointer fal fa-search" title="Search" onClick={searchFieldDisplay}/>
+              <i className="cursor-pointer fal fa-plus-circle" title="New Chat"  onClick={newDialog}/>
+              <i className="cursor-pointer fal fa-user-friends" title="New Group" onClick={newGroupDialog}/>
             </div>
           </div>
-          {searchFieldShow && <div className="search-controls">
-              <input className="" value={searchValue} onChange={handleSearchValue} ref={searchRef}/>
-              <button className="search-close btn" onClick={searchFieldClose}>Cancel</button>
-            </div>}
         </div>
         {/* <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button> */}
         <div className="kt-notification-v2 list-dialogs" ref={contextMenuWrapper}>
@@ -165,7 +196,7 @@ const ListDialog = ()=> {
                           {dialog.type==3 && dialog.users && dialog.users[0] && <>{dialog.users[0].first_name} {dialog.users[0].last_name}</>}
                           {dialog.type==2 && <>{dialog.name}</>}
                         </h5>
-                        <span className="last-message">{dialog.last_message === '' ? "No messages yet" : dialog.last_message}</span>
+                        <span className="last-message">{dialog.last_message === '' ? "No messages yet" : convertMessage(dialog.last_message)}</span>
                       </div>
                       <div className="info-right">
                         <p>{lastDate({

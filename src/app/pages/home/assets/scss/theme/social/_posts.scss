@@ -75,6 +75,15 @@
         }
       }
     }
+    .article-type{
+      float:right;
+      margin-top: 2px;
+      border-radius: 3px;
+      background-color: #AFCA32;
+      color:white;
+      font-size: 14px;
+      padding:4px 31px;
+    }
     .post-time{
       color:#A8AEB5;
       font-size: 10px;
@@ -95,6 +104,15 @@
   }
   .post-body{
     padding: 0 23px 15px 23px;
+    .html-content{
+      .read-more__button{
+        margin-top: -20px;
+        position: absolute;
+        right: 40px;
+        padding-left:10px;
+        background-color: white;
+      }
+    }
   }
   .medias-container{
     position: relative;

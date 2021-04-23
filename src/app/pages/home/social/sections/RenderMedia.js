@@ -7,7 +7,7 @@ import { play } from "video-react/lib/actions/player";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {setItemValue} from "../../redux/post/actions";
 
-const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimensions, containerRef}) => {
+const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimensions, containerRef, postType}) => {
   const player = useRef();
   const imageRef = useRef();
   const videoPlayer = useSelector(({post})=>post.videoPlayer);
@@ -184,9 +184,16 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
       }
     };
   },[])
-  const convertImageUrl = (url)=>{
-    const object = new URL(url);
+  const convertImageUrl = (url, file)=>{
+    let object;
+    try{
+      object = new URL(url);
+    }catch(e){
+      console.log(url, file)
+      return;
+    }
     if(object.protocol == 'blob:' )return url;
+    if(['shop','blog','benchmark'].includes(postType))return url;
     let filename = object.pathname.split('/').reverse()[0];
     const ext = filename.split('.')[1]; 
     let replaceFileName = filename.split('.')[0] + '-1024.'+ext;
@@ -196,7 +203,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
     if(setDimensions)setTimeout(()=>setIndex(index + 1),100);
   },[setDimensions]);
   return (
-    file.type === "image"?<img src={convertImageUrl(file.url)} alt="image" onClick={onOpenClick} ref={imageRef}/>:
+    file.type === "image"?<img src={convertImageUrl(file.url, file)} alt="image" onClick={onOpenClick} ref={imageRef}/>:
     modal?<Player
         ref={player}
         src={file.url}

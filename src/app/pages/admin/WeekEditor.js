@@ -12,7 +12,8 @@ import {
     $openPreviewCell,
     $updateItemValue,
     $submitContent,
-    $updateImage
+    $updateImage,
+    $removeImage
   } from "../../../modules/subscription/weekWorkout";
 import WorkoutEditDialog from "./dialog/WorkoutEditDialog";
 import WorkoutImageEditDialog from "./dialog/WorkoutImageEditDialog";
@@ -169,6 +170,9 @@ function Main({
     setOpenBlog(false);
     dispatch($submitContent(weekDay));
   };
+  const removeImage = () =>{
+    dispatch($removeImage(weekDay));
+  }
   const handleChange = event => {
     dispatch($updateItemValue('content',event.target.value));
   };
@@ -284,7 +288,7 @@ function Main({
                     })}
                   >
                     {data[weekDay]&&data[weekDay][col] !== undefined &&
-                      data[weekDay][col][row+'_timer_type'] !== undefined && data[weekDay][col][row+'_timer_type'] !== "" && data[weekDay][col][row+'_timer_type'] !== null && (
+                      data[weekDay][col][row+'_timer_type'] !== undefined && data[weekDay][col][row+'_timer_type'] !== "" && data[weekDay][col][row+'_timer_type'] !== "null" && data[weekDay][col][row+'_timer_type'] !== null && (
                         <div className={classes.timer}>
                           {data[weekDay][col][row+'_timer_type']!='tabata'?
                             <>
@@ -352,6 +356,7 @@ function Main({
         updateImage={updateImage}
         handleChange={handleChange}
         handleSave={handleSave}
+        removeImage={removeImage}
       />
       <WorkoutEditDialog 
         open={openBlog} 

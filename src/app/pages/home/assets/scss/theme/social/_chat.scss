@@ -452,10 +452,13 @@ $fitemos-chat-panel: (
       .title{
         display: inline-block;
         width:calc(100% - 100px);
+        height: 45px;
         span{
           color:#0C2A49;
           font-size: 20px;          
           font-weight: 600;
+          margin-top: 4px;
+          display: inline-block;
         }
       }
       .actions{
@@ -465,13 +468,14 @@ $fitemos-chat-panel: (
       }
     }
     .search-controls{
-      margin-left: 70px;
       text-align: left;
+      display: inline-block;
       input{
         border-radius: 4px;
         padding:5px;
         border: 1px solid rgba($secondary-background-color, 0.8);
         outline: none;
+        width:200px;
         &:focus{
           border:1px solid rgba($secondary-background-color, 1);
         }
@@ -487,9 +491,11 @@ $fitemos-chat-panel: (
     width:334px;
     .image-crop-picker-header{
       margin-top: 17px;
+      display: flex;
       button{
         background-color: $secondary-background-color;
-        margin:0 40px;
+        margin:0 35px;
+        flex-grow: 1;
         color:white;
       }
     }

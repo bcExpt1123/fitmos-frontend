@@ -1179,7 +1179,7 @@ function* onAppendSuggestedPosts(){
     const filteredPostsAfter = result.newsfeed.filter((post)=>!suggestedPosts.some(item=>item.id == post.id));
     suggestedPosts = suggestedPosts.concat(filteredPostsAfter);
     if(filteredPostsAfter.length>0){
-      const ids = filteredPostsAfter.map(item=>item.id);
+      const ids = filteredPostsAfter.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
       id = Math.min(...ids);
     }
     yield put(setItemValue({name:"suggestedPosts", value:suggestedPosts}));
@@ -1305,7 +1305,7 @@ function* onAppendOldNewsfeed(){
     const filteredPostsAfter = result.oldNewsfeed.filter((post)=>!oldNewsfeed.some(item=>item.id == post.id));
     oldNewsfeed = oldNewsfeed.concat(filteredPostsAfter);
     if(filteredPostsAfter.length>0){
-      const ids = filteredPostsAfter.map(item=>item.id);
+      const ids = filteredPostsAfter.filter((item)=>item.id == parseInt(item.id)).map(item=>item.id);
       id = Math.min(...ids);
     }
     yield put(setItemValue({name:"oldNewsfeed", value:oldNewsfeed}));

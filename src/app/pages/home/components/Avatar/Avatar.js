@@ -20,6 +20,8 @@ const pictureSrc = ({ pictureUrls, size }) => {
     case "md":
     case "xm":
       return pictureUrls.medium;
+    case "xs":
+      return pictureUrls.small;
     default:
       return pictureUrls.small;
   }

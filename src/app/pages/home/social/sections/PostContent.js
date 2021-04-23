@@ -16,6 +16,7 @@ import ReportModal from "./ReportModal";
 import TagFollowersModal from "./customer/TagFollowersModal";
 import { convertTime, can } from "../../../../../lib/common";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
+import HtmlContentReadMore from './HtmlContentReadMore';
 const Map = compose(
   withScriptjs,
   withGoogleMap
@@ -170,102 +171,164 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
       }
     </>)
   }
+  const commonPostTypes = ['general','workout'];
+  const customPostTypes = ['shop','blog','benchmark','evento'];
+  const articlePath = ()=>{
+    if(customPostTypes.includes(post.type)){
+      switch(post.type){
+        case "shop":
+          return "/"+post.shopUsername
+        case "blog":
+          return "/news/"+post.object_id;
+        case "benchmark":
+          return "/benchmarks";
+        case "evento":
+          return "/eventos/"+post.object_id;
+      }
+    }
+    return "/";
+  }
+  const articleType = ()=>{
+    if(customPostTypes.includes(post.type)){
+      switch(post.type){
+        case "shop":
+          return "Nueva Tienda";
+        case "blog":
+          return "Nuevo Artículo";
+        case "benchmark":
+          return "Nuevo Benchmark";
+        case "evento":
+          return "Nuevo Evento";
+      }
+    }
+    return "";
+  }
   return (
     <>
       <div className="post-header">
-        <NavLink
-          to={"/"+post.customer.username}
-          className={"link-profile"}
-        >
-          <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
-        </NavLink>
-        <DropDown refresh={refresh}>
-          {({show,toggleHandle})=>(
-            <div className=" dropdown">
-              <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
-                <i className="fal fa-ellipsis-h dropbtn" />
-              </button>
-              <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
-                {
-                  (currentUser.type==="customer" && post.customer_id == currentUser.customer.id || currentUser.type==="admin" && can(currentUser, "social"))?
-                  <>
-                    <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
-                    <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
-                  </>
-                  :
-                  <>
-                    {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                    {/* {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>} */}
-                    {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                    <a className={"dropdown-item"} onClick={handleReport}>Report Post</a>
-                  </>
-                }
-              </div>
-            </div>    
-          )}
-        </DropDown>
-        <ReportModal type={"post"} post={post} show={showReportModal} onClose={onReportModalClose}/>
-        <span style={{display:"inline-block",verticalAlign:"super"}}>
-          <span className="full-name">
+        {commonPostTypes.includes(post.type) &&
+          <>
             <NavLink
               to={"/"+post.customer.username}
-              className={"link-profile font-weight-bold"}
+              className={"link-profile"}
             >
-              {post.customer.first_name} {post.customer.last_name}
+              <Avatar pictureUrls={post.customer.avatarUrls} size="xs" />
             </NavLink>
-          </span>
-          {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
-            <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
-              &nbsp;&nbsp;&nbsp;Follow
+            <DropDown refresh={refresh}>
+              {({show,toggleHandle})=>(
+                <div className=" dropdown">
+                  <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
+                    <i className="fal fa-ellipsis-h dropbtn" />
+                  </button>
+                  <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
+                    {
+                      (currentUser.type==="customer" && post.customer_id == currentUser.customer.id || currentUser.type==="admin" && can(currentUser, "social"))?
+                      <>
+                        <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
+                        <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
+                      </>
+                      :
+                      <>
+                        {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                        {/* {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>} */}
+                        {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                        <a className={"dropdown-item"} onClick={handleReport}>Report Post</a>
+                      </>
+                    }
+                  </div>
+                </div>    
+              )}
+            </DropDown>
+            <ReportModal type={"post"} post={post} show={showReportModal} onClose={onReportModalClose}/>
+            <span style={{display:"inline-block",verticalAlign:"super"}}>
+              <span className="full-name">
+                <NavLink
+                  to={"/"+post.customer.username}
+                  className={"link-profile font-weight-bold"}
+                >
+                  {post.customer.first_name} {post.customer.last_name}
+                </NavLink>
+              </span>
+              {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
+                <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
+                  &nbsp;&nbsp;&nbsp;Follow
+                </span>
+              )}        
+              {!modalShow&&postHeader()}
             </span>
-          )}        
-          {!modalShow&&postHeader()}
-        </span>
+          </>
+        }
+        {customPostTypes.includes(post.type)&&
+          <>
+            <NavLink
+              to={"/"+articlePath()}
+              className={"link-profile"}
+            >
+              {post.type==='shop'?<Avatar pictureUrls={post.shopLogo} size="xs" />
+                :<Avatar pictureUrls={{small:toAbsoluteUrl("/media/logos/logo-mini-sm.png")}} size="xs" />
+              }
+              
+            </NavLink>
+            <span style={{display:"inline-block",verticalAlign:"super"}}>
+              <span className="full-name">
+                <NavLink
+                  to={articlePath()}
+                  className={"link-profile font-weight-bold"}
+                >
+                  {post.title}
+                </NavLink>
+              </span>
+              {!modalShow&&postHeader()}
+            </span>
+            <div className="article-type">{articleType()}</div>
+          </>
+        }
         <div className="post-time" >{convertTime(post.created_at)}</div>
       </div>
       <div className={classnames("post-body",{'post-modal-show':modalShow,'read-more-show':showMore})}>
-        {post.json_content && <>
+        {post.contentType==="html"?<HtmlContentReadMore content={post.content}/>:
+        post.json_content && <>
           {post.json_content.length>5?
-          <>
-            {showMore?<>
-              {post.json_content.map((line, index)=>
-                (index<post.json_content.length-1)?
-                  <div key={index}>{renderPostLine(line)}</div>
-                  :
-                  <div key={index}>{renderPostLine(line)}
-                    <button 
-                      onClick={toggleReadMore}
-                      className="read-more__button"
-                    >
-                      {SHOW_LESS_TEXT}
-                    </button>              
-                  </div>
-              )}
-            </>:<>
-              <div>{renderPostLine(post.json_content[0])}</div>
-              <div>{renderPostLine(post.json_content[1])}</div>
-              <div>{renderPostLine(post.json_content[2])}</div>
-              <div>{renderPostLine(post.json_content[3])}</div>
-              <div>{renderPostLine(post.json_content[4])}<span>…</span>
-                <button 
-                  onClick={toggleReadMore}
-                  className="read-more__button"
-                >
-                  {SHOW_MORE_TEXT}
-                </button>          
-              </div>
-            </>            
-            }
-          </>
-          :
-          <>
-            {post.json_content.map((line,index)=>
-              <div key={index}>{
-                renderPostLine(line)
-                }
-              </div>)
-            }          
-          </>
+            <>
+              {showMore?<>
+                {post.json_content.map((line, index)=>
+                  (index<post.json_content.length-1)?
+                    <div key={index}>{renderPostLine(line)}</div>
+                    :
+                    <div key={index}>{renderPostLine(line)}
+                      <button 
+                        onClick={toggleReadMore}
+                        className="read-more__button"
+                      >
+                        {SHOW_LESS_TEXT}
+                      </button>              
+                    </div>
+                )}
+              </>:<>
+                <div>{renderPostLine(post.json_content[0])}</div>
+                <div>{renderPostLine(post.json_content[1])}</div>
+                <div>{renderPostLine(post.json_content[2])}</div>
+                <div>{renderPostLine(post.json_content[3])}</div>
+                <div>{renderPostLine(post.json_content[4])}<span>…</span>
+                  <button 
+                    onClick={toggleReadMore}
+                    className="read-more__button"
+                  >
+                    {SHOW_MORE_TEXT}
+                  </button>          
+                </div>
+              </>            
+              }
+            </>
+            :
+            <>
+              {post.json_content.map((line,index)=>
+                <div key={index}>{
+                  renderPostLine(line)
+                  }
+                </div>)
+              }          
+            </>
           }
           </>
         }
@@ -281,7 +344,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
         />
       </div>}
       {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}>
-      {(post.tagFollowers&&post.tagFollowers.length>0 || post.location || post.type==="workout")&&<SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>}
+        {(post.tagFollowers&&post.tagFollowers.length>0 || post.location || post.type==="workout")&&<SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>}
         {postHeader()}</div>
       }
     </>
