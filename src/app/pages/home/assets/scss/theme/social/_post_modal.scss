@@ -151,7 +151,7 @@
           }
           .post-body{
             font-size: 14px;
-            padding:16px;
+            padding:0 20px;
           }
           .post-footer{
             border-top:1px solid #E4E4E5;
@@ -160,6 +160,7 @@
             padding: 13px 0;
           }
           .post-comments{
+            margin-top: 16px;
             .comment-view{
               form{
                 margin-right: -43px;

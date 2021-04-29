@@ -15,6 +15,7 @@ import LinkProfile from "./customer/Link";
 import ReportModal from "./ReportModal";
 import TagFollowersModal from "./customer/TagFollowersModal";
 import { convertTime, can } from "../../../../../lib/common";
+import { CUSTOM_POST_TYPES, articlePath } from "../../../../../lib/social";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import HtmlContentReadMore from './HtmlContentReadMore';
 const Map = compose(
@@ -38,7 +39,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     return <>
       {follower.length>0?
         <button className="follower-button dropbtn font-weight-bold" onClick={handleClick(follower[0])}>
-          {follower[0].first_name+' '+follower[0].last_name}
+          {follower[0].first_name+' '+follower[0].last_name}&nbsp;
         </button>
         :
         <>{word}</>}
@@ -136,33 +137,42 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     return (<>
       {post.type=="workout"?
         <>
-          &nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_spanish_short_date}</span>
+          &nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
         </>:
         <>
-          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;is</span>}
+          {(post.tagFollowers&&post.tagFollowers.length>0 || post.location)&&<span>&nbsp;está&nbsp;</span>}
           {(post.location && post.location!='false')&&<>
-            &nbsp;in&nbsp;<span className="font-weight-bold">
+            &nbsp;en&nbsp;<span className="font-weight-bold">
               <a href={`http://www.google.com/maps/search/?api=1&query=`+window.encodeURI(post.location)} target="_blank" className="open-map font-size-14 font-weight-bold">{post.location}</a></span>
+              &nbsp;
             </>}
-          {post.tagFollowers&&post.tagFollowers.length>0&&<>&nbsp;with</>}
-          &nbsp;
+          {post.tagFollowers&&post.tagFollowers.length>0&&<>con&nbsp;</>}
           {
             post.tagFollowers && post.tagFollowers.length>0 &&<>
-              &nbsp;<span className="follower font-weight-bold"><LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/></span>
+              &nbsp;<span className="follower font-weight-bold">
+                <LinkProfile id={post.tagFollowers[0].id} display={post.tagFollowers[0].first_name+' '+post.tagFollowers[0].last_name} username={post.tagFollowers[0].username}/>
+                </span>
               {post.tagFollowers.length>1&&
                 <>
-                  &nbsp;and&nbsp;
-                  <Tooltip title={
-                    post.tagFollowers.map((follower, index)=>{
-                      return index>0&&
-                      <div key={follower.id} className="follower">
-                        {follower.first_name+' '+follower.last_name}
-                      </div>
-                    })
-                  }>
-                    <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} others</span>
-                  </Tooltip>  
-                  {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+                  &nbsp;y&nbsp;
+                  {post.tagFollowers.length===2?<span className="follower font-weight-bold">
+                    <LinkProfile id={post.tagFollowers[1].id} display={post.tagFollowers[1].first_name+' '+post.tagFollowers[1].last_name} username={post.tagFollowers[1].username}/>
+                  </span>
+                    :
+                    <>
+                      <Tooltip title={
+                        post.tagFollowers.map((follower, index)=>{
+                          return index>0&&
+                          <div key={follower.id} className="follower">
+                            {follower.first_name+' '+follower.last_name}
+                          </div>
+                        })
+                      }>
+                        <span className="cursor-pointer font-weight-bold" onClick={openTagFollowersModal}>{post.tagFollowers.length - 1} otros</span>
+                      </Tooltip>  
+                      {showTagFollowersModal && <TagFollowersModal show={showTagFollowersModal} onClose={onCloseTagFollowersModal} followers={post.tagFollowers}/>}
+                    </>
+                  }
                 </>
               }
             </>
@@ -172,24 +182,8 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     </>)
   }
   const commonPostTypes = ['general','workout'];
-  const customPostTypes = ['shop','blog','benchmark','evento'];
-  const articlePath = ()=>{
-    if(customPostTypes.includes(post.type)){
-      switch(post.type){
-        case "shop":
-          return "/"+post.shopUsername
-        case "blog":
-          return "/news/"+post.object_id;
-        case "benchmark":
-          return "/benchmarks";
-        case "evento":
-          return "/eventos/"+post.object_id;
-      }
-    }
-    return "/";
-  }
   const articleType = ()=>{
-    if(customPostTypes.includes(post.type)){
+    if(CUSTOM_POST_TYPES.includes(post.type)){
       switch(post.type){
         case "shop":
           return "Nueva Tienda";
@@ -199,7 +193,9 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           return "Nuevo Benchmark";
         case "evento":
           return "Nuevo Evento";
-      }
+        case "workout-post":
+          return "Nuevo Workout";
+        }
     }
     return "";
   }
@@ -224,15 +220,15 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
                     {
                       (currentUser.type==="customer" && post.customer_id == currentUser.customer.id || currentUser.type==="admin" && can(currentUser, "social"))?
                       <>
-                        <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Edit Post</a>
-                        <a className={"dropdown-item"} onClick={handleDelete(post)}>Delete Post</a>
+                        <a className={"dropdown-item"} onClick={openEditPostModal(post)}>Editar Publicación</a>
+                        <a className={"dropdown-item"} onClick={handleDelete(post)}>Borrar Publicación</a>
                       </>
                       :
                       <>
-                        {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Unfollow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                        {/* {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Follow&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>} */}
-                        {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Hide all posts from&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
-                        <a className={"dropdown-item"} onClick={handleReport}>Report Post</a>
+                        {post.customer.following&&post.customer.following.status ==='accepted'&&<a className={"dropdown-item"} onClick={handleUnfollow}>Dejar de seguir&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                        {/* {post.customer.following == null && <a className={"dropdown-item"} onClick={handleFollow}>Agregar&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>} */}
+                        {(newsfeed === true && post.customer.relation == false) && <a className={"dropdown-item"} onClick={handleMute}>Esconder las publicaciones de&nbsp; <span className="font-weight-bold">{post.customer.first_name}  {post.customer.last_name}</span></a>}
+                        <a className={"dropdown-item"} onClick={handleReport}>Reportar Publicación</a>
                       </>
                     }
                   </div>
@@ -251,17 +247,17 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               </span>
               {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
                 <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
-                  &nbsp;&nbsp;&nbsp;Follow
+                  &nbsp;&nbsp;&nbsp;Agregar
                 </span>
               )}        
               {!modalShow&&postHeader()}
             </span>
           </>
         }
-        {customPostTypes.includes(post.type)&&
+        {CUSTOM_POST_TYPES.includes(post.type)&&
           <>
             <NavLink
-              to={"/"+articlePath()}
+              to={"/"+articlePath(post)}
               className={"link-profile"}
             >
               {post.type==='shop'?<Avatar pictureUrls={post.shopLogo} size="xs" />
@@ -272,7 +268,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
             <span style={{display:"inline-block",verticalAlign:"super"}}>
               <span className="full-name">
                 <NavLink
-                  to={articlePath()}
+                  to={articlePath(post)}
                   className={"link-profile font-weight-bold"}
                 >
                   {post.title}
@@ -343,7 +339,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           markerPosition={position.lat===null?null:{ lat: parseFloat(position.lat), lng: parseFloat(position.lng) }}
         />
       </div>}
-      {modalShow&&<div className="font-size-14" style={{padding:"0 23px"}}>
+      {modalShow&&<div className="font-size-14" style={{padding:"0 20px", marginBottom:"16px"}}>
         {(post.tagFollowers&&post.tagFollowers.length>0 || post.location || post.type==="workout")&&<SVG src={toAbsoluteUrl("/media/icons/svg/Design/Minus.svg")} style={{width:"30px"}}/>}
         {postHeader()}</div>
       }

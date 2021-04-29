@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 const SearchCompanies = ({companies, keyword}) => {
   return <>
     {companies.length==0?
-      <>There is no results with keyword "{keyword}".</>:
+      <>No hay resultados sobre "{keyword}".</>:
       companies.map(company=>(
         <div className="item" key={company.id}>
           <NavLink

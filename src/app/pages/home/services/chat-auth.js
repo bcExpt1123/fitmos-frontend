@@ -52,6 +52,7 @@ class AuthService {
       authService.setUserSession(session)
       await authService.connect(session.user_id, session.token)
     }catch(e){
+      console.log('error', e)
       if(e.status == 401){
         console.log(params)
         console.log(e);

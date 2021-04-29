@@ -246,11 +246,11 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
           <span className="cursor-pointer back" onClick={returnPostScreen}><i className="fas fa-arrow-left" /></span>
           {type==="tag"&&
             <Modal.Title className="w-100">
-              Tag Followers
+              Taggear Amigos
             </Modal.Title>
           }
           {type==="location"&&<Modal.Title className="w-100">
-              Search for location
+              Ubicación
             </Modal.Title>
           }
           {type==="medias"&&<Modal.Title className="w-100">
@@ -293,9 +293,9 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
                 </span>
                 {(workout || post.type=="workout")?<>
                   {post.type=="workout"?
-                    <>&nbsp;completed <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {post.workout_spanish_short_date}</span> </>
+                    <>&nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span> </>
                     :
-                    <>&nbsp;completes <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">the workout from {workout.short_date}</span> </>
+                    <>&nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {workout.short_date}</span> </>
                   }
                   
                 </>:<>

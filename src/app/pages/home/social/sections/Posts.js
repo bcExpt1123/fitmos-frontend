@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Post from "./Post";
 import BirthdayPost from "./BirthdayPost";
+import JoinPost from "./JoinPost";
 import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
 import CreatePostModal from "../posts/CreatingModal";
 import PostModal from "../sections/PostModal";
@@ -55,7 +56,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
       }
       {show&&
         <div className="tag-post cursor-pointer" onClick={OpenCreatingPost}>
-          What's on your mind? {currentUser.customer.first_name}
+          ¿Qué hay de nuevo {currentUser.customer.first_name}?
           <button type="button" className={"clickable-button"}>
             <i className="fal fa-plus-square" />
           </button>
@@ -65,8 +66,11 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
         {posts.length > 0&&
           <>{
             posts.map(post=>
-              post.type==='birthday'?
-                <BirthdayPost key={post.id}  post={post} />
+              ['birthday','join'].includes(post.type)?
+                <React.Fragment key={post.id}>{
+                  post.type==='birthday'?<BirthdayPost post={post} />
+                    :<JoinPost post={post} />
+                }</React.Fragment>
                 :
                 <Post post={post} newsfeed={newsfeed} key={post.id} suggested={suggested} setMedia={setMedia} setShowPostModal={setShowPostModal}/>
             )}

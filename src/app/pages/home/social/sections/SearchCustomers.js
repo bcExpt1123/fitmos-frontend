@@ -4,7 +4,7 @@ import FollowButton from "./FollowButton";
 const SearchCustomers = ({customers, keyword}) => {
   return <>
     {customers.length==0?
-      <>There is no results with keyword "{keyword}".</>:
+      <>No hay resultados sobre "{keyword}".</>:
       customers.map(customer=>(
         <div className="item" key={customer.id}>
           <div>

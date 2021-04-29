@@ -18,9 +18,9 @@ const HtmlContentReadMore = ({content}) => {
           if(ref.current.children[0].children[0].offsetHeight>70){
             setHeight(ref.current.children[0].children[0].offsetHeight + "px");
             ref.current.children[0].style.height=ref.current.children[0].children[0].offsetHeight + "px";
-          }else{
-            ref.current.children[0].style.height=(ref.current.children[0].children[0].offsetHeight + ref.current.children[0].children[1].offsetHeight)+ "px";
-            setHeight((ref.current.children[0].children[0].offsetHeight + ref.current.children[0].children[1].offsetHeight)+ "px");
+          }else{            
+            ref.current.children[0].style.height=(ref.current.children[0].children[1].getClientRects()[0].bottom - ref.current.children[0].children[0].getClientRects()[0].bottom + ref.current.children[0].children[1].offsetHeight)+ "px";
+            setHeight((ref.current.children[0].children[1].getClientRects()[0].bottom - ref.current.children[0].children[1].getClientRects()[0].bottom + ref.current.children[0].children[1].offsetHeight)+ "px");
           }
           setReadMore(true);
           setIndex(index + 1);
@@ -39,10 +39,12 @@ const HtmlContentReadMore = ({content}) => {
   useEffect(()=>{
     const containerBottom = ref.current.children[0].getClientRects()[0].bottom;
     let elementBottom;
-    if(ref.current.children[0].children[0].offsetHeight>70){
-      elementBottom = ref.current.children[0].children[0].getClientRects()[0].bottom;
-    }else{
-      elementBottom = ref.current.children[0].children[1].getClientRects()[0].bottom;
+    if(ref.current.children[0].children.length>2){
+      if(ref.current.children[0].children[0].offsetHeight>70){
+        elementBottom = ref.current.children[0].children[0].getClientRects()[0].bottom;
+      }else{
+        elementBottom = ref.current.children[0].children[1].getClientRects()[0].bottom;
+      }
     }
     if(height){
       if(ref.current.offsetHeight>100){
@@ -65,12 +67,14 @@ const HtmlContentReadMore = ({content}) => {
     <>
       <div className="html-content" ref={ref}>
         <Markup content={content} />
-        <button 
-          onClick={toggleReadMore}
-          className="read-more__button"
-        >
-          {readMore?SHOW_MORE_TEXT:SHOW_LESS_TEXT}
-        </button>
+        {height&&<div style={{textAlign:'right',marginTop:'-20px'}}>
+          <button 
+            onClick={toggleReadMore}
+            className="read-more__button"
+          >
+            {readMore?SHOW_MORE_TEXT:SHOW_LESS_TEXT}
+          </button>
+        </div>}
       </div>
     </>
   )

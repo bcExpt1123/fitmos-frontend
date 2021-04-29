@@ -3,7 +3,6 @@ import { persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import {
   setItemValue,
-  addNewDialog,
   updateDialog,
   editGroupDialog,
   sortDialogs,
@@ -31,12 +30,13 @@ const initialState = {
   postMessageCount:0,
   groupImage:null,
   readMessageCount:0,
+  renderWordsCount:0,
 };
 const reducer = persistReducer(
   {
     storage,
     key: "dialogs",
-    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading','postMessageIds','groupImage' ],
+    blacklist:['selectedMessageId','actionLoading', 'openDropdownMenu','editMessageState','actionLoading', 'listLoading','postMessageIds','groupImage', 'renderWordsCount' ],
   },
   handleActions(
     {

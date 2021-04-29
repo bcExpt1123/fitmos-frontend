@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Modal } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { getTime } from '../../../../../../lib/common';
+import { getTime, getImageMeta } from '../../../../../../lib/common';
 import MessageSendState from './MessageStatus';
 import Avatar from '../../../components/Avatar';
 import { GetMaxWidthMsg } from '../helper/utils';
@@ -62,20 +62,33 @@ function Message({message, whoIsSender, widthScroll}) {
   const renderZoomImg = (event, message) => {
     event.preventDefault()
     setSelectedImg(message.attachment[0]);
-    setIsModal(false);
+    setIsModal(true);
   }
 
   const handleCloseModal = () => setIsModal(false);
-
+  const [width, setWidth] = useState(250);
+  const [height, setHeight] = useState(250);
   const _renderAsAttachment = () => {
+    getImageMeta(message.attachment[0].url, function(naturalWidth, naturalHeight){
+      let w, h;
+      if(naturalWidth>naturalHeight){
+        w = 250;
+        h = w / naturalWidth * naturalHeight;
+      }else{
+        h = 250;
+        w = h / naturalHeight * naturalWidth;
+      }
+      setWidth(w);
+      setHeight(h);
+    });
     return (
       <>
         <div className="chat-message-container-attachment">
           <div style={{
             backgroundImage: `url(${message.attachment[0].url})`,
             backgroundPosition: 'center',
-            width: '100%',
-            height: '100%',
+            width: `${width}px`,
+            height: `${height}px`,
             border: '1px solid #cbcbcb',
             cursor: 'pointer'
           }}
@@ -101,25 +114,26 @@ function Message({message, whoIsSender, widthScroll}) {
     )
   }
   const withMsg = new GetMaxWidthMsg(widthScroll)
-
   return (
     <>
       {isModal &&
         <Modal
-          isOpen={isModal}
-          onRequestClose={handleCloseModal}
-          ariaHideApp={false}
-          overlayClassName="overlay-chat-attachment"
+          show={isModal}
+          onHide={handleCloseModal}
+          centered
+          className="overlay-chat-attachment"
         >
-          <div className="active-window-modal-attachment">
-            <i className="fa fa-times-circle"  color={'white'} onClick={handleCloseModal}/>
-            <img
-              src={selectedImg.url}
-              width={selectedImg.width}
-              height={selectedImg.height}
-              alt="zoomImg"
-            />
-          </div>
+        <Modal.Header closeButton>
+        </Modal.Header>
+          <Modal.Body>
+            <div className="active-window-modal-attachment">
+              <img
+                src={selectedImg.url}
+                style={{width:"100%"}}
+                alt="zoomImg"
+              />
+            </div>
+          </Modal.Body>
         </Modal>
       }
       <div className="chat-message-layout">

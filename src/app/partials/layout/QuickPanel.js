@@ -96,10 +96,13 @@ const QuickPanel = ()=> {
   const history = useHistory();
   const clickNotification = (notification)=>{
     if(notification.action_type === "customer"){
-      history.push("/"+ notification.action.username);
+      if(notification.object_type === 'post'){
+        history.push("/posts/"+ notification.object_id);
+      }else{
+        history.push("/"+ notification.action.username);
+      }
     }
   }
-  console.log(notifications.length === 0 && followRequests.length ===0)
   return (
     <div id="kt_quick_panel" className="kt-quick-panel">
       <a
@@ -167,7 +170,7 @@ const QuickPanel = ()=> {
                   <div className="kt-notification-v2__itek-wrapper">
                     <div className="kt-notification-v2__item-desc" style={{color:"#0C2A49"}}>
                       {convertContent(notification.content)}
-                      <span style={{color:"#707C89"}}>&nbsp;&nbsp;{convertTime(notification.created_at)}</span>
+                      <span style={{color:"#707C89",display:"block",marginLeft:'-5px'}}>&nbsp;&nbsp;{convertTime(notification.created_at)}</span>
                     </div>
                   </div>
                 </span>

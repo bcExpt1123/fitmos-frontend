@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import ChatHeader from "./ChatHeader";
@@ -39,42 +39,47 @@ const EditGroupDialog = ()=>{
     });
   }
   const deleteDialog = ()=>{
-    if(window.confirm("Are you sure to delete this group?")){
+    if(window.confirm("¿Estás seguro que deseas eliminar este grupo?")){
       dispatch(deleteGroupDialog({id:currentUser.chat_id}));
       dispatch(setItemValue({name:"route",value:"list"}));
     }
   }
+  
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
-      <ChatHeader title="Edit Group Chat" path={path}/>
+      <ChatHeader title={currentUser.chat_id == selectedDialog.user_id?"Ajustes de Chat Grupal":selectedDialog.name} path={path}/>
       <div className="create-dialog-body">
         <div className="create-dialog-body-groupinfo">
-          <ImagePicker onUpload={onUpload} url={getImageLinkFromUID(selectedDialog.photo)} />
-          <div className="form-wrapper">
-            {editShow ?<>
-                <div className="group-name">
-                  <input
-                  type="text"
-                  placeholder="Group Name"
-                  value={groupName}
-                  className="dialog-name"
-                  onChange={changeDialogName} />
-                </div>
-                <div className="action">
-                  <i className="fa fa-check" onClick={saveGroupName}/>
-                </div>
-              </>
-              :
-              <>
-                <div className="group-name">
-                  {groupName}
-                </div>
-                <div className="action">
-                  <i className="fa fa-pencil-alt" onClick={()=>setEditShow(true)}/>
-                </div>
-              </>
-            }
-          </div>
+          {currentUser.chat_id == selectedDialog.user_id&&
+            <>
+              <ImagePicker onUpload={onUpload} url={getImageLinkFromUID(selectedDialog.photo)} />
+              <div className="form-wrapper">
+                {editShow ?<>
+                    <div className="group-name">
+                      <input
+                      type="text"
+                      placeholder="Group Name"
+                      value={groupName}
+                      className="dialog-name"
+                      onChange={changeDialogName} />
+                    </div>
+                    <div className="action">
+                      <i className="fa fa-check" onClick={saveGroupName}/>
+                    </div>
+                  </>
+                  :
+                  <>
+                    <div className="group-name">
+                      {groupName}
+                    </div>
+                    <div className="action">
+                      <i className="fa fa-pencil-alt" onClick={()=>setEditShow(true)}/>
+                    </div>
+                  </>
+                }
+              </div>
+            </>
+          }
           {selectedDialog!=null&&
             <div className="created-user">created by {
               currentUser.chat_id == selectedDialog.user_id?<>you</>
@@ -83,14 +88,18 @@ const EditGroupDialog = ()=>{
           }
         </div>
         <div className="participants">
-          <label>{selectedDialog.occupants_ids.length} PARTICIPANTS</label>
-          <button onClick={nextScreen} className="btn-fs-blue" disabled={groupName==="" || groupName.length<3}>
-            Add Users
-          </button>
-          &nbsp;&nbsp;&nbsp;
-          <button onClick={deleteDialog} className="btn-fs-waring">
-            Delete Chat
-          </button>
+          <label>{selectedDialog.occupants_ids.length} Participantes</label>
+          {currentUser.chat_id == selectedDialog.user_id&&
+            <>
+              <button onClick={nextScreen} className="btn-fs-blue" disabled={groupName==="" || groupName.length<3}>
+                Agregar Personas
+              </button>
+              &nbsp;&nbsp;&nbsp;
+              <button onClick={deleteDialog} className="btn-fs-waring">
+                Borrar Grupo
+              </button>
+            </>
+          }
           {selectedDialog.users.map(user=><div className="participant-info other" key={user.id}>
             <div className="avatar">
               <img src={user.avatarUrls['small']} alt={user.first_name +' '+ user.last_name}/>
@@ -98,7 +107,7 @@ const EditGroupDialog = ()=>{
             <div className="name">
               {user.first_name} {user.last_name}
             </div>
-            <button className="participant-delete" onClick={removeUser(user)}>Remove</button>
+            {currentUser.chat_id == selectedDialog.user_id && <button className="participant-delete" onClick={removeUser(user)}>Remove</button>}
           </div>)
           }
           <div className="participant-info">

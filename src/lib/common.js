@@ -60,15 +60,13 @@ const convertTime = (timeString)=>{
   }else if(diffTime<3600*24){
     return Math.round(diffTime/3600)+"h";
   }else if(diffTime<3600*24*30){
-    return Math.round(diffTime/3600/24)+"d";
+    var options = { weekday: 'long', month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit',hour12:true };    
+    return other.toLocaleDateString('es-ES', options);
+      // return Math.round(diffTime/3600/24)+"d";
   }else if(diffTime<3600*24*365){
-    let months;
-    months = (now.getFullYear() - other.getFullYear()) * 12;
-    months -= other.getMonth();
-    months += now.getMonth();    
-    return months+"M";
-  }else{
-    return (now.getFullYear() - other.getFullYear()) + "y";
+    var options = { year:'numeric',weekday: 'long', month: 'short', day: 'numeric',hour:'numeric',minute:'2-digit',hour12:true };    
+    return other.toLocaleDateString('es-ES', options);
+    // return (now.getFullYear() - other.getFullYear()) + "y";
   }
 }
 const convertTimeSeconds = (diffTime)=>{
@@ -77,19 +75,19 @@ const convertTimeSeconds = (diffTime)=>{
   if(diffTime<1800){
     return "en línea";
   }else if(diffTime<3600){
-    return "Last seen "+Math.round(diffTime/60)+"m ago";
+    return "Podemos borrar esto "+Math.round(diffTime/60)+"m ";
   }else if(diffTime<3600*24){
-    return "Last seen "+Math.round(diffTime/3600)+"h ago";
+    return "Podemos borrar esto "+Math.round(diffTime/3600)+"h ";
   }else if(diffTime<3600*24*30){
-    return "Last seen "+Math.round(diffTime/3600/24)+"d ago";
+    return "Podemos borrar esto "+Math.round(diffTime/3600/24)+"d ";
   }else if(diffTime<3600*24*365){
     let months;
     months = (now.getFullYear() - other.getFullYear()) * 12;
     months -= other.getMonth();
     months += now.getMonth();    
-    return "Last seen "+months+"M ago";
+    return "Podemos borrar esto "+months+"M ";
   }else{
-    return (now.getFullYear() - other.getFullYear()) + "y ago";
+    return (now.getFullYear() - other.getFullYear()) + "y ";
   }
 }
 const can = (currentUser,permission)=>{
@@ -157,4 +155,62 @@ export function getRandomSubarray(arr, size) {
   }
   return shuffled.slice(min);
 }
-export {once, colonsToUnicode, convertTime,convertTimeSeconds, can, lastDate};
+const resizeImage = (settings)=>{
+  const file = settings.file;
+  const maxSize = settings.maxSize;
+  const reader = new FileReader();
+  const image = new Image();
+  const canvas = document.createElement('canvas');
+  const dataURItoBlob = function (dataURI) {
+      const bytes = dataURI.split(',')[0].indexOf('base64') >= 0 ?
+          atob(dataURI.split(',')[1]) :
+          unescape(dataURI.split(',')[1]);
+      const mime = dataURI.split(',')[0].split(':')[1].split(';')[0];
+      const max = bytes.length;
+      const ia = new Uint8Array(max);
+      for (var i = 0; i < max; i++)
+          ia[i] = bytes.charCodeAt(i);
+      return new Blob([ia], { type: mime });
+  };
+  const resize = function () {
+      let width = image.width;
+      let height = image.height;
+      console.log(width, height);
+      if (width > height) {
+          if (width > maxSize) {
+              height *= maxSize / width;
+              width = maxSize;
+          }
+      } else {
+          if (height > maxSize) {
+              width *= maxSize / height;
+              height = maxSize;
+          }
+      }
+      console.log(width, height);
+      canvas.width = width;
+      canvas.height = height;
+      canvas.getContext('2d').drawImage(image, 0, 0, width, height);
+      const dataUrl = canvas.toDataURL('image/jpeg');
+      return dataURItoBlob(dataUrl);
+  };
+  return new Promise(function (ok, no) {
+      if (!file.type.match(/image.*/)) {
+          no(new Error("Not an image"));
+          return;
+      }
+      reader.onload = function (readerEvent) {
+          image.onload = function () { return ok(resize()); };
+          image.src = readerEvent.target.result;
+      };
+      reader.readAsDataURL(file);
+  });
+}
+const getImageMeta = (url, callback)=>{   
+  var img = new Image();
+  img.addEventListener("load", function(){
+    if(callback)callback(this.naturalWidth, this.naturalHeight)
+  });
+  img.src = url;
+}
+export {once, colonsToUnicode, convertTime,convertTimeSeconds, can, lastDate, resizeImage, getImageMeta};

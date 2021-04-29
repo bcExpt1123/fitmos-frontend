@@ -10,6 +10,12 @@ import SharingPostPopup from "./social/sections/SharingPostPopup";
 import LikersModal from "./social/sections/LikersModal";
 import BirthdayCustomersModal from "./social/sections/BirthdayCustomersModal";
 import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 export default function Newsfeed() {
   const posts = useSelector(({post})=>post.newsfeed);
@@ -69,13 +75,13 @@ export default function Newsfeed() {
                 <div className="cursor-pointer align-center mt-1">
                   <SVG src={toAbsoluteUrl("/media/icons/svg/General/Checked.svg")} />
                 </div>
-                <div className="font-size-14 font-weight-bold align-center mt-1">You’re All Caught Up</div>
-                <div className="font-size-14 align-center mt-1">You’ve seen all new posts from the past 3 days.</div>
-                {oldPosts.length>0&&<div className="font-size-14 font-weight-bold align-center cursor-pointer" style={{color:"#008EB2"}} onClick={convertOld}>View Older Posts</div>}
+                <div className="font-size-14 font-weight-bold align-center mt-1">Estás al día.</div>
+                <div className="font-size-14 align-center mt-1">Ya viste todas las publicaciones de los últimos 3 días.</div>
+                {oldPosts.length>0&&<div className="font-size-14 font-weight-bold align-center cursor-pointer" style={{color:"#008EB2"}} onClick={convertOld}>Ver publicaciones más antiguas.</div>}
               </div>
               <div className="newsfeed suggested-header">
                 <Sticky offsetTop={62} onChange={handleChangeSuggeted}>
-                  {suggestedPosts.length>0 && <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Suggested Posts </div>}
+                  {suggestedPosts.length>0 && <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Publicaciones Recomendadas</div>}
                   {(suggestedSticky&&oldPosts.length>0) &&<div className="font-size-14 font-weight-bold cursor-pointer old-posts-button" onClick={convertOld}>
                       Older Posts
                     </div>

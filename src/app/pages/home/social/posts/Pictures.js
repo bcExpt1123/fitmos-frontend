@@ -8,6 +8,12 @@ import {findUsername, setItemValue} from "../../redux/people/actions";
 import ClickableMedia from "../sections/ClickableMedia";
 import PostModal from "../sections/PostModal";
 import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
+import "../../assets/scss/theme/style.scss";
+import "../../assets/scss/theme/mbr-additional.css";
+import "../../assets/scss/dropdown/style.css";
+import "../../assets/scss/theme/common.scss";
+import "../../assets/scss/theme/login.scss";
+import "../../assets/scss/theme/signup.scss";
 
 const PicturesPage = () => {
   const match = matchPath(window.location.pathname, {
@@ -17,7 +23,6 @@ const PicturesPage = () => {
   });  
   const username = useSelector(({people})=>people.username);
   const dispatch = useDispatch();
-  const currentUser = useSelector(({auth})=>auth.currentUser);
   const selfMedias = useSelector(({post})=>post.selfMedias);
   const last = useSelector(({post})=>post.selfMediasLast);
   useEffect(()=>{

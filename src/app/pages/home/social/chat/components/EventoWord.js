@@ -1,18 +1,13 @@
 import React,{useState, useEffect, useRef} from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { http } from "../../../services/api";
 import { addPostMessageIds, updateRenderWordsCount } from "../../../redux/dialogs/actions";
 import { CUSTOM_POST_TYPES } from "../../../../../../lib/social";
 
-const PostWord = ({messageId, id})=>{
+const EventoWord = ({messageId, id})=>{
   const dispatch = useDispatch();
-  const customerPosts = useSelector(({post})=>post.customerPosts);
-  const newsfeed = useSelector(({post})=>post.newsfeed);
-  const suggestedPosts = useSelector(({post})=>post.suggestedPosts);
-  const oldNewsfeed = useSelector(({post})=>post.oldNewsfeed);
-  const posts = [...customerPosts,...newsfeed,...suggestedPosts,...oldNewsfeed];
-  const [post, setPost] = useState(()=>posts.find(p=>p.id===id));
+  const [evento, setEvento] = useState(false);
   const convert=(content)=>{
     if(content!="" && content!=null && content!=undefined){
       const regexp = /(@\[.+?\]\([0-9]+\))/g;
@@ -41,11 +36,11 @@ const PostWord = ({messageId, id})=>{
   useEffect(()=>{
     async function loadPost(){
       const res = await http({
-        path:"posts/"+id
+        path:"eventos/"+id
       });
-      setPost(res.data);
+      setEvento(res.data);
     }
-    if(post===null || post===undefined || post.id!=id){
+    if(evento===null || evento===undefined || evento.id!=id){
       if(id)loadPost();
     }else{
       
@@ -89,26 +84,26 @@ const PostWord = ({messageId, id})=>{
     if(wordRef.current){
       wordRef.current.parentElement.parentElement.parentElement.className = wordRef.current.parentElement.parentElement.parentElement.className + " fitemos-article";
     }
-  },[post]);
+  },[evento]);
   return (
-    <>{post&&(
+    <>{evento&&(
         <NavLink
-          to={"/posts/"+post.id}
+          to={"/eventos/"+evento.id}
           className="article-links"
           ref={wordRef}
         >
-          {post.title?
-            <>{post.title}</>
+          {evento.title?
+            <>{evento.title}</>
             :
             <>
-            {convert(post.content)}
+            {convert(evento.description)}
             </>    
           }
           {
-            post.medias.length>0&&(
+            evento.images.length>0&&(
               <>
-                {post.medias[0].type=="video"&&<video controls src={post.medias[0].url} className="chat-post-video" style={getDimension(post.medias[0])} ref={mediaRef}/>}
-                {post.medias[0].type=="image"&&<img src={convertChatUrl(post.medias[0].url,post.type)} className="chat-post-image" style={getDimension(post.medias[0])} ref={mediaRef}/>}
+                {evento.images[0].type=="video"&&<video controls src={evento.images[0].url} className="chat-post-video" style={getDimension(evento.images[0])} ref={mediaRef}/>}
+                {evento.images[0].type=="image"&&<img src={convertChatUrl(evento.images[0].url,evento.type)} className="chat-post-image" style={getDimension(evento.images[0])} ref={mediaRef}/>}
               </>
             )
           }
@@ -117,4 +112,4 @@ const PostWord = ({messageId, id})=>{
     }</>
   )
 }
-export default PostWord;
+export default EventoWord;

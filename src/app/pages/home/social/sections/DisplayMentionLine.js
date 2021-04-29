@@ -1,7 +1,7 @@
 import React,{useState, useEffect} from "react";
 import LinkProfile from "./customer/Link";
 
-const DisplayMentionLine = ({line})=>{
+const DisplayMentionLine = ({line, link})=>{
   const [words, setWords] = useState([]);
   useEffect(()=>{
     if (line !== "") {
@@ -37,7 +37,7 @@ const DisplayMentionLine = ({line})=>{
       {words.map((word, index)=>
         <span key={index}>
           {word.type=="p"&&<>{word.word}</>}
-          {word.type=="customer"&&<LinkProfile id={word.id} display={word.display}/>}
+          {word.type=="customer"&&<LinkProfile id={word.id} display={word.display} link={link}/>}
         </span>
       )}
     </>    

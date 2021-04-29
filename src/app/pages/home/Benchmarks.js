@@ -7,6 +7,12 @@ import {Col} from "react-bootstrap";
 import ThreeColumn from "./layouts/Three";
 import PageHeader from "./layouts/PageHeader";
 import SectionEditBenchmark from "./DashboardPage/SectionEditBenchmark";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const BenchmarksPage = () => {
   const benchmarks = useSelector(({ benchmark }) => benchmark.published);

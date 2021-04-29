@@ -144,6 +144,13 @@ export const reducer = persistReducer(
         }
         return { ...state, published: clonedPublished };
       case actionTypes.COMPANY_FRONT_INDEX_SUCCESS:
+        if(parseInt(action.currentPage)===1){
+          return {
+            ...state,
+            frontData: [...action.frontData],
+            frontMeta: { ...state.frontMeta, ...action.frontMeta }
+          };  
+        }
         return {
           ...state,
           frontData: [...state.frontData,...action.frontData],
@@ -521,6 +528,7 @@ function* fetchFrontCompany(){
     const result = yield call(companiesFrontRequest, company.frontMeta);
     yield put({
       type: actionTypes.COMPANY_FRONT_INDEX_SUCCESS,
+      currentPage:result.current_page,
       frontData: result.data,
       frontMeta: { total: result.total, pageTotal: result.last_page }
     });

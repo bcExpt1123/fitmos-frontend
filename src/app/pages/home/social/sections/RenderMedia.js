@@ -169,7 +169,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
     playVideos();
   },[videoPlayer, videoPlayerModalMode])
   const onOpenClick = (event)=>{
-    if(onOpenModal)onOpenModal(file);
+    if(onOpenModal && postType!='workout-post')onOpenModal(file);
     if(modal)event.stopPropagation();
   }
   useEffect(()=>{
@@ -193,7 +193,7 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
       return;
     }
     if(object.protocol == 'blob:' )return url;
-    if(['shop','blog','benchmark'].includes(postType))return url;
+    if(['shop','blog','benchmark','workout-post'].includes(postType))return url;
     let filename = object.pathname.split('/').reverse()[0];
     const ext = filename.split('.')[1]; 
     let replaceFileName = filename.split('.')[0] + '-1024.'+ext;

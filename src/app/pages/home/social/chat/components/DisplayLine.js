@@ -1,5 +1,6 @@
 import React,{useState, useEffect} from "react";
 import PostWord from "./PostWord";
+import EventoWord from "./EventoWord";
 
 const DisplayLine = ({line, messageId})=>{
   const [words, setWords] = useState([]);
@@ -10,9 +11,11 @@ const DisplayLine = ({line, messageId})=>{
       const postPattern = `(${window.location.origin}/posts/[0-9]+)`;
       // const postPattern = `http:\/\/localhost:3000\/posts\/[0-9]+`;
       // const regexp = /(@\[.+?\]\([0-9]+\))|http:\/\/localhost:3000\/posts\/[0-9]+/g;
-      const regexpPostPattern = new RegExp(postPattern, 'g');
+      const eventoPattern = `(${window.location.origin}/eventos/[0-9]+)`;
+      const regexpPostPattern = new RegExp(postPattern + '|' + eventoPattern, 'g');
       const mentionReg = /@\[(.+?)\]\(([0-9]+)\)/g;
       const postReg = /(http|https):\/\/(localhost:[0-9]+|www\.fitemos\.com|dev\.fitemos\.com)\/posts\/([0-9]+)/g;
+      const eventoReg = /(http|https):\/\/(localhost:[0-9]+|www\.fitemos\.com|dev\.fitemos\.com)\/eventos\/([0-9]+)/g;
       let content = line;
       let newWords;
       if(content.search(mentionReg)>-1){
@@ -44,9 +47,18 @@ const DisplayLine = ({line, messageId})=>{
                 id:matches1[0][3]
               }
             }else{
-              word = {
-                type:"p",
-                word:newWords[i]
+              const matches2 = [...newWords[i].matchAll(eventoReg)];
+              if(matches2.length>0){
+                word = {
+                  type:"evento",
+                  word:newWords[i],
+                  id:matches2[0][3]
+                }
+              }else{
+                word = {
+                  type:"p",
+                  word:newWords[i]
+                }
               }
             }
           }
@@ -63,6 +75,7 @@ const DisplayLine = ({line, messageId})=>{
           {word.type=="p"&&<>{word.word}</>}
           {word.type=="customer"&&<b>@{word.display}</b>}
           {word.type=="post"&&<PostWord id={word.id} messageId={messageId}/>}
+          {word.type=="evento"&&<EventoWord id={word.id} messageId={messageId}/>}
         </span>
       )}
     </>    

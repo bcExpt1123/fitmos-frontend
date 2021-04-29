@@ -140,7 +140,6 @@ const ListDialog = ()=> {
           position: "relative"
         }}
       >
-        {/* <button className="new-chat" onClick={newDialog}><i className="fas fa-user"/>&nbsp;New chat</button> */}
         <div className="dialogs-header">
           <div className="sub-header">
             <div className="title">
@@ -154,13 +153,12 @@ const ListDialog = ()=> {
               }
             </div>
             <div className="actions">
-              <i className="cursor-pointer fal fa-search" title="Search" onClick={searchFieldDisplay}/>
-              <i className="cursor-pointer fal fa-plus-circle" title="New Chat"  onClick={newDialog}/>
-              <i className="cursor-pointer fal fa-user-friends" title="New Group" onClick={newGroupDialog}/>
+              <i className="cursor-pointer fal fa-search" title="Buscar" onClick={searchFieldDisplay}/>
+              <i className="cursor-pointer fal fa-plus-circle" title="Nuevo Chat"  onClick={newDialog}/>
+              <i className="cursor-pointer fal fa-user-friends" title="Nuevo Chat Grupal " onClick={newGroupDialog}/>
             </div>
           </div>
         </div>
-        {/* <button className="new-chat" onClick={newGroupDialog}><i className="fas fa-user-friends"/>&nbsp;New Group chat</button> */}
         <div className="kt-notification-v2 list-dialogs" ref={contextMenuWrapper}>
         { 
           actionLoading?

@@ -29,7 +29,7 @@ const EditPostModal = ({show}) => {
     dispatch(setItemValue({name:"openEditModal",value:false}));    
   }
   return (
-    <FormPostModal show={show} title={'Edit Post'} handleClose={handleClose} publishPost={publishPost} post={post} saving={saving}/>
+    <FormPostModal show={show} title={'Editar Publicación'} handleClose={handleClose} publishPost={publishPost} post={post} saving={saving}/>
   );
 }
 

@@ -7,7 +7,7 @@ import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
 import { isMobile } from '../../../../../../_metronic/utils/utils';
 import { colonsToUnicode } from '../../../services/emoji';
-import ImagePicker from "./ImagePicker";
+import ImageUpload from "./ImageUpload";
 
 export default function({sendMessageCallback}) {
   const [messageText, setMessageText] =  useState('');
@@ -128,34 +128,36 @@ export default function({sendMessageCallback}) {
       setMessageText('');
     }
   },[editMessageState])
-  const onUpload = (cropper)=>{
-    cropper.getCroppedCanvas().toBlob((blob) => {
-      const cropedImage = new File([blob], "image.jpg", { type: 'image/jpeg' });
+  const onUpload = (cropedImage)=>{
+    // cropper.getCroppedCanvas().toBlob((blob) => {
+    //   const cropedImage = new File([blob], "image.jpg", { type: 'image/jpeg' });
       const image = {
         size: cropedImage.size,
         type: cropedImage.type,
         file: cropedImage,
+        width:500,
+        height:500,
         name: 'croped_image.jpg',
         public: false
       }
       sendMessageCallback(messageText, image)
       .then(() => (setMessageText('')))
       .catch(() => (setMessageText('')))      
-    });
+    // });
 
   }
 
   return (
     <footer>
       <form onSubmit={sendMessage}>
-        <ImagePicker onUpload={onUpload} pickAsAttachment/>
+        <ImageUpload onUpload={onUpload}/>
         <MentionsInput
           value={messageText}
           onChange={handleChange}
           onKeyDown={handleEnterPress}
           inputRef={textRef}
           className="mentions"
-          placeholder={blocked?"Blocked":"Leave a messageText..."}
+          placeholder={blocked?"Chat deshabilitado":"Escribe un mensaje..."}
           allowSuggestionsAboveCursor={true}
         >
           <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion} displayTransform = {(id, display)=>{return '@' + display}}/>

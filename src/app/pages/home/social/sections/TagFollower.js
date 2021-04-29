@@ -35,8 +35,8 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
   return (
     <div className="tag-followers">
       <div>
-        <input className="search" name="search" placeholder="Search for friends" autoComplete="off" value={searchName} onChange={handleSearchName}/>
-        <button className="btn btn-primary" onClick={onClose}>Done</button>
+        <input className="search" name="search" placeholder="Buscar amigos" autoComplete="off" value={searchName} onChange={handleSearchName}/>
+        <button className="btn btn-primary" onClick={onClose}>Aceptar</button>
       </div>
       <div className="tag-content">
         {tagFollowers.length>0&&            
@@ -53,7 +53,7 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
         }
         {searchName&&
           <div>
-            <label>Search</label>
+            <label>Buscar</label>
             {searchCustomers.length>0?
               <ul>
                 {searchCustomers.map((customer)=>
@@ -63,7 +63,7 @@ const TagFollowers = ({searchableCustomers, setSearchableCustomers, tagFollowers
                 )}
               </ul>
               :<div>
-                No people found
+                Sin resultados
               </div>
             }
           </div>

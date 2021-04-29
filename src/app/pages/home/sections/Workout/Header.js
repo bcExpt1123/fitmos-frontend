@@ -55,9 +55,9 @@ const Header = ()=>{
       {
         workouts&&workouts.current&&(
           workouts.current.read?(
-            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/checked.svg")} className="ml-5 mr-5 mb-2" style={{width:"25px",height:"25px"}}/>
+            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/checked.svg")} className="ml-2 ml-md-5 mr-md-5 mb-2" style={{width:"25px",height:"25px"}}/>
           ):(
-            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/unchecked.svg")} className="ml-5 mr-5 mb-2" style={{width:"25px",height:"25px"}}/>
+            <SVG src={toAbsoluteUrl("/media/icons/svg/Mark/unchecked.svg")} className="ml-2 ml-md-5 mr-md-5 mb-2" style={{width:"25px",height:"25px"}}/>
           )
         )
       }

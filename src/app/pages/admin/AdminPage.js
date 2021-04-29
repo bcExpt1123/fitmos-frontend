@@ -1,57 +1,58 @@
-import React, { Suspense } from "react";
+import React, { Suspense, lazy } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import Dashboard from "./Dashboard";
-import { Customers } from "./Customers";
-import { CustomerDetail } from "./CustomerDetail";
-import { CustomerProfile } from "./CustomerProfile";
-import { Subscriptions } from "./Subscriptions";
-import { SubscriptionDetail } from "./SubscriptionDetail";
-import { Transactions } from "./Transactions";
-import { BankTransferRequests } from "./BankTransferRequests";
-import { Invoices } from "./Invoices";
-import { InvoicePrint } from "./InvoicePrint";
-import { Coupons } from "./Coupons";
-import SubscriptionManager from "./SubscriptionManager";
-import { SubscriptionManagerEdit } from "./SubscriptionManagerEdit";
-import { SubscriptionCMS } from "./SubscriptionCms";
-import { SubscriptionWeekCMS } from "./SubscriptionWeekCMS";
-import { CouponCreate } from "./CouponCreate";
-import { LinkCoupons } from "./LinkCoupons";
-import { LinkCouponCreate } from "./LinkCouponCreate";
-import { LinkCouponShow } from "./LinkCouponShow";
-import { Categories} from "./Categories";
-import { CategoryCreate } from "./CategoryCreate";
-import { Events } from "./Events";
-import { EventCreate } from "./EventCreate";
-import { Eventos } from "./Eventos";
-import { EventoCreate } from "./EventoCreate";
-import { Shortcodes } from "./Shortcodes";
-import { ShortcodeCreate } from "./ShortcodeCreate";
-import { Keywords } from "./Keywords";
-import { KeywordCreate } from "./KeywordCreate";
-import { WeeklyEditor } from "./WeeklyEditor";
-import { Benchmarks } from "./Benchmark";
-import { BenchmarkCreate } from "./BenchmarkCreate";
-import { Users } from "./Users";
-import { UserCreate } from "./UserCreate";
-import { Medals } from "./Medals";
-import { MedalCreate } from "./MedalCreate";
-import { CartSettings } from "./SettingsPage/SectionCartSettings";
-import { Permissions } from "./SettingsPage/SectionPermissions";
-import { Referral } from "./SettingsPage/SectionReferral";
-import { TagLine } from "./SettingsPage/SectionTagLine";
-import { Reports } from "./SettingsPage/SectionReport";
-import { UserProfile } from "./UserProfile";
-import {Survey}  from "./Survey";
-import { SurveyCreate } from "./SurveyCreate";
-import {Products}  from "./Products";
-import {ViewImages}  from "./ViewImages";
-import {Companies}  from "./Companies";
-import { CompanyCreate } from "./CompanyCreate";
-import { ProductCreate } from "./ProductCreate";
-import { LayoutSplashScreen } from "../../../_metronic";
-import { SurveyReports } from "./SurveyReports";
-import { SocialReports } from "./SocialReports";
+import { lazily } from 'react-lazily'
+const Dashboard = lazy(() =>import("./Dashboard"));
+const { Customers } = lazily(() => import('./Customers'));
+const { CustomerDetail } = lazily(() => import('./CustomerDetail'));
+const { CustomerProfile } = lazily(() => import('./CustomerProfile'));
+const { Subscriptions } = lazily(() => import('./Subscriptions'));
+const { SubscriptionDetail } = lazily(() => import('./SubscriptionDetail'));
+const { Transactions } = lazily(() => import('./Transactions'));
+const { BankTransferRequests } = lazily(() => import('./BankTransferRequests'));
+const { Invoices } = lazily(() => import('./Invoices'));
+const { InvoicePrint } = lazily(() => import('./InvoicePrint'));
+const { Coupons } = lazily(() => import('./Coupons'));
+const SubscriptionManager = lazy(() =>import("./SubscriptionManager"));
+const { SubscriptionManagerEdit } = lazily(() => import('./SubscriptionManagerEdit'));
+const { SubscriptionCMS } = lazily(() => import('./SubscriptionCms'));
+const { SubscriptionWeekCMS } = lazily(() => import('./SubscriptionWeekCMS'));
+const { CouponCreate } = lazily(() => import('./CouponCreate'));
+const { LinkCoupons } = lazily(() => import('./LinkCoupons'));
+const { LinkCouponCreate } = lazily(() => import('./LinkCouponCreate'));
+const { LinkCouponShow } = lazily(() => import('./LinkCouponShow'));
+const { Categories } = lazily(() => import('./Categories'));
+const { CategoryCreate } = lazily(() => import('./CategoryCreate'));
+const { Events } = lazily(() => import('./Events'));
+const { EventCreate } = lazily(() => import('./EventCreate'));
+const { Eventos } = lazily(() => import('./Eventos'));
+const { EventoCreate } = lazily(() => import('./EventoCreate'));
+const { Shortcodes } = lazily(() => import('./Shortcodes'));
+const { ShortcodeCreate } = lazily(() => import('./ShortcodeCreate'));
+const { Keywords } = lazily(() => import('./Keywords'));
+const { KeywordCreate } = lazily(() => import('./KeywordCreate'));
+const { WeeklyEditor } = lazily(() => import('./WeeklyEditor'));
+const { Benchmarks } = lazily(() => import('./Benchmark'));
+const { BenchmarkCreate } = lazily(() => import('./BenchmarkCreate'));
+const { Users } = lazily(() => import('./Users'));
+const { UserCreate } = lazily(() => import('./UserCreate'));
+const { Medals } = lazily(() => import('./Medals'));
+const { MedalCreate } = lazily(() => import('./MedalCreate'));
+const { CartSettings } = lazily(() => import('./SettingsPage/SectionCartSettings'));
+const { Permissions } = lazily(() => import('./SettingsPage/SectionPermissions'));
+const { Referral } = lazily(() => import('./SettingsPage/SectionReferral'));
+const { TagLine } = lazily(() => import('./SettingsPage/SectionTagLine'));
+const { Reports } = lazily(() => import('./SettingsPage/SectionReport'));
+const { UserProfile } = lazily(() => import('./UserProfile'));
+const { Survey } = lazily(() => import('./Survey'));
+const { SurveyCreate } = lazily(() => import('./SurveyCreate'));
+const { Products } = lazily(() => import('./Products'));
+const { ViewImages } = lazily(() => import('./ViewImages'));
+const { Companies } = lazily(() => import('./Companies'));
+const { CompanyCreate } = lazily(() => import('./CompanyCreate'));
+const { ProductCreate } = lazily(() => import('./ProductCreate'));
+const { LayoutSplashScreen } = lazily(() => import('../../../_metronic'));
+const { SurveyReports } = lazily(() => import('./SurveyReports'));
+const { SocialReports } = lazily(() => import('./SocialReports'));
 
 export default function AdminPage() {
   // useEffect(() => {
@@ -59,7 +60,7 @@ export default function AdminPage() {
   // }, []) // [] - is required if you need only one call
   // https://reactjs.org/docs/hooks-reference.html#useeffect
   return (
-    <Suspense fallback={<LayoutSplashScreen />}>
+    <Suspense fallback={<LayoutSplashScreen visible={true}/>}>
       <Switch>
         {
           /* Redirect from root URL to /dashboard. */

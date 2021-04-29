@@ -12,6 +12,12 @@ import { checkPaymentMode, changeVoucher,inside,outside, start } from "./redux/c
 // import { findUserDetails } from "./redux/auth/actions";
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { calculatePriceWithCoupon } from '../../../lib/calculatePrice';
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const styles = {};
 const CheckoutPage = () => {

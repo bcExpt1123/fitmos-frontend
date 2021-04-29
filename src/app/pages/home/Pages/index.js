@@ -3,6 +3,13 @@ import { useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 import OneColumn from "../layouts/One";
 import TwoColumn from "../layouts/Two";
+import "../assets/scss/theme/style.scss";
+import "../assets/scss/theme/mbr-additional.css";
+import "../assets/scss/dropdown/style.css";
+import "../assets/scss/theme/common.scss";
+import "../assets/scss/theme/login.scss";
+import "../assets/scss/theme/signup.scss";
+
 const Page = ({ tags, content }) => {
   /*const profileLinks = [
     { name: "profile", url: "profile", label: "Perfil" },

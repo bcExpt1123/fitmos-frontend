@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import MetaTags from "react-meta-tags";
 import { matchPath } from "react-router-dom";
 import Evento from "./Item";
@@ -9,10 +10,11 @@ const EventPage = () => {
     exact:true,
     strict:true
   }); 
+  const event = useSelector(({evento})=>evento.item);   
   return(
     <>
       <MetaTags>
-        <title>Event -Fitemos </title>
+        <title>{event&&event.title} -Fitemos </title>
         <meta
           name="description"
           content="Event -Fitemos"

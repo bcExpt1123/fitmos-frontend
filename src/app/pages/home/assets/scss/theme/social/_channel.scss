@@ -139,6 +139,18 @@
 .chat-message-wrap {
   width: 850px;
   display: flex;
+  .article-links{
+    color:black;
+  }
+  .fitemos-article{
+    background-color: transparent;
+    .chat-message-right-footer>span{
+      color:black;    
+    }
+  }
+  .chat-post-image, .chat-post-video{
+    display:block;
+  }
 }
 
 .chat-message-wrap-right{
@@ -160,7 +172,6 @@
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
   border-top-right-radius: 15px;
-  background-color: white;
   text-align: left;
   align-items: center;
   margin: 10px 20px 10px 0;
@@ -193,11 +204,9 @@
 
 .chat-message-container-position-left {
   min-width: 80px;
-  align-items: flex-start;
   border-top-right-radius: 15px;
   border-bottom-right-radius: 15px;
   border-bottom-left-radius: 15px;
-  background-color:white;
   align-items: center;
   margin: 10px 0 10px 0;
   padding: 5px;
@@ -256,8 +265,8 @@
   margin-top: 6px;
 }
 .chat-message-container-attachment { 
-  width: 250px;
-  height: 250px;
+  width: auto;
+  height: auto;
   padding: 3px
 }
 

@@ -9,7 +9,10 @@ import classnames from "classnames";
 import { useHistory } from "react-router-dom";
 import CommentView from "./CommentView";
 import MentionTextarea from "../../social/sections/MentionTextarea";
+import SharePopup from "../../components/Share/Popup";
 import { $changeItem, $toggleAttend, $createComment, $appendNextReplies, $hideReplies } from "../../../../../modules/subscription/evento";
+import { setItemValue } from "../../redux/post/actions";
+import { shareEvento } from "../../redux/messages/actions";
 
 const Map = compose(
   withScriptjs,
@@ -67,6 +70,12 @@ const EventPage = ({id}) => {
     dispatch($hideReplies(comment));
   }
   const history = useHistory();
+  const openSharing=()=>{
+    dispatch(setItemValue({name:'openShareCustomers',value:true}));
+  }
+  const selectCustomer = (customer)=>{
+    dispatch(shareEvento({customer,id}));
+  }
   return (
     event?
     <div className="event">
@@ -89,10 +98,10 @@ const EventPage = ({id}) => {
       <Tabs defaultActiveKey="body" id="event">
         <Tab eventKey="body" title="Acerca del Evento">
           <>
-            {event.participant?<button className="btn btn-custom-third font-size-14" onClick={handleUnattend} disabled={disable}>Estoy Interesado</button>
-            :<button className="btn btn-custom-secondary font-size-14" onClick={handleAttend} disabled={disable}>Estoy Interesado</button>
+            {event.participant?<button className="btn btn-custom-third font-size-14" onClick={handleUnattend} disabled={disable}>Confirmar Participación</button>
+            :<button className="btn btn-custom-secondary font-size-14" onClick={handleAttend} disabled={disable}>Confirmar Participación</button>
             }
-            <button className="btn btn-custom-secondary font-size-14">Compartir</button>
+            <button className="btn btn-custom-secondary font-size-14" onClick={openSharing}>Compartir</button>
             <span className="ml-2 participants font-size-14 font-weight-bold">Participantes {event.participants}</span>
             <div className="mt-4">
               <Markup content={event.description}/>
@@ -100,7 +109,7 @@ const EventPage = ({id}) => {
             <div className="address">
               <div>
                 <label>Ubicación</label>
-                <a href={`http://www.google.com/maps/place/${event.latitude},${event.longitude}`} target="_blank" className="open-map font-size-14 font-weight-bold">Open Maps</a>
+                <a href={`http://www.google.com/maps/place/${event.latitude},${event.longitude}`} target="_blank" className="open-map font-size-14 font-weight-bold">Abrir Mapa</a>
               </div>
               <div className="public-address">
                 {event.address}
@@ -146,6 +155,7 @@ const EventPage = ({id}) => {
           </form>
         </Tab>
       </Tabs>
+      <SharePopup selectCustomerCallback={selectCustomer}/>
     </div>
     :
     <>

@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { Mention, MentionsInput } from "react-mentions";
 import { StylesViaJss } from "substyle-jss";
 import classnames from "classnames";
 // import CommentParagraph from "./CommentParagraph";
-import { NimblePicker, emojiIndex } from "emoji-mart";
+import { NimblePicker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
 import data from "emoji-mart/data/google.json";
 import Avatar from "../../components/Avatar";
@@ -106,7 +106,7 @@ export default function MentionTextarea({content, setContent, submit,commentForm
               onKeyDown={handleEnterPress}
               inputRef={textRef}
               className="mentions"
-              placeholder="Leave a comment..."
+              placeholder="Agrega un comentario..."
               allowSuggestionsAboveCursor={true}
             >
               <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion}/>
@@ -146,7 +146,7 @@ export default function MentionTextarea({content, setContent, submit,commentForm
                     //   setComment("");
                     // }}
                   >
-                    POST
+                    Publicar
                   </button>
                 </>
             }

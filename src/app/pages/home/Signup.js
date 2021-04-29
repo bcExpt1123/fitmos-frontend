@@ -20,6 +20,12 @@ import * as Cookies from "./services/storage";
 //import { getNavigation } from '../../navigation';
 import { withRouter } from "react-router";
 import "./assets/scss/theme/signup.scss";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 class SignupPage extends React.Component {
   state = {

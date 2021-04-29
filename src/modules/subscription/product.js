@@ -529,11 +529,13 @@ function* fetchFrontInitialProducts({companyId}){
   try {
     const product = yield select(store => store.product);
     const result = yield call(productsFrontRequest, product.frontMeta,companyId);
-    yield put({
-      type: actionTypes.PRODUCT_FRONT_INDEX_SUCCESS,
-      frontData: result.products.data,
-      frontMeta: { total: result.products.total, pageTotal: result.products.last_page }
-    });
+    if(result.products.data){
+      yield put({
+        type: actionTypes.PRODUCT_FRONT_INDEX_SUCCESS,
+        frontData: result.products.data,
+        frontMeta: { total: result.products.total, pageTotal: result.products.last_page }
+      });
+    }
     yield put({type:actionTypes.PRODUCT_SET_VALUE,key:"company",value:result.company});
   } catch (e) {
     yield put({ type: actionTypes.PRODUCT_INDEX_FAILURE, error: e.message });

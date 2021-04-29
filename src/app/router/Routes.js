@@ -38,9 +38,9 @@ class ErrorBoundary extends React.Component {
     // You can also log error messages to an error reporting service here
     const environment = process.env.NODE_ENV;
     if(environment!=='development'){
-      this.props.history.push('/');
-      reactLocalStorage.clear();
-      window.location.reload(true);
+      // this.props.history.push('/');
+      // reactLocalStorage.clear();
+      // window.location.reload(true);
     }
   }
   

@@ -1,4 +1,4 @@
-import { call, takeLeading, select,put, delay, race } from "redux-saga/effects";
+import { call, takeLeading, select,put, delay, debounce } from "redux-saga/effects";
 import {
   setItemValue,
   addNewDialog,
@@ -17,6 +17,7 @@ import {
   deleteGroupDialogImage,
   pulling,
   DIALOG_TYPE,
+  updateRenderWordsCount,
 } from "./actions";
 import ChatService from '../../services/chat-service';
 
@@ -336,6 +337,10 @@ function* onFetchDialog({payload}){
 
   }
 }
+function* onUpdateRenderWordsCount(){
+  const count = yield select(({dialog})=>dialog.renderWordsCount);
+  yield put(setItemValue({name:'renderWordsCount',value:count + 1}));
+}
 export default function* rootSaga() {
   yield takeLeading(createDialog,onCreateDialog);
   yield takeLeading(addNewDialog,onAddNewDialog);
@@ -349,4 +354,5 @@ export default function* rootSaga() {
   yield takeLeading(updateGroupDialogImage,onUpdateGroupDialogImage);
   yield takeLeading(deleteGroupDialogImage,onDeleteGroupDialogImage);
   yield takeLeading(fetchDialog, onFetchDialog);
+  yield debounce(100, updateRenderWordsCount, onUpdateRenderWordsCount);
 }

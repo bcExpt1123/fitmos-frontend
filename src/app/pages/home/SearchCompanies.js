@@ -6,6 +6,12 @@ import OneColumn from "./layouts/One";
 import { searchCompanies } from "./redux/people/actions";
 import SearchCompanies from "./social/sections/SearchCompanies";
 import { useInfiniteScroll } from "../../../lib/useInfiniteScroll";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const SearchCompaniesPage = () => {
   const dispatch = useDispatch();

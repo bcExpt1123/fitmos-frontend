@@ -3,8 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { findPopupCustomer } from "../../../redux/people/actions";
 import { NavLink } from "react-router-dom";
 
-const LinkProfile = ({id, display, username})=>{
-  const currentUser = useSelector(({ auth }) => auth.currentUser);
+const LinkProfile = ({id, display, username, link})=>{
   const popupCustomers = useSelector(({ people })=> people.popupCustomers);
   const [popupCustomer, setPopupCustomer] = useState(false);
   const dispatch = useDispatch();
@@ -21,21 +20,24 @@ const LinkProfile = ({id, display, username})=>{
   return (
     <>
       {popupCustomer?
+        (link?popupCustomer.first_name +' '+ popupCustomer.last_name:
         <NavLink
           to={"/"+popupCustomer.username}
           className={"link-profile follower-button font-weight-bold"}
         >
           {popupCustomer.first_name} {popupCustomer.last_name}
         </NavLink>    
+        )
       :
       <>
         {username?
-          <NavLink
-            to={"/"+username}
-            className={"link-profile follower-button font-weight-bold"}
-          >
-            {display}
-          </NavLink>
+          (link?display:
+            <NavLink
+              to={"/"+username}
+              className={"link-profile follower-button font-weight-bold"}
+            >
+              {display}
+            </NavLink>)
         :
           <span className="">
             {display}

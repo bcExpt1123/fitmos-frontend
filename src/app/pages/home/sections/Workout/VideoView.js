@@ -76,7 +76,7 @@ const VideoView = ({onClose}) => {
       if(mobileBack.classList.contains("show"))mobileBack.style.opacity = "1";
       detectswipe('video_modal',swapeMobile);
       const chat = document.getElementById("wabi-floating-button");
-      chat.style.zIndex = 0;
+      if(chat)chat.style.zIndex = 0;
     }else{
       const videoDialog = document.getElementsByClassName("video-dialog")[0];
       if(videoDialog)videoDialog.style.width = (window.innerHeight * 9 / 16 ) + "px";
@@ -87,7 +87,7 @@ const VideoView = ({onClose}) => {
         if(document.exitFullscreen)document.exitFullscreen();
         setFullScreen(false);
         const chat = document.getElementById("wabi-floating-button");
-        chat.style.zIndex = 2147483646;
+        if(chat)chat.style.zIndex = 2147483646;
       }
     }
   },[]);

@@ -231,6 +231,17 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             data-app-modern-menu="true"
           >
             <li className="nav-item">
+              <NavLink
+                to={"/"+currentUser.customer.username}
+                className={"nav-link link text-white display-4"}
+                activeClassName="active"
+                exact
+              >
+                <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
+                <span className="full-name">{currentUser.name}</span>
+              </NavLink>
+            </li>
+            <li className="nav-item">
               <button type="button" className={"clickable-button"} onClick={OpenCreatingPost}>
                 <i className="fal fa-plus-square" />
               </button>
@@ -250,17 +261,6 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
               >
                 <NotificationToggler />
               </a>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                to={"/"+currentUser.customer.username}
-                className={"nav-link link text-white display-4"}
-                activeClassName="active"
-                exact
-              >
-                <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />
-                <span className="full-name">{currentUser.name}</span>
-              </NavLink>
             </li>
             <li className="nav-item dropdown">
               <Submenu open={openSubmenu} show={showSubmenu} openCreatingPost={OpenCreatingPost}/>

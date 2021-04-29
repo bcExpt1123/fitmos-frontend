@@ -98,7 +98,7 @@ const reducer = persistReducer(
           ...state,
           newsfeed:clonedNewsfeedAfter,
           newsfeedLastId:minId,
-          newsfeedLast:filteredPostsAfter.length === 0?true:false
+          // newsfeedLast:filteredPostsAfter.length === 0?true:false
         }
       },
       [setNewsfeed]:(state, actions) =>{

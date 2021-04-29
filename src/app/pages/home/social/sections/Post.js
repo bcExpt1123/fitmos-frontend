@@ -1,15 +1,15 @@
-import React,{ useState, useEffect, useMemo, useRef } from 'react';
+import React,{ useState, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory } from "react-router-dom";
 import classnames from "classnames";
 import RenderMedia from "./RenderMedia";
-import SVG from "react-inlinesvg";
-import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import PostContent from "./PostContent";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
 import ShareDropDown from "./ShareDropDown";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
+import { CUSTOM_POST_TYPES, articlePath } from "../../../../../lib/social";
 
 export default function Post({post, newsfeed, suggested, setShowPostModal, setMedia}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -105,15 +105,20 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     return -1;
   }
   /** open post modal */
-  const videoPlayer = useSelector(({post})=>post.videoPlayer);
+  // const videoPlayer = useSelector(({post})=>post.videoPlayer);
+  const history = useHistory();
   const openPostModal = (file)=>{
-    if(window.innerWidth>800){
-      setShowPostModal(true);
-      setMedia(file);
-      // if(videoPlayer  === file.id){
-        dispatch(setItemValue({name:"videoPlayerOpenModal",value:file.id}));
-      // }
-      dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
+    if(CUSTOM_POST_TYPES.includes(post.type)){
+      history.push(articlePath(post));
+    }else{
+      if(window.innerWidth>800){
+        setShowPostModal(true);
+        setMedia(file);
+        // if(videoPlayer  === file.id){
+          dispatch(setItemValue({name:"videoPlayerOpenModal",value:file.id}));
+        // }
+        dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
+      }
     }
   }
   // const setSize = (width,height)=>{
@@ -207,6 +212,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
               </div>
             </div>
           </div>
+          {post.type!="workout-post"&&
           <div className="post-footer">
             <div className="likes">
               <span><i className={classnames(" fa-heart cursor-pointer",{like:post.like,fas:post.like,far:post.like==false} )}  onClick={handleLike}/>&nbsp;&nbsp;&nbsp;
@@ -216,6 +222,8 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
             </div>
             <ShareDropDown post={post} />
           </div>
+          }
+          {post.type!="workout-post"&&
           <div className="post-comments">
             {(post.previousCommentsCount>0) && 
               <div className="cursor-pointer append" onClick={handlePreviousComments}> Show all&nbsp;{post.previousCommentsCount}&nbsp;{post.previousCommentsCount>1?<>comments</>:<>comment</>}</div>
@@ -249,6 +257,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
               <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
             </form>}
           </div>
+          }
         </div>
       }
     </ViewableMonitor>

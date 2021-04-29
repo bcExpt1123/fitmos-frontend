@@ -48,15 +48,15 @@ const ProfileDropdown = ()=>{
                 <a className={"dropdown-item"} onClick={()=>{handleUnblock();setShow(false)}} disabled={blockDisabled}>Unblock</a>
                 :
                 <>
-                  <a className={"dropdown-item"} onClick={()=>{handleBlock();setShow(false)}} disabled={blockDisabled}>Block</a>
+                  <a className={"dropdown-item"} onClick={()=>{handleBlock();setShow(false)}} disabled={blockDisabled}>Bloquear</a>
                   {customer.relation === 'muted'?
-                    <a className={"dropdown-item"} onClick={()=>{handleUnmute();setShow(false)}} disabled={muteDisabled}>Unmute</a>
+                    <a className={"dropdown-item"} onClick={()=>{handleUnmute();setShow(false)}} disabled={muteDisabled}>Quitar silenciado</a>
                   :
-                    <a className={"dropdown-item"} onClick={()=>{handleMute();setShow(false)}} disabled={muteDisabled}>Mute</a>
+                    <a className={"dropdown-item"} onClick={()=>{handleMute();setShow(false)}} disabled={muteDisabled}>Silenciar</a>
                   }
                 </>
               }
-              <a className={"dropdown-item"} onClick={handleReport}>Report</a>
+              <a className={"dropdown-item"} onClick={handleReport}>Reportar</a>
             </div>
           </div>    
         )}

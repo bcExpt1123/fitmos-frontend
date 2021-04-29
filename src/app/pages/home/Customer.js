@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import MetaTags from "react-meta-tags";
 import { useSelector, useDispatch } from "react-redux";
 import ThreeColumn from "./layouts/Three";
@@ -24,10 +24,10 @@ export default function Customer({id}) {
   return (
     <>
       <MetaTags>
-      <title>Customer Profile - Fitemos </title>
+      <title>{username?username.first_name + ' ' + username.last_name:""} - Fitemos </title>
       <meta
         name="description"
-        content="Customer Posts - Fitemos"
+        content="Customer Profile - Fitemos"
       />
       </MetaTags>
       {(username.profile==='public' || username.following && (username.following.status == 'accepted') || username.id == currentUser.customer.id)?

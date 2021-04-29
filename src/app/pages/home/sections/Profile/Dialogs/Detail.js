@@ -231,7 +231,7 @@ const EditProfile = ({ show, handleClose }) => {
                       hasValue={Boolean(values.username)}
                       name="username"
                       htmlFor="username"
-                      label={"Username"}
+                      label={"Usuario"}
                       focused={focused.username}
                       touched={touched.username}
                       valid={Boolean(values.username && !errors.username)}
@@ -343,7 +343,7 @@ const EditProfile = ({ show, handleClose }) => {
                       hasValue={Boolean(values.description)}
                       name="description"
                       htmlFor="description"
-                      label={"Description"}
+                      label={"Acerca de mí"}
                       focused={focused.description}
                       touched={touched.description}
                       valid={Boolean(values.description && !errors.description)}

@@ -1,11 +1,9 @@
 import React,{useState,useEffect} from 'react';  
-import { useDispatch, useSelector } from "react-redux";
 import {  NavLink } from "react-router-dom";
 import { http } from "../../services/api";
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 
 const RightBarOther = () => {  
-  const dispatch = useDispatch();
   useEffect(()=>{
     async function fetchData(){
       const res = await http({
@@ -22,11 +20,6 @@ const RightBarOther = () => {
   const [events, setEvents] = useState([]);
   const [news, setNews] = useState([]);
   const [products, setProducts] = useState([]);
-  const [show, setShow] = useState(false);
-  const [media, setMedia] = useState(false);
-  const onClose = ()=>{
-    setShow(false);
-  }
   return (  
       <>
         {events.length>0&&
@@ -43,7 +36,7 @@ const RightBarOther = () => {
                       {event.images.length==0?<>
                         <img src={toAbsoluteUrl("/media/products/no-image.png")} alt="no image" />
                       </>:
-                        <img src={event.images[0].url} alt={"logo"}/>
+                        event.images[0] && <img src={event.images[0].url} alt={"logo"}/>
                       }
                       <div className="info" >
                         <div className="title">{event.title}</div>

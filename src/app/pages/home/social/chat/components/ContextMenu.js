@@ -67,7 +67,6 @@ const ContextMenu = ({ children, wrapper }) => {
   if(wrapper.current){
     top = yPos;
     left = xPos-wrapper.current.getClientRects()[0].left;
-    console.log(yPos, top,xPos, left,wrapper.current.getClientRects()[0])
   }
   const menuRef = useRef();
   useEffect(()=>{

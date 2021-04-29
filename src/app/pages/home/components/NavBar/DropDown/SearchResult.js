@@ -55,7 +55,7 @@ const SearchResult = ({value,clearValue})=>{
           </>
         }
         <button className="open-search-button mt-2" onClick={openSearchPage}>
-          <i className="fas fa-search"/> &nbsp;Search for {value}
+          <i className="fas fa-search"/> &nbsp;Buscar por {value}
         </button>
       </div>
     </>    

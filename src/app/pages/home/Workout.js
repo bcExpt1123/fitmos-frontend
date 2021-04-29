@@ -7,6 +7,12 @@ import { findWorkouts,initialBlock } from "./redux/done/actions";
 import PageHeader from "./layouts/PageHeader";
 import Header from "./sections/Workout/Header";
 import Body from "./sections/Workout/Body";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const WorkoutPage = () => {
   const dispatch = useDispatch();

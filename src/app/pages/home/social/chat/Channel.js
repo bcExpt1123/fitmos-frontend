@@ -49,7 +49,6 @@ const Channel = ()=> {
   const lazyLoadMessages = (elem, y) => {
     setRecyclerY(y);
     setContentHeight(elem.nativeEvent.contentSize.height);
-    console.log(listenerLazyLoad , needToGetMoreMessage , y < 20)
     if (listenerLazyLoad && needToGetMoreMessage && y < 20) {
       setListenerLazyLoad(false);
       ChatService.getMoreMessages(selectedDialog)
@@ -77,6 +76,7 @@ const Channel = ()=> {
           }));
         }, 500)
         setTimer(timerId)
+        console.log('handleResize')
       }
     }
   }
@@ -93,7 +93,7 @@ const Channel = ()=> {
   const postMessageIds = useSelector(({dialog})=>dialog.postMessageIds);
   const count = useSelector(({dialog})=>dialog.postMessageCount);
   useEffect(()=>{
-    setTimeout(()=>setExtendedState({ids:postMessageIds,count}),400);
+    setTimeout(()=>setExtendedState({ids:postMessageIds,count}),700);
   },[postMessageIds,count])
   useEffect(()=>{ 
     setUpdateScollPositionIndex(updateScollPositionIndex+1)    
@@ -257,12 +257,17 @@ const Channel = ()=> {
       scrollToBottom();
     },100)
   },[readMessageCount]);
+  const renderWordsCount = useSelector(({dialog})=>dialog.renderWordsCount);
+  useEffect(()=>{
+    handleResize();
+    console.log(renderWordsCount)
+  },[renderWordsCount])
   return (<ConnectyCubeWrapper>
     <div className="chat-container" >
       <ChatHeader avatar = {avatar}>
         <div className="chat-title">
-          <h3>{title}</h3>
-          {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participants</div>}
+          <h3 className="cursor-pointer" onClick={editGroup}>{title}</h3>
+          {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participantes</div>}
           {selectedDialog.type==3&&<div className="participants">{selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
         </div>
         <DropDown>
@@ -273,16 +278,16 @@ const Channel = ()=> {
                 
               </button>
               <div className={classnames("dropdown-menu dropdown-menu-right" ,{showmenu:show})}>
-                {selectedDialog.type==3&&<a className={"dropdown-item"} onClick={viewProfile}>View Profile</a>}
+                {selectedDialog.type==3&&<a className={"dropdown-item"} onClick={viewProfile}>Ver perfil</a>}
                 {selectedDialog.type==3&&<>
-                  {selectedDialog.owner.relation == 'muted'?<a className={"dropdown-item"} onClick={handleMute}>Unmute</a>
+                  {selectedDialog.owner.relation == 'muted'?<a className={"dropdown-item"} onClick={handleMute}>Quitar silenciado</a>
                   :
-                  <a className={"dropdown-item"} onClick={handleUnmute}>Mute</a>}
+                  <a className={"dropdown-item"} onClick={handleUnmute}>Silenciar</a>}
                 </>}
                 {selectedDialog.type==2&&<>{
                   selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Leave Chat</a>
                   :
-                  <a className={"dropdown-item"} onClick={editGroup}>Manage Dialog</a>
+                  <a className={"dropdown-item"} onClick={editGroup}>Ajustes</a>
                 }
                 </>}
               </div>

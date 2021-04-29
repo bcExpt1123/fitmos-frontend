@@ -10,6 +10,12 @@ import SearchCompanies from "./social/sections/SearchCompanies";
 import SearchPosts from "./social/sections/SearchPosts";
 import SharingPostPopup from "./social/sections/SharingPostPopup";
 import LikersModal from "./social/sections/LikersModal";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const Search = () => {
   const dispatch = useDispatch();
@@ -69,7 +75,7 @@ const Search = () => {
         </div>
       </div>
       <div className="search-posts">
-        <div className="label">Posts
+        <div className="label">Publicaciones
           {results.posts.length>0&&
             <div>
               <NavLink

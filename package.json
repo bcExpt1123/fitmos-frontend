@@ -96,6 +96,7 @@
     "react-intl": "^3.6.2",
     "react-is": "^17.0.1",
     "react-js-pagination": "^3.0.3",
+    "react-lazily": "^0.9.0",
     "react-lightgallery": "^0.9.0",
     "react-mentions": "^4.1.1",
     "react-meta-tags": "^1.0.1",

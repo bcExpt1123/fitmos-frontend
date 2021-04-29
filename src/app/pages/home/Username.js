@@ -5,6 +5,12 @@ import { useHistory } from "react-router-dom";
 import {findUsername, setItemValue} from "./redux/people/actions";
 import Company from "./ShopPage/Company";
 import Customer from "./Customer";
+import "./assets/scss/theme/style.scss";
+import "./assets/scss/theme/mbr-additional.css";
+import "./assets/scss/dropdown/style.css";
+import "./assets/scss/theme/common.scss";
+import "./assets/scss/theme/login.scss";
+import "./assets/scss/theme/signup.scss";
 
 const UsernamePage = ({match}) => {
   const dispatch = useDispatch();

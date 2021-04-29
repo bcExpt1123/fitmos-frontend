@@ -19,11 +19,17 @@ export default function BirthdayCustomer({customer,post}) {
       >
         <Avatar pictureUrls={customer.avatarUrls} size="xs" />
       </NavLink>
-      <div className="info">
-        <div className="fullname">{customer.first_name} {customer.last_name}</div>
-        <div className="birthday">{post.label}</div>
-      </div>
-      {customer.chat_id && currentUser.customer.blockedChatIds.includes(customer.chat_id)===false &&<i className="fal fa-comments"  onClick={handleClick} />}
+      <NavLink
+        to={"/"+customer.username}
+        className={"info"}
+      >
+        <div className="">
+          <div className="fullname">{customer.first_name} {customer.last_name}</div>
+          {post.type==='join'?<div className="birthday">@{customer.username}</div>
+            :<div className="birthday">{post.label}</div>}
+        </div>
+      </NavLink>
+      {(customer.chat_id && currentUser.customer.blockedChatIds.includes(customer.chat_id)===false) ?<i className="fal fa-comments"  onClick={handleClick} />:<i className=" fa-comments"/>}
     </div>
   );
 }

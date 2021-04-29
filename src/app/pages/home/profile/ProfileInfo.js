@@ -126,7 +126,7 @@ const ProfileInfo = ({customer}) => {
           <div className="col-4" onClick={openFollowingModal("followings")}>
             <div className="value">{check()?customer.followings&&customer.followings.length:currentUser.customer.followings&&currentUser.customer.followings.length}
             </div>
-            <div className="label">Following</div>
+            <div className="label">Partners</div>
           </div>
           <div className="col-4" onClick={openFollowingModal("followers")}>
             <div className="value">{check()?customer.followers&&customer.followers.length:currentUser.customer.followers&&currentUser.customer.followers.length}
@@ -136,7 +136,7 @@ const ProfileInfo = ({customer}) => {
           </div>
           <div className="col-4">
             <div className="value">{check()?customer.postCount:currentUser.customer.postCount}</div>
-            <div className="label">Posts</div>
+            <div className="label">Publicaciones</div>
           </div>
         </div>
         <div className="actions">

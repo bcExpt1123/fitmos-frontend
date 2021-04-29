@@ -53,7 +53,7 @@ function* onFindNewsfeed(){
   yield put(setItemValue({name:'old',value:0}));
   try {
     const result = yield call(findNewsfeedRequest);
-    if(result.newsfeed.length == 0){
+    if(!result.next){
       yield put(setItemValue({name:"newsfeedLast",value:true}));
       yield put(setItemValue({name:"suggested", value:1}));
       yield put(appendSuggestedPosts());
@@ -81,7 +81,8 @@ function* onAppendNewsfeedAfter(){
   try {
     let result = yield call(appendNewsfeedAfterRequest, id,0);
     if(suggested === 0 ){
-      if(result.newsfeed.length == 0){
+      if(!result.next){
+        console.log(result)
         yield put(setItemValue({name:"newsfeedLast",value:true}));
         yield put(setItemValue({name:"suggested", value:1}));
         yield put(appendSuggestedPosts());
@@ -1174,7 +1175,7 @@ function* onAppendSuggestedPosts(){
   if(suggested == 0)yield put(setItemValue({name:"suggested", value:1}));
   try {
     let result = yield call(appendNewsfeedAfterRequest, id,1);
-    console.log(result.posts)
+    console.log(result.newsfeed)
     let suggestedPosts = yield select(({post})=>post.suggestedPosts);
     const filteredPostsAfter = result.newsfeed.filter((post)=>!suggestedPosts.some(item=>item.id == post.id));
     suggestedPosts = suggestedPosts.concat(filteredPostsAfter);
@@ -1184,7 +1185,7 @@ function* onAppendSuggestedPosts(){
     }
     yield put(setItemValue({name:"suggestedPosts", value:suggestedPosts}));
     yield put(setItemValue({name:"suggestedPostsLastId", value:id}));
-    yield put(setItemValue({name:"suggestedPostsLast", value:filteredPostsAfter.length === 0?true:false}));
+    yield put(setItemValue({name:"suggestedPostsLast", value:!result.next}));
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));
@@ -1310,7 +1311,7 @@ function* onAppendOldNewsfeed(){
     }
     yield put(setItemValue({name:"oldNewsfeed", value:oldNewsfeed}));
     yield put(setItemValue({name:"oldNewsfeedLastId", value:id}));
-    yield put(setItemValue({name:"oldNewsfeedLast", value:filteredPostsAfter.length === 0?true:false}));
+    yield put(setItemValue({name:"oldNewsfeedLast", value:!result.next}));
   } catch (error) {
     console.log(error);
     //yield put(validateVoucherFailed({ token }));

@@ -5,6 +5,7 @@ import { Modal } from 'react-bootstrap';
 import { useDispatch } from "react-redux";
 import fileSizeLessThan from '../../../components/DropNCrop/util/fileSizeLessThan';
 import fileType from '../../../components/DropNCrop/util/fileType';
+import { resizeImage } from '../../../../../../lib/common';
 import { deleteGroupDialogImage } from "../../../redux/dialogs/actions";
 
 
@@ -60,17 +61,24 @@ export default function ImagePicker({onUpload, url, pickAsAttachment}){
     const fileTypeValidation = fileType(allowedFileTypes)(files);
 
     if (fileSizeValidation.isValid && fileTypeValidation.isValid) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setDropState({
-          src: reader.result,
-          filename: files[0].name,
-          filetype: files[0].type,
-          result: reader.result,
-          error: null,
-        });
-      };
-      reader.readAsDataURL(files[0]);
+      resizeImage({
+        file: files[0],
+        maxSize: 768
+      }).then(function (resizedImage) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          setDropState({
+            src: reader.result,
+            filename: files[0].name,
+            filetype: 'image/jpeg',
+            result: reader.result,
+            error: null,
+          });
+        };
+        reader.readAsDataURL(resizedImage);
+        }).catch(function (err) {
+        console.error(err);
+      });  
     } else {
       setDropState({
         error: !fileTypeValidation.isValid
