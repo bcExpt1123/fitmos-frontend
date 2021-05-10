@@ -113,7 +113,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
   /** google map show */
   const [position, setPosition] = useState(false);
   useEffect(()=>{
-    if(post.medias.length == 0 && post.location){
+    if(post.medias&&post.medias.length == 0 && post.location){
       fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${post.location}&key=${process.env.REACT_APP_GOOGLE_MAP_KEY}`,{
         method:"GET",
       })
@@ -125,7 +125,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
         }
       });
     }
-  },[post.medias.length ,post.location])
+  },[post.medias ,post.location])
   const redirectWorkoutPage = ()=>{
     if(post.type === 'workout'){
       dispatch(findWorkouts(post.workout_date));
@@ -276,7 +276,12 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               </span>
               {!modalShow&&postHeader()}
             </span>
-            <div className="article-type">{articleType()}</div>
+            <NavLink
+              to={articlePath(post)}
+              className={"article-type"}
+            >
+              {articleType()}
+            </NavLink>
           </>
         }
         <div className="post-time" >{convertTime(post.created_at)}</div>
@@ -329,7 +334,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           </>
         }
       </div>
-      {(post.medias.length==0 && position) &&<div>
+      {post.medias && (post.medias.length==0 && position) &&<div>
         <Map
           googleMapURL={"https://maps.googleapis.com/maps/api/js?key="+process.env.REACT_APP_GOOGLE_MAP_KEY}
           loadingElement={<div style={{ height: `100%` }} />}

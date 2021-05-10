@@ -35,7 +35,15 @@ export default function Customer({id}) {
           <div className="customer-profile-section newsfeed">
             <ProfileInfo customer={username}/>
           </div>
-          <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
+          {posts.length>0?
+            <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
+            :
+            <div className="absolute center">
+              <div className="item">
+                <div className="second-text"> Sin publicaciones</div>
+              </div>
+            </div>
+          }  
           <SharingPostPopup />
           <LikersModal />
         </ThreeColumn>

@@ -105,7 +105,7 @@ const PostWord = ({messageId, id})=>{
             </>    
           }
           {
-            post.medias.length>0&&(
+            post.medias&&post.medias.length>0&&(
               <>
                 {post.medias[0].type=="video"&&<video controls src={post.medias[0].url} className="chat-post-video" style={getDimension(post.medias[0])} ref={mediaRef}/>}
                 {post.medias[0].type=="image"&&<img src={convertChatUrl(post.medias[0].url,post.type)} className="chat-post-image" style={getDimension(post.medias[0])} ref={mediaRef}/>}

@@ -6,16 +6,12 @@
   display: -o-flex;
   align-items: center;
   -webkit-align-items: center;
-  min-height: 72vh;
+  min-height: 100vh;
   padding-top: 3rem;
   padding-bottom: 3rem;
   h1 {
     font-size: $bg-title-size;
     text-align: left;
-    font-style: italic;
-    .subtitle {
-      color: #bfd734;
-    }
   }
   .mbr-text,
   .mbr-section-btn {
@@ -38,6 +34,10 @@
       transition: all 0.5s;
       -webkit-transition: all 0.5s;
     }
+  }
+  video{
+    position: absolute;
+    height: 100vh;
   }
 }
 @media (max-width: 767px) {

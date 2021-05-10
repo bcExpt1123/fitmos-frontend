@@ -23,7 +23,7 @@ const BenchmarksPage = () => {
   const dispatch = useDispatch();
   const [height, setHeight] = useState(230);
   useEffect(()=>{
-    if(total === 0 )dispatch($findPublished());
+    dispatch($findPublished());
     // dispatch(findUserDetails());
     changeDimesions();
     setTimeout(changeDimesions,50);

@@ -77,7 +77,8 @@ export const reducer = persistReducer(
   {
     storage,
     key: "benchmarks",
-    whitelist: []
+    whitelist: [],
+    blacklist: ['published'],
   },
   (state = initialState, action) => {
     const clonedErrors = Object.assign({}, state.errors);
@@ -441,7 +442,7 @@ const getRecentWorkouts = () =>
   http({ path: `customers/recentWorkouts` }).then(response => response.data);
 function* findPublished() {
   const benchmark = yield select(store => store.benchmark);
-  if (benchmark.published.length === 0) {
+  if (benchmark.published.length === 0 || true) {
     try {
       const {workouts,profile:{fromWorkout,fromWorkoutImage,toWorkout,toWorkoutImage,workoutCount,levelMedalImage,
         toMonthWorkout, toMonthWorkoutImage, monthWorkoutCount,monthWorkoutTotal,monthPercent}} = yield call(getRecentWorkouts);

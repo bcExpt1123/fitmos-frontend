@@ -145,11 +145,13 @@ const PostModal = ({show, media, onClose }) => {
                 <i className="fas fa-times" />
               </div>
               <div className="sliders" ref={sliderContainerRef} onClick={(evt)=>evt.stopPropagation()}>
-                <Slider {...settings} ref={sliderRef}>
+                {post.medias&&
+                  <Slider {...settings} ref={sliderRef}>
                   {post.medias.map((media, index)=>
                     <RenderModalMedia key={'modal'+media.id} hidden={hidden} media={media} sliderContainerRef={sliderContainerRef} activeSlide={activeSlide} index={index} handleClose={handleClose} postType={post.type}/>
                   )}
                 </Slider>
+                }
                 {hidden==false&&<div className="loading-container">
                   <img src={toAbsoluteUrl("/media/loading/transparent-loading.gif")} alt="loading..." />
                 </div>}

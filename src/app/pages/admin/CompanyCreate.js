@@ -9,6 +9,7 @@ import {
   $saveItem,
   $updateItemValue,
   $updateItemImage,
+  $updateItemPostImage,
   $setNewItem,
   $changeItem,
   $fetchCountries,
@@ -41,7 +42,6 @@ const useStyles = makeStyles((theme) => ({
 const Main = ({history}) =>{
   const classes = useStyles();
   const company = useSelector(({ company }) => company);
-  console.log(company)
   const dispatch=useDispatch();
   useEffect(() => {
     dispatch($fetchCountries())
@@ -49,10 +49,11 @@ const Main = ({history}) =>{
   const item = company.item;
   const isloading = company.loading;
   const countryList = company.data;
-  const [state,setState] = React.useState({file:""});
+  const [logoFile,setLogoFile] = React.useState("");
+  const [postImageFile,setPostImageFile] = React.useState("");
   const handleOnSubmit = e => {
     e.preventDefault();
-    if (item.image === "" && state.file === "") {
+    if (item.image === "" && logoFile === "") {
       alert("Please upload image");
       return false;
     }
@@ -61,8 +62,13 @@ const Main = ({history}) =>{
   }
   const handleCapture = ({ target }) => {
     const file = URL.createObjectURL(target.files[0]);
-    setState({ file });
+    setLogoFile(file);
     dispatch($updateItemImage(target.files));
+  }
+  const handleCaptureImage = ({ target }) => {
+    const file = URL.createObjectURL(target.files[0]);
+    setPostImageFile(file);
+    dispatch($updateItemPostImage(target.files));
   }
   const handleChange = (name) => {
     return event => {
@@ -87,7 +93,6 @@ const Main = ({history}) =>{
         }
       }
     }
-    console.log(event.target.value);
     dispatch($updateCountries(event.target.value));
   }
   return (
@@ -259,7 +264,7 @@ const Main = ({history}) =>{
               </Grid>
             </Grid>
             <Grid container spacing={3}>
-                <Grid item xs={7}>
+                <Grid item xs={4}>
                   <TextField
                     required
                     id="description"
@@ -273,40 +278,73 @@ const Main = ({history}) =>{
                     value={item.description}
                   />
                 </Grid>
-                <Grid item xs={5}>
-                  <Grid>
-                    <input
-                      accept="image/*"
-                      className={classes.input}
-                      style={{ display: "none" }}
-                      id="raised-button-file"
-                      multiple
-                      type="file"
-                      onChange={handleCapture}
-                    />
-                    <div className="admin-upload-image">
-                      {(item.logo || state.file) && (
+                <Grid item xs={4}>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    style={{ display: "none" }}
+                    id="raised-button-file"
+                    multiple
+                    type="file"
+                    onChange={handleCapture}
+                  />
+                  <div className="admin-upload-image">
+                    <label>Logo</label>
+                    {(item.logo || logoFile) && (
+                      <label htmlFor="raised-button-file">
+                        <IconButton color="primary" component="span">
+                          <PhotoCamera />
+                        </IconButton>
+                      </label>
+                    )} 
+                    <div className="uploaded-photo">
+                      {logoFile ? (
+                        <img src={logoFile} alt='prop' width="200px" />
+                      ) : item.logo ? (
+                        <img src={item.logo} alt='prop' width="200px" />
+                      ) : (
                         <label htmlFor="raised-button-file">
-                          <IconButton color="primary" component="span" style={{marginTop:"30px"}}>
+                          <IconButton color="primary" component="span">
                             <PhotoCamera />
                           </IconButton>
                         </label>
-                      )} 
-                      <div className="uploaded-photo">
-                        {state.file ? (
-                          <img src={state.file} alt='prop' width="200px" />
-                        ) : item.logo ? (
-                          <img src={item.logo} alt='prop' width="200px" />
-                        ) : (
-                          <label htmlFor="raised-button-file">
-                            <IconButton color="primary" component="span">
-                              <PhotoCamera />
-                            </IconButton>
-                          </label>
-                        )}
-                    </div>
+                      )}
                   </div>
-                </Grid>
+                </div>
+              </Grid>
+              <Grid item xs={4}>
+                <label>Post Image</label>
+                <input
+                  accept="image/*"
+                  className={classes.input}
+                  style={{ display: "none" }}
+                  id="raised-button-file1"
+                  multiple
+                  type="file"
+                  onChange={handleCaptureImage}
+                />
+                <div className="admin-upload-image">
+                  {(item.post_image || postImageFile) && (
+                    <label htmlFor="raised-button-file1">
+                      <IconButton color="primary" component="span">
+                        <PhotoCamera />
+                      </IconButton>
+                    </label>
+                  )} 
+                  <div className="uploaded-photo">
+                    {postImageFile ? (
+                      <img src={postImageFile} alt='prop' width="200px" />
+                    ) : item.post_image ? (
+                      <img src={item.post_image} alt='prop' width="200px" />
+                    ) : (
+                      <label htmlFor="raised-button-file1">
+                        <IconButton color="primary" component="span">
+                          <PhotoCamera />
+                        </IconButton>
+                      </label>
+                    )}
+                  </div>
+                </div>
               </Grid>
             </Grid>
           </form>

@@ -101,6 +101,10 @@ const QuickPanel = ()=> {
       }else{
         history.push("/"+ notification.action.username);
       }
+    }else if(notification.action_type === "fitemos"){
+      if(notification.type === "payment_renewal"){
+        history.push("/settings/subscriptions");
+      }
     }
   }
   return (

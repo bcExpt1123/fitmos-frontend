@@ -23,12 +23,14 @@ const SearchPosts = ({posts, keyword}) => {
             to={"/posts/"+post.id}
             className={""}
           >
-            {post.medias.length==0?<>
-              <img src={toAbsoluteUrl("/media/products/no-image.png")} alt="no image" />
-            </>:
-              post.medias[0].type === 'video'?
-              <video src = {post.medias[0].url} />:<img src={post.medias[0].url} alt={"logo"}/>
-            }
+            {post.medias&&<>
+              {post.medias.length==0?<>
+                <img src={toAbsoluteUrl("/media/products/no-image.png")} alt="no image" />
+              </>:
+                post.medias[0].type === 'video'?
+                <video src = {post.medias[0].url} />:<img src={post.medias[0].url} alt={"logo"}/>
+              }
+            </>}
             <div className="body" >
               <div className="content">{displayContent(post.content)}</div>
               <div className="post-footer">

@@ -1,7 +1,8 @@
 import React, { Component } from "react";
-import { jarallax } from "jarallax";
+// import { jarallax } from "jarallax";
 import { NavLink } from "react-router-dom";
 import ProofButton from "../components/ProofButton";
+import { toAbsoluteUrl, isMobile } from "../../../../_metronic/utils/utils";
 
 
 const BannerContent = ()=>{
@@ -15,9 +16,7 @@ const BannerContent = ()=>{
           <div className="subtitle">GUIADOS POR EXPERTOS</div>
         </h1>
         <p className="mbr-text pb-3 mbr-fonts-style display-7  d-none d-md-block">
-          Recibe diariamente entrenamientos
-          <br />
-          personalizados en tu teléfono y realízalo
+          Recibe entrenamientos diarios y realízalos
           <br />
           donde y cuando gustes.
         </p>
@@ -39,44 +38,37 @@ class SectionBanner extends Component {
   constructor(props) {
     super(props);
 
-    this.$el = React.createRef();
-    this.state = { screenWidth: null };
-    this.updateWindowDimensions = this.updateWindowDimensions.bind(this);    
+    // this.$el = React.createRef();
+    // this.state = { screenWidth: null };
+    // this.updateWindowDimensions = this.updateWindowDimensions.bind(this);    
   }
 
   // init on mount.
   componentDidMount() {
-    window.addEventListener("resize", this.updateWindowDimensions());
+    // window.addEventListener("resize", this.updateWindowDimensions());
     setTimeout(()=>{
-      if(this.$el.current)jarallax(this.$el.current, { speed: 0.2 });
+      // if(this.$el.current)jarallax(this.$el.current, { speed: 0.2 });
     },10);
   }
 
   // destroy on unmount.
   componentWillUnmount() {
-    this.isDestroyed = true;
-    jarallax(this.$el.current, "destroy");
-    window.removeEventListener("resize", this.updateWindowDimensions);
+    // jarallax(this.$el.current, "destroy");
+    // window.removeEventListener("resize", this.updateWindowDimensions);
   }
-  updateWindowDimensions() {
-    this.setState({ screenWidth: window.innerWidth });
-  }
+  // updateWindowDimensions() {
+  //   this.setState({ screenWidth: window.innerWidth });
+  // }
   render() {
-    let url;
-    if(this.state.screenWidth>760){
-      url = "url(" + require("../assets/img/homebanner.png") + ")";
-    }else{
-      url = "url(" + require("../assets/img/mobilebackground.jpg") + ")";
-    }
     return (
       <section
         id="SectionBanner"
-        ref={this.$el}
-        className="mbr-parallax-background"
-        style={{
-          backgroundImage: url
-        }}
       >
+        <video muted autoPlay loop playsInline={true}>
+          {isMobile()?<source src={toAbsoluteUrl('/media/home-background/mobile.mp4')} type="video/mp4" />
+            :<source src={toAbsoluteUrl('/media/home-background/desktop.mp4')} type="video/mp4" />
+          }
+        </video>
         <div
           className="mbr-overlay"
           style={{ opacity: 0.4, backgroundColor: "rgb(35, 35, 35)" }}

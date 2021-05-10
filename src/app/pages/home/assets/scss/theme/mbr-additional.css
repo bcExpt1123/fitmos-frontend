@@ -122,26 +122,6 @@ body {
 .bg-danger {
   background-color: #b1a374 !important;
 }
-.btn-primary,
-.btn-primary:active {
-  background-color: #149dcc !important;
-  border-color: #149dcc !important;
-  color: #ffffff !important;
-}
-.btn-primary:hover,
-.btn-primary:focus,
-.btn-primary.focus,
-.btn-primary.active {
-  color: #ffffff !important;
-  background-color: #0d6786 !important;
-  border-color: #0d6786 !important;
-}
-.btn-primary.disabled,
-.btn-primary:disabled {
-  color: #ffffff !important;
-  background-color: #0d6786 !important;
-  border-color: #0d6786 !important;
-}
 .btn-secondary,
 .btn-secondary:active {
   background-color: #ff3366 !important;

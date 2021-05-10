@@ -2,7 +2,7 @@ import React,{useState, useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setItemValue } from "../../redux/post/actions";
 
-const Dropdown = ({children,refresh})=>{
+const DropDown = ({children,refresh})=>{
   const globalDropdown = useSelector(({post}) => post.dropdown);
   useEffect(()=>{
     if(globalDropdown && !self){
@@ -29,4 +29,4 @@ const Dropdown = ({children,refresh})=>{
     </>    
   )
 }
-export default Dropdown;
+export default DropDown;

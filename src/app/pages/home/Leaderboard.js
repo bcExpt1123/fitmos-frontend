@@ -1,6 +1,7 @@
 import React,{useState, useEffect, useRef} from "react";
 import MetaTags from "react-meta-tags";
 import DatePicker, { registerLocale } from "react-datepicker";
+import { useHistory } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
 import ThreeColumn from "./layouts/Three";
@@ -83,6 +84,10 @@ export default function Leaderboard() {
       labelRef.current.style.height = height+"px";
     }
   },[]);
+  const history = useHistory();
+  const onRedirectCustomerProfile = (username)=>()=>{
+    history.push(username);
+  }
   return (
     <>
       <MetaTags>
@@ -134,7 +139,7 @@ export default function Leaderboard() {
               </div>
             ):(
               records.map(record=>(
-                <div key={record.id} className="item row">
+                <div key={record.id} className="item row cursor-pointer" onClick={onRedirectCustomerProfile(record.username)}>
                   <div className="avatar"><img src={record.avatar_url.small} alt={record.id} className="avatar"/></div>
                   <div className="content">
                     <div className="name">{record.name}</div>

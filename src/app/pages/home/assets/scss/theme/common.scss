@@ -47,10 +47,10 @@
 }
 .fs-home-btn {
   border-radius: 7px;
-  background: linear-gradient(90deg,#B62602,#D76F33);
+  // background: linear-gradient(90deg,#B62602,#D76F33);
   border: 0;
   &:hover {
-    background: linear-gradient(90deg, #d62302,#D36F23);
+    // background: linear-gradient(90deg, #d62302,#D36F23);
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
   }
 }
@@ -96,9 +96,25 @@ h3 {
   cursor: pointer;
 }
 .btn-primary, .btn-primary:active {
-  background-color: $secondary-background-color !important;
-  border-color: $secondary-background-color !important;
+  background-color: $primary-button-backgound-color !important;
+  border-color: $primary-button-backgound-color !important;
 }
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary.active {
+  color: #ffffff !important;
+  background-color: $primary-button-hover-backgound-color !important;
+  border-color: $primary-button-hover-backgound-color !important;
+}
+.btn-primary.disabled,
+.btn-primary:disabled {
+  color: #ffffff !important;
+  background-color: $primary-button-hover-backgound-color !important;
+  border-color: $primary-button-hover-backgound-color !important;
+}
+
+
 .btn-custom, .btn-custom:active {
   border: 1px solid #B9B7B7;
   background-color: #ffffff;

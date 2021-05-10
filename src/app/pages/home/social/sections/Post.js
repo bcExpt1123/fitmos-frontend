@@ -18,7 +18,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
   const [mediasHeight,setMediasHeight] = useState(100);
   const [mediaContainerHeight,setMediaContainerHeight] = useState('auto');
   const changeDimesions = ()=>{
-    if(mediaContainerRef.current){
+    if(post.medias && mediaContainerRef.current){
       const width = mediaContainerRef.current.clientWidth;
       setMediaWidth(width);
       switch(post.medias.length){
@@ -52,7 +52,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     }
   }
   useEffect(()=>{
-    changeDimesions();
+    if(post.medias)changeDimesions();
     setTimeout(changeDimesions,50);
     function handleResize() {
       changeDimesions();
@@ -141,14 +141,14 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           <div className="medias-container">
             <div className="medias-body">
               <div className="medias" ref={mediaContainerRef}  style={{height:mediaContainerHeight}}>
-                {post.medias.length == 1&&(
+                {post.medias&&post.medias.length == 1&&(
                   <div className="wrapper" style={{top:0,left:0,width:mediasWidth+"px",height:mediasHeight+"px",backgroundColor:"black"}}>
                     <div className="item cursor-pointer">
                       <RenderMedia file={post.medias[0]} videoIndex = {findVideoIndex(post.medias[0].id)} onOpenModal={openPostModal} postType={post.type}/>
                     </div>
                   </div>
                 )}
-                {post.medias.length > 1&&(
+                {post.medias&&post.medias.length > 1&&(
                   <>
                     <div className="wrapper" style={{top:0,left:0,width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                       <div className="item cursor-pointer">
@@ -162,7 +162,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                     </div>
                   </>
                 )}
-                {post.medias.length == 3&&(
+                {post.medias&&post.medias.length == 3&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth+"px",height:mediasWidth/2+"px"}}>
                       <div className="item cursor-pointer">
@@ -171,7 +171,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                     </div>
                   </>
                 )}
-                {post.medias.length == 4&&(
+                {post.medias&&post.medias.length == 4&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/2+"px",height:mediasWidth/2+"px"}}>
                       <div className="item cursor-pointer">
@@ -185,7 +185,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                     </div>
                   </>
                 )}
-                {post.medias.length > 4&&(
+                {post.medias&&post.medias.length > 4&&(
                   <>
                     <div className="wrapper" style={{top:mediasWidth/2,left:0+"px",width:mediasWidth/3+"px",height:mediasWidth/3+"px"}}>
                       <div className="item cursor-pointer">

@@ -118,9 +118,8 @@
       margin:40px -60px -23px -60px;
     }
     .actions{
-      display: flex; 
-      justify-content: center;
-      flex-direction: column;
+      display: block; 
+      text-align: right;
       .open-create-post-modal{
         margin: 30px auto;
         width:448px;
@@ -195,6 +194,7 @@
       position: fixed;
       bottom: 30px;
       left: calc( 50% - 200px);
+      display: block;
       .back{
         background-color: white;
         color: #333333;

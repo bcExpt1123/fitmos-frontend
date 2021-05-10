@@ -74,6 +74,7 @@ const initialState = {
     search: ""
   },
   uploadImage: null,
+  uploadPostImage: null,
   errors: {
     title: "",
     description: ""
@@ -129,7 +130,8 @@ export const reducer = persistReducer(
           updatedItem: action.item,
           isloading: false,
           isSaving: false,
-          uploadImage: null
+          uploadImage: null,
+          uploadPostImage:null
         };
       case actionTypes.COMPANY_CHANGE_SAVE_STATUS:
         return { ...state, isSaving: action.status };
@@ -191,6 +193,9 @@ export function $saveItem(history) {
 }
 export function $updateItemImage(image) {
   return { type: actionTypes.COMPANY_UPLOAD_IMAGE, image };
+}
+export function $updateItemPostImage(image) {
+  return { type: actionTypes.COMPANY_SET_VALUE, key:"uploadPostImage",value:image };
 }
 export function $setNewItem() {
   const item = { id: null, username:"",name: "", phone: "", mail: "", image: "",date:"",description:"",all:"",mobile_phone:"", website_url:"",address:"",facebook:"", instagram:"", twitter:"", horario:"" };
@@ -329,6 +334,12 @@ const saveCompany = company => {
       formData.append("logo", file);
     });
   }
+  if (company.uploadPostImage) {
+    const files = Array.from(company.uploadPostImage);
+    files.forEach((file, i) => {
+      formData.append("post_image", file);
+    });
+  }
   if (company.item.id) {
     formData.append("_method", "PUT");
     return http({
@@ -352,7 +363,6 @@ const saveCompany = company => {
 };
 function* saveItem({ history }) {
   const company = yield select(store => store.company);
-  console.log(company)
   try {
     const result = yield call(saveCompany, company);
     if (result.company) {

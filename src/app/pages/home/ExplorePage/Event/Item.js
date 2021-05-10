@@ -98,7 +98,7 @@ const EventPage = ({id}) => {
       <Tabs defaultActiveKey="body" id="event">
         <Tab eventKey="body" title="Acerca del Evento">
           <>
-            {event.participant?<button className="btn btn-custom-third font-size-14" onClick={handleUnattend} disabled={disable}>Confirmar Participación</button>
+            {event.participant?<button className="btn btn-custom-third font-size-14" onClick={handleUnattend} disabled={disable}>Participación Confirmada</button>
             :<button className="btn btn-custom-secondary font-size-14" onClick={handleAttend} disabled={disable}>Confirmar Participación</button>
             }
             <button className="btn btn-custom-secondary font-size-14" onClick={openSharing}>Compartir</button>
