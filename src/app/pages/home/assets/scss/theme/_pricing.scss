@@ -26,6 +26,12 @@
           font-weight: 400;
           color: #333333;
           line-height: 1.5;
+          text-align: left;
+          i{
+            color:$primary-button-background-color;
+            font-size: 20px;
+            padding-right: 16px;
+          }
         }
       }
       .plan-footer {
@@ -75,7 +81,7 @@
     .text-label {
       margin-top: 108px;
       .title {
-        color: $green-yellow-color;
+        color: white;
         font-size: $bg-title-size;
         font-weight: 700;
         text-transform: uppercase;

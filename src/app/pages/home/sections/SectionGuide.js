@@ -26,6 +26,7 @@ export default function SectionGuide() {
               <li>Guías nutricionales</li>
               <li>Tutorial de cada movimiento</li>
               <li>Acceso a entrenadores</li>
+              <li>Interacción entre miembros</li>
               <li>Rutinas nuevas todos los días</li>
               <li>Planificado por expertos</li>
             </ul>

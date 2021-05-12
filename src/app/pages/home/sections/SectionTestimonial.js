@@ -56,9 +56,9 @@ export default function Testimonial() {
           <SlideSide image={require("../assets/testimonial/eliana.png")} name={"Eliana Jiménez"} role={"Lic. Nutrición y Atleta"}
             description={`Así como cada miembro requiere una programación de Fitness personalizada, 
             también requiere la nutrición. Proveemos guías nutricionales semanales a todos los miembros con el fin de mejorar sus hábitos alimenticios.`}/>
-          <SlideSide image={require("../assets/testimonial/faby.png")} name={"Faby Antequera"} role={"Lic. Mercadeo Deportivo y Deportista"}
+          {/* <SlideSide image={require("../assets/testimonial/faby.png")} name={"Faby Antequera"} role={"Lic. Mercadeo Deportivo y Deportista"}
             description={`En Fitemos conocemos todas las variables que crean resultados, cubrimos Fitness Personalizado, 
-            Wellness, Nutrición y la Comunidad. No hay nada como compartir el Fitness y motivarte junto a personas iguales a ti. ¡Bienvenido a Fitemos!`}/>
+            Wellness, Nutrición y la Comunidad. No hay nada como compartir el Fitness y motivarte junto a personas iguales a ti. ¡Bienvenido a Fitemos!`}/> */}
         </Slider>
       </div>
     </section>

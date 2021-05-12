@@ -101,7 +101,7 @@ const ProfileInfo = ({customer}) => {
                   onContentChange={getWrapperWidth}
                 />
               }
-              {(currentUser.type==="customer" && currentUser.customer.id === customer.id &&customer.description==null)&&<>Enter something about you…</>}
+              {(currentUser.type==="customer" && currentUser.customer.id === customer.id &&customer.description==null)&&<>Escribe algo sobre ti…</>}
             </div>
           </div>
           :
@@ -117,7 +117,7 @@ const ProfileInfo = ({customer}) => {
                   showLessButton={true}
                   onContentChange={getWrapperWidth}
                 />
-                :<>Enter something about you…</>
+                :<>Escribe algo sobre ti…</>
               }
             </div>
           </div>
@@ -149,7 +149,9 @@ const ProfileInfo = ({customer}) => {
           :
           <>
             <button className="btn btn-custom-secondary" onClick={openModal}>
-              Editar<span style={{width:"15.4px",display:"inline-block"}}>&nbsp;&nbsp;&nbsp;</span>Perfil
+              <span style={{width:"5.5px",display:"inline-block"}}>&nbsp;</span>
+              Editar<span style={{width:"4.4px",display:"inline-block"}}>&nbsp;</span>Perfil
+              <span style={{width:"5.5px",display:"inline-block"}}>&nbsp;</span>
             </button>
             <button className="btn btn-custom-secondary"onClick={redirectEditAccountPage}>
               Configuración

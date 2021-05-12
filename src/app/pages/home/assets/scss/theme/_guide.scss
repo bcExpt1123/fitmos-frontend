@@ -5,7 +5,7 @@
   h2 {
     font-size: $bg-title-size;
     text-align: left;
-    color: #156376;
+    color: black;
     font-weight: 700;
     padding-top: 1rem;
     padding-bottom: 30px;
@@ -18,12 +18,20 @@
     }
   }
   ul.mbr-section-text {
-    margin-left: -14px;
+    margin-left: -41px;
+    list-style: none;
     li {
       font-size: 2rem;
       color: #333333;
       font-weight: 500;
       padding-bottom: 5px;
+      &::before{
+        font-family:'Font Awesome 5 Pro';        
+        font-weight: 900;
+        content: "\f00c";
+        color:$primary-button-background-color;
+        margin-right: 27px;
+      }
     }
   }
   .background-container {

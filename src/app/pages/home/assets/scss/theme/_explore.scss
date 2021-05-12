@@ -51,7 +51,7 @@
       font-weight: 500;
       padding: 2px  30px;
       &.active {
-        border-bottom: 2px solid #AFCA32;
+        border-bottom: 2px solid $primary-button-background-color;
         padding-bottom: 0;
       }
     }

@@ -31,7 +31,7 @@ class Pricing extends React.Component {
       if (serviceItem.yearly !== "") {
         monthlyFee = serviceItem.yearly / 12;
       }
-      if (monthlyFee === undefined) {
+      if (serviceItem.monthly !== "") {
         monthlyFee = serviceItem.monthly;
       }
       monthlyFee = roundToMoney(monthlyFee);
@@ -44,17 +44,17 @@ class Pricing extends React.Component {
             <div className="col-12 col-md-5">
               <div className="plan-card">
                 <div className="plan-header text-center">
-                  <h3 className="plan-title mbr-fonts-style">Plan Fitemos</h3>
+                  <h3 className="plan-title mbr-fonts-style">Fitemos Program</h3>
                 </div>
                 <div className="plan-body">
-                  <div className="plan-list align-center">
-                    <div>Entrenamientos personalizados</div>
-                    <div>Tutorial de cada movimiento</div>
-                    <div>Tips personalizados</div>
-                    <div>Pruebas para medir tu progreso</div>
-                    <div>Calentamiento específico</div>
-                    <div>Acceso a entrenadores 24/7</div>
-                    <div>Comunidad Fitemos</div>
+                  <div className="plan-list">
+                    <div><i className="fa fa-check" />Entrenamientos personalizados</div>
+                    <div><i className="fa fa-check" />Tutorial de cada movimiento</div>
+                    <div><i className="fa fa-check" />Tips personalizados</div>
+                    <div><i className="fa fa-check" />Pruebas para medir tu progreso</div>
+                    <div><i className="fa fa-check" />Calentamiento específico</div>
+                    <div><i className="fa fa-check" />Acceso a entrenadores 24/7</div>
+                    <div><i className="fa fa-check" />Comunidad Fitemos</div>
                   </div>
                 </div>
                 <div className="plan-footer">

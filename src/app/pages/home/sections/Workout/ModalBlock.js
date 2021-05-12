@@ -8,7 +8,7 @@ import Timer from "./Timer";
 import { doneWorkout,startWorkout,setRunning, stopRunning, setTimer, removeTimer } from "../../redux/done/actions";
 import { nextModalBlock,previousModalBlock,initialModalBlock } from "../../redux/workout/actions";
 
-const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
+const ModalBlock = ({ block,renderLine,setAll, handleOpen, onHide })=>{
   const workout = process.env.REACT_APP_WORKOUT;
   const workouts = useSelector(({done})=>done.workouts);
   const isRunning = useSelector(({done})=>done.isRunning);
@@ -101,6 +101,11 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
             {step>1&&<button onClick={previousStep} className="previous">
               Anterior
             </button>}
+            {step==1&&
+              <button  className="previous" onClick={onHide}>
+                Anterior
+              </button>
+            }
             <button onClick={(e)=>{e.stopPropagation();handleComplete(workouts.current);}} className={classnames("next",{checked:workouts.current.read})}>
               Completar
             </button>
@@ -117,8 +122,13 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen })=>{
             <div className="actions">
               {step>1&&
                 <button  className="previous" onClick={previousStep}>
-                Anterior
-              </button>
+                  Anterior
+                </button>
+              }
+              {step==1&&
+                <button  className="previous" onClick={onHide}>
+                  Anterior
+                </button>
               }
               <button onClick={()=>nextStep(block.slug,workouts.current)} className="next">
                 Siguiente

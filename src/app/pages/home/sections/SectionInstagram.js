@@ -314,7 +314,7 @@ const SectionInstagram = () => {
           <div className={"header container"}>
             <h2>
               Únete a la gran comunidad Fitemos y disfruta de una vida{" "}
-              <span style={{ color: "#156376" }}>saludable.</span>
+              <span>saludable.</span>
             </h2>
           </div>
           {photos&&(

@@ -1,23 +1,25 @@
 .footer {
   padding-top: 60px;
   padding-bottom: 60px;
-  background-color: #2e2e2e;
+  background-color: $basic-text-color;
   .content {
     .col-md-2 h3 {
       width: 120%;
     }
     h3 {
-      color: $green-yellow-color;
+      color: $seconday-button-backgound-color;
     }
     ul {
       list-style-type: none;
       padding-left: 0;
       li {
         padding-bottom: 12px;
-        a,
-        a:hover {
+        a{
           color: white;
           font-size: $normal-font-size;
+        }
+        a:hover {
+          color: $seconday-button-backgound-color;
         }
       }
     }

@@ -15,8 +15,8 @@
         .border-line {
           position: absolute;
           bottom: 0;
-          border-bottom: solid 20px $primary-button-backgound-color;
-          border-left: solid 20px $primary-button-backgound-color;
+          border-bottom: solid 20px $primary-button-background-color;
+          border-left: solid 20px $primary-button-background-color;
           width: 233px;
           height: 89px;
           margin-left: -10px;
@@ -69,7 +69,7 @@
     .card-img {
       .box-button {
         border-radius: 35px;
-        background: $primary-button-backgound-color;
+        background: $primary-button-background-color;
         border: 0;
         width: 70px;
         height: 70px;

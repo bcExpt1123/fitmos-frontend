@@ -87,7 +87,7 @@
       float:right;
       margin-top: 2px;
       border-radius: 3px;
-      background-color: #AFCA32;
+      background-color: $seconday-button-backgound-color;
       color:white;
       font-size: 14px;
       padding:4px 31px;
@@ -267,7 +267,7 @@
 .follower-button{
   background-color:transparent;
   border:0;
-  color:$secondary-background-color !important;
+  color:$primary-button-background-color !important;
   padding:0;
 }
 .absolute.center{

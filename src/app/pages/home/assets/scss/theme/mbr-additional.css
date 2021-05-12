@@ -107,9 +107,6 @@ body {
   padding: 1.2rem 3.2rem;
   border-radius: 3px;
 }
-.bg-primary {
-  background-color: #149dcc !important;
-}
 .bg-success {
   background-color: #f7ed4a !important;
 }
@@ -498,10 +495,6 @@ a.text-black:focus {
 }
 .mbr-gallery-filter li.active .btn:focus {
   box-shadow: none;
-}
-a,
-a:hover {
-  color: #149dcc;
 }
 .mbr-plan-header.bg-primary .mbr-plan-subtitle,
 .mbr-plan-header.bg-primary .mbr-plan-price-desc {

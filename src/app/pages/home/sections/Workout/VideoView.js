@@ -22,6 +22,7 @@ const VideoView = ({onClose}) => {
   const dispatch = useDispatch();
   const video = useSelector(({workout})=>workout.video);
   const originalVideo = useSelector(({workout})=>workout.originalVideo);
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   const [instructionShow,setInstructionShow] = useState(false);
   const modalVideo = useSelector(({workout})=>workout.modalVideo);
   const videoRef = useRef();
@@ -153,13 +154,13 @@ const VideoView = ({onClose}) => {
       </div>
       {(video.alternate_a || video.alternate_b)&&
         <div className="workout-alternate mt-5">
-          {video.alternate_a&&
-            <button type="button" className={"back-button alternate_a"} onClick={() => changeVideo('alternate_a')}>
+          {video.alternate_b&&
+            <button type="button" className={"back-button alternate_b"} onClick={() => changeVideo('alternate_b')}>
               <i className="fas fa-chevron-left" />
             </button>              
           }
-          {video.alternate_b&&
-            <button type="button" className={"back-button alternate_b"} onClick={() => changeVideo('alternate_b')}>
+          {video.alternate_a&&
+            <button type="button" className={"back-button alternate_a"} onClick={() => changeVideo('alternate_a')}>
               <i className="fas fa-chevron-right" />
             </button>              
           }
@@ -172,9 +173,11 @@ const VideoView = ({onClose}) => {
         <button type="button" className={"btn back"} onClick={()=>{setInstructionShow(true)}}>
           Instrucciones
         </button>              
-        <button type="button" className={"btn swap"} onClick={handleAlernateModal}>
-          Escoger
-        </button>              
+        {currentUser&&currentUser.customer.current_condition>=originalVideo.level&&
+          <button type="button" className={"btn swap"} onClick={handleAlernateModal}>
+            Escoger
+          </button>              
+        }
       </div>
       <Modal
         show={instructionShow}

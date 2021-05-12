@@ -19,7 +19,7 @@ import "./assets/scss/theme/common.scss";
 import "./assets/scss/theme/login.scss";
 import "./assets/scss/theme/signup.scss";
 
-const styles = {};
+const styles = {page:"checkout-section"};
 const CheckoutPage = () => {
   const history = useHistory();
   const currentUser = useSelector(({auth})=>auth.currentUser);

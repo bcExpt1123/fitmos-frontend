@@ -142,8 +142,8 @@
         margin: 10px;
         padding: 12px 40px;
         &.next{
-          border: 1px solid $secondary-background-color;
-          background-color: $secondary-background-color;          
+          border: 1px solid $primary-button-background-color;
+          background-color: $primary-button-background-color;          
           color:white;
           padding: 12px 80px;
         }
@@ -178,10 +178,10 @@
         color:black;
         height: auto;
         &.alternate_a{
-          float:left;
+          float:right;
         }
         &.alternate_b{
-          float:right;
+          float:left;
         }
         i{
           font-size: 30px;

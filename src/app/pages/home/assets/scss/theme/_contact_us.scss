@@ -75,11 +75,17 @@
   }
 }
 .help{
-  .fs-btn{
+  .contact-btn{
     margin: 40px auto 0 auto;
     font-size: 23px;
     padding: 13px 90px;
     width:auto;
+    background-color: transparent !important;
+    text-transform: uppercase;
+    color:black;
+    border: 2px solid black !important;
+    border-radius: 10px;
+    font-weight: 900;
   }  
 }
 @media (max-width: 767px) {

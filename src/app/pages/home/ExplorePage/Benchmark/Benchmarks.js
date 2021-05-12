@@ -58,8 +58,7 @@ const BenchmarksPage = () => {
               >
                 <div className="image cursor-pointer"
                   style={{
-                    backgroundImage: "url(" + benchmark.image + ")",
-                    height: height+"px",
+                    backgroundImage: "url(" + benchmark.image + ")"
                   }}
                 >
                   <div className="background">

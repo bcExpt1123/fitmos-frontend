@@ -1,5 +1,5 @@
 .top-line-green {
-  border-top: solid 3px #156376;
+  border-top: solid 3px $primary-button-background-color;
   display: inline-block;
 }
 .testimonial {
@@ -32,7 +32,7 @@
     .address {
       font-size: 1.3rem;
       font-weight: 700;
-      color: #156376;
+      color: black;
     }
     .mbr-section-text {
       padding-top: 20px;
@@ -75,8 +75,8 @@
       .border-line {
         position: absolute;
         bottom: 0;
-        border-bottom: solid 20px #156376;
-        border-left: solid 20px #156376;
+        border-bottom: solid 20px $primary-button-background-color;
+        border-left: solid 20px $primary-button-background-color;
         width: 90px;
         height: 134px;
         margin-left: -10px;
@@ -101,7 +101,7 @@
     font: normal normal normal 16px/1 "LineAwesome";
     font-weight: 600;
     &:before {
-      color: #156376;
+      color: $primary-button-background-color;
       font-family: unset;
       font-size: 50px;
       content: "\f111";
@@ -112,7 +112,7 @@
     font: normal normal normal 16px/1 "LineAwesome";
     font-weight: 600;
     &:before {
-      color: #156376;
+      color: $primary-button-background-color;
       font-size: 50px;
       content: "\f112";
       font-family: unset;
@@ -130,6 +130,7 @@
       padding-right: 0;
       padding-left: 0;
       width: 351px;
+      height: 442px;
       img {
         width: 350px;
         height: 433px;
@@ -156,8 +157,8 @@
         .border-line {
           position: absolute;
           bottom: 0;
-          border-bottom: solid 5px #156376;
-          border-left: solid 5px #156376;
+          border-bottom: solid 5px $primary-button-background-color;
+          border-left: solid 5px $primary-button-background-color;
           width: 37px;
           height: 56px;
           margin-left: -2.5px;
@@ -170,11 +171,11 @@
         font-size: 1.5rem;
         .top-line-green {
           padding-top: 10px;
-          border-top: solid 2px #156376;
+          border-top: solid 2px $primary-button-background-color;
         }
         .top-line-green-md {
           padding-top: 10px;
-          border-top: solid 2px #156376;
+          border-top: solid 2px $primary-button-background-color;
           display: inline-block;
         }
       }

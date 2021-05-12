@@ -29,18 +29,18 @@
   position: absolute;
   font-size: 8px;
   right: 4px;
-  background-color: #afca32;
+  background-color: $primary-button-background-color;
   display: inline-block;
   width:10px;
   height:10px;
   border-radius: 5px;
-  color:#afca32;
+  color:$primary-button-background-color;
 }
 
 .fitemos-menu-social {
   .navbar {
     padding: 0;
-    background: #232323;
+    background: $basic-text-color;
     transition: none;
     min-height: 77px;
     &.full-width{
@@ -167,7 +167,7 @@
         }
         &.active{
           i{
-            color:#afca32;
+            color:$primary-button-background-color;
             &.fal.fa-heartbeat{
               display: none;
             }            
@@ -175,7 +175,7 @@
               display: inline;
             }
           }
-          border-bottom: 4px solid #afca32;
+          border-bottom: 4px solid $primary-button-background-color;
           padding-left: 25px;          
           .menu-text{
             font-weight: bold;
@@ -258,7 +258,6 @@
     }
     .menu-third {
       .link{
-        padding: 13px !important;      
         .full-name{
           display:none;
         }

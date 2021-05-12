@@ -36,12 +36,19 @@
 @import "./_leaderboard.scss";
 @import "./social/index";
 @import "./explore/index";
+a,
+a:hover {
+  color: $primary-button-background-color;
+}
+#root{
+  background-color: #f3f3f3;
+}
 .fs-btn {
   border-radius: 7px;
-  background: linear-gradient(90deg, #028fb4, #bfd734);
+  background: $primary-button-background-color;
   border: 0;
   &:hover {
-    background: linear-gradient(90deg, #187688, #97c84f);
+    background: $primary-button-hover-background-color;
     box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
   }
 }
@@ -96,22 +103,22 @@ h3 {
   cursor: pointer;
 }
 .btn-primary, .btn-primary:active {
-  background-color: $primary-button-backgound-color !important;
-  border-color: $primary-button-backgound-color !important;
+  background-color: $primary-button-background-color !important;
+  border-color: $primary-button-background-color !important;
 }
 .btn-primary:hover,
 .btn-primary:focus,
 .btn-primary.focus,
 .btn-primary.active {
   color: #ffffff !important;
-  background-color: $primary-button-hover-backgound-color !important;
-  border-color: $primary-button-hover-backgound-color !important;
+  background-color: $primary-button-hover-background-color !important;
+  border-color: $primary-button-hover-background-color !important;
 }
 .btn-primary.disabled,
 .btn-primary:disabled {
   color: #ffffff !important;
-  background-color: $primary-button-hover-backgound-color !important;
-  border-color: $primary-button-hover-backgound-color !important;
+  background-color: $primary-button-hover-background-color !important;
+  border-color: $primary-button-hover-background-color !important;
 }
 
 
@@ -125,7 +132,7 @@ h3 {
   color: #333333;
 }
 .btn-custom-third,.btn-custom-third:active{
-  background-color: #AFCA32;
+  background-color: $seconday-button-backgound-color;
   color: white;
 }
 @media (max-width: 767px) {

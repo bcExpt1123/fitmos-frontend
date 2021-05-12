@@ -23,7 +23,7 @@ const Channel = ()=> {
   let title;
   if(selectedDialog){
     if(selectedDialog.type==3){
-      if(selectedDialog.users[0])title = selectedDialog.users[0].first_name + selectedDialog.users[0].last_name;
+      if(selectedDialog.users[0])title = selectedDialog.users[0].first_name +' '+ selectedDialog.users[0].last_name;
       else title="";
     }else{
       title = selectedDialog.name;
@@ -268,7 +268,7 @@ const Channel = ()=> {
         <div className="chat-title">
           <h3 className="cursor-pointer" onClick={editGroup}>{title}</h3>
           {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participantes</div>}
-          {selectedDialog.type==3&&<div className="participants">{selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
+          {selectedDialog.type==3&&<div className="participants">{false&&selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
         </div>
         <DropDown>
           {({show,toggleHandle,setShow})=>(

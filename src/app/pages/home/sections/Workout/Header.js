@@ -110,7 +110,7 @@ const Header = ()=>{
                 />
                 <Form.Check 
                   type={'radio'}
-                  id={`advertise`}
+                  id={`advertisea`}
                   label={`Me llegó la publicidad`}
                   onChange={handleOptionChange}
                   value="advertise"

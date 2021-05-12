@@ -134,6 +134,7 @@ const ModalView = ({ isOpen, onClose, onOpenPost }) => {
                   <ModalBlock key={index}
                     block={block}
                     renderLine={renderLine}
+                    onHide={onHide}
                   />
                 )
               )

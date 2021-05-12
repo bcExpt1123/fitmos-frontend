@@ -10,7 +10,7 @@ function SectionAsk() {
           <div className="mt-5">
             <NavLink
               to="/contact"
-              className={"btn btn-md btn-primary fs-btn mb-5"}
+              className={"btn btn-md contact-btn mb-5"}
               exact
             >
               Contáctanos

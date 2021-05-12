@@ -17,16 +17,19 @@
       padding: 16px 0;
       cursor: pointer;
       &.active {
-        background-color: #156376!important;
+        background-color: $primary-button-background-color;
         color: white;
         cursor: auto;
+        &:hover{
+          background-color: $primary-button-hover-background-color;
+        }
       }
       h2 {
         font-size: 30px;
         font-style: italic;
       }
       &:hover{
-        background-color: #c8dc50;
+        background-color: $seconday-button-backgound-color;
       }
     }
     .free-plan .fs-btn {
@@ -54,6 +57,9 @@
           line-height: 2.3;
           ul{
             list-style: none;
+            li i{
+              color:$primary-button-background-color;
+            }
           }
         }
       }
@@ -110,6 +116,12 @@
             width: 97%;
             padding-left: 0px;
             padding-right: 0px;
+            background: $seconday-button-backgound-color!important;
+            border: 0;
+            &:hover {
+              background: $seconday-button-backgound-color !important;
+              box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
+            }          
           }
           a{
             color:#156376;
