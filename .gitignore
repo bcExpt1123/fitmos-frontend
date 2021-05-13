@@ -3,9 +3,9 @@
 # dependencies
 /~
 /node_modules
-/public/
-/src/app/pages/home/assets/img
-/src/app/pages/home/assets/media
+#/public/
+#/src/app/pages/home/assets/img
+#/src/app/pages/home/assets/media
 /.pnp
 .pnp.js
 
