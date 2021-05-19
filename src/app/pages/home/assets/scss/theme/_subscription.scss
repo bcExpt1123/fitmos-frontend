@@ -2,7 +2,7 @@
   justify-content: center;
   padding-top: 80px;
   padding-bottom: 80px;
-  background-image: url("../../img/subscription-banner.png");
+  background-image: url("../../img/pricing-banner.jpg");
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
@@ -29,7 +29,7 @@
         font-style: italic;
       }
       &:hover{
-        background-color: $seconday-button-backgound-color;
+        background-color: $secondary-button-backgound-color;
       }
     }
     .free-plan .fs-btn {
@@ -116,10 +116,10 @@
             width: 97%;
             padding-left: 0px;
             padding-right: 0px;
-            background: $seconday-button-backgound-color!important;
+            background: $secondary-button-backgound-color!important;
             border: 0;
             &:hover {
-              background: $seconday-button-backgound-color !important;
+              background: $secondary-button-backgound-color !important;
               box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
             }          
           }

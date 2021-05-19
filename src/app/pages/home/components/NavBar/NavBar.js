@@ -216,7 +216,7 @@ class NavBarVariantFull extends React.Component {
                         className="navbar-nav nav-dropdown"
                         data-app-modern-menu="true"
                       >
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                           <NavLink
                             to="/news"
                             className={"nav-link link text-white display-4"}
@@ -225,7 +225,7 @@ class NavBarVariantFull extends React.Component {
                           >
                             Blog
                           </NavLink>
-                        </li>
+                        </li> */}
                         <li className="nav-item">
                           <NavLink
                             to="/ayuda"

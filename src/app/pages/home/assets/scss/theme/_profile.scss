@@ -132,7 +132,7 @@
         color:$basic-text-color;
       }
       .flag-dropdown,.form-control{
-        border: 1px solid #b3d139;        
+        border: 1px solid $secondary-button-backgound-color;        
       }
     }
     .edit-peso{
@@ -147,7 +147,7 @@
       left: 0px;
     }
     .btn-edit-peso{
-      border: 1px solid #b3d139;
+      border: 1px solid $secondary-button-backgound-color;
       margin: 0;
       justify-content: left;
       text-align: left;

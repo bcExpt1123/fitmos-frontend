@@ -187,7 +187,7 @@
       top: -12px;
       right: 15px;
       border: solid 1px #485b70;
-      background-color: $seconday-button-backgound-color;
+      background-color: $secondary-button-backgound-color;
       font-size: 9px;
       font-weight: 500;
       line-height: 3;
@@ -219,7 +219,7 @@
     font-weight: 400;
   }
   .valid {
-    border-color: #b3d139;
+    border-color: $secondary-button-backgound-color;
   }
   .form-label {
     position: absolute;

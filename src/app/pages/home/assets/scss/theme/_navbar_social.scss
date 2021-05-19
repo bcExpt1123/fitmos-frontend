@@ -28,7 +28,6 @@
 @mixin notification-number{
   position: absolute;
   font-size: 8px;
-  right: 4px;
   background-color: $primary-button-background-color;
   display: inline-block;
   width:10px;
@@ -221,9 +220,14 @@
       }
     }
     .link{
-      padding: 13px 17px!important;
+      padding: 13px 21px!important;
       i{
         font-size: 24px;
+      }
+    }
+    .nav-item{
+      button{
+        margin: 13px 6px 0 6px;
       }
     }
     .dropdown{
@@ -262,6 +266,11 @@
           display:none;
         }
       }
+      .nav-item{
+        button{
+          margin: 13px 4px 0 4px;
+        }
+      }
     }
   }
 }
@@ -269,6 +278,13 @@
   .fitemos-menu-social {
     .navbar.full-width{
       padding:0 12px;
+    }
+    .menu-third{
+      .nav-item{
+        button{
+          margin: 13px 0px 0 0px;
+        }
+      }
     }
   }
 }

@@ -36,7 +36,7 @@
       }
       .plan-footer {
         .plan-price {
-          color: #156376;
+          color: black;
           margin-bottom: 20px;
           .price-value,
           .price-figure {
@@ -68,8 +68,8 @@
         top: 0px;
         right: 0%;
         .border-line {
-          border-top: solid 20px #c8dc50;
-          border-right: solid 20px #c8dc50;
+          border-top: solid 20px $primary-button-background-color;
+          border-right: solid 20px $primary-button-background-color;
           float: right;
           width: 103px;
           height: 163px;
@@ -108,7 +108,7 @@
     overflow: hidden;
     pointer-events: none;
     .background {
-      background-image: url("../../img/pricing-banner.png");
+      background-image: url("../../img/pricing-banner.jpg");
       background-position: 50% 100%;
       background-size: cover;
       background-repeat: no-repeat;

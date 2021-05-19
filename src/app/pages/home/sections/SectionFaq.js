@@ -5,7 +5,7 @@ export default function SectionFaq() {
       <div className="container">
         <div className="row">
           <div className="col-12 mt-5">
-            <h1 className="display-3 mbr-semibold" style={{color:'#f3f3f3'}}>Preguntas frecuentes</h1>
+            <h1 className="display-3 mbr-semibold">Preguntas frecuentes</h1>
             <p className="hidden" style={{display:'none'}}>ADJUNTAR PREGUNTAS ENVIADAS</p>
             <article>
               <div className="faq mt-5 mb-5">

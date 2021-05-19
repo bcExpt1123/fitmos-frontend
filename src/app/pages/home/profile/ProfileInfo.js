@@ -214,11 +214,11 @@ const ProfileInfo = ({customer}) => {
           <div className="progress-bar-wrapper">
             <div className="medal-image">
               {check()?
-                customer.medals.toMonthWorkout&&(
+                customer.medals.toMonthWorkoutImage&&(
                   <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
                 )
                 :
-                done.toMonthWorkout&&(
+                done.toMonthWorkoutImage&&(
                   <img src={done.toMonthWorkoutImage} alt="workout-medal"/>
                 )
               }

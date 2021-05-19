@@ -84,7 +84,7 @@ class Pricing extends React.Component {
             <div className="col-12 col-md-1">&nbsp;</div>
             <div className="col-12 col-md-5">
               <div className="text-label">
-                <h2 className="title">Fitemos</h2>
+                <h2 className="title">Workout</h2>
                 <h2 className="sub-title">anywhere</h2>
                 <div className="description d-none d-md-block">
                   Conviértete en la mejor versión de ti mismo con el Plan
