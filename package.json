@@ -130,6 +130,7 @@
     "slick-carousel": "^1.8.1",
     "socicon": "^3.0.5",
     "substyle-jss": "^4.1.0",
+    "swr": "^0.5.6",
     "video-react": "^0.14.1",
     "wil-react-sticky": "^1.0.5"
   },

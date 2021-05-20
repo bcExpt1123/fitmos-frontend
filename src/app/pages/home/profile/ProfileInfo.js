@@ -123,20 +123,20 @@ const ProfileInfo = ({customer}) => {
           </div>
         }
         <div className="social-info row">
+          <div className="col-4" onClick={openFollowingModal("followers")}>
+            <div className="value">{check()?customer.medals.workoutCount:done.workoutCount}
+            {/* <span className="unit">K</span> */}
+            </div>
+            <div className="label">Workouts</div>
+          </div>
           <div className="col-4" onClick={openFollowingModal("followings")}>
             <div className="value">{check()?customer.followings&&customer.followings.length:currentUser.customer.followings&&currentUser.customer.followings.length}
             </div>
             <div className="label">Partners</div>
           </div>
-          <div className="col-4" onClick={openFollowingModal("followers")}>
-            <div className="value">{check()?customer.followers&&customer.followers.length:currentUser.customer.followers&&currentUser.customer.followers.length}
-            {/* <span className="unit">K</span> */}
-            </div>
-            <div className="label">Followers</div>
-          </div>
           <div className="col-4">
             <div className="value">{check()?customer.postCount:currentUser.customer.postCount}</div>
-            <div className="label">Publicaciones</div>
+            <div className="label">Posts</div>
           </div>
         </div>
         <div className="actions">
@@ -174,7 +174,7 @@ const ProfileInfo = ({customer}) => {
               }
             </div>
             <div className="progress-bar-body">
-              <span className="label">Bodyweight Fitness</span>
+              <span className="label">Nivel</span>
               {check()?<>
                 <span className="value">{customer.current_condition}/5</span>
                 <ProgressBar now={customer.current_condition/5*100} />
@@ -197,7 +197,7 @@ const ProfileInfo = ({customer}) => {
               }
             </div>
             <div className="progress-bar-body">
-              <span className="label">Workout Totales</span>
+              <span className="label">Rango</span>
               {check()?
                 <>
                   <span className="value">{customer.medals.workoutCount}/{customer.medals.toWorkout}</span>
@@ -224,7 +224,7 @@ const ProfileInfo = ({customer}) => {
               }
             </div>
             <div className="progress-bar-body">
-              <span className="label">Completados {customer.medals&&customer.medals.monthShortName}.</span>
+              <span className="label">Peso</span>
               {check()?
                 <>
                   <span className="value">{customer.medals.monthWorkoutCount}/{customer.medals.monthWorkoutTotal}</span>

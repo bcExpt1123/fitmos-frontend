@@ -47,6 +47,22 @@ export function http({
 
   return axios(config);
 }
+export function httpApi(path, method, data) {
+  const config = {
+    method:'GET',
+    headers:{
+      "Content-Type": "application/json",
+    },
+  };
+  if(method)config.method = method;
+  if(data) config.data = data;
+  config.url = url(app, path);
+  const idToken = authToken || store.getState().auth.accessToken;
+  if (idToken) {
+    config.headers.Authorization = `Bearer ${idToken}`;
+  }  
+  return axios(config);
+}
 export function fileDownload({
   method = "GET",
   path = "/",

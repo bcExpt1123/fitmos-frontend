@@ -211,11 +211,11 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
             </li>
             <li className="nav-item">
               <NavLink
-                to="/benchmarks"
+                to="/miembro"
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 isActive={(match, location) => {
-                  return (location.pathname.match('/\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/'))
+                  return (location.pathname.match('/\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/|\/miembro/'))
                 }}                
               >
                 <i className="fal fa-compass" />

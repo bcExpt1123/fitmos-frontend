@@ -163,6 +163,9 @@ const Event = lazy(() =>
 const UsernamePage = lazy(() =>
   import("./Username")
 );
+const Member = lazy(() =>
+  import("./ExplorePage/Member")
+); 
 export default function HomePage() {
   // useEffect(() => {
   //   console.log('Home page');
@@ -214,6 +217,7 @@ export default function HomePage() {
         <Route exact path="/posts/:id" component={SocialPostPage} />
         <Route exact path="/eventos" component={Events} />
         <Route exact path="/eventos/:id" component={Event} />
+        <Route exact path="/miembro" component={Member} />
         <Route exact path="/:username" component={UsernamePage} />
         <Route exact path="/:username/pictures" component={ProfilePicturesPage} />        
       </Switch>

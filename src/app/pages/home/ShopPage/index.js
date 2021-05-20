@@ -2,7 +2,7 @@ import React,{useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { $frontPage, $fetchFrontIndex } from "../../../../modules/subscription/company";
-import { useInfiniteScroll } from "../../../../lib//useInfiniteScroll";
+import { useInfiniteScroll } from "../../../../lib/useInfiniteScroll";
 
 
 const Shop = () => {
