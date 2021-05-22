@@ -1,0 +1,38 @@
+@import "../mixin.scss";
+.member{
+  .item{
+    >div{
+      display: inline-block;
+      img{
+        width:64px;
+        height: 64px;
+        border-radius: 32px;
+        object-fit: cover;
+        margin-top: -16px;          
+      }
+      .name{
+        display: inline-block;
+        margin-left: 10px;
+        .fullname{
+          padding-top: 10px;
+          font-size: 14px;
+          color: $basic-text-color;
+        }
+        .username{
+          font-size: 12px;
+          color:#707C89;
+        }
+      }
+    }
+    .follow{
+      float: right;
+      margin-top: 13px;
+      border:0;
+      border-radius: 3px;
+      font-size: 14px;
+      background-color: #BDD631;
+      color:white;
+      padding: 9px;
+    }
+  }
+}

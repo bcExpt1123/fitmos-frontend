@@ -1,7 +1,0 @@
-[1214/051431.478:ERROR:crash_report_database_win.cc(455)] unexpected header
-[1214/052003.702:ERROR:crash_report_database_win.cc(455)] unexpected header
-[1214/114006.483:ERROR:crash_report_database_win.cc(455)] unexpected header
-[0111/161855.896:ERROR:crash_report_database_win.cc(455)] unexpected header
-[0111/162007.290:ERROR:crash_report_database_win.cc(455)] unexpected header
-[0111/162007.291:ERROR:filesystem_win.cc(129)] GetFileAttributes C:\Users\rsi\AppData\Local\Google\Chrome\User Data\Crashpad\attachments\bc0afe1b-1d60-4e58-b917-03550070c82d: The system cannot find the path specified. (0x3)
-[0111/164222.856:ERROR:crash_report_database_win.cc(455)] unexpected header

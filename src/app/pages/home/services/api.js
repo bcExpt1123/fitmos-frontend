@@ -56,8 +56,8 @@ export function httpApi(path, method, data) {
   };
   if(method)config.method = method;
   if(data) config.data = data;
-  config.url = url(app, path);
-  const idToken = authToken || store.getState().auth.accessToken;
+  config.url = url(null, path);
+  const idToken = store.getState().auth.accessToken;
   if (idToken) {
     config.headers.Authorization = `Bearer ${idToken}`;
   }  
