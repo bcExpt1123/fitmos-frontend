@@ -997,7 +997,7 @@ function* onHideReplies({payload}){
 const getCommentRange = (post)=>{
   let fromId=-1;
   let toId=-1;
-  if(post.comments.length>0){
+  if(Array.isArray(post.comments) && post.comments.length>0){
     fromId = post.comments[0].id;
     toId = post.comments[post.comments.length-1].id;
   }
@@ -1263,7 +1263,7 @@ function* onRefreshPosts(){
     if( old == 0 ){
       if(suggested ===  0 ){
         newsfeed = yield select(({post})=>post.newsfeed);
-        const filteredPosts = result.posts.filter((post)=>post.customer.following!=null && post.customer.following.status=='accepted' && post.customer.relation!=undefined);
+        const filteredPosts = result.posts.filter((post)=>post.customer && post.customer.following!=null && post.customer.following.status=='accepted' && post.customer.relation!=undefined);
         newPosts = filteredPosts.map(replacePosts(newsfeed));
         yield put(setItemValue({name:"newsfeed", value:newPosts}));      
         if(newPosts.length ==0){
@@ -1271,13 +1271,13 @@ function* onRefreshPosts(){
         }
       }else{
         suggestedPosts = yield select(({post})=>post.suggestedPosts);
-        const filteredPosts = result.posts.filter((post)=>(post.customer.following==null || post.customer.following.status=='pending' )&&post.customer.relation!=undefined);
+        const filteredPosts = result.posts.filter((post)=>(post.customer && post.customer.following==null || post.customer.following.status=='pending' )&&post.customer.relation!=undefined);
         newPosts = filteredPosts.map(replacePosts(suggestedPosts));
         yield put(setItemValue({name:"suggestedPosts", value:newPosts}));      
       }
     }else{
       oldPosts = yield select(({post})=>post.oldNewsfeed);
-      const filteredPosts = result.posts.filter((post)=>post.customer.following!=null&&  post.customer.following.status=='accepted' && post.customer.relation!=undefined);
+      const filteredPosts = result.posts.filter((post)=>post.customer && post.customer.following!=null&&  post.customer.following.status=='accepted' && post.customer.relation!=undefined);
       newPosts = filteredPosts.map(replacePosts(oldPosts));
       yield put(setItemValue({name:"oldNewsfeed", value:newPosts}));
     }

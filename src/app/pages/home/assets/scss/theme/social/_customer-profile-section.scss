@@ -4,7 +4,6 @@
 @media (max-width: 991px) {
   .customer-profile-section{
     display: block;
-    margin-bottom: 20px;
     .wrapper-side{
       background: white;
       padding: 35px 15px 15px 15px; 
@@ -15,6 +14,8 @@
       .actions{
         margin-left: calc(50% - 123px);
       }
+      margin-bottom: 20px;
     }    
+    @import "./_wrapper_rightbar.scss";
   }
 }

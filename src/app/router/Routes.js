@@ -194,6 +194,7 @@ export const Routes = withRouter(({ history }) => {
     "/admin/eventos/create",
     "/admin/eventos/:id",
     "/admin/reports",
+    "/admin/managers",
   ];
   const frontBannerUrls = [
     "/",
@@ -237,6 +238,7 @@ export const Routes = withRouter(({ history }) => {
     "/eventos/:id",
     "/:username",
     "/:username/pictures",
+    "/:username/workouts",
   ];
   const frontUnauthorizedUrls = [
     "/",

@@ -1,0 +1,38 @@
+.profile-workouts-page{
+  background-color:white;
+  border-radius: 5px;
+  padding: 20px 30px;
+  .back-profile{
+    font-size: 16px;
+    i{
+      font-size: 32px;
+    }
+    span{
+      display: inline-block;
+      margin-left: 10px;
+      vertical-align: super;      
+    }
+  }
+  .workouts{
+    margin-top: 20px;
+    .item{
+      font-size: 14px;
+      border-radius: 3px;
+      margin-bottom: 16px;
+      padding:5px;
+      i{
+        float: right;
+        margin: 3px 5px;
+        &.fa-check{
+          background-color: #51AB80;
+          padding: 1px 2px;
+          color:white;
+          border-radius: 50%;
+        }
+        &.fa-comment{
+          font-size: 16px;
+        }
+      }
+    }
+  }
+}

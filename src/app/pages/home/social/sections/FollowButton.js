@@ -2,15 +2,17 @@ import React,{useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { follow, unfollow } from "../../redux/notification/actions";
 
-const FollowButton = ({customer})=>{
+const FollowButton = ({customer, afterAction})=>{
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const buttonDisabled = useSelector(({ notification }) => notification.followDisabled);
   const dispatch = useDispatch();  
   const handleFollow = ()=>{
     dispatch(follow(customer.id));
+    afterAction();
   }
   const handleUnfollow = ()=>{
     dispatch(unfollow(customer.id));
+    afterAction();
   }
   return (
     (customer&&customer.id != currentUser.customer.id)&&(

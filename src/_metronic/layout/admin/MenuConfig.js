@@ -22,6 +22,13 @@ export default {
         page: "admin/customers"
       },
       {
+        title: "Profile Managers",
+        root: true,
+        icon: "flaticon2-avatar",
+        can:["customers","social"],
+        page: "admin/managers"
+      },
+      {
         title: "Subscriptions",
         root: true,
         icon: "flaticon2-browser",

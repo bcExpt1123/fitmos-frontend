@@ -7,7 +7,9 @@ import { findCustomerPosts, appendCustomerPostsAfter } from "./redux/post/action
 import Posts from "./social/sections/Posts";
 import ProfileInfo from "./profile/ProfileInfo";
 import SharingPostPopup from "./social/sections/SharingPostPopup";
+import RightBarProfile from "./social/sections/RightBarProfile";
 import LikersModal from "./social/sections/LikersModal";
+import { isMobile } from "../../../_metronic/utils/utils";
 
 export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
@@ -32,9 +34,12 @@ export default function Customer({id}) {
       </MetaTags>
       {(username.profile==='public' || username.following && (username.following.status == 'accepted') || username.id == currentUser.customer.id)?
         <ThreeColumn>
-          <div className="customer-profile-section newsfeed">
-            <ProfileInfo customer={username}/>
-          </div>
+          { isMobile() && (
+            <div className="customer-profile-section newsfeed">
+              <ProfileInfo customer={username}/>
+              <RightBarProfile />
+            </div>
+          )}
           {posts.length>0?
             <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
             :

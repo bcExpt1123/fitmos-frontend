@@ -3,6 +3,7 @@ import React from "react";
 import { connect } from "react-redux";
 import objectPath from "object-path";
 import { withRouter } from "react-router-dom";
+import { lazily } from 'react-lazily';
 import * as builder from "../../../ducks/builder";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { SubHeaderDashboard } from "../../../../app/pages/admin/Dashboard";
@@ -46,15 +47,25 @@ import { SubHeaderPermissions } from "../../../../app/pages/admin/SettingsPage/S
 import { SubHeaderCartSettings } from "../../../../app/pages/admin/SettingsPage/SectionCartSettings";
 import { SubHeaderReferralSettings } from "../../../../app/pages/admin/SettingsPage/SectionReferral";
 import { SubHeaderTagLineSettings } from "../../../../app/pages/admin/SettingsPage/SectionTagLine";
-import { SubHeaderSurvey } from "../../../../app/pages/admin/Survey";
-import { SubHeaderSurveyCreate } from "../../../../app/pages/admin/SurveyCreate";
-import { SubHeaderCompanies } from "../../../../app/pages/admin/Companies";
-import { SubHeaderCompanyCreate } from "../../../../app/pages/admin/CompanyCreate";
-import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
-import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
-import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
-import { SubHeaderSurveyReports } from "../../../../app/pages/admin/SurveyReports";
-import { SubHeaderSocialReports } from "../../../../app/pages/admin/SocialReports";
+// import { SubHeaderSurvey } from "../../../../app/pages/admin/Survey";
+const { SubHeaderSurvey } = lazily(() => import('../../../../app/pages/admin/Survey'));
+// import { SubHeaderSurveyCreate } from "../../../../app/pages/admin/SurveyCreate";
+const { SubHeaderSurveyCreate } = lazily(() => import('../../../../app/pages/admin/SurveyCreate'));
+// import { SubHeaderCompanies } from "../../../../app/pages/admin/Companies";
+const { SubHeaderCompanies } = lazily(() => import('../../../../app/pages/admin/Companies'));
+// import { SubHeaderCompanyCreate } from "../../../../app/pages/admin/CompanyCreate";
+const { SubHeaderCompanyCreate } = lazily(() => import('../../../../app/pages/admin/CompanyCreate'));
+// import { SubHeaderProducts } from "../../../../app/pages/admin/Products";
+const { SubHeaderProducts } = lazily(() => import('../../../../app/pages/admin/Products'));
+// import { SubHeaderProductCreate } from "../../../../app/pages/admin/ProductCreate";
+const { SubHeaderProductCreate } = lazily(() => import('../../../../app/pages/admin/ProductCreate'));
+// import { SubHeaderViewImages } from "../../../../app/pages/admin/ViewImages";
+const { SubHeaderViewImages } = lazily(() => import('../../../../app/pages/admin/ViewImages'));
+// import { SubHeaderSurveyReports } from "../../../../app/pages/admin/SurveyReports";
+const { SubHeaderSurveyReports } = lazily(() => import('../../../../app/pages/admin/SurveyReports'));
+// import { SubHeaderSocialReports } from "../../../../app/pages/admin/SocialReports";
+const { SubHeaderSocialReports } = lazily(() => import('../../../../app/pages/admin/SocialReports'));
+const { SubHeaderProfileManagers } = lazily(() => import('../../../../app/pages/admin/ProfileManagers'));
 
 // import BreadCrumbs from "./components/BreadCrumbs";
 
@@ -272,6 +283,11 @@ class SubHeader extends React.Component {
               exact
               path="/admin/reports"
               component={SubHeaderSocialReports}
+            />
+            <Route
+              exact
+              path="/admin/managers"
+              component={SubHeaderProfileManagers}
             />
           </Switch>
         </div>

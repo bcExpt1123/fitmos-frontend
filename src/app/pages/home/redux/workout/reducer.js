@@ -13,6 +13,7 @@ import {
   confirmModalNo,
   confirmModalYes,
   setPublic,
+  goCreateComment
 } from "./actions";
 
 const initialState = {
@@ -23,6 +24,7 @@ const initialState = {
   timer:false,
   publicProfile:false,
   modalVideo:false,
+  slug:false,
 };
 const reducer = persistReducer(
   {
@@ -94,8 +96,12 @@ const reducer = persistReducer(
       [setPublic]:(state, actions) =>({
         ...state,
         publicProfile:actions.payload
-      })
-    
+      }),
+      [goCreateComment]:(state,actions) =>({
+        ...state,
+        slug:actions.payload,
+        view:"comment"
+      }),
     },
     initialState
   )

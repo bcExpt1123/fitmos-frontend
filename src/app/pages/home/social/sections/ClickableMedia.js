@@ -19,12 +19,16 @@ const ClickableMedia = ({file, setShow, setMedia}) => {
     }
   }
   const convertImageUrl = (url)=>{
-    const object = new URL(url);
-    if(object.protocol == 'blob:')return url;
-    let filename = object.pathname.split('/').reverse()[0];
-    const ext = filename.split('.')[1]; 
-    let replaceFileName = filename.split('.')[0] + '-150X150.'+ext;
-    return url.replace(filename, replaceFileName);
+    try{
+      const object = new URL(url);
+      if(object.protocol == 'blob:')return url;
+      let filename = object.pathname.split('/').reverse()[0];
+      const ext = filename.split('.')[1]; 
+      let replaceFileName = filename.split('.')[0] + '-150X150.'+ext;
+      return url.replace(filename, replaceFileName);
+    }catch(e){
+      return null;
+    }
   }
   return (
     <div className="cursor-pointer" onClick={openPostModal(file)}>

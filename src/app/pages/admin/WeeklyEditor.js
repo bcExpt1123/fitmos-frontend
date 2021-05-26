@@ -509,6 +509,7 @@ class Sub extends Component {
     this.props.$fetchWeeklyCms(this.props.history);
   }
   getWeekDays(date) {
+    date.setHours(18);
     let copiedDate = new Date(date.getTime());
     const options = { year: "numeric", month: "short", day: "numeric" };
     const weekDay = copiedDate.getDay();

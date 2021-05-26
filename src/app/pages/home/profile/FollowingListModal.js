@@ -1,9 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import classnames from "classnames";
 import { Tab, Tabs, Modal } from 'react-bootstrap';
 import { NavLink } from "react-router-dom";
-import Avatar from "../components/Avatar";
 import CustomerInfo from "./components/CustomerInfo";
 import { unfollow, accept, reject, showFollows, appendFollows } from "../redux/notification/actions";
 import { toAbsoluteUrl } from "../../../../_metronic/utils/utils";

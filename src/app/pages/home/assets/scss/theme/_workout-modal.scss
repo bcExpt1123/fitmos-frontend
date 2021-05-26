@@ -111,30 +111,9 @@
         }
       }
     }
-    hr{
-      height: 2px;      
-      background-color:#DDDDD7;
-      border:0;
-      margin:40px -60px -23px -60px;
-    }
     .actions{
-      display: block; 
-      text-align: right;
-      .open-create-post-modal{
-        margin: 30px auto;
-        width:448px;
-        color:$basic-text-color;
-        padding: 14px;
-        border: 0;
-        border-radius: 5px;
-        background-color: #F4F4F2;
-        input{
-          display: inline-block;
-          background-color: transparent;
-          width:400px;
-          border: 0;
-        }
-      }
+      display: flex;
+      align-content: space-between;
       button{
         border-radius: 3px;
         box-sizing: border-box;
@@ -146,12 +125,20 @@
           background-color: $primary-button-background-color;          
           color:white;
           padding: 12px 80px;
+          margin-left: auto;
         }
         &.previous{
           border: 1px solid #B9B7B7;
           background-color: #ffffff;                  
           color:$basic-text-color;
           margin: 10px auto 10px 0;
+        }
+        &.create-comment{
+          background-color: $secondary-button-backgound-color;
+          color:white;
+          &:disabled{
+            opacity: 0.7;
+          }
         }
       }
     }
@@ -241,6 +228,25 @@
           border-top-color: white;
           animation: video-react-spinner-spin 1.1s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, video-react-spinner-fade 1.1s linear infinite;          
         }        
+      }
+    }
+    .create-comment-workout{
+      .content{
+        .form-control{
+          height: 122px;
+          textarea{
+            width: 100%;
+            border: 0;
+            &:focus{
+              outline-width: 0;
+            }                        
+          }
+        }
+      }
+      .form-control{
+        input{
+          width:100%;
+        }
       }
     }
   }

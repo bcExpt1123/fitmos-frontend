@@ -10,7 +10,22 @@ import FollowButton from "../social/sections/FollowButton";
 import ReadMore from '../components/ReadMore';
 import FollowingListModal from './FollowingListModal';
 import OpenPrivateMessageButton from './components/OpenPrivateMessage';
-
+import DumbellsWeightModal from './components/DumbellsWeightModal';
+const caculatePercent = customer =>{
+  const dumbellsWeight = customer.dumbells_weight?customer.dumbells_weight:0;
+  let rate = 0;
+  if(customer.gender === 'Male'){
+    rate = parseInt(dumbellsWeight * 2);
+  }else{
+    rate = parseInt(dumbellsWeight * 100/2);
+  }
+  if(rate>100){
+    return 100;
+  }else if( rate < 0){
+    return 0;
+  }
+  return rate;
+}
 const ProfileInfo = ({customer}) => {  
   const file=false;
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -26,6 +41,11 @@ const ProfileInfo = ({customer}) => {
       dispatch($findPublished());
     }
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(()=>{
+    if(currentUser.customer.weights === 'con pesas' && currentUser.customer.dumbells_weight===null){
+      setDumbellsModalShow(true);
+    }
+  },[currentUser.customer.weights]);// eslint-disable-line react-hooks/exhaustive-deps
   const history = useHistory();
   const redirectProfile = ()=>{
     history.push('/'+ currentUser.customer.username);
@@ -61,9 +81,14 @@ const ProfileInfo = ({customer}) => {
   const handleFollowingListClose = ()=>{
     setFollowingModalShow(false);
   }
-  const openPrivateMessage = ()=>{
-
+  const [dumbellsModalShow,setDumbellsModalShow] = useState(false);
+  const openDumbellsModal = ()=>{
+    setDumbellsModalShow(true);
   }
+  const closeDumbellsModal = ()=>{
+    setDumbellsModalShow(false);
+  }
+  
   return (  
     <>
       <div className="wrapper-side">
@@ -159,89 +184,98 @@ const ProfileInfo = ({customer}) => {
           </>
         }
         </div>
-        <div className="workout">
-          <h3 className="mb-4">Entrenamiento</h3>
-          <div className="progress-bar-wrapper">
-            <div className="medal-image">
-              {check()?
-                customer.medals.levelMedalImage&&(
-                  <img src={customer.medals.levelMedalImage} alt="workout-medal"/>
-                )
-                :
-                done.levelMedalImage&&(
-                  <img src={done.levelMedalImage} alt="workout-medal"/>
-                )
-              }
+        {((customer.is_mamager === false && customer!="username" && customer.type==="customer")
+          ||
+          (currentUser.customer.is_mamager === false && customer.type===undefined && currentUser.customer.id === customer.id)) && (
+          <div className="workout">
+            <h3 className="mb-4">Entrenamiento</h3>
+            <div className="progress-bar-wrapper">
+              <div className="medal-image">
+                {check()?
+                  customer.medals.levelMedalImage&&(
+                    <img src={customer.medals.levelMedalImage} alt="workout-medal"/>
+                  )
+                  :
+                  done.levelMedalImage&&(
+                    <img src={done.levelMedalImage} alt="workout-medal"/>
+                  )
+                }
+              </div>
+              <div className="progress-bar-body">
+                <span className="label">Nivel</span>
+                {check()?<>
+                  <span className="value">{customer.current_condition}/5</span>
+                  <ProgressBar now={customer.current_condition/5*100} />
+                </>:<>
+                  <span className="value">{currentUser.customer.current_condition}/5</span>
+                  <ProgressBar now={currentUser.customer.current_condition/5*100} />
+                </>}
+              </div>
+            </div>          
+            <div className="progress-bar-wrapper">
+              <div className="medal-image">
+                {check()?
+                  customer.medals.toWorkoutImage&&(
+                    <img src={customer.medals.toWorkoutImage} alt="workout-medal"/>
+                  )
+                  :
+                  done.toWorkoutImage&&(
+                    <img src={done.toWorkoutImage} alt="workout-medal"/>
+                  )
+                }
+              </div>
+              <div className="progress-bar-body">
+                <span className="label">Rango</span>
+                {check()?
+                  <>
+                    <span className="value">{customer.medals.workoutCount}/{customer.medals.toWorkout}</span>
+                    <ProgressBar now={customer.medals.workoutCount/customer.medals.toWorkout*100} />
+                  </>
+                  :
+                  <>
+                    <span className="value">{done.workoutCount}/{done.toWorkout}</span>
+                    <ProgressBar now={now} />
+                  </>
+                }  
+              </div>
             </div>
-            <div className="progress-bar-body">
-              <span className="label">Nivel</span>
-              {check()?<>
-                <span className="value">{customer.current_condition}/5</span>
-                <ProgressBar now={customer.current_condition/5*100} />
-              </>:<>
-                <span className="value">{currentUser.customer.current_condition}/5</span>
-                <ProgressBar now={currentUser.customer.current_condition/5*100} />
-              </>}
-            </div>
+            {check()?
+              customer.weights === 'con pesas' && (
+                <div className="progress-bar-wrapper">
+                  <div className="medal-image">
+                    {/* {customer.medals.toMonthWorkoutImage&&(
+                        <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
+                    )} */}
+                  </div>
+                  <div className="progress-bar-body">
+                    <span className="label">Peso</span>
+                    <span className="value">{caculatePercent(customer)}</span>
+                    <ProgressBar now={caculatePercent(customer)} />
+                  </div>
+                </div>
+              )  
+              :
+              currentUser.customer.weights === 'con pesas' && (
+                <div className="progress-bar-wrapper">
+                  <div className="medal-image">
+                    {/* {done.toMonthWorkoutImage&&(
+                      <img src={done.toMonthWorkoutImage} alt="workout-medal"/>
+                    )} */}
+                  </div>
+                  <div className="progress-bar-body cursor-pointer"  onClick={openDumbellsModal}>
+                    <span className="label">Peso</span>
+                    <span className="value">{caculatePercent(currentUser.customer)}</span>
+                    <ProgressBar now={caculatePercent(currentUser.customer)} />
+                  </div>
+                </div>
+              )
+            }
           </div>          
-          <div className="progress-bar-wrapper">
-            <div className="medal-image">
-              {check()?
-                customer.medals.toWorkoutImage&&(
-                  <img src={customer.medals.toWorkoutImage} alt="workout-medal"/>
-                )
-                :
-                done.toWorkoutImage&&(
-                  <img src={done.toWorkoutImage} alt="workout-medal"/>
-                )
-              }
-            </div>
-            <div className="progress-bar-body">
-              <span className="label">Rango</span>
-              {check()?
-                <>
-                  <span className="value">{customer.medals.workoutCount}/{customer.medals.toWorkout}</span>
-                  <ProgressBar now={customer.medals.workoutCount/customer.medals.toWorkout*100} />
-                </>
-                :
-                <>
-                  <span className="value">{done.workoutCount}/{done.toWorkout}</span>
-                  <ProgressBar now={now} />
-                </>
-              }  
-            </div>
-          </div>
-          <div className="progress-bar-wrapper">
-            <div className="medal-image">
-              {check()?
-                customer.medals.toMonthWorkoutImage&&(
-                  <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
-                )
-                :
-                done.toMonthWorkoutImage&&(
-                  <img src={done.toMonthWorkoutImage} alt="workout-medal"/>
-                )
-              }
-            </div>
-            <div className="progress-bar-body">
-              <span className="label">Peso</span>
-              {check()?
-                <>
-                  <span className="value">{customer.medals.monthWorkoutCount}/{customer.medals.monthWorkoutTotal}</span>
-                  <ProgressBar now={customer.medals.monthPercent} />
-                </>
-                :
-                <>
-                  <span className="value">{done.monthWorkoutCount}/{done.monthWorkoutTotal}</span>
-                  <ProgressBar now={done.monthPercent} />
-                </>
-              }
-            </div>
-          </div>
-        </div>
+        )} 
       </div>
       {currentUser.type==="customer" && <DetailModal show={show} handleClose={handleClose}/>}
       {followingModalShow && <FollowingListModal show={followingModalShow}  onClose={handleFollowingListClose} tabKey={tabKey} customer={customer}/>}
+      {dumbellsModalShow && <DumbellsWeightModal show={dumbellsModalShow} onClose={closeDumbellsModal}/>}
     </>
   )  
 }  

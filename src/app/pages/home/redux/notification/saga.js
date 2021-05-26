@@ -110,6 +110,7 @@ function* onFollow({payload}){
       if(result.customer.chat_id)yield put(createDialog(result.customer.chat_id));
     }
   }catch(error){
+    console.log(error)
   }
   yield put(setItemValue({name:'followDisabled',value:false}));
 }
@@ -159,6 +160,7 @@ function* onUnfollow({payload}){
     })
     yield put(setPeopleValue({name:'searchCustomers',value:customers}));
   }catch(error){
+    console.log(error)
   }  
   yield put(setItemValue({name:'followDisabled',value:false}));
 }

@@ -19,12 +19,7 @@ const CompleteView = ({onClose, openCreatingPost})=>{
       {renderImage(workouts.current.blocks[0].image_path)}
       <h2 className="text-center mt-1 mb-2">¡Grandioso!</h2>
       <h2 className="text-center mt-1">Haz completado tu workout del día</h2>
-      <hr/>
       <div className="actions mt-5">
-        <div className="open-create-post-modal">
-          <input value={"Comparte tu experiencia"} onClick={openCreatingPost}/>
-          <i className="fal fa-camera"/>
-        </div>        
         <button className="btn btn-primary" style={{margin:"auto"}} onClick={onClose}>Aceptar</button>
       </div>
     </div>

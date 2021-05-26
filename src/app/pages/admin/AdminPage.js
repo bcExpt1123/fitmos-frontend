@@ -1,6 +1,6 @@
 import React, { Suspense, lazy } from "react";
 import { Redirect, Route, Switch } from "react-router-dom";
-import { lazily } from 'react-lazily'
+import { lazily } from 'react-lazily';
 const Dashboard = lazy(() =>import("./Dashboard"));
 const { Customers } = lazily(() => import('./Customers'));
 const { CustomerDetail } = lazily(() => import('./CustomerDetail'));
@@ -53,6 +53,7 @@ const { ProductCreate } = lazily(() => import('./ProductCreate'));
 const { LayoutSplashScreen } = lazily(() => import('../../../_metronic'));
 const { SurveyReports } = lazily(() => import('./SurveyReports'));
 const { SocialReports } = lazily(() => import('./SocialReports'));
+const { ProfileManagers } = lazily(() => import('./ProfileManagers'));
 
 export default function AdminPage() {
   // useEffect(() => {
@@ -141,6 +142,7 @@ export default function AdminPage() {
         <Route exact path="/admin/companies/:id/products/:id" component={ProductCreate} />
         <Route exact path="/admin/companies/:id/products/viewImages/:id" component={ViewImages} />
         <Route exact path="/admin/reports" component={SocialReports} />
+        <Route exact path="/admin/managers" component={ProfileManagers} />
       </Switch>
     </Suspense>
   );

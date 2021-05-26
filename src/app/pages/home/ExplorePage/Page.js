@@ -1,16 +1,24 @@
 import React from "react";
-
+import useSWR from "swr";
 import OneColumn from "../layouts/One";
 import SubNav from "../components/SubNav";
+import { httpApi } from "../services/api";
 
 const Page = ({ actions, currentUser, section }) => {
-  const profileLinks = [
+  const { data, error } = useSWR('eventos/home?pageSize=6&pageNumber=0', httpApi)
+  const profileLinks = data?.data.data.length>0?[
     { name: "miembro", url: "/miembro", label: "Miembro" },
     { name: "benchmarks", url: "/benchmarks", label: "Benchmarks",match:'/benchmarks'  },
     { name: "events", url: "/eventos", label: "Eventos",match:'/eventos' },
     { name: "blog", url: "/news", label: "Blog",match:'/news' },
     { name: "shop", url: "/shop", label: "Shop",match:'/shop' },
+  ]:[
+    { name: "miembro", url: "/miembro", label: "Miembro" },
+    { name: "benchmarks", url: "/benchmarks", label: "Benchmarks",match:'/benchmarks'  },
+    { name: "blog", url: "/news", label: "Blog",match:'/news' },
+    { name: "shop", url: "/shop", label: "Shop",match:'/shop' },
   ];
+
   return (
     <OneColumn>
       <section className={"explore"}>

@@ -167,7 +167,7 @@ function Main() {
                           </IconButton>
                           <IconButton
                             className={classes.button}
-                            aria-label="Restore"
+                            aria-label="Delete"
                             title="Delete"
                             onClick={actionDelete(row.id)}
                           >

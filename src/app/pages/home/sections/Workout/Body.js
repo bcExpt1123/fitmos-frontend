@@ -9,7 +9,7 @@ import Blog from "./Blog";
 import Blocks from "./Blocks";
 import Block from "./Block";
 import ModalView from "./ModalView";
-import CreatePostModal from "../../social/posts/CreatingModal";
+// import CreatePostModal from "../../social/posts/CreatingModal";
 import { initialModalBlock, convertContent,convertVideo,setVideo,  confirmModalNo, confirmModalYes } from "../../redux/workout/actions";
 
 const Body = ()=>{
@@ -131,7 +131,7 @@ const Body = ()=>{
         ):(
           <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)}/>
         )}
-        {workouts&&workouts.current&&<CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose} workout={workouts.current}/>}
+        {/* {workouts&&workouts.current&&<CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose} workout={workouts.current}/>} */}
       </>
     }
   </div>

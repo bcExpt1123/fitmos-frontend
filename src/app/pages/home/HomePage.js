@@ -32,7 +32,6 @@ import { LayoutSplashScreen } from "../../../_metronic";
 // import Benchmarks from "./ExplorePage/Benchmark";
 // import ProfilePage from "./Profile";
 // import ProfilePicturesPage from "./social/posts/Pictures";
-// import PerfilPage from "./Perfil";
 // import Workout from "./Workout";
 // import LevelPage from "./Level";
 // import SubscriptionTabs from "./Subscriptions";
@@ -121,9 +120,6 @@ const ProfilePage = lazy(() =>
 const ProfilePicturesPage = lazy(() =>
   import("./social/posts/Pictures")
 );
-const PerfilPage = lazy(() =>
-  import("./Perfil")
-);
 const Workout = lazy(() =>
   import("./Workout")
 );
@@ -166,6 +162,9 @@ const UsernamePage = lazy(() =>
 const Member = lazy(() =>
   import("./ExplorePage/Member")
 ); 
+const ProfileWorkoutsPage = lazy(() =>
+import("./ProfileWorkouts")
+); 
 export default function HomePage() {
   // useEffect(() => {
   //   console.log('Home page');
@@ -205,7 +204,6 @@ export default function HomePage() {
         <Route exact path="/benchmarks" component={Benchmarks} />
         <Route exact path="/profile" component={ProfilePage} />
         {/* <Route exact path="/profile/pictures" component={ProfilePicturesPage} /> */}
-        <Route exact path="/perfil" component={PerfilPage} />
         <Route exact path="/level" component={LevelPage} />
         <Route exact path="/subscriptions" component={SubscriptionTabs} />
         <Route exact path="/newsfeed" component={NewsfeedPage} />
@@ -220,6 +218,7 @@ export default function HomePage() {
         <Route exact path="/miembro" component={Member} />
         <Route exact path="/:username" component={UsernamePage} />
         <Route exact path="/:username/pictures" component={ProfilePicturesPage} />        
+        <Route exact path="/:username/workouts" component={ProfileWorkoutsPage} />
       </Switch>
     </Suspense>
   );

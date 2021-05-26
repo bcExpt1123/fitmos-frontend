@@ -5,7 +5,6 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { makeStyles } from '@material-ui/styles';
 import parse from 'autosuggest-highlight/parse';
 import throttle from 'lodash/throttle';
-import { http } from "../../services/api";
 
 function loadScript(src, position, id) {
   if (!position) {

@@ -1,0 +1,95 @@
+.wrapper-rightbar{
+  padding:10px 15px;
+  height: 100%;
+  background: #fff;
+  overflow-x: hidden;      
+  margin-bottom: 20px;
+  .label{
+    font-size: 16px;
+    font-weight: 600;
+    padding: 0px 0 10px 0;
+    a{
+      font-size: 12px;
+      font-weight: 600;
+      float: right;
+      color:black;
+      &:hover{
+        color:black;
+      }
+    }
+  }
+  .body{
+    .workouts{
+      .item{
+        font-size: 14px;
+        background-color: #F5F6F7;
+        border-radius: 3px;
+        margin-bottom: 16px;
+        padding:5px;
+        i{
+          float: right;
+          margin: 3px 5px;
+          &.fa-check{
+            background-color: #51AB80;
+            padding: 1px 2px;
+            color:white;
+            border-radius: 50%;
+          }
+          &.fa-comment{
+            font-size: 16px;
+          }
+        }
+      }
+    }
+    .medias{
+      display: grid;
+      grid-template-columns: auto auto auto;
+      >div{
+        padding: 2px;
+        img,video{
+          width: 91px;
+          height: 91px;
+          object-fit: cover;
+        }
+      }          
+    }
+    .events{
+      >div{
+        margin-bottom: 15px;
+        a{
+          display: flex;
+          img{
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+          }
+          .info{
+            margin-left: 15px;
+            flex-grow: 1;
+            .title{
+              font-size: 14px;
+              font-weight: 600;
+              color:black;
+            }
+            .sub-title{
+              font-size: 13px;
+              font-weight: 400;
+              color:$basic-text-color;
+            }
+          }
+        }
+      }
+    }
+  }
+  &.event{
+    margin:auto auto 20px auto ;
+    .label{
+      font-size: 21px;
+      font-weight: 700;
+      a{
+        font-size: 14px;
+        line-height: 34px;
+      }
+    }
+  }
+}

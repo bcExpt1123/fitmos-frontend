@@ -11,11 +11,6 @@ import "../assets/scss/theme/login.scss";
 import "../assets/scss/theme/signup.scss";
 
 const Page = ({ tags, content }) => {
-  /*const profileLinks = [
-    { name: "profile", url: "profile", label: "Perfil" },
-    { name: "payments", url: "payments", label: "Métodos de Pago" },
-    { name: "invoices", url: "bills", label: "Facturas" }
-  ];*/
   useEffect(() => {
     window.scrollTo(0, 0);
   },[]);

@@ -1,4 +1,5 @@
 import React,{ useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useSWRInfinite } from "swr";
 import { NavLink } from "react-router-dom";
 import MetaTags from "react-meta-tags";
@@ -31,6 +32,9 @@ const MemberPage = () => {
       dim.height = 85;
     },
   ));
+  const followButtonCallback = ()=>{
+    setTimeout(()=>{mutate()}, 2000);
+  }
   const rowRenderer = (type, customer) => {
     return <div className="item container">
       <div>
@@ -45,7 +49,7 @@ const MemberPage = () => {
           </div>
         </NavLink>    
       </div>
-      <FollowButton customer={customer} />
+      <FollowButton customer={customer} afterAction={followButtonCallback}/>
     </div>
   }
   const handleListEnd = () => {
@@ -97,6 +101,7 @@ const MemberPage = () => {
       }
     }
   }
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   return (
     <>
       <MetaTags>
@@ -107,9 +112,8 @@ const MemberPage = () => {
         />
       </MetaTags>
       <section className="member" id="member">
-        {/* {customers.map(customer=><div key={customer.id}>
-          {customer.first_name} {customer.last_name}
-        </div>)} */}
+        <h2>¡{currentUser.customer.first_name} agrega a tus primeros partners!</h2>
+        <h4>Te recomendamos agregar a la mayor cantidad de partners. En Fitemos todos somos un gran equipo.</h4>
         {dataProvider._data.length>0 && scrollWidth>0 && (
           <RecyclerListView
             style={{
