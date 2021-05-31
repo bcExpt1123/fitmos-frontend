@@ -1,0 +1,47 @@
+.workout-comment-modal{
+  .modal-body{
+    padding: 0;
+    .workout-comments{
+      .workout{
+        padding: 1.25rem;
+        &:first-of-type{
+          border-bottom: 1px solid #E4E4E5;
+        }
+        &:last-of-type{
+          padding-top: 1.25rem;
+        }
+        i.fa{
+          color:rgba(51,51,51,0.5);
+          display: block;
+          text-align: right;
+        }
+        .comment{
+          max-height: 300px;
+          overflow-y: auto;
+          .link-profile{
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+    .create-comment-workout{
+      .content{
+        .form-control{
+          height: 122px;
+          textarea{
+            width: 100%;
+            border: 0;
+            &:focus{
+              outline-width: 0;
+            }                        
+          }
+        }
+      }
+      .form-control{
+        input{
+          width:100%;
+        }
+      }
+    }
+  }
+}

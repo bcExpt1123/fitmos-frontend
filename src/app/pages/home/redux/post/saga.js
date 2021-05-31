@@ -102,13 +102,12 @@ function* onRefreshNewsfeed(){
     yield put(findNewsfeed());
   }
 }
-const createPostRequest = ({files, location, tagFollowers, content,workout_date})=>{
+const createPostRequest = ({files, location, tagFollowers, content})=>{
   let formData =  new FormData;
   if(location)formData.append("location", location);
   formData.append("content", content);
   const followers = tagFollowers.map((tagFollower)=>tagFollower.id);
   formData.append("tag_followers", JSON.stringify(followers));
-  if(workout_date)formData.append("workout_date", workout_date);
   if (files) {
     files.forEach((file, i) => {
       formData.append(`medias[${i}]`, file.file);

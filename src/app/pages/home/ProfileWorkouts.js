@@ -3,9 +3,9 @@ import { useSWRInfinite } from "swr";
 import MetaTags from "react-meta-tags";
 import { useSelector, useDispatch } from "react-redux";
 import { matchPath, useHistory } from "react-router-dom";
-import throttle from 'lodash/throttle';
-import debounce from 'lodash/debounce';
+import classnames from 'classnames';
 import TwoColumn from "./layouts/Two";
+import WorkoutCommentModal from "./social/sections/workout/WorkoutCommentModal";
 import { useInfiniteScroll } from "../../../lib/useInfiniteScroll";
 import { findUsername } from "./redux/people/actions";
 import { httpApi } from "./services/api";
@@ -53,7 +53,6 @@ const ProfileWorkouts = () => {
   }
   const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   useEffect(()=>{
-    console.log(isRefreshing)
     if (isFetching && !isRefreshing) {
       console.log('isRefreshing')
       setSize(size + 1)
@@ -62,9 +61,20 @@ const ProfileWorkouts = () => {
   useEffect(()=>{
     if(size>1) setIsFetching(false);
   },[size]);
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [publishDate, setPublishDate] = useState(null);
+  const openCommentModal = workout => () =>{
+    if(workout.comment_count>0){
+      setShowCommentModal(true);
+      setPublishDate(workout.publish_date);
+    }
+  }
+  const closeCommentModal = ()=>{
+    setShowCommentModal(false);
+  }
   return <>
     <MetaTags>
-      <title>Profile Workouts -Fitemos </title>
+      <title>Profile Workouts - Fitemos </title>
       <meta
         name="description"
         content="Profile Workouts -Fitemos"
@@ -77,7 +87,7 @@ const ProfileWorkouts = () => {
         </div>
         <div className="workouts">
           {workouts && workouts.map((workout)=>
-            <div key={workout.publish_date} className='item'>
+            <div key={workout.publish_date} className={classnames('item',{'cursor-pointer':workout.comment_count>0})} onClick={openCommentModal(workout)}>
               {workout.spanish_date}
               {workout.completed && <i className="fal fa-check" />}
               {workout.comment_count>0 && <i className="fal fa-comment" />}
@@ -85,6 +95,7 @@ const ProfileWorkouts = () => {
           )}
           {isFetching && 'Obteniendo más elementos de la lista...'}
         </div>
+        {showCommentModal && <WorkoutCommentModal publishDate={publishDate} onClose={closeCommentModal} show={showCommentModal}/>}
       </div>
     </TwoColumn>
   </>

@@ -12,7 +12,6 @@ const Block = ({ block,renderLine,setAll, handleOpen })=>{
   const workouts = useSelector(({done})=>done.workouts);
   const isRunning = useSelector(({done})=>done.isRunning);
   const step = useSelector(({done})=>done.step);
-  const [show, setShow] = useState(false);
   const renderImage = (url)=>{
     if(url){
       return (

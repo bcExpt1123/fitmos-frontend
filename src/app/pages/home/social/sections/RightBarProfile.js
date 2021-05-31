@@ -1,10 +1,12 @@
 import React,{useState,useEffect} from 'react';  
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
+import classnames from 'classnames';
 import { NavLink } from "react-router-dom";
 import { findRandomMedias} from "../../redux/post/actions";
 import ClickableMedia from "./ClickableMedia";
 import PostModal from "./PostModal";
+import WorkoutCommentModal from "./workout/WorkoutCommentModal";
 import { httpApi } from "../../services/api";
 
 const RightBarProfile = () => {  
@@ -32,6 +34,17 @@ const RightBarProfile = () => {
     setShow(false);
     setMedia(false);
   }
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [publishDate, setPublishDate] = useState(null);
+  const openCommentModal = workout => () =>{
+    if(workout.comment_count>0){
+      setShowCommentModal(true);
+      setPublishDate(workout.publish_date);
+    }
+  }
+  const closeCommentModal = ()=>{
+    setShowCommentModal(false);
+  }
   return (  
       <>
         {username.type === 'customer' && username.is_manager === false && (
@@ -40,7 +53,7 @@ const RightBarProfile = () => {
             <div className="body">
               <div className="workouts">
                 {workouts && workouts.map((workout)=>
-                  <div key={workout.publish_date} className='item'>
+                  <div key={workout.publish_date} className={classnames('item',{'cursor-pointer':workout.comment_count>0})} onClick={openCommentModal(workout)}>
                     {workout.spanish_date}
                     {workout.completed && <i className="fal fa-check" />}
                     {workout.comment_count>0 && <i className="fal fa-comment" />}
@@ -48,6 +61,7 @@ const RightBarProfile = () => {
                 )}
               </div>
             </div>
+            {showCommentModal && <WorkoutCommentModal publishDate={publishDate} onClose={closeCommentModal} show={showCommentModal} customerId={username.id}/>}
           </div>
         )}
         {selfMedias.length>0&&

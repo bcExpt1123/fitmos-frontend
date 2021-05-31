@@ -38,12 +38,7 @@ const headRows = [
 
 const Main =() =>{
   const { data } = useSWR('profile-managers', httpApi);
-	useEffect(() => {
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const classes = useStyles();
-  useEffect(() => {
-    // dispatch($fetchIndex())
-  }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const customers = data?.data;
   
   const emptyRows = 0;

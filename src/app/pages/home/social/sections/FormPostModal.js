@@ -18,7 +18,7 @@ import { isMobile } from '../../../../../_metronic/utils/utils';
 import { findWorkouts,initialBlock } from "../../redux/done/actions";
 import { colonsToUnicode } from '../../services/emoji';
 
-const FormPostModal = ({show,title,handleClose, publishPost, post, saving, workout}) => {
+const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
   const users = useSelector(({people})=>people.people);
   const [content, setContent] = useState("");
   const textRef = useRef();
@@ -152,7 +152,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
   const [location, setLocation] = useState(false);
   const onPublishPost = ()=>{
     const id = post?post.id:false;
-    publishPost({files, location, tagFollowers, content,id:id, workout_date:workout?workout.today:false});
+    publishPost({files, location, tagFollowers, content,id:id});
     setContent("");
     setLocation(false);
     setFiles([]);
@@ -207,12 +207,6 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
   const history = useHistory();
   const dispatch = useDispatch();
   const redirectWorkoutPage = ()=>{
-    if(workout){
-      dispatch(findWorkouts(workout.today));
-      dispatch(initialBlock());
-      history.push("/");
-      return;
-    }
     if(postType === 'workout'){
       dispatch(findWorkouts(post.workout_date));
       dispatch(initialBlock());
@@ -291,13 +285,8 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving, worko
                   {currentUser.type==="customer" &&<>{currentUser.name}</>}
                   {currentUser.type==="admin" && customer &&<>{customer.first_name} {customer.last_name}</>}
                 </span>
-                {(workout || post.type=="workout")?<>
-                  {post.type=="workout"?
-                    <>&nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span> </>
-                    :
-                    <>&nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {workout.short_date}</span> </>
-                  }
-                  
+                {(post.type=="workout")?<>
+                  &nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
                 </>:<>
                   {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
                   {location&&<>&nbsp;in {location}</>}

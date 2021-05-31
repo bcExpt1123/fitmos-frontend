@@ -77,16 +77,6 @@ const Body = ()=>{
     dispatch(confirmModalYes());
     dispatch(initialModalBlock());
   }
-  /** from workout to create post */
-  const [showCreatingPost, setShowCreatingPost] = useState(false);
-  const onOpenPostModal = () =>{
-    console.log('onOpenPostModal')
-    setShow(false);
-    if(!workouts.current.hasPost)setShowCreatingPost(true);
-  }
-  const handleCreatingModalClose = () => {
-    setShowCreatingPost(false);
-  }
   return (
     <div className="workout-body">
     {
@@ -124,14 +114,15 @@ const Body = ()=>{
           )
         }
         {workout === 'update'?(
-          <ModalView isOpen={show} step={step} onClose={() => {
-            dispatch(convertContent());
-            setShow(false)
-          }} onOpenPost={onOpenPostModal}/>
+          <ModalView isOpen={show} step={step} onClose={() => 
+            {
+              dispatch(convertContent());
+              setShow(false)
+            }}
+          />
         ):(
           <ModalVideo channel='youtube' isOpen={show} videoId={vid} onClose={() => setShow(false)}/>
         )}
-        {/* {workouts&&workouts.current&&<CreatePostModal show={showCreatingPost} handleClose={handleCreatingModalClose} workout={workouts.current}/>} */}
       </>
     }
   </div>

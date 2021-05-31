@@ -11,7 +11,7 @@ import { convertVideo,convertContent, setVideo } from "../../redux/workout/actio
 import { stopRunning } from "../../redux/done/actions";
 import CreateComment from "./CreateComment";
 
-const ModalView = ({ isOpen, onClose, onOpenPost }) => {
+const ModalView = ({ isOpen, onClose }) => {
   const dispatch = useDispatch();
   const workouts = useSelector(({done})=>done.workouts);
   const step = useSelector(({workout})=>workout.step);
@@ -143,7 +143,7 @@ const ModalView = ({ isOpen, onClose, onOpenPost }) => {
             }
             {workouts && workouts.current.blocks && step!==0 && step === workouts.current.blocks.length&&
               <>
-                <CompleteView onClose={onClose} openCreatingPost={onOpenPost}/>
+                <CompleteView onClose={onClose}/>
               </> 
             }
           </div>

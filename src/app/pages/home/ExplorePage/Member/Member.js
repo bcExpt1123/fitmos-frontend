@@ -12,7 +12,7 @@ const MemberPage = () => {
 
   const { data, error, mutate, size, setSize, isValidating } = useSWRInfinite(
     index =>
-      `search/members?page=${index+1}`,    httpApi
+      `search/members?page=${index+1}`, httpApi
   );
   let customers = []
   let dataProvider = new DataProvider((r1, r2) => {
