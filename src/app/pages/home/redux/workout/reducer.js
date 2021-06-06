@@ -99,7 +99,8 @@ const reducer = persistReducer(
       }),
       [goCreateComment]:(state,actions) =>({
         ...state,
-        slug:actions.payload,
+        slug:actions.payload.slug,
+        comment:actions.payload.comment,
         view:"comment"
       }),
     },

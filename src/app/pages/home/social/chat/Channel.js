@@ -260,7 +260,6 @@ const Channel = ()=> {
   const renderWordsCount = useSelector(({dialog})=>dialog.renderWordsCount);
   useEffect(()=>{
     handleResize();
-    console.log(renderWordsCount)
   },[renderWordsCount])
   return (<ConnectyCubeWrapper>
     <div className="chat-container" >

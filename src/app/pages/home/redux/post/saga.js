@@ -507,57 +507,65 @@ function* getPostsByActivity(activitytId){
   let level="post";// or comment or reply
   let isModalPost;
   const customerPosts = yield select(({post})=>post.customerPosts);
-  if(customerPosts)item = customerPosts.find(item=>{
-    const comment = item.comments.find(comment=>{
-      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
-      if(repley) return true;
-      return comment.activity_id == activitytId
+  if(customerPosts){
+    item = customerPosts.find(item=>{
+      const comment = item.comments.find(comment=>{
+        const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+        if(repley) return true;
+        return comment.activity_id == activitytId
+      });
+      if(comment) return true;
+      return item.activity_id == activitytId;
     });
-    if(comment) return true;
-    return item.activity_id == activitytId;
-  });
-  if(item){
-    names.push("customerPosts");
+    if(item){
+      names.push("customerPosts");
+    }
   }
   const newsfeed = yield select(({post})=>post.newsfeed);
-  if(newsfeed)item = newsfeed.find(item=>{
-    const comment = item.comments.find(comment=>{
-      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
-      if(repley) return true;
-      return comment.activity_id == activitytId
+  if(newsfeed){
+    item = newsfeed.find(item=>{
+      const comment = item.comments?.find(comment=>{
+        const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+        if(repley) return true;
+        return comment.activity_id == activitytId
+      });
+      if(comment) return true;
+      return item.activity_id == activitytId;
     });
-    if(comment) return true;
-    return item.activity_id == activitytId;
-  });
-  if(item){
-    names.push("newsfeed");
+    if(item){
+      names.push("newsfeed");
+    }
   }
   const suggestedPosts = yield select(({post})=>post.suggestedPosts);
-  if(suggestedPosts)item = suggestedPosts.find(item=>{
-    const comment = item.comments.find(comment=>{
-      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
-      if(repley) return true;
-      return comment.activity_id == activitytId
+  if(suggestedPosts){
+      item = suggestedPosts.find(item=>{
+      const comment = item.comments.find(comment=>{
+        const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+        if(repley) return true;
+        return comment.activity_id == activitytId
+      });
+      if(comment) return true;
+      return item.activity_id == activitytId;
     });
-    if(comment) return true;
-    return item.activity_id == activitytId;
-  });
-  if(item){
-    names.push("suggestedPosts");
+    if(item){
+      names.push("suggestedPosts");
+    }
   }
   const oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
-  if(oldNewsfeed)item = oldNewsfeed.find(item=>{
-    const comment = item.comments.find(comment=>{
-      const repley = comment.children.find(reply=>reply.activity_id == activitytId);
-      if(repley) return true;
-      return comment.activity_id == activitytId
+  if(oldNewsfeed){
+      item = oldNewsfeed.find(item=>{
+      const comment = item.comments.find(comment=>{
+        const repley = comment.children.find(reply=>reply.activity_id == activitytId);
+        if(repley) return true;
+        return comment.activity_id == activitytId
+      });
+      if(comment) return true;
+      return item.activity_id == activitytId;
     });
-    if(comment) return true;
-    return item.activity_id == activitytId;
-  });
-  if(item){
-    names.push("oldNewsfeed");
-  }        
+    if(item){
+      names.push("oldNewsfeed");
+    } 
+  }       
   const modalPost = yield select(({post})=>post.modalPost);
   if(modalPost){
     const post = yield select(({post})=>post.post);
@@ -1067,7 +1075,7 @@ const postUnlike = (post,activityId)=>{
     post.like=false;
     post.likesCount = post.likesCount - 1;
   }else{
-    post.comments = post.comments.map(comment=>{
+    post.comments = post?.comments?.map(comment=>{
       if(comment.activity_id == activityId){
         comment.like=false;
         comment.likeCount = comment.likeCount - 1;
@@ -1090,7 +1098,7 @@ const postLike = (post,activityId)=>{
     post.like=true;
     post.likesCount = post.likesCount + 1;
   }else{
-    post.comments = post.comments.map(comment=>{
+    post.comments = post?.comments?.map(comment=>{
       if(comment.activity_id == activityId){
         comment.like=true;
         comment.likeCount = comment.likeCount + 1;

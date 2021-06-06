@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 
 
 const SectionProduct = ({product}) => (
-  <article className="col-12 col-md-4">
+  <article className="col-12 col-md-3">
     <div className="content">
       <NavLink
         aria-label="Product"

@@ -5,7 +5,6 @@ import { Navbar, Container } from "react-bootstrap";
 import { NavLink, useHistory } from "react-router-dom";
 import * as qs from 'query-string';
 import { useScrollPosition } from "@n8tb1t/use-scroll-position";
-import SVG from "react-inlinesvg";
 
 import Avatar from "../Avatar";
 import Logo from "../Logo";
@@ -19,7 +18,6 @@ import { setItemValue } from "../../redux/dialogs/actions";
 import { $changeItem } from "../../../../../modules/subscription/service";
 import CreatePostModal from "../../social/posts/CreatingModal";
 import EditPostModal from "../../social/posts/EditingModal";
-import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import BasicSubmenu from "./DropDown/BasicSubMenu";
 import Submenu from "./DropDown/SubMenu";
 import SearchResult from "./DropDown/SearchResult";
@@ -79,7 +77,7 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
   },[]);
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
-    setShowCreatingPost(true);
+    if (!currentUser.customer.muteStatus) setShowCreatingPost(true);
     setShowSubmenu(false);
   }
   const showChatPanel = useSelector(({dialog})=>dialog.showPanel);

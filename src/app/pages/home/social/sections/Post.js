@@ -254,7 +254,9 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
               <div className="cursor-pointer append" onClick={handleNextComments}> Show &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comments</>:<> comment</>}</div>
             }
             {currentUser.type==="customer" && <form onSubmit={onCommentFormSubmit}>
-              <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+              <fieldset disabled={currentUser.customer.muteStatus}>
+                <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+              </fieldset>
             </form>}
           </div>
           }

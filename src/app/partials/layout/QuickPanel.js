@@ -1,5 +1,5 @@
 /* eslint-disable no-script-url,jsx-a11y/anchor-is-valid,no-undef */
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { useSelector, useDispatch } from "react-redux";
 import classnames from "classnames";
@@ -98,21 +98,26 @@ const QuickPanel = ()=> {
     if(notification.action_type === "customer"){
       if(notification.object_type === 'post'){
         history.push("/posts/"+ notification.object_id);
+        if(closeBtnRef && closeBtnRef.current )closeBtnRef.current.click();
       }else{
         history.push("/"+ notification.action.username);
+        if(closeBtnRef && closeBtnRef.current )closeBtnRef.current.click();
       }
     }else if(notification.action_type === "fitemos"){
       if(notification.type === "payment_renewal"){
         history.push("/settings/subscriptions");
+        if(closeBtnRef && closeBtnRef.current )closeBtnRef.current.click();
       }
     }
   }
+  const closeBtnRef = useRef();
   return (
     <div id="kt_quick_panel" className="kt-quick-panel">
       <a
         href="#"
         className="kt-quick-panel__close"
         id="kt_quick_panel_close_btn"
+        ref={closeBtnRef}
       >
         <i className="flaticon2-delete" />
       </a>

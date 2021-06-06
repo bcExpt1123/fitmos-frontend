@@ -17,7 +17,7 @@ const caculatePercent = customer =>{
   if(customer.gender === 'Male'){
     rate = parseInt(dumbellsWeight * 2);
   }else{
-    rate = parseInt(dumbellsWeight * 100/2);
+    rate = parseInt(dumbellsWeight * 100/35);
   }
   if(rate>100){
     return 100;
@@ -42,10 +42,10 @@ const ProfileInfo = ({customer}) => {
     }
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(()=>{
-    if(currentUser.customer.weights === 'con pesas' && currentUser.customer.dumbells_weight===null){
+    if(currentUser.customer && currentUser.customer.weights === 'con pesas' && currentUser.customer.dumbells_weight===null){
       setDumbellsModalShow(true);
     }
-  },[currentUser.customer.weights]);// eslint-disable-line react-hooks/exhaustive-deps
+  },[currentUser.customer && currentUser.customer.weights]);// eslint-disable-line react-hooks/exhaustive-deps
   const history = useHistory();
   const redirectProfile = ()=>{
     history.push('/'+ currentUser.customer.username);
@@ -165,11 +165,11 @@ const ProfileInfo = ({customer}) => {
           </div>
         </div>
         <div className="actions">
-        {(check() && currentUser.type==="customer" && customer.id !== currentUser.customer.id)?
+        {(check() && customer.type==="customer" && (currentUser.customer===null ||  customer.id !== currentUser.customer.id))?
           <>
-            <FollowButton customer={customer} />
-            <OpenPrivateMessageButton customer={customer}/>
-            <ProfileDropdown />
+            {currentUser.customer!==null && <FollowButton customer={customer} />}
+            {currentUser.customer!==null && <OpenPrivateMessageButton customer={customer}/>}
+            {currentUser.customer!==null && <ProfileDropdown />}
           </>
           :
           <>
@@ -184,9 +184,9 @@ const ProfileInfo = ({customer}) => {
           </>
         }
         </div>
-        {((customer.is_mamager === false && customer!="username" && customer.type==="customer")
+        {((customer.is_manager === false && customer!="username" && customer.type==="customer")
           ||
-          (currentUser.customer.is_mamager === false && customer.type===undefined && currentUser.customer.id === customer.id)) && (
+          (currentUser.customer && currentUser.customer.is_manager === false && customer.type===undefined && currentUser.customer.id === customer.id)) && (
           <div className="workout">
             <h3 className="mb-4">Entrenamiento</h3>
             <div className="progress-bar-wrapper">
@@ -249,7 +249,7 @@ const ProfileInfo = ({customer}) => {
                   </div>
                   <div className="progress-bar-body">
                     <span className="label">Peso</span>
-                    <span className="value">{caculatePercent(customer)}</span>
+                    <span className="value">{caculatePercent(customer)}%</span>
                     <ProgressBar now={caculatePercent(customer)} />
                   </div>
                 </div>
@@ -264,7 +264,7 @@ const ProfileInfo = ({customer}) => {
                   </div>
                   <div className="progress-bar-body cursor-pointer"  onClick={openDumbellsModal}>
                     <span className="label">Peso</span>
-                    <span className="value">{caculatePercent(currentUser.customer)}</span>
+                    <span className="value">{caculatePercent(currentUser.customer)}%</span>
                     <ProgressBar now={caculatePercent(currentUser.customer)} />
                   </div>
                 </div>

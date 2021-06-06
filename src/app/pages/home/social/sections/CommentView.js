@@ -78,7 +78,9 @@ const CommentView = ({comment})=>{
           {showEdit?
             <>
               <form onSubmit={onEditFormSubmit}>
-                <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit} focus={true}/>
+                <fieldset disabled={currentUser.customer.muteStatus}>
+                  <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit} focus={true}/>
+                </fieldset>  
               </form>
             </>
             :
@@ -97,7 +99,9 @@ const CommentView = ({comment})=>{
         </div>
         {currentUser.type==="customer" && show&&(
           <form onSubmit={onReplyFormSubmit}>
-            <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit} focus={true}/>
+            <fieldset disabled={currentUser.customer.muteStatus}>
+              <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit} focus={true}/>
+            </fieldset>
           </form>        
         )}
       </div>

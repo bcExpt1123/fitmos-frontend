@@ -17,7 +17,6 @@ import "./assets/scss/theme/login.scss";
 import "./assets/scss/theme/username-workouts.scss";
 
 const getKey = (pageIndex, previousPageData, username) => {
-  console.log(pageIndex, previousPageData)
   if (previousPageData && !previousPageData.data.length) return null // reached the end
   return username?`workout-comments/publish?customer_id=${username.id}&page_number=${pageIndex+1}`:null
 }
@@ -54,7 +53,6 @@ const ProfileWorkouts = () => {
   const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   useEffect(()=>{
     if (isFetching && !isRefreshing) {
-      console.log('isRefreshing')
       setSize(size + 1)
     }
   },[isFetching, isRefreshing])

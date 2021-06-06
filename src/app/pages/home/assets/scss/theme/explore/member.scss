@@ -1,5 +1,22 @@
 @import "../mixin.scss";
 .member{
+  max-width: 680px;
+  margin: 30px auto 0 auto;;
+  background-color: white;
+  border-radius: 5px;
+  padding: 20px;
+  .data-wrapper{
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    >div{
+      width: 100%;
+      height: 100%;
+      overflow-y: scroll;
+      padding-right: 17px;
+      box-sizing: content-box;       
+    }    
+  }
   .item{
     >div{
       display: inline-block;
@@ -27,12 +44,55 @@
     .follow{
       float: right;
       margin-top: 13px;
+      margin-right: 53px;
       border:0;
       border-radius: 3px;
       font-size: 14px;
       background-color: #BDD631;
       color:white;
       padding: 9px;
+    }
+  }
+}
+@media (max-width:480px){
+  .member{
+    .item{
+      .name{
+        .fullname{
+          width: 170px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
+@media (max-width:375px){
+  .member{
+    .item{
+      .name{
+        .fullname{
+          width: 130px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
+}
+@media (max-width:320px){
+  .member{
+    .item{
+      .name{
+        .fullname{
+          width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
     }
   }
 }

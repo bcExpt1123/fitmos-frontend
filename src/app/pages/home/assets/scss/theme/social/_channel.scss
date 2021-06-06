@@ -97,32 +97,35 @@
     bottom:0px;
     margin-right: 13px;
     form{
-      display:flex;
-      flex-direction: row;
+      display:block;
       border:1px solid rgba(#b2b3b8, 1);
       padding: 5px 10px;
       border-radius: 30px;
       background-color: white;
-      .image-picker{
-        padding-top: 3px;
-        padding-right: 10px;
-      }
-      .mentions{
-        flex-grow: 4;
-        textarea{
-          border: 0;
+      fieldset{
+        display:flex;
+        flex-direction: row;
+        .image-picker{
+          padding-top: 3px;
+          padding-right: 10px;
+        }
+        .mentions{
+          flex-grow: 4;
+          textarea{
+            border: 0;
+            outline: none;
+          }
+        }
+        button{
+          border:0;
           outline: none;
-        }
-      }
-      button{
-        border:0;
-        outline: none;
-        background-color: white;
-        &.emoji__button{
-
-        }
-        &.send{
-          color:#AFCA32;
+          background-color: white;
+          &.emoji__button{
+  
+          }
+          &.send{
+            color:#AFCA32;
+          }
         }
       }
     }

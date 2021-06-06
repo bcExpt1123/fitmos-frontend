@@ -17,8 +17,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
   }, [posts]);// eslint-disable-line react-hooks/exhaustive-deps
   const [showCreatingPost, setShowCreatingPost] = useState(false);
   const OpenCreatingPost = ()=>{
-    console.log("clicked")
-    setShowCreatingPost(true);
+    if (!currentUser.customer.muteStatus) setShowCreatingPost(true);
   }  
   const handleCreatingModalClose = () => {
     setShowCreatingPost(false);

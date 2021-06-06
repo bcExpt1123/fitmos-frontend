@@ -194,7 +194,9 @@ const PostModal = ({show, media, onClose }) => {
               </div>
               {currentUser.type==="customer" && 
                 <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
-                    <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+                  <fieldset disabled={currentUser.customer.muteStatus}>
+                  <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
+                  </fieldset>
                 </form>
               }  
             </div>

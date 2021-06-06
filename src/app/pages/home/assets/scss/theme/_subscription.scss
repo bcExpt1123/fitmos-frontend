@@ -29,7 +29,7 @@
         font-style: italic;
       }
       &:hover{
-        background-color: $secondary-button-backgound-color;
+        background-color: $secondary-button-background-color;
       }
     }
     .free-plan .fs-btn {
@@ -116,10 +116,10 @@
             width: 97%;
             padding-left: 0px;
             padding-right: 0px;
-            background: $secondary-button-backgound-color!important;
+            background: $secondary-button-background-color!important;
             border: 0;
             &:hover {
-              background: $secondary-button-backgound-color !important;
+              background: $secondary-button-background-color !important;
               box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.2) !important;
             }          
           }

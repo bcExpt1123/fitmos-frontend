@@ -70,13 +70,12 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen, onHide })=>{
     }
   },[block]);// eslint-disable-line react-hooks/exhaustive-deps
   const openCreateComment = ()=>{
-    dispatch(goCreateComment(block.slug));
+    dispatch(goCreateComment({slug:block.slug,comment:block.comment}));
   }
   const renderCommentButton = ()=>{
     return ['sin_content','con_content', 'extra_sin', 'fit', 'strong_male', 'strong_female', 'cardio'].includes(block.slug) && (
-      <button className="create-comment" onClick={openCreateComment} disabled={block.has_comment}>
-        Comment
-        {/* <i className="fas fa-upload" /> */}
+      <button className={classnames("create-comment",{has:block.has_comment})} onClick={openCreateComment}>
+        <i className="fas fa-comment" />
       </button>
     )
   }

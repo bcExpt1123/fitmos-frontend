@@ -47,7 +47,7 @@
       min-height: 100vh;
       .modal-header{
         .modal-title{
-          font-size: 16px;
+          font-size: 18px;
         }
       }
     }
@@ -134,10 +134,10 @@
           margin: 10px auto 10px 0;
         }
         &.create-comment{
-          background-color: $secondary-button-backgound-color;
+          background-color: $primary-button-background-color;
           color:white;
-          &:disabled{
-            opacity: 0.7;
+          &.has{
+            background-color: $secondary-button-background-color;
           }
         }
       }
@@ -186,12 +186,13 @@
         background-color: white;
         color: #333333;
         font-size: 16px !important;
-        width:auto;
+        width:190px;
       }
       .swap{
-        background-color: $secondary-background-color;
+        background-color: $primary-button-background-color;
         color:white;
         font-size: 16px!important;
+        width:190px;
       }
     }
     .video-loading{
@@ -319,7 +320,7 @@
     .modal-dialog{
       .modal-content .modal-header{
         .modal-title{
-          font-size:15px;
+          font-size:17px;
         }
       }
     }
@@ -395,7 +396,10 @@
         width: calc(100% + 43px);
       }
       .workout-footer{
-        left: calc( 50% - 150px);
+        left: calc( 50% - 170px);
+        .swap, .back{
+          width:150px;
+        }
         .active{
           padding: 3px 10px;
         }

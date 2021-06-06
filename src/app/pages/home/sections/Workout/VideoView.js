@@ -175,7 +175,7 @@ const VideoView = ({onClose}) => {
         </button>              
         {currentUser&&currentUser.customer.current_condition>=originalVideo.level&&
           <button type="button" className={"btn swap"} onClick={handleAlernateModal}>
-            Escoger
+            Alternar
           </button>              
         }
       </div>
@@ -200,7 +200,7 @@ const VideoView = ({onClose}) => {
         className={classnames("alternate-modal")}>
         <Modal.Dialog>
           <Modal.Body>
-            <p>¿Deseas alternar Mov A por Mov B?</p>
+            <p>¿Deseas alternar {originalVideo.name} por {video.name}?</p>
           </Modal.Body>
 
           <Modal.Footer className="actions">

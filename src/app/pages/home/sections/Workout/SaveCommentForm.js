@@ -19,7 +19,7 @@ const validate = values => {
   return errors;
 };
 
-const SaveCommentForm = ({id, initialValues, publishDate, type, workoutContent, onCancel, onSuccess }) => {
+const SaveCommentForm = ({id, from, initialValues, publishDate, type, workoutContent, onCancel, onSuccess }) => {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const dispatch = useDispatch();
   const [focused, setFocused] = useState({});
@@ -42,9 +42,6 @@ const SaveCommentForm = ({id, initialValues, publishDate, type, workoutContent, 
             dumbells_weight
           }
         });
-        setSubmitting(false);
-        dispatch(findWorkouts(publishDate));
-        onSuccess();
       }else{
         await http({
           method: "POST",
@@ -58,10 +55,14 @@ const SaveCommentForm = ({id, initialValues, publishDate, type, workoutContent, 
             dumbells_weight
           }
         });
-        setSubmitting(false);
-        dispatch(convertContent());
-        dispatch(findWorkouts(publishDate));
       }
+      if(from){
+        dispatch(convertContent());
+      }else{
+        onSuccess();
+      }
+      setSubmitting(false);
+      dispatch(findWorkouts(publishDate));
     }catch(error){
       setSubmitting(false);
       if(error && error.response.status){

@@ -6,6 +6,7 @@ import { http } from "../../services/api";
 import { currentCustomerWeights } from "../../services/convert";
 import { updateCustomerAttribute as updateWeightsAction } from "../../redux/auth/actions";
 import SectionChangeGoal from "../../DashboardPage/SectionChangeGoal";
+import DumbellsWeightModal from '../../profile/components/DumbellsWeightModal';
 import { $resetPublished } from "../../../../../modules/subscription/benchmark";
 
 export const findObjective = (objective,currentUser) => {
@@ -57,6 +58,13 @@ const Objective = () => {
       dispatch($resetPublished());
     }
   };
+  const [dumbellsModalShow, setDumbellsModalShow] = useState(false);
+  const openDumbellsModal = () => {
+    setDumbellsModalShow(true);
+  }
+  const closeDumbellsModal = ()=>{
+    setDumbellsModalShow(false);
+  }
   return (
     <Card>
       <Card.Header>
@@ -73,6 +81,15 @@ const Objective = () => {
           <div className="value col-10">{currentCustomerWeights(currentUser.customer.weights)}</div>
           <div className="col-2 edit"><i className="fa fa-pen" onClick={handleClick}></i></div>
         </div>
+        {currentUser.customer.weights === 'con pesas' && (
+          <>
+            <label>Peso de Mancuernas</label>
+            <div className="row">
+              <div className="value col-10">{currentUser.customer.dumbells_weight}</div>
+              <div className="col-2 edit"><i className="fa fa-pen" onClick={openDumbellsModal}></i></div>
+            </div>
+          </>
+        )}
         <label>Intensidad</label>
         <div className="row">
           <div className="value col-10">Nivel Físico {currentUser.customer.current_condition}</div>
@@ -87,6 +104,7 @@ const Objective = () => {
         </div>
       </Card.Body>
       <SectionChangeGoal handleClose={handleCloseObjective} show={objective}/>
+      {dumbellsModalShow && <DumbellsWeightModal show={dumbellsModalShow} onClose={closeDumbellsModal}/>}
     </Card>
   );
 };

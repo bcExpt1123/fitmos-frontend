@@ -150,42 +150,44 @@ export default function({sendMessageCallback}) {
   return (
     <footer>
       <form onSubmit={sendMessage}>
-        <ImageUpload onUpload={onUpload}/>
-        <MentionsInput
-          value={messageText}
-          onChange={handleChange}
-          onKeyDown={handleEnterPress}
-          inputRef={textRef}
-          className="mentions"
-          placeholder={blocked?"Chat deshabilitado":"Escribe un mensaje..."}
-          allowSuggestionsAboveCursor={true}
-        >
-          <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion} displayTransform = {(id, display)=>{return '@' + display}}/>
-        </MentionsInput>
-        {isMobile()===false&&<>
-          {showEmojis ? (
-            <span className={"emoji__picker"}  ref={emojiPicker}>
-              <NimblePicker
-                onSelect={handleSelectEmoji}
-                showSkinTones={false}
-                emojiTooltip={false}
-                showPreview={false}
-                sheetSize={32}
-                data={data}
-              />
-            </span>
-          ) : (
-            <button
-              className={"emoji__button"}
-              onClick={() => setShowEmojis(true)}
-            >
-              {String.fromCodePoint(0x1f60a)}
-            </button>
-          )}                
-        </>}
-        <button className="send" onClick={sendMessage} disabled={blocked}>
-          <i className="fas fa-paper-plane" />
-        </button>
+        <fieldset disabled={blocked || currentUser.customer.muteStatus}>
+          <ImageUpload onUpload={onUpload}/>
+          <MentionsInput
+            value={messageText}
+            onChange={handleChange}
+            onKeyDown={handleEnterPress}
+            inputRef={textRef}
+            className="mentions"
+            placeholder={(blocked || currentUser.customer.muteStatus) ? "Chat deshabilitado":"Escribe un mensaje..."}
+            allowSuggestionsAboveCursor={true}
+          >
+            <Mention data={filterPeople} renderSuggestion={renderPeopleSuggestion} displayTransform = {(id, display)=>{return '@' + display}}/>
+          </MentionsInput>
+          {isMobile()===false&&<>
+            {showEmojis ? (
+              <span className={"emoji__picker"}  ref={emojiPicker}>
+                <NimblePicker
+                  onSelect={handleSelectEmoji}
+                  showSkinTones={false}
+                  emojiTooltip={false}
+                  showPreview={false}
+                  sheetSize={32}
+                  data={data}
+                />
+              </span>
+            ) : (
+              <button
+                className={"emoji__button"}
+                onClick={() => setShowEmojis(true)}
+              >
+                {String.fromCodePoint(0x1f60a)}
+              </button>
+            )}                
+          </>}
+          <button className="send" onClick={sendMessage} disabled={blocked || !currentUser.customer.muteStatus}>
+            <i className="fas fa-paper-plane" />
+          </button>
+        </fieldset>
       </form>
     </footer>
   )

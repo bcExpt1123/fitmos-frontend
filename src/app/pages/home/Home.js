@@ -12,10 +12,8 @@ import SectionGuide from "./sections/SectionGuide";
 import SectionPricing from "./sections/SectionPricing";
 import SectionTestimonial from "./sections/SectionTestimonial";
 import SectionInstagram from "./sections/SectionInstagram";
-import ThreeColumn from "./layouts/Three";
 import TwoColumn from "./layouts/Two";
 import { findWorkouts,initialBlock, fetchSurvey } from "./redux/done/actions";
-import PageHeader from "./layouts/PageHeader";
 import Header from "./sections/Workout/Header";
 import Body from "./sections/Workout/Body";
 
@@ -37,7 +35,7 @@ const Home = ({ auth,history }) => {
     dispatch(fetchSurvey());
     window.scrollTo(0,1);
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
-  const tagLine = useSelector(({done})=>done.tagLine);
+  // const tagLine = useSelector(({done})=>done.tagLine);
   const step = useSelector(({done})=>done.step);
   return (
   <>
