@@ -156,7 +156,7 @@ const ModalView = ({ isOpen, onClose }) => {
             </>
           }
           {view==='comment'&&
-            <CreateComment/>
+            <CreateComment onCancel={() => dispatch(convertContent())}/>
           }
         </Modal.Body>
       </Modal>

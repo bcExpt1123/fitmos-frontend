@@ -174,7 +174,7 @@ const PostModal = ({show, media, onClose }) => {
                         <CommentView comment={comment}/>
                       </div>
                       {(comment.children.length>0) && 
-                        <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
+                        <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Ocultar comentarios</div>
                       }
                       <div className={"comment-replies"}>
                         {
@@ -186,7 +186,7 @@ const PostModal = ({show, media, onClose }) => {
                         }
                       </div>
                       {(comment.nextChildrenCount>0) && 
-                        <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View next replies</div>
+                        <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> Ver más comentarios</div>
                       }
                     </React.Fragment>
                   )}

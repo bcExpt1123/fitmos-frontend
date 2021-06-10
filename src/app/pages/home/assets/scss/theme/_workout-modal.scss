@@ -137,7 +137,9 @@
           background-color: $primary-button-background-color;
           color:white;
           &.has{
-            background-color: $secondary-button-background-color;
+            background-color: white;
+            color:$basic-text-color;
+            border: 1px solid #B9B7B7;
           }
         }
       }

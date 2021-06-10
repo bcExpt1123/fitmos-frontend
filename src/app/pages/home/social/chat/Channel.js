@@ -156,8 +156,8 @@ const Channel = ()=> {
   const [updateScollPositionIndex, setUpdateScollPositionIndex] = useState(0);
   const updateScrollPosition = () => {
     const chatBody = document.getElementById('chat-body');
-    if(chatBody.children.length>0 && chatBody.children[0].children.length && chatBody.children[0].children[0].children.length>0){
-      const getElement = document.getElementById('chat-body').children[0].children[0].children[0].style.height;
+    if(chatBody && chatBody.children.length>0 && chatBody.children[0].children.length && chatBody.children[0].children[0].children.length>0){
+      const getElement = chatBody.children[0].children[0].children[0].style.height;
       const fullScrollHeight = getElement.slice(0, getElement.length - 2)
       const newOffset = recyclerY + (fullScrollHeight - contentHeight);
       messagesListRef.current.scrollToOffset(0, newOffset);
@@ -196,8 +196,11 @@ const Channel = ()=> {
   useEffect(()=>{
     window.addEventListener('resize', handleResize);
     window.addEventListener('click', handleDocumentClick);
-    setScrollWidth(document.getElementById('chat-body').clientWidth);
-    setScrollHeight(document.getElementById('chat-body').clientHeight);
+    const chatBody = document.getElementById('chat-body');
+    if(chatBody){
+      setScrollWidth(document.getElementById('chat-body').clientWidth);
+      setScrollHeight(document.getElementById('chat-body').clientHeight);
+    }
     return ()=>{
       window.removeEventListener('resize', handleResize);
       window.removeEventListener('click', handleDocumentClick);

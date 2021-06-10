@@ -226,7 +226,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
           {post.type!="workout-post"&&
           <div className="post-comments">
             {(post.previousCommentsCount>0) && 
-              <div className="cursor-pointer append" onClick={handlePreviousComments}> Show all&nbsp;{post.previousCommentsCount}&nbsp;{post.previousCommentsCount>1?<>comments</>:<>comment</>}</div>
+              <div className="cursor-pointer append" onClick={handlePreviousComments}> Mostrar all&nbsp;{post.previousCommentsCount}&nbsp;{post.previousCommentsCount>1?<>comentarios</>:<>comentario</>}</div>
             }
             {post.comments.length>0&&post.comments.map(comment=>
               <React.Fragment  key={comment.id}>
@@ -234,7 +234,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                   <CommentView comment={comment}/>
                 </div>
                 {(comment.children.length>0) && 
-                  <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Hide all replies</div>
+                  <div className="cursor-pointer  comment-append-replies append" onClick={handleHideReplies(comment)}> Ocultar comentarios</div>
                 }
                 <div className={"comment-replies"}>
                   {
@@ -246,12 +246,12 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                   }
                 </div>
                 {(comment.nextChildrenCount>0) && 
-                  <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> View&nbsp;{comment.nextChildrenCount}&nbsp;{comment.nextChildrenCount>1?<>replies</>:<>reply</>}</div>
+                  <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> Ver&nbsp;{comment.nextChildrenCount}&nbsp;{comment.nextChildrenCount>1?<>comentarios</>:<>comentario</>}</div>
                 }
               </React.Fragment>
             )}
             {(post.nextCommentsCount>0) && 
-              <div className="cursor-pointer append" onClick={handleNextComments}> Show &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comments</>:<> comment</>}</div>
+              <div className="cursor-pointer append" onClick={handleNextComments}> Mostrar &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comentarios</>:<> comentario</>}</div>
             }
             {currentUser.type==="customer" && <form onSubmit={onCommentFormSubmit}>
               <fieldset disabled={currentUser.customer.muteStatus}>

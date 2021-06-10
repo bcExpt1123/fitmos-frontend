@@ -87,6 +87,7 @@ function Message({message, whoIsSender, widthScroll}) {
           <div style={{
             backgroundImage: `url(${message.attachment[0].url})`,
             backgroundPosition: 'center',
+            backgroundSize: '100% auto',
             width: `${width}px`,
             height: `${height}px`,
             border: '1px solid #cbcbcb',

@@ -333,7 +333,12 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
           }
           </>
         }
-        {post.type==='workout' && post.dumbells_weight&& (<div className="mt-2" style={{color:"rgba(54, 54, 54, 0.7)"}}>
+        {post.type==='workout' && post.dumbells_weight&& (<div className="mt-2" style={{
+            color:"rgba(51, 51, 51, 1)",
+            backgroundColor:"#B9B7B7",
+            display:'inline-block',
+            padding:'2px 5px',
+            borderRadius:'5px'}}>
             Peso utilizado:{post.dumbells_weight}lbs
           </div>
         )}

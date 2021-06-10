@@ -215,7 +215,7 @@ export default function HomePage() {
         <Route exact path="/posts/:id" component={SocialPostPage} />
         <Route exact path="/eventos" component={Events} />
         <Route exact path="/eventos/:id" component={Event} />
-        <Route exact path="/miembro" component={Member} />
+        <Route exact path="/miembros" component={Member} />
         <Route exact path="/:username" component={UsernamePage} />
         <Route exact path="/:username/pictures" component={ProfilePicturesPage} />        
         <Route exact path="/:username/workouts" component={ProfileWorkoutsPage} />

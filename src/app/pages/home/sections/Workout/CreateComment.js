@@ -2,7 +2,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 import SaveCommentForm from "./SaveCommentForm";
 
-const CreateComment = () => {
+const CreateComment = ({onCancel}) => {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const workouts = useSelector(({done})=>done.workouts);
   const step = useSelector(({workout})=>workout.step);
@@ -23,6 +23,7 @@ const CreateComment = () => {
         }}
         publishDate={workouts.current.today}
         type={type}
+        onCancel={onCancel}
         workoutContent={workouts.current.blocks[step].content}
       />
     </div>

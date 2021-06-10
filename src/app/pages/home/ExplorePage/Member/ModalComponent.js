@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from "react";
+import { useSelector } from "react-redux";
 import MemberComponent from './Component';
 
 const ModalComponent = () => {
@@ -25,8 +26,11 @@ const ModalComponent = () => {
       // setMarginLeft( (document.getElementById('member').clientWidth - bodyClientWidth)/2 + 'px');
     }
   }
+  const currentUser = useSelector(({auth})=>auth.currentUser);
   return (
     <section className="member" id="member">
+      <h2 className="mb-4">¡{currentUser.customer.first_name} agrega a tus primeros partners!</h2>
+      <h4 className="mb-4">Te recomendamos agregar a la mayor cantidad de partners. En Fitemos todos somos un gran equipo.</h4>
       <MemberComponent scrollWidth={scrollWidth} scrollHeight={scrollHeight} marginLeft={marginLeft}/>
     </section>
   );

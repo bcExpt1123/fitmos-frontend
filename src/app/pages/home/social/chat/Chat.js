@@ -107,7 +107,7 @@ class Chat extends PureComponent {
   updateScrollPosition = () => {
     setTimeout(() => {
       const chatBody = document.getElementById('chat-body');
-      if(chatBody.children.length>0 && chatBody.children[0].children.length && chatBody.children[0].children[0].children.length>0){
+      if(chatBody && chatBody.children.length>0 && chatBody.children[0].children.length && chatBody.children[0].children[0].children.length>0){
         const getElement = document.getElementById('chat-body').children[0].children[0].children[0].style.height;
         const fullScrollHeight = getElement.slice(0, getElement.length - 2)
         const newOffset = this.recycler_Y + (fullScrollHeight - this.contentHeight)

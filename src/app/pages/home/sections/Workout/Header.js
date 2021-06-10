@@ -19,7 +19,7 @@ const Header = ()=>{
   const survey = useSelector(({done})=>done.survey);
   const [show, setShow] = useState(false);
   const [showSurvey, setShowSurvey] = useState(false);
-  const [question, setQuestion] = useState(false);
+  const [question, setQuestion] = useState('recommend');
   const changeConfirm = ()=>{
     if(isRunning){
       if(window.confirm("El reloj aún sigue corriendo. ¿Deseas avanzar?") ===false)return false;
@@ -83,7 +83,7 @@ const Header = ()=>{
           <span> <i className="fas fa-angle-right"></i> </span>
         ))}
       </div>
-      {currentUser&&currentUser.customer.qbligatory_question==null&&(
+      {currentUser&&(
         <Modal
           show={show}
           className="qbligatory-question-modal"
@@ -94,47 +94,52 @@ const Header = ()=>{
         >
           <Modal.Header closeButton>
             <Modal.Title className="text-center w-100">
-              ¿Cómo nos conociste?
+              ¡Bienvenido a Fitemos!
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form>
-              <Form.Group>
-                <Form.Check 
-                  type={'radio'}
-                  id={`recommend`}
-                  label={`Me lo recomendaron`}
-                  onChange={handleOptionChange}
-                  value="recommend"
-                  checked={question === "recommend"}
-                />
-                <Form.Check 
-                  type={'radio'}
-                  id={`advertisea`}
-                  label={`Me llegó la publicidad`}
-                  onChange={handleOptionChange}
-                  value="advertise"
-                  checked={question === "advertise"}
-                />
-                <Form.Check 
-                  type={'radio'}
-                  id={`long`}
-                  label={`Los conozco hace un tiempo`}
-                  onChange={handleOptionChange}
-                  value="long"
-                  checked={question === "long"}
-                />
-              </Form.Group>
-              <Button
-                type="button"
-                onClick={handleConfirm}
-                className="blue-btn"
-                style={{ margin: "10px auto", fontSize: "17px", width: "auto" }}
-              >
-                Aceptar
-              </Button>
-              <MemberModalComponent />
-            </Form>
+            {currentUser.customer.qbligatory_question==null&&(
+              <>
+              <h2>¿Cómo nos conociste?</h2>
+              <Form>
+                <Form.Group>
+                  <Form.Check 
+                    type={'radio'}
+                    id={`recommend`}
+                    label={`Me lo recomendaron`}
+                    onChange={handleOptionChange}
+                    value="recommend"
+                    checked={question === "recommend"}
+                  />
+                  <Form.Check 
+                    type={'radio'}
+                    id={`advertisea`}
+                    label={`Me llegó la publicidad`}
+                    onChange={handleOptionChange}
+                    value="advertise"
+                    checked={question === "advertise"}
+                  />
+                  <Form.Check 
+                    type={'radio'}
+                    id={`long`}
+                    label={`Los conozco hace un tiempo`}
+                    onChange={handleOptionChange}
+                    value="long"
+                    checked={question === "long"}
+                  />
+                </Form.Group>
+                <Button
+                  type="button"
+                  onClick={handleConfirm}
+                  className="blue-btn"
+                  style={{ margin: "10px auto", fontSize: "17px", width: "auto" }}
+                >
+                  Aceptar
+                </Button>
+                </Form>
+              </>
+            )}
+            <MemberModalComponent />
           </Modal.Body>
         </Modal>
       )

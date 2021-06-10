@@ -1,5 +1,4 @@
 import React,{ useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useSWRInfinite } from "swr";
 import { NavLink } from "react-router-dom";
 import { RecyclerListView, DataProvider, LayoutProvider } from "recyclerlistview/web";
@@ -65,11 +64,8 @@ const MemberComponent = ({scrollWidth, scrollHeight, marginLeft}) => {
       },
     ));
   },[scrollWidth, scrollHeight]);
-  const currentUser = useSelector(({auth})=>auth.currentUser);
   return (
     <>
-      <h2 className="mb-4">¡{currentUser.customer.first_name} agrega a tus primeros partners!</h2>
-      <h4 className="mb-4">Te recomendamos agregar a la mayor cantidad de partners. En Fitemos todos somos un gran equipo.</h4>
       <div className='data-wrapper' >
         {dataProvider._data.length>0 && scrollWidth>0 && (
           <RecyclerListView

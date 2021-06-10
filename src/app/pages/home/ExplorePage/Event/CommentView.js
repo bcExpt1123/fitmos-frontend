@@ -75,7 +75,7 @@ const CommentView = ({comment})=>{
         </div>
         <div className="actions">
           <div className="comment-time">{convertTime(comment.created_at)}</div>
-          <button className="reply-comment" onClick={openReplyComment}>Reply</button>      
+          <button className="reply-comment" onClick={openReplyComment}>Responder</button>      
         </div>
         {show&&(
           <form onSubmit={onReplyFormSubmit}>
