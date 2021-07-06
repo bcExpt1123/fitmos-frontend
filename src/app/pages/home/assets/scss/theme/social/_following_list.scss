@@ -44,7 +44,7 @@
             button{
               padding:5px 15px;
               &.unfollow{
-                background-color:$secondary-background-color;
+                background-color:$primary-button-background-color;
                 color:white;
               }
               &.accept{

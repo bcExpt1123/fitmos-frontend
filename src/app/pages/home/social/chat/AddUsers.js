@@ -140,7 +140,7 @@ const AddUsers = ()=>{
     <div className="create-dialog-container">
       <ChatHeader path={path} title={selectedDialog?"Add to Group":"Create new Group"}>
         <div className="dialog-btn">
-          <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUsers.length===0}>Done</button>
+          <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUsers.length===0}>Aceptar</button>
         </div>
       </ChatHeader>
       {isLoader &&
@@ -179,7 +179,7 @@ const AddUsers = ()=>{
           }}
         >
         { contactedUsers.length>0 && <div className="contacted-users">
-          People
+          Personas
           {contactedUsers.map(user=>
             <div className="contacted-user" key={user.id}  onClick={triggerUsers(user)}>
               <div className="avatar">
@@ -195,7 +195,7 @@ const AddUsers = ()=>{
           )}
         </div> }
         { moreUsers.length>0 && <div className="more-users">
-          More people
+          More Personas
           {moreUsers.map(user=>
             <div className="more-user" key={user.id} onClick={triggerUsers(user)}>
               <div className="avatar">

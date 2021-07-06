@@ -201,16 +201,19 @@ const ProfileInfo = ({customer}) => {
                   )
                 }
               </div>
-              <div className="progress-bar-body">
-                <span className="label">Nivel</span>
-                {check()?<>
+              {check()?
+                <div className="progress-bar-body">
+                  <span className="label">Nivel</span>
                   <span className="value">{customer.current_condition}/5</span>
                   <ProgressBar now={customer.current_condition/5*100} />
-                </>:<>
+                </div>
+              :
+                <div className="progress-bar-body cursor-pointer"  onClick={()=>history.push('/level')}>
+                  <span className="label">Nivel</span>
                   <span className="value">{currentUser.customer.current_condition}/5</span>
                   <ProgressBar now={currentUser.customer.current_condition/5*100} />
-                </>}
-              </div>
+                </div>
+              }
             </div>          
             <div className="progress-bar-wrapper">
               <div className="medal-image">

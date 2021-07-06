@@ -3,9 +3,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { Modal } from "react-bootstrap";
 import { MentionsInput, Mention } from 'react-mentions';
 import classnames from "classnames";
-import { NimblePicker, emojiIndex } from "emoji-mart";
+import { NimblePicker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
-import data from "emoji-mart/data/google.json";
+import useSWR from "swr";
 import { useHistory } from "react-router-dom";
 import TagFollower from './TagFollower';
 import Avatar from "../../components/Avatar";
@@ -17,9 +17,11 @@ import SplashScreen from "../../../../partials/layout/SplashScreen";
 import { isMobile } from '../../../../../_metronic/utils/utils';
 import { findWorkouts,initialBlock } from "../../redux/done/actions";
 import { colonsToUnicode } from '../../services/emoji';
+import { httpApi } from "../../services/api";
 
 const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
-  const users = useSelector(({people})=>people.people);
+  const { data, error } = useSWR('customers/all', httpApi);
+  const users = data?data.data.customers:null;
   const [content, setContent] = useState("");
   const textRef = useRef();
   const [type, setType] = useState("post");
@@ -36,10 +38,12 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     }
   },[post]);// eslint-disable-line react-hooks/exhaustive-deps
   useEffect(()=>{
-    if(post && post.tagFollowers && post.tagFollowers.length>0){
-      setSearchableCustomers(users.filter((customer)=>!post.tagFollowers.some(item=>item.id == customer.id)));      
-    }else{
-      setSearchableCustomers(users);
+    if(Array.isArray(users)){
+      if(post && post.tagFollowers && post.tagFollowers.length>0){
+        setSearchableCustomers(users.filter((customer)=>!post.tagFollowers.some(item=>item.id == customer.id)));      
+      }else{
+        setSearchableCustomers(users);
+      }
     }
   },[users,post]);// eslint-disable-line react-hooks/exhaustive-deps
   const handleChange = (ev, newValue)=>{
@@ -64,11 +68,13 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
     setType("medias")
   }
   const filterPeople=(search, callback)=>{
-    if(search.length>1){
-      const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search.toLowerCase()));
-      callback(filteredPeople.slice(0, 20));
-    }else{
-      callback(users.slice(0, 20));
+    if(Array.isArray(users)){
+      if(search.length>1){
+        const filteredPeople = users.filter((customer)=>customer.display.toLowerCase().includes(search.toLowerCase()));
+        callback(filteredPeople.slice(0, 20));
+      }else{
+        callback(users.slice(0, 20));
+      }
     }
   }
   /** tag */

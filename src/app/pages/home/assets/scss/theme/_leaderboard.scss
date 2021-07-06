@@ -92,7 +92,9 @@
   }
 }
 @media (max-width: 590px) {
-  .leaderboard-front .data .item .content{
-    flex: 0 0 60%;
-  }
+  .leaderboard-front .data .item {
+    .name{
+      flex: 0 0 39%;
+    }    
+  } 
 }

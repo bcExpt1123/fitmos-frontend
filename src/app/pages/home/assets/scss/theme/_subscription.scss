@@ -137,8 +137,8 @@
         top: 0px;
         right: 0%;
         .border-line {
-          border-top: solid 20px #c8dc50;
-          border-right: solid 20px #c8dc50;
+          border-top: solid 20px $primary-button-background-color;
+          border-right: solid 20px $primary-button-background-color;
           float: right;
           width: 103px;
           height: 163px;
@@ -262,8 +262,8 @@
         }
         .border-line-container {
           .border-line {
-            border-top: solid 15px #c8dc50;
-            border-right: solid 15px #c8dc50;
+            border-top: solid 15px $primary-button-background-color;
+            border-right: solid 15px $primary-button-background-color;
             float: right;
             width: 56px;
             height: 94px;

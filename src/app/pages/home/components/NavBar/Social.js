@@ -213,7 +213,8 @@ const NavBarVariantFull = ({isScroll, checkout})=>{
                 className={"nav-link link text-white display-4"}
                 activeClassName="active"
                 isActive={(match, location) => {
-                  return (location.pathname.match('/\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/|\/miembros/'))
+                  const reg = new RegExp('\/benchmarks$|\/benchmarks|\/news$|\/news\/|\/shop|\/eventos$|\/eventos/|\/miembros$','g');
+                  return (location.pathname.match(reg))
                 }}                
               >
                 <i className="fal fa-compass" />

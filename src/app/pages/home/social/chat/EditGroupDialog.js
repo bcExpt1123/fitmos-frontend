@@ -58,7 +58,7 @@ const EditGroupDialog = ()=>{
                     <div className="group-name">
                       <input
                       type="text"
-                      placeholder="Group Name"
+                      placeholder=" Nombre del grupo"
                       value={groupName}
                       className="dialog-name"
                       onChange={changeDialogName} />

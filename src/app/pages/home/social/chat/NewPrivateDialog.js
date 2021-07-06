@@ -86,9 +86,9 @@ const NewPrivateDialog = ()=>{
   const searchRef = useRef();
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
-      <ChatHeader title={"Create new Chat"}>
+      <ChatHeader title={"crear nuevo chat"}>
         <div className="dialog-btn">
-          <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUser===null}>Done</button>
+          <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUser===null}>Aceptar</button>
         </div>
       </ChatHeader>
       {isLoader &&
@@ -102,7 +102,7 @@ const NewPrivateDialog = ()=>{
           value={keyword}
           onChange={changeSearch}
           required
-          placeholder="Search"
+          placeholder="Buscar"
           autoComplete="off"
           className="search-people"
           ref = {searchRef}
@@ -136,7 +136,7 @@ const NewPrivateDialog = ()=>{
           }}
         >
         { moreUsers.length>0 && <div className="more-users">
-          People
+          Personas
           {moreUsers.map(user=>
             <div className="more-user" key={user.id} onClick={triggerUser(user)}>
               <div className="avatar">

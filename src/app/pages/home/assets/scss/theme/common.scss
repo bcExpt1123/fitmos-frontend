@@ -62,10 +62,10 @@ a:hover {
   }
 }
 .btn-fs-blue{
-  background-color: $secondary-background-color;
+  background-color: $primary-button-background-color;
   color:white;
   &:hover {
-    background-color: $secondary-background-color;
+    background-color: $primary-button-hover-background-color;
     color:white;
   }
 }

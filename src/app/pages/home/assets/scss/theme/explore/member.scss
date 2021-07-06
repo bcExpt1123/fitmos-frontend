@@ -59,7 +59,6 @@
     .item{
       .name{
         .fullname{
-          width: 170px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -68,12 +67,12 @@
     }
   }
 }
-@media (max-width:375px){
+@media (max-width:330px){
   .member{
     .item{
       .name{
         .fullname{
-          width: 130px;
+          width: 80px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
@@ -82,12 +81,12 @@
     }
   }
 }
-@media (max-width:320px){
+@media (max-width:306px){
   .member{
     .item{
       .name{
         .fullname{
-          width: 100px;
+          width: 60px;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;

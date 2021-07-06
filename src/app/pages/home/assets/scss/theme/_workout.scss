@@ -20,7 +20,7 @@
 }
 .workout{
   background-color: #ffffff;
-  border-radius: 10px;
+  border-radius: 5px;
   .workout-header{
     padding:18px 60px;
     border-bottom: 1px solid #DDDDD7;
@@ -164,8 +164,8 @@
   }
 }
 .blue-btn{
-  border: 1px solid $secondary-background-color;
-  background-color: $secondary-background-color;  
+  border: 1px solid $primary-button-background-color;
+  background-color: $primary-button-background-color;  
   display:block;
 }
 @media (max-width: 1080px) {

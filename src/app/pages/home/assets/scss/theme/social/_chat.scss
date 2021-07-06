@@ -291,14 +291,14 @@ $fitemos-chat-panel: (
       .btn-fs-blue{
         border-radius: 15px;
         padding: 0 10px;
-        background-color:$secondary-background-color;
+        background-color:$primary-button-background-color;
       }
     }
     .search-people{
       outline:none;
       border-radius: 4px;
       padding:10px;
-      border: 1px solid $secondary-background-color;
+      border: 1px solid $primary-button-background-color;
       margin-bottom: 10px;
       width:100%;
     }
@@ -323,7 +323,7 @@ $fitemos-chat-panel: (
             i{
               background-color: white;
               border-radius: 50%;
-              color: $secondary-background-color;
+              color: $primary-button-background-color;
               border: 1px solid white;
             }
           }
@@ -445,7 +445,7 @@ $fitemos-chat-panel: (
   .dialogs-header{
     padding: 10px;
     i{
-      color:#B9B7B7;
+      color:rgba($basic-text-color, 0.8);
       margin-right: 16px;
     }
     .sub-header{
@@ -473,11 +473,11 @@ $fitemos-chat-panel: (
       input{
         border-radius: 4px;
         padding:5px;
-        border: 1px solid rgba($secondary-background-color, 0.8);
+        border: 1px solid rgba($primary-button-background-color, 0.8);
         outline: none;
-        width:190px;
+        width:188px;
         &:focus{
-          border:1px solid rgba($secondary-background-color, 1);
+          border:1px solid rgba($primary-button-background-color, 1);
         }
       }
       .search-close{
@@ -493,7 +493,7 @@ $fitemos-chat-panel: (
       margin-top: 17px;
       display: flex;
       button{
-        background-color: $secondary-background-color;
+        background-color: $primary-button-background-color;
         margin:0 35px;
         flex-grow: 1;
         color:white;

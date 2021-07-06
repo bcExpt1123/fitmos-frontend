@@ -188,7 +188,7 @@
         background-color: white;
         color: #333333;
         font-size: 16px !important;
-        width:190px;
+        width:197px;
       }
       .swap{
         background-color: $primary-button-background-color;
@@ -264,6 +264,9 @@
     width: 400px;
     .modal-content{
       border:0;
+      .modal-dialog{
+        margin-bottom: 0;
+      }
       .actions{
         .btn{
           font-size:16px !important;

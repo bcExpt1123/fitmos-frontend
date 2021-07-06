@@ -63,7 +63,7 @@ export default function JoinPost({post}) {
       </div>
       <div className="post-comments">
         {(post.previousCommentsCount>0) && 
-          <div className="cursor-pointer append" onClick={handlePreviousComments}> Mostrar all&nbsp;{post.previousCommentsCount}&nbsp;{post.previousCommentsCount>1?<>comentarios</>:<>comentario</>}</div>
+          <div className="cursor-pointer append" onClick={handlePreviousComments}> Ver más&nbsp;{post.previousCommentsCount>1?<>comentarios</>:<>comentario</>}&nbsp;({post.previousCommentsCount})</div>
         }
         {post.comments.length>0&&post.comments.map(comment=>
           <React.Fragment  key={comment.id}>

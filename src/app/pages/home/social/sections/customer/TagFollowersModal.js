@@ -17,7 +17,7 @@ const TagFollowersModal = ({show, followers, onClose }) => {
     >
       <Modal.Header closeButton>
         <Modal.Title className="w-100 text-center">
-          People
+          Personas
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

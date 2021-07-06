@@ -34,7 +34,7 @@ const NewGroupDialog = ()=>{
 
   return <ConnectyCubeWrapper>
       <div className="create-dialog-container">
-        <ChatHeader title="New Group Chat"/>
+        <ChatHeader title="Nuevo chat grupal"/>
       <div className="create-dialog-body">
         <div className="create-dialog-body-groupinfo">
           {img?<ImagePicker onUpload={onUpload} url={img.url}/>:<ImagePicker onUpload={onUpload}/>}

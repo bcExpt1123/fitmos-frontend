@@ -143,7 +143,7 @@ const ListDialog = ()=> {
         <div className="dialogs-header">
           <div className="sub-header">
             <div className="title">
-              <i className="cursor-pointer fal fa-window-close" onClick={handleChatClose}/>
+              <i className="cursor-pointer fas fa-chevron-left" onClick={handleChatClose}/>
               {searchFieldShow ? <div className="search-controls">
                 <input className="" value={searchValue} onChange={handleSearchValue} ref={searchRef}/>
                 <button className="search-close btn" onClick={searchFieldClose}>Cancel</button>
@@ -153,9 +153,9 @@ const ListDialog = ()=> {
               }
             </div>
             <div className="actions">
-              <i className="cursor-pointer fal fa-search" title="Buscar" onClick={searchFieldDisplay}/>
-              <i className="cursor-pointer fal fa-plus-circle" title="Nuevo Chat"  onClick={newDialog}/>
-              <i className="cursor-pointer fal fa-user-friends" title="Nuevo Chat Grupal " onClick={newGroupDialog}/>
+              <i className="cursor-pointer fas fa-search" title="Buscar" onClick={searchFieldDisplay}/>
+              <i className="cursor-pointer fas fa-plus-circle" title="Nuevo Chat"  onClick={newDialog}/>
+              <i className="cursor-pointer fas fa-user-friends" title="Nuevo Chat Grupal " onClick={newGroupDialog}/>
             </div>
           </div>
         </div>

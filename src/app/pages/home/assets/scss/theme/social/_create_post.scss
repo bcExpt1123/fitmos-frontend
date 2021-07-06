@@ -76,13 +76,13 @@
         }
       }
       .MuiChip-outlinedPrimary{
-        color:$secondary-background-color;
-        border: 1px solid $secondary-background-color;
+        color:$primary-button-background-color;
+        border: 1px solid $primary-button-background-color;
       }
       .MuiChip-deleteIconOutlinedColorPrimary{
-        color:rgba($secondary-background-color,0.7);
+        color:rgba($primary-button-background-color,0.7);
         &:hover{
-          color:$secondary-background-color;
+          color:$primary-button-background-color;
         }
       }
       .btn-primary{

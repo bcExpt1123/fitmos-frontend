@@ -1169,9 +1169,9 @@ const onReadingRequest = (id)=>
 function* onReadingPost({payload}){
   const currentUser = yield select(({auth})=>auth.currentUser);
   try{
-    if(currentUser.customer.id!=payload.customer_id){
+    // if(currentUser.customer.id!=payload.customer_id){
       const result = yield call(onReadingRequest, payload.id);
-    }    
+    // }    
   }catch(e){
 
   }

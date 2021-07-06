@@ -83,10 +83,8 @@ const Submenu = ({open,show,openCreatingPost} )=>{
         animation={false}
         centered
       >
-      <Modal.Header closeButton>
-        </Modal.Header>
         <Modal.Body>
-          <h3>¿Está seguro que desea cerrar sesión?</h3>
+          <h3 style={{margin:'14px'}}>¿Está seguro que desea cerrar sesión?</h3>
         </Modal.Body>
         <Modal.Footer>
         <Button variant="logout-modal-button" onClick={handleCloseForm}>
