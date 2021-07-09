@@ -16,17 +16,19 @@ import {
 } from "./actions";
 import {
   setItemValue as setPeopleValue,
+  findFriends
 } from "../people/actions";
 import {
   refreshPosts
 } from "../post/actions";
 import {
-  createDialog
+  createDialog,
+  setItemValue as setDialogItemValue
 } from "../dialogs/actions";
 
 import { http } from "../../services/api";
-import { ca } from "date-fns/locale";
-import { LiveTvOutlined, SelectAllOutlined } from "@material-ui/icons";
+// import { ca } from "date-fns/locale";
+// import { LiveTvOutlined, SelectAllOutlined } from "@material-ui/icons";
 
 const searchNotificationsRequest = ()=>
   http({
@@ -293,6 +295,10 @@ function* onMute({payload}){
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
+    yield put(findFriends());
+    const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+    selectedDialog.owner.relation = 'muted';
+    yield put(setDialogItemValue({name:'selectedDialog',value:selectedDialog}));
   }catch(error){
     yield put(setItemValue({name:'muteDisabled',value:false}));
   }  
@@ -314,6 +320,10 @@ function* onUnmute({payload}){
     const username = yield select(({people})=>people.username);
     if(result.customer && username.id == result.customer.id)yield put(setPeopleValue({name:'username',value:result.customer}));
     yield put(refreshPosts());
+    yield put(findFriends());
+    const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+    selectedDialog.owner.relation = '';
+    yield put(setDialogItemValue({name:'selectedDialog',value:selectedDialog}));
   }catch(error){
     yield put(setItemValue({name:'muteDisabled',value:false}));
   }    

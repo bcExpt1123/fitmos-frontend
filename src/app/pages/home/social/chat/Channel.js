@@ -11,7 +11,7 @@ import Message from './components/Message';
 import ChatService from '../../services/chat-service';
 import { toAbsoluteUrl } from "../../../../../_metronic/utils/utils";
 import { ChatLayoutUtil } from './helper/utils';
-import { editGroupDialog, setItemValue, deleteGroupDialog } from '../../redux/dialogs/actions';
+import { editGroupDialog, setItemValue, deleteGroupDialog, checkOwnerSelectedDialog } from '../../redux/dialogs/actions';
 import { deleteMessage, updateMessageBody } from "../../redux/messages/actions";
 import { mute, unmute } from "../../redux/notification/actions";
 import { convertTimeSeconds } from "../../../../../lib/common";
@@ -19,6 +19,7 @@ import { getImageLinkFromUID } from './helper/utils';
 import DropDown from "../../components/DropDown";
 
 const Channel = ()=> {
+  const [refresh, setRefresh] = useState(false);
   const selectedDialog = useSelector(({dialog})=>dialog.selectedDialog);
   let title;
   if(selectedDialog){
@@ -191,8 +192,10 @@ const Channel = ()=> {
     setIsFetchingMsg(false);
     getDialogInfo();
     setIsAlready(true);
-    console.log(isAlready,isFetchingMsg);
   },[selectedDialog]);
+  useEffect(()=>{
+    dispatch(checkOwnerSelectedDialog())
+  },[]);
   useEffect(()=>{
     window.addEventListener('resize', handleResize);
     window.addEventListener('click', handleDocumentClick);
@@ -235,12 +238,15 @@ const Channel = ()=> {
   }
   const history = useHistory();
   const viewProfile = ()=>{
+    setRefresh(refresh + 1);
     history.push('/'+ selectedDialog.owner.username);
   }
   const handleMute = ()=>{
+    setRefresh(refresh + 1);
     dispatch(mute(selectedDialog.owner.id));
   }
   const handleUnmute = ()=>{
+    setRefresh(refresh + 1);
     dispatch(unmute(selectedDialog.owner.id));
   }
   const deleteChat = ()=>{
@@ -272,7 +278,7 @@ const Channel = ()=> {
           {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participantes</div>}
           {selectedDialog.type==3&&<div className="participants">{false&&selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
         </div>
-        <DropDown>
+        <DropDown refresh={refresh}>
           {({show,toggleHandle,setShow})=>(
             <div className=" dropdown">
               <button type="button" className={"btn dropbtn"} onClick={toggleHandle}>
@@ -282,9 +288,9 @@ const Channel = ()=> {
               <div className={classnames("dropdown-menu dropdown-menu-right" ,{showmenu:show})}>
                 {selectedDialog.type==3&&<a className={"dropdown-item"} onClick={viewProfile}>Ver perfil</a>}
                 {selectedDialog.type==3&&<>
-                  {selectedDialog.owner.relation == 'muted'?<a className={"dropdown-item"} onClick={handleMute}>Quitar silenciado</a>
+                  {selectedDialog.owner.relation === 'muted'?<a className={"dropdown-item"} onClick={handleUnmute}>Quitar silenciado</a>
                   :
-                  <a className={"dropdown-item"} onClick={handleUnmute}>Silenciar</a>}
+                  <a className={"dropdown-item"} onClick={handleMute}>Silenciar</a>}
                 </>}
                 {selectedDialog.type==2&&<>{
                   selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Leave Chat</a>

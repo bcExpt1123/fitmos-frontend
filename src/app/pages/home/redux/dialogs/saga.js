@@ -18,8 +18,10 @@ import {
   pulling,
   DIALOG_TYPE,
   updateRenderWordsCount,
+  checkOwnerSelectedDialog
 } from "./actions";
 import ChatService from '../../services/chat-service';
+import { http } from "../../services/api";
 
 function* onCreateDialog({payload}){
   let dialogs = yield select(({dialog})=>dialog.dialogs);
@@ -341,6 +343,23 @@ function* onUpdateRenderWordsCount(){
   const count = yield select(({dialog})=>dialog.renderWordsCount);
   yield put(setItemValue({name:'renderWordsCount',value:count + 1}));
 }
+const findCustomerRequest = (id)=>
+  http({
+    path: "customers/"+id+"/profile",
+    method: "GET"
+  }).then(response => response.data);
+function* onCheckOwnerSelectedDialog(){
+  const selectedDialog = yield select(({dialog})=>dialog.selectedDialog);
+  try{
+    if(selectedDialog){
+      const customer = yield call(findCustomerRequest, selectedDialog.owner.id);
+      selectedDialog.owner.relation = customer.relation;
+      yield put(setItemValue({name:'selectedDialog',value:selectedDialog}));
+    }
+  } catch (error){
+    console.log(error)
+  }
+}
 export default function* rootSaga() {
   yield takeLeading(createDialog,onCreateDialog);
   yield takeLeading(addNewDialog,onAddNewDialog);
@@ -354,5 +373,6 @@ export default function* rootSaga() {
   yield takeLeading(updateGroupDialogImage,onUpdateGroupDialogImage);
   yield takeLeading(deleteGroupDialogImage,onDeleteGroupDialogImage);
   yield takeLeading(fetchDialog, onFetchDialog);
+  yield takeLeading(checkOwnerSelectedDialog, onCheckOwnerSelectedDialog);
   yield debounce(100, updateRenderWordsCount, onUpdateRenderWordsCount);
 }
