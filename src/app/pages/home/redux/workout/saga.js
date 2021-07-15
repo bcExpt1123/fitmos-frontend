@@ -25,7 +25,7 @@ function* onConfirmAlternate(){
   const originalVideo = yield select(({workout}) => workout.originalVideo);
   const video = yield select(({workout}) => workout.video);
   try {
-    const result = yield call(confirmAlternateRequest, {
+    yield call(confirmAlternateRequest, {
       shortcode_id:originalVideo.original_id,
       alternate_id:video.id,
     });

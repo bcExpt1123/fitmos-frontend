@@ -124,8 +124,9 @@ const reducer = persistReducer(
                   line.before_content = line.line.before_content.content.replace("@@multipler@@",Math.round(shortcode.multipler * line.line.before_content.multipler));
                 }
                 line.video = shortcode;
-                if(Array.isArray(line.line.after_content)){
-                  line.after_content = line.line.after_content.content.replace("@@multipler@@",Math.round(shortcode.multipler * line.line.before_content.multipler));
+                if(typeof line.line.after_content == "object" ){
+                  console.log(shortcode, line.line.after_content.multipler, shortcode.multipler * line.line.after_content.multipler)
+                  line.after_content = line.line.after_content.content.replace("@@multipler@@",Math.round(shortcode.multipler * line.line.after_content.multipler));
                 }
               }
               return line;
