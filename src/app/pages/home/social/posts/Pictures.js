@@ -3,8 +3,8 @@ import MetaTags from "react-meta-tags";
 import { useSelector, useDispatch } from "react-redux";
 import TwoColumn from "../../layouts/Two";
 import { matchPath, useHistory } from "react-router-dom";
-import { appendCustomerPostMediasAfter} from "../../redux/post/actions";
-import {findUsername, setItemValue} from "../../redux/people/actions";
+import { appendCustomerPostMediasAfter, setItemValue} from "../../redux/post/actions";
+import {findUsername} from "../../redux/people/actions";
 import ClickableMedia from "../sections/ClickableMedia";
 import PostModal from "../sections/PostModal";
 import { useInfiniteScroll } from "../../../../../lib/useInfiniteScroll";
@@ -34,7 +34,10 @@ const PicturesPage = () => {
     }      
   },[])
   useEffect(()=>{
-    if(username.type=='customer')dispatch(appendCustomerPostMediasAfter(username.id));
+    if(username.type=='customer'){
+      dispatch(setItemValue({name:'selfMediasLastId',value:-1}));
+      dispatch(appendCustomerPostMediasAfter(username.id));
+    }
   },[username]);
   const [show, setShow] = useState(false);
   const [media, setMedia] = useState(false);

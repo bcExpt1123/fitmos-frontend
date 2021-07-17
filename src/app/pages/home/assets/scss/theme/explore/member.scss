@@ -67,29 +67,35 @@
     }
   }
 }
-@media (max-width:330px){
+@media (max-width:400px){
   .member{
     .item{
       .name{
         .fullname{
-          width: 80px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          width: 100px;
         }
       }
     }
   }
 }
-@media (max-width:306px){
+
+@media (max-width:375px){
+  .member{
+    .item{
+      .name{
+        .fullname{
+          width: 85px;
+        }
+      }
+    }
+  }
+}
+@media (max-width:360px){
   .member{
     .item{
       .name{
         .fullname{
           width: 60px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
     }

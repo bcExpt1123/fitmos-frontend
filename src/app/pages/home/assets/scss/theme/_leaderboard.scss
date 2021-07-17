@@ -98,3 +98,23 @@
     }    
   } 
 }
+@media (max-width: 412px) {
+  .leaderboard-front .data .item {
+    .name{
+      flex: 0 0 36%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }    
+  } 
+}
+@media (max-width: 368px) {
+  .leaderboard-front .data .item {
+    .name{
+      flex: 0 0 33%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }    
+  } 
+}

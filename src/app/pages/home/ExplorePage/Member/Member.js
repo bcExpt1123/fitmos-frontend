@@ -10,12 +10,12 @@ const MemberPage = () => {
     window.addEventListener('resize', handleResize);
     const bodyClientWidth = document.querySelector('.member').clientWidth;
     const bodyClientHeight = document.querySelector('body').clientHeight;
-    setScrollWidth(bodyClientWidth);
     setMarginLeft( (document.getElementById('member').clientWidth - bodyClientWidth)/2 + 'px');
     document.querySelector('body').style.overflowX = 'hidden';
     if(bodyClientWidth>490){
       setScrollHeight(bodyClientHeight - 284);
     }else{
+      setScrollWidth(bodyClientWidth - 50);
       setScrollHeight(bodyClientHeight - 320);
     }
     return ()=>{
@@ -27,12 +27,13 @@ const MemberPage = () => {
     if(member){
       const bodyClientWidth = document.querySelector('.member').clientWidth;
       const bodyClientHeight = document.querySelector('body').clientHeight;
-      setScrollWidth(bodyClientWidth);
-      setMarginLeft( (document.getElementById('member').clientWidth - bodyClientWidth)/2 + 'px');
       if(bodyClientWidth>490){
-        setScrollHeight(bodyClientHeight - 185);
+        setScrollWidth(bodyClientWidth);
+        setMarginLeft( (document.getElementById('member').clientWidth - bodyClientWidth)/2 + 'px');
+        setScrollHeight(bodyClientHeight - 284);
       }else{
-        setScrollHeight(bodyClientHeight - 210);
+        // setScrollWidth(bodyClientWidth - 50);
+        // setScrollHeight(bodyClientHeight - 320);
       }
     }
   }

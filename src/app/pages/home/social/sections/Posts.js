@@ -42,7 +42,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
   }
   /** visibleMonistor */
   const visibleChange = (status)=>{
-    console.log(topMonitor, status)
+    // console.log(topMonitor, status)
     if(topMonitor)dispatch(setItemValue({name:topMonitor+"TopVisible",value:status}));
   }
   return (
@@ -53,6 +53,9 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
           }
         </ViewableMonitor>
       }
+      {/* <div style={{position:'fixed',top:'72px', backgroundColor:'white'}}>
+        {window.innerHeight},{document.documentElement.scrollTop},{document.documentElement.offsetHeight}
+      </div> */}
       {show&&
         <div className="tag-post cursor-pointer" onClick={OpenCreatingPost}>
           ¿Qué hay de nuevo {currentUser.customer.first_name}?

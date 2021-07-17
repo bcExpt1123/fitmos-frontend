@@ -274,9 +274,18 @@ const Channel = ()=> {
     <div className="chat-container" >
       <ChatHeader avatar = {avatar}>
         <div className="chat-title">
-          <h3 className="cursor-pointer" onClick={editGroup}>{title}</h3>
-          {selectedDialog.type==2&&<div className="participants">{selectedDialog.occupants_ids.length} participantes</div>}
-          {selectedDialog.type==3&&<div className="participants">{false&&selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>}
+          {selectedDialog.type==2&&
+            <>
+              <h3 className="cursor-pointer" onClick={editGroup}>{title}</h3>
+              <div className="participants">{selectedDialog.occupants_ids.length} participantes</div>
+            </>
+          }
+          {selectedDialog.type==3&&
+            <>
+              <h3>{title}</h3>
+              <div className="participants">{false&&selectedDialog.last_activity&&convertTimeSeconds(selectedDialog.last_activity)}</div>
+            </>
+          }
         </div>
         <DropDown refresh={refresh}>
           {({show,toggleHandle,setShow})=>(

@@ -1026,11 +1026,18 @@ function* onSyncPosts({payload}){
     customerPosts = yield select(({post})=>post.customerPosts);
     suggestedPosts = yield select(({post})=>post.suggestedPosts);
     oldNewsfeed = yield select(({post})=>post.oldNewsfeed);
+    if(window.location.pathname === '/newsfeed'){
+      customerPosts = [];
+    }else{
+      newsfeed = [];
+      suggestedPosts = [];
+      oldNewsfeed = [];
+    }
     const posts = [...newsfeed, ...customerPosts,...suggestedPosts,...oldNewsfeed];
     const filtedPosts = posts.filter(post=>payload.some(id=>id==post.id));
     postData = filtedPosts.map(post=>{
       const [fromId, toId] = getCommentRange(post);
-      return{
+      return {
         id:post.id,
         from_id:fromId,
         to_id:toId,

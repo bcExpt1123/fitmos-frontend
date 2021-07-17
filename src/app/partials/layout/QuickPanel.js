@@ -171,7 +171,7 @@ const QuickPanel = ()=> {
                 <span className="kt-notification-v2__item cursor-pointer" key={notification.id} onClick={()=>clickNotification(notification)}>
                   <div className="kt-notification-v2__item-icon">
                     {notification.action_type === "fitemos"?
-                      <img src={toAbsoluteUrl('/media/logos/logo-mini-md.png')} />
+                      <img src={toAbsoluteUrl('/media/logos/logo-mini-sm.png')} />
                       :
                       <img src={notification.action.avatarUrls['small']} alt={notification.action.first_name +' '+ notification.action.last_name}/>
                     }                  

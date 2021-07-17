@@ -396,6 +396,9 @@
 }
 @media (max-width: 390px) {
   .fitemos-menu-social {
+    .menu-first .search #search.clickable{
+      width: 155px;
+    }
     .menu-third{
       .link{
         padding: 13px 10px !important;       
@@ -413,6 +416,9 @@
 }
 @media (max-width: 370px) {
   .fitemos-menu-social {
+    .menu-first .search #search.clickable{
+      width: 145px;
+    }
     .menu-third{
       .nav-item:nth-of-type(3){
         .link{

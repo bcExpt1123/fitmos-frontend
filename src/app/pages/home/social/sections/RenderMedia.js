@@ -37,28 +37,46 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
         if(videoPlayerOpenModal===file.id){
           const width = parseFloat(file.width);
           const height = parseFloat(file.height);
-          if(width>height){
-            // player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.bottom=(player.current.video.video.offsetHeight/2 - player.current.video.video.offsetWidth * height/width/2)+"px";
-            const videoHeight = player.current.video.video.offsetWidth * height/width;
-            // containerRef.current.style.height=videoHeight+"px";
-            // containerRef.current.style.marginTop=(window.innerHeight - videoHeight)/2 + "px";
-            player.current.video.video.offsetParent.style.height=videoHeight+"px";
-            // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.height=videoHeight+"px";
-          }else{
-            const videoWidth = player.current.video.video.offsetHeight * width/height;
-            // containerRef.current.style.width=videoWidth+"px";
-            // containerRef.current.style.marginTop=(window.innerHeight - videoWidth)/2 + "px";
-            player.current.video.video.offsetParent.style.width=videoWidth+"px";
-            // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.width=videoWidth+"px";
-            player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.width=player.current.video.video.offsetHeight * width/height+"px";
-            player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.left=(player.current.video.video.offsetWidth/2 - player.current.video.video.offsetHeight * width/height/2)+"px";
-          }
-          if(player.current){
-            if(videoPlayerOpenCurrentTime.id == file.id){
-              player.current.seek(videoPlayerOpenCurrentTime.time);
-              dispatch(setItemValue({name:"videoPlayerOpenCurrentTime",value:{id:-1, time:0}}));
+          if(window.innerWidth>800){
+            if(width>height){
+              // player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.bottom=(player.current.video.video.offsetHeight/2 - player.current.video.video.offsetWidth * height/width/2)+"px";
+              const videoHeight = player.current.video.video.offsetWidth * height/width;
+              // containerRef.current.style.height=videoHeight+"px";
+              // containerRef.current.style.marginTop=(window.innerHeight - videoHeight)/2 + "px";
+              player.current.video.video.offsetParent.style.height=videoHeight+"px";
+              // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.height=videoHeight+"px";
+            }else{
+              const videoWidth = player.current.video.video.offsetHeight * width/height;
+              // containerRef.current.style.width=videoWidth+"px";
+              // containerRef.current.style.marginTop=(window.innerHeight - videoWidth)/2 + "px";
+              player.current.video.video.offsetParent.style.width=videoWidth+"px";
+              // player.current.video.video.offsetParent.parentNode.parentNode.parentNode.style.width=videoWidth+"px";
+              player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.width=player.current.video.video.offsetHeight * width/height+"px";
+              player.current.video.video.nextElementSibling.nextElementSibling.nextElementSibling.style.left=(player.current.video.video.offsetWidth/2 - player.current.video.video.offsetHeight * width/height/2)+"px";
             }
-            setVideoTimeIndex(videoTimeIndex + 1);
+            if(player.current){
+              if(videoPlayerOpenCurrentTime.id == file.id){
+                player.current.seek(videoPlayerOpenCurrentTime.time);
+                dispatch(setItemValue({name:"videoPlayerOpenCurrentTime",value:{id:-1, time:0}}));
+              }
+              setVideoTimeIndex(videoTimeIndex + 1);
+            }
+          }else{
+            // if(window.innerWidth>window.innerHeight){
+            //   player.current.video.video.offsetParent.style.width=window.innerWidth+"px";
+            //   const videoHeight = window.innerWidth * height/width;
+            //   player.current.video.video.offsetParent.style.height=videoHeight+"px";
+            // }else{
+              if(width/height>window.innerWidth/window.innerHeight){
+                player.current.video.video.offsetParent.style.width=window.innerWidth+"px";
+                const videoHeight = window.innerWidth * height/width;
+                player.current.video.video.offsetParent.style.height=videoHeight+"px";
+              }else{
+                player.current.video.video.offsetParent.style.height=window.innerHeight+"px";
+                const videoWidth = window.innerHeight * width/height;
+                player.current.video.video.offsetParent.style.width=videoWidth+"px";
+              }
+            // }
           }
         }else{
           setTimeout(()=>setIndex(index+1), 100);
@@ -85,10 +103,25 @@ const RenderMedia = ({file, videoIndex, modal, status, onOpenModal, setDimension
         else {
           if(setDimensions)setDimensions([imageRef.current.naturalWidth, imageRef.current.naturalHeight]);
           if(modal){
-            if(imageRef.current.naturalWidth>imageRef.current.naturalHeight){
-              const imageHeight = imageRef.current.offsetWidth * imageRef.current.naturalHeight/imageRef.current.naturalWidth;
-              imageRef.current.style.height = imageHeight + "px";
-              imageRef.current.style.marginTop = (containerRef.current.offsetHeight - imageHeight)/2+"px";
+            console.log('modal')
+            if(window.innerWidth>800){
+              if(imageRef.current.naturalWidth>imageRef.current.naturalHeight){
+                const imageHeight = imageRef.current.offsetWidth * imageRef.current.naturalHeight/imageRef.current.naturalWidth;
+                imageRef.current.style.height = imageHeight + "px";
+                imageRef.current.style.marginTop = (containerRef.current.offsetHeight - imageHeight)/2+"px";
+              }
+            }else{
+              console.log(imageRef.current.naturalWidth/imageRef.current.naturalHeight,window.innerWidth/window.innerHeight,imageRef.current.naturalWidth,imageRef.current.naturalHeight,window.innerWidth,window.innerHeight)
+              if(imageRef.current.naturalWidth/imageRef.current.naturalHeight>window.innerWidth/window.innerHeight){
+                console.log('height')
+                const imageHeight = window.innerWidth * imageRef.current.naturalHeight/imageRef.current.naturalWidth;
+                imageRef.current.style.height = imageHeight + "px";
+                imageRef.current.style.marginTop = (containerRef.current.offsetHeight - imageHeight)/2+"px";
+              }else{
+                const imageWidth = window.innerHeight * imageRef.current.naturalWidth/imageRef.current.naturalHeight;
+                console.log('width',imageWidth)
+                imageRef.current.style.width = imageWidth + "px";
+              }
             }
           }
         }

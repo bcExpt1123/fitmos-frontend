@@ -41,7 +41,7 @@ const NewGroupDialog = ()=>{
           <div className="form-wrapper">
             <input
               type="text"
-              placeholder="Group Name"
+              placeholder="Nombre del grupo"
               value={groupName}
               className="dialog-name"
               onChange={changeDialogName} />
@@ -49,7 +49,7 @@ const NewGroupDialog = ()=>{
         </div>
         <div className="create-dialog-body-btn">
           <button onClick={nextScreen} className="btn-fs-blue" disabled={groupName==="" || groupName.length<3}>
-            Next
+            Siguiente
           </button>
         </div>
       </div>

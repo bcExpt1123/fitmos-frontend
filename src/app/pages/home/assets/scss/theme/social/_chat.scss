@@ -49,6 +49,7 @@ $fitemos-chat-panel: (
 .fitemos-chat-panel{
   margin-left: auto;
   right:0!important;
+  overflow-y:unset;
   &.modal.show{
     display: contents !important;
   }
@@ -513,5 +514,26 @@ $fitemos-chat-panel: (
 @media (max-width: 767px){
   .fitemos-chat-panel {
     width: 100% !important;
+  }
+}
+@media (max-width: 427px){
+  .fitemos-chat-panel .dialogs-header .search-controls input{
+    width: 160px;
+  }
+}
+@media (max-width: 400px){
+  .fitemos-chat-panel .dialogs-header .search-controls input{
+    width: 150px;
+  }
+}
+@media (max-width: 390px){
+  .fitemos-chat-panel .dialogs-header .search-controls input{
+    width: 130px;
+  }
+}
+@media (max-width: 374px){
+  .fitemos-chat-panel .dialogs-header .search-controls {
+    input{ width: 120px; }
+    .search-close{ padding: 5px 0;}
   }
 }

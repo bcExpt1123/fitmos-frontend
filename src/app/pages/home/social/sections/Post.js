@@ -111,14 +111,14 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     if(CUSTOM_POST_TYPES.includes(post.type)){
       history.push(articlePath(post));
     }else{
-      if(window.innerWidth>800){
-        setShowPostModal(true);
-        setMedia(file);
-        // if(videoPlayer  === file.id){
-          dispatch(setItemValue({name:"videoPlayerOpenModal",value:file.id}));
-        // }
-        dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
-      }
+      // if(window.innerWidth>800){
+      setShowPostModal(true);
+      setMedia(file);
+      // if(videoPlayer  === file.id){
+        dispatch(setItemValue({name:"videoPlayerOpenModal",value:file.id}));
+      // }
+      dispatch(setItemValue({name:"videoPlayerModalMode",value:true}));
+      // }
     }
   }
   // const setSize = (width,height)=>{

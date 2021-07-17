@@ -97,6 +97,7 @@ const PostModal = ({show, media, onClose }) => {
     autoplaySpeed: 5000,
     fade: true,
     speed: 1000,
+    centerPadding: '0',
     lazyLoad: true,
     slidesToShow: 1,
     centerMode:true,

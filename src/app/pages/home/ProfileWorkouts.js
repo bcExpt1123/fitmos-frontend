@@ -93,7 +93,7 @@ const ProfileWorkouts = () => {
           )}
           {isFetching && 'Obteniendo más elementos de la lista...'}
         </div>
-        {showCommentModal && <WorkoutCommentModal publishDate={publishDate} onClose={closeCommentModal} show={showCommentModal}/>}
+        {showCommentModal && <WorkoutCommentModal publishDate={publishDate} onClose={closeCommentModal} show={showCommentModal}  customerId={username.id}/>}
       </div>
     </TwoColumn>
   </>

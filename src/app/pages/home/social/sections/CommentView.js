@@ -13,9 +13,9 @@ const CommentView = ({comment})=>{
   const currentUser = useSelector(({ auth }) => auth.currentUser);
   const [show, setShow ] = useState(false);
   const [replyContent, setReplyContent] = useState("");
-  const openReplyComment = ()=>{
+  const openReplyComment = comment => ()=>{
     // if(!show)setTimeout(()=>commentTextarea.current.focus(),20);
-    setReplyContent(`@[${currentUser.customer.first_name} ${currentUser.customer.last_name}](${currentUser.customer.id}) `);
+    setReplyContent(`@[${comment.customer.first_name} ${comment.customer.last_name}](${comment.customer.id}) `);
     setShow(!show);
   }
   const commentTextarea = useRef();
@@ -95,7 +95,7 @@ const CommentView = ({comment})=>{
             &nbsp;
             Me gusta
           </span>
-          <button className="reply-comment" onClick={openReplyComment}>Responder</button>      
+          <button className="reply-comment" onClick={openReplyComment(comment)}>Responder</button>      
         </div>
         {currentUser.type==="customer" && show&&(
           <form onSubmit={onReplyFormSubmit}>
