@@ -1,4 +1,4 @@
-import { call, takeLeading, select,put, delay, race } from "redux-saga/effects";
+import { call, takeLeading, select,put, delay, takeEvery } from "redux-saga/effects";
 import {
   findNewsfeed, 
   setNewsfeed,   
@@ -1361,7 +1361,7 @@ export default function* rootSaga() {
   yield takeLeading(toggleLike, onToggleLike);
   yield takeLeading(  appendNextReplies,onAppendNextReplies);
   yield takeLeading(  hideReplies, onHideReplies );
-  yield takeLeading( readingPost, onReadingPost );
+  yield takeEvery( readingPost, onReadingPost );
   yield takeLeading( appendSuggestedPosts, onAppendSuggestedPosts );
   yield takeLeading( refreshSuggestedPosts, onRefreshSuggestedPosts );
   yield takeLeading( refreshPosts, onRefreshPosts);

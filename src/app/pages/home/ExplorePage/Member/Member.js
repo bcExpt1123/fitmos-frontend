@@ -13,6 +13,7 @@ const MemberPage = () => {
     setMarginLeft( (document.getElementById('member').clientWidth - bodyClientWidth)/2 + 'px');
     document.querySelector('body').style.overflowX = 'hidden';
     if(bodyClientWidth>490){
+      setScrollWidth(bodyClientWidth);
       setScrollHeight(bodyClientHeight - 284);
     }else{
       setScrollWidth(bodyClientWidth - 50);

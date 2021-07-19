@@ -83,7 +83,7 @@ export default function Newsfeed() {
                 <Sticky offsetTop={62} onChange={handleChangeSuggeted}>
                   {suggestedPosts.length>0 && <div className="font-size-14 font-weight-bold pt-4 pl-3 pb-3">Publicaciones Recomendadas</div>}
                   {(suggestedSticky&&oldPosts.length>0) &&<div className="font-size-14 font-weight-bold cursor-pointer old-posts-button" onClick={convertOld}>
-                      Older Posts
+                    Publicaciones antiguas
                     </div>
                   }
                 </Sticky>
@@ -94,7 +94,7 @@ export default function Newsfeed() {
         :
           <>
             <div className="newsfeed mt-2 mb-4">
-              <h3><a onClick={backNewsfeed}><i className="fas fa-arrow-left" /></a> <span className="font-weight-bold">Older Posts</span></h3>
+              <h3><a onClick={backNewsfeed}><i className="fas fa-arrow-left" /></a> <span className="font-weight-bold">Publicaciones antiguas</span></h3>
             </div>
             {<Posts posts={oldPosts} last={oldLast} dispatchAction={dispatchOldAction}  show={false} newsfeed={true} suggested={true} topMonitor={"oldNewsfeed"}/>}
           </>

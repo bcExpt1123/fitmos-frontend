@@ -89,13 +89,13 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
     // }
   }
   /** visibleMonistor */
-  const [visible, setVisible] = useState(false);
+  // const [visible, setVisible] = useState(false);
   const visibleChange = (status)=>{
     if(status){
       dispatch(readingPost(post));
       //play start
     }
-    setVisible(status);
+    // setVisible(status);
   }
   const findVideoIndex = (id)=>{
     const videos = post.medias.filter(media=>media.type==='video');
