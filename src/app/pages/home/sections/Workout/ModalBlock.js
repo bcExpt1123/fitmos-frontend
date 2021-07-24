@@ -75,7 +75,7 @@ const ModalBlock = ({ block,renderLine,setAll, handleOpen, onHide })=>{
   const renderCommentButton = ()=>{
     return ['sin_content','con_content', 'extra_sin', 'fit', 'strong_male', 'strong_female', 'cardio'].includes(block.slug) && (
       <button className={classnames("create-comment",{has:block.has_comment})} onClick={openCreateComment}>
-        <i className="fas fa-comment" />
+        <i className="far fa-comment" />
       </button>
     )
   }
