@@ -1,5 +1,5 @@
 import { LayoutProvider } from "recyclerlistview/web";
-import ConnectyCube from 'connectycube';
+import ConnectyCube from 'connectycube/dist/connectycube.min';
 import store from '../../../../../store/store';
 
 export class DialogLayoutUtil {

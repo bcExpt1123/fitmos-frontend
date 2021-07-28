@@ -1,5 +1,5 @@
 import React,{useState, useEffect} from "react";
-import ConnectyCube from 'connectycube';
+import ConnectyCube from 'connectycube/dist/connectycube.min';
 import ChatService from '../../../services/chat-service';
 
 const ConnectyCubeWrapper = ({children})=>{

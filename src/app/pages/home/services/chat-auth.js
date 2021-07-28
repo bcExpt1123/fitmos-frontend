@@ -1,4 +1,4 @@
-import ConnectyCube from 'connectycube';
+import ConnectyCube from 'connectycube/dist/connectycube.min'
 import store from '../../../store/store';
 import { http } from './api';
 

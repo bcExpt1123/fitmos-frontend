@@ -54,6 +54,7 @@ function* onFindNewsfeed(){
   try {
     const result = yield call(findNewsfeedRequest);
     if(!result.next){
+      yield put(setNewsfeed(result.newsfeed));
       yield put(setItemValue({name:"newsfeedLast",value:true}));
       yield put(setItemValue({name:"suggested", value:1}));
       yield put(appendSuggestedPosts());
@@ -82,7 +83,7 @@ function* onAppendNewsfeedAfter(){
     let result = yield call(appendNewsfeedAfterRequest, id,0);
     if(suggested === 0 ){
       if(!result.next){
-        console.log(result)
+        yield put(addNewsfeedAfter(result.newsfeed));
         yield put(setItemValue({name:"newsfeedLast",value:true}));
         yield put(setItemValue({name:"suggested", value:1}));
         yield put(appendSuggestedPosts());

@@ -1,4 +1,4 @@
-import ConnectyCube from 'connectycube'
+import ConnectyCube from 'connectycube/dist/connectycube.min'
 import UserModel from '../models/user'
 import store from '../store'
 import { fetchUsers } from '../actions/users'
