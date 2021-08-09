@@ -292,7 +292,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
                   {currentUser.type==="admin" && customer &&<>{customer.first_name} {customer.last_name}</>}
                 </span>
                 {(post.type=="workout")?<>
-                  &nbsp;completó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
+                  &nbsp;comentó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
                 </>:<>
                   {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
                   {location&&<>&nbsp;in {location}</>}

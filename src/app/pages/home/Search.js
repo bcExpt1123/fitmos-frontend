@@ -35,7 +35,7 @@ const Search = () => {
       <title>search -Fitemos </title>
       <meta
         name="description"
-        content="Search -Fitemos"
+        content="Buscar -Fitemos"
       />
     </MetaTags>
     <OneColumn>

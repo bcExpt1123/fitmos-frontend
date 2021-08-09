@@ -148,11 +148,11 @@ const LogInPage = ({
               <FormattedMessage id="LogInPage.Link.ForgotPassword" />
             </NavLink>
           </footer>
-          {isMobile() && mobileApp !== 'no' && (
+          {false && isMobile() && mobileApp !== 'no' && (
             <Modal
               size="md"
               dialogClassName="logout-modal"
-              show={showForm}
+              show={true}
               animation={false}
               centered
             >

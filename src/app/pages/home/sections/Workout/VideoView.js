@@ -173,7 +173,7 @@ const VideoView = ({onClose}) => {
         <button type="button" className={"btn back"} onClick={()=>{setInstructionShow(true)}}>
           Instrucciones
         </button>              
-        {currentUser&&currentUser.customer.current_condition>=originalVideo.level&&
+        {currentUser&&
           <button type="button" className={"btn swap"} onClick={handleAlernateModal}>
             Alternar
           </button>              

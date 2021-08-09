@@ -138,7 +138,7 @@ const AddUsers = ()=>{
   }
   return <ConnectyCubeWrapper>
     <div className="create-dialog-container">
-      <ChatHeader path={path} title={selectedDialog?"Add to Group":"Create new Group"}>
+      <ChatHeader path={path} title={selectedDialog?"Agregar al grupo":"Create new Group"}>
         <div className="dialog-btn">
           <button onClick={saveDialog} className="btn-fs-blue" disabled={selectedUsers.length===0}>Aceptar</button>
         </div>
@@ -154,7 +154,7 @@ const AddUsers = ()=>{
           value={keyword}
           onChange={changeSearch}
           required
-          placeholder="Search"
+          placeholder="Buscar"
           autoComplete="off"
           className="search-people"
           name="search" />

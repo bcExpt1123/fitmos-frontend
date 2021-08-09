@@ -233,7 +233,7 @@ console.log(msg, dialog);
   }
 
   sendChatAlertOnCreate(dialog) {
-    const message = 'Group is created'
+    const message = 'Grupo creado'
     chatService.sendMsgChatAlertOnCreate(dialog, message, GROUP_CHAT_ALERT_TYPE.CREATE)
   }
 

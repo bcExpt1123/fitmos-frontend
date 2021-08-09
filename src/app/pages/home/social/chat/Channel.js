@@ -82,11 +82,11 @@ const Channel = ()=> {
     }
   }
   const scrollToBottom = () => {
-    if (messagesListRef && messagesListRef.current) {
+    if (messagesListRef && messagesListRef.current && dataProvider._data.length>0) {
       try{
         messagesListRef.current.scrollToIndex(dataProvider._data.length - 1, false)
       }catch(e){
-        console.log(e);
+        console.log(e, dataProvider._data.length);
       }
     }
   }
@@ -302,7 +302,7 @@ const Channel = ()=> {
                   <a className={"dropdown-item"} onClick={handleMute}>Silenciar</a>}
                 </>}
                 {selectedDialog.type==2&&<>{
-                  selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Leave Chat</a>
+                  selectedDialog.user_id != currentUser.chat_id?<a className={"dropdown-item"} onClick={deleteChat}>Abandonar chat</a>
                   :
                   <a className={"dropdown-item"} onClick={editGroup}>Ajustes</a>
                 }

@@ -33,10 +33,10 @@ const SearchCustomersPage = () => {
   const [isFetching, setIsFetching] = useInfiniteScroll(fetchMoreListItems);
   return <>
     <MetaTags>
-      <title>Search people -Fitemos </title>
+      <title>Buscar people -Fitemos </title>
       <meta
         name="description"
-        content="Search people -Fitemos"
+        content="Buscar people -Fitemos"
       />
     </MetaTags>
     <OneColumn>

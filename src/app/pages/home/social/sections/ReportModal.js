@@ -34,10 +34,10 @@ const ReportModal = ({show, type, customer, post, onClose }) => {
       <Modal.Header closeButton>
         <Modal.Title>
           {customer&&
-            <>Report for {customer.first_name} {customer.last_name}</>
+            <>Reporte para {customer.first_name} {customer.last_name}</>
           }
           {post&&
-            <>Report for Post</>
+            <>Reporte para Post</>
           }
         </Modal.Title>
       </Modal.Header>
@@ -53,7 +53,7 @@ const ReportModal = ({show, type, customer, post, onClose }) => {
             className="btn btn-primary"
             type="submit"
           >
-            Send
+            Enviar
           </button>          
         </form>
       </Modal.Body>

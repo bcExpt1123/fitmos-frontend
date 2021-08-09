@@ -81,7 +81,7 @@ const EditGroupDialog = ()=>{
             </>
           }
           {selectedDialog!=null&&
-            <div className="created-user">created by {
+            <div className="created-user">Nombre del grupo {
               currentUser.chat_id == selectedDialog.user_id?<>you</>
               :<>{selectedDialog.owner.display}</>
             }</div>

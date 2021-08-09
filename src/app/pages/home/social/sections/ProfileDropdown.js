@@ -45,7 +45,7 @@ const ProfileDropdown = ()=>{
             </button>
             <div className={classnames("dropdown-menu",{show})}>
               {customer.relation === 'blocked'?
-                <a className={"dropdown-item"} onClick={()=>{handleUnblock();setShow(false)}} disabled={blockDisabled}>Unblock</a>
+                <a className={"dropdown-item"} onClick={()=>{handleUnblock();setShow(false)}} disabled={blockDisabled}>Desbloquear</a>
                 :
                 <>
                   <a className={"dropdown-item"} onClick={()=>{handleBlock();setShow(false)}} disabled={blockDisabled}>Bloquear</a>
