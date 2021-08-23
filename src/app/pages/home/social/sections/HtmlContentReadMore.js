@@ -1,7 +1,7 @@
 import React,{ useRef, useEffect, useState } from 'react';
 import { Markup } from "interweave";
-const SHOW_LESS_TEXT = 'Show Less';
-const SHOW_MORE_TEXT = 'Read More';
+const SHOW_LESS_TEXT = 'Colapsar';
+const SHOW_MORE_TEXT = 'Ver más';
 
 const HtmlContentReadMore = ({content}) => {
   const ref = useRef();

@@ -18,14 +18,14 @@ const FollowButton = ({customer, afterAction})=>{
     (customer&&customer.id != currentUser.customer.id)&&(
       customer.following?
         customer.following.status === 'rejeced'?
-          <button className="btn btn-custom-secondary follow">Rejected</button>
+          <button className="btn btn-primary follow">Rejected</button>
           :
           customer.following.status === 'pending'?
-          <button className="btn btn-custom-secondary follow">Requested</button>
+          <button className="btn btn-primary follow">Requested</button>
           :
           <button className="btn btn-custom-secondary follow" onClick={handleUnfollow} disabled={buttonDisabled}>Remover</button>
         :
-        <button className="btn btn-custom-third follow" onClick={handleFollow} disabled={buttonDisabled}>Agregar</button>
+        <button className="btn btn-primary follow" onClick={handleFollow} disabled={buttonDisabled}>Agregar</button>
     )    
   )
 }

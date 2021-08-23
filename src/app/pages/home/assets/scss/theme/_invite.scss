@@ -28,13 +28,10 @@
       display:none;
     }
   }
-  .dropdown-item{
-    button{
-      padding-left:10px!important;
-    }
-    &:active{
-      background-color:transparent;
-    }
+}
+.inviter-share-menu {
+  button{
+    margin: 0 10px;
   }
 }
 @media (max-width: 991px) {

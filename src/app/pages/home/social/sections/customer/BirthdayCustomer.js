@@ -29,7 +29,7 @@ export default function BirthdayCustomer({customer,post}) {
             :<div className="birthday">{post.label}</div>}
         </div>
       </NavLink>
-      {(customer.chat_id && currentUser.customer.blockedChatIds.includes(customer.chat_id)===false) ?<i className="fal fa-comments"  onClick={handleClick} />:<i className=" fa-comments"/>}
+      {(customer.chat_id && currentUser.customer.blockedChatIds.includes(customer.chat_id)===false) ?<i className="fal fa-comments"  onClick={handleClick} />:<i className=""/>}
     </div>
   );
 }

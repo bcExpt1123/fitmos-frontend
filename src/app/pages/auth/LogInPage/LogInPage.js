@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
 import MetaTags from "react-meta-tags";
@@ -49,17 +49,19 @@ const LogInPage = ({
   const appleHandleError = (error)=>{
     logInAppleFailed(error);
   }
-  const mobileApp = reactLocalStorage.get('mobile-app');
+  const [mobileApp, setMobileApp] = useState(()=>reactLocalStorage.get('mobile-app'));
   const handleCloseForm = () => {
     reactLocalStorage.set('mobile-app', 'no');
+    setMobileApp('no');
   }
   const handleRedirectApp = () => {
+    setMobileApp('no');    
     if(isIOS()){
       setTimeout(function () { window.location.replace("https://apps.apple.com/us/app/fitemos/id1549350889"); }, 25);
-      window.location.replace("appname://");
+      window.location.replace("http://onelink.to/m5fkyh");
     }else{
       setTimeout(function () { window.location.replace("https://play.google.com/store/apps/details?id=com.dexterous.fitemos"); }, 25);
-      window.location.replace("appname://");
+      window.location.replace("http://onelink.to/m5fkyh");
     }
   }
   return (
@@ -148,7 +150,7 @@ const LogInPage = ({
               <FormattedMessage id="LogInPage.Link.ForgotPassword" />
             </NavLink>
           </footer>
-          {false && isMobile() && mobileApp !== 'no' && (
+          {true && isMobile() && mobileApp !== 'no' && (
             <Modal
               size="md"
               dialogClassName="logout-modal"
@@ -161,10 +163,10 @@ const LogInPage = ({
                 <p>En el app de Fitemos podrás vivir la experiencia completa de entrenar y conectarte con tus compañeros. Descárgala ya</p>
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="logout-modal-button" onClick={handleCloseForm}>
+                <Button className="btn-primary" variant="logout-modal-button" onClick={handleCloseForm}>
                   No 
                 </Button>
-                <Button variant="logout-modal-button" onClick={handleRedirectApp}>
+                <Button className="btn-primary" variant="logout-modal-button" onClick={handleRedirectApp}>
                   Si
                 </Button>
               </Modal.Footer>          

@@ -5,6 +5,7 @@ import { MentionsInput, Mention } from 'react-mentions';
 import classnames from "classnames";
 import { NimblePicker } from "emoji-mart";
 import "emoji-mart/css/emoji-mart.css";
+import data from "emoji-mart/data/google.json";
 import useSWR from "swr";
 import { useHistory } from "react-router-dom";
 import TagFollower from './TagFollower';
@@ -20,8 +21,8 @@ import { colonsToUnicode } from '../../services/emoji';
 import { httpApi } from "../../services/api";
 
 const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
-  const { data, error } = useSWR('customers/all', httpApi);
-  const users = data?data.data.customers:null;
+  const { data:customerData } = useSWR('customers/all', httpApi);
+  const users = customerData?customerData.data.customers:null;
   const [content, setContent] = useState("");
   const textRef = useRef();
   const [type, setType] = useState("post");
@@ -288,14 +289,14 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
               {currentUser.type==="admin" && customer && <Avatar pictureUrls={customer.avatarUrls} size="xs" />}
               <div className="with-location">
                 <span className="full-name">
-                  {currentUser.type==="customer" &&<>{currentUser.name}</>}
-                  {currentUser.type==="admin" && customer &&<>{customer.first_name} {customer.last_name}</>}
+                  {currentUser.type==="customer" &&<strong>{currentUser.name}</strong>}
+                  {currentUser.type==="admin" && customer &&<strong>{customer.first_name} {customer.last_name}</strong>}
                 </span>
                 {(post.type=="workout")?<>
                   &nbsp;comentó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
                 </>:<>
-                  {(tagFollowers.length>0 || location)&&<>&nbsp;is</>}
-                  {location&&<>&nbsp;in {location}</>}
+                  {(tagFollowers.length>0 || location)&&<>&nbsp;está</>}
+                  {location&&<>&nbsp;en <strong>{location}</strong></>}
                   {tagFollowers.length>0&&<>&nbsp;with</>}
                   &nbsp;
                   {

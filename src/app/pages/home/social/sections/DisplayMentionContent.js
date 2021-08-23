@@ -1,8 +1,8 @@
 import React,{useState, useEffect} from "react";
 import Line from "./DisplayMentionLine";
 
-const SHOW_LESS_TEXT = 'Show Less';
-const SHOW_MORE_TEXT = 'Read More';
+const SHOW_LESS_TEXT = 'Colapsar';
+const SHOW_MORE_TEXT = 'Ver más';
 const DisplayMentionContent = ({content})=>{
   const [lines, setLines] = useState([]);
   const [show, setShow] = useState(false);

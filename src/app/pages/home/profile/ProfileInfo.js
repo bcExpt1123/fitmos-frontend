@@ -190,7 +190,7 @@ const ProfileInfo = ({customer}) => {
           <div className="workout">
             <h3 className="mb-4">Entrenamiento</h3>
             <div className="progress-bar-wrapper">
-              <div className="medal-image">
+              {/* <div className="medal-image">
                 {check()?
                   customer.medals.levelMedalImage&&(
                     <img src={customer.medals.levelMedalImage} alt="workout-medal"/>
@@ -200,7 +200,7 @@ const ProfileInfo = ({customer}) => {
                     <img src={done.levelMedalImage} alt="workout-medal"/>
                   )
                 }
-              </div>
+              </div> */}
               {check()?
                 <div className="progress-bar-body">
                   <span className="label">Nivel</span>
@@ -216,7 +216,7 @@ const ProfileInfo = ({customer}) => {
               }
             </div>          
             <div className="progress-bar-wrapper">
-              <div className="medal-image">
+              {/* <div className="medal-image">
                 {check()?
                   customer.medals.toWorkoutImage&&(
                     <img src={customer.medals.toWorkoutImage} alt="workout-medal"/>
@@ -226,7 +226,7 @@ const ProfileInfo = ({customer}) => {
                     <img src={done.toWorkoutImage} alt="workout-medal"/>
                   )
                 }
-              </div>
+              </div> */}
               <div className="progress-bar-body">
                 <span className="label">Rango</span>
                 {check()?
@@ -245,11 +245,11 @@ const ProfileInfo = ({customer}) => {
             {check()?
               customer.weights === 'con pesas' && (
                 <div className="progress-bar-wrapper">
-                  <div className="medal-image">
-                    {/* {customer.medals.toMonthWorkoutImage&&(
+                  {/* <div className="medal-image">
+                    {customer.medals.toMonthWorkoutImage&&(
                         <img src={customer.medals.toMonthWorkoutImage} alt="workout-medal"/>
-                    )} */}
-                  </div>
+                    )}
+                  </div> */}
                   <div className="progress-bar-body">
                     <span className="label">Peso</span>
                     <span className="value">{caculatePercent(customer)}%</span>
@@ -260,11 +260,11 @@ const ProfileInfo = ({customer}) => {
               :
               currentUser.customer.weights === 'con pesas' && (
                 <div className="progress-bar-wrapper">
-                  <div className="medal-image">
-                    {/* {done.toMonthWorkoutImage&&(
+                  {/* <div className="medal-image">
+                    {done.toMonthWorkoutImage&&(
                       <img src={done.toMonthWorkoutImage} alt="workout-medal"/>
-                    )} */}
-                  </div>
+                    )}
+                  </div> */}
                   <div className="progress-bar-body cursor-pointer"  onClick={openDumbellsModal}>
                     <span className="label">Peso</span>
                     <span className="value">{caculatePercent(currentUser.customer)}%</span>

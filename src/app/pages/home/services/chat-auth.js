@@ -1,5 +1,4 @@
 import ConnectyCube from 'connectycube/dist/connectycube.min'
-import store from '../../../store/store';
 import { http } from './api';
 
 class AuthService {
@@ -19,10 +18,10 @@ class AuthService {
         }
       },
         debug: {
-          mode: 0
+          mode: 1
         } 
       }
-    ];    
+    ];
     await ConnectyCube.init(...config)
     // return authService.autologin()
   }

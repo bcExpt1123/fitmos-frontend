@@ -47,7 +47,6 @@ export default function Leaderboard() {
         setIsLoading(true);
       }
     }
-    console.log(month, gender)
     fetchData();
   },[month,gender]);
   const labelRef = useRef();

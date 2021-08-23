@@ -10,7 +10,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon,
 } from "react-share";
-import {DropdownButton, Dropdown} from 'react-bootstrap';
+import { Button, Menu, MenuItem } from '@material-ui/core';
 
 import { http } from "../services/api";
 
@@ -32,6 +32,15 @@ const SectionInvite = () => {
     }
     fetchData();
   },[]);// eslint-disable-line react-hooks/exhaustive-deps
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };  
   return(
     <div className="invite pt-5 pb-4">
       <h3 className="text-center">{currentUser&&currentUser.customer.first_name}, ¡Compartamos el Fitness!</h3>
@@ -42,11 +51,22 @@ const SectionInvite = () => {
         <li>El descuento será renovable. Siempre y cuando tengas uno o más invitados activos.</li>
         <li>Haz click en el boton de abajo, genera tu enlace e invita a tus amigos.</li>
       </ul>
-      <DropdownButton
+      <Button
         title="INVITAR"
         id="dropdown-invitation"
+        aria-controls="inviter-menu"
+        aria-haspopup="true"
+        onClick={handleClick}
+        className="primary-button"
+      >INVITAR</Button>
+      <Menu
+        id="inviter-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
       >
-        <Dropdown.Item eventKey="1">
+        <MenuItem onClick={handleClose} className="inviter-share-menu">
           <FacebookShareButton
             url={referralUrl}
             quote={text}>
@@ -72,8 +92,8 @@ const SectionInvite = () => {
           >
             <WhatsappIcon size={32} round />
           </WhatsappShareButton>
-        </Dropdown.Item>
-      </DropdownButton>
+        </MenuItem>
+      </Menu>
     </div>
 )};
 

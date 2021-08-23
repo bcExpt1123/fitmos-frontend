@@ -32,7 +32,7 @@ const EventsPage = () => {
       <section className="evento" id="evento">
         {/* <h4 style={{color:'rgba(51, 51, 51, 0.5)'}}>Todas las semanas publicamos comercios nuevos</h4> */}
         <div className="row">
-          {events&&events.map((event)=>
+          {events&&events.length>0?events.map((event)=>
             <article className="col-12 col-md-3"  key={event.id}>
               <div className="content">
                 <NavLink
@@ -61,6 +61,8 @@ const EventsPage = () => {
                 </NavLink> 
               </div>
             </article>
+          ):(
+            <article className="col-12 col-md-12"><div className="content p-4"><div>No hay eventos programados</div></div></article>
           )}
           {meta&&meta.page<meta.pageTotal&&isFetching && 'Obteniendo más elementos de la lista...'}
         </div>

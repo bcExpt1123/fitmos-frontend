@@ -1,4 +1,4 @@
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, useRef } from 'react';
 import { useDispatch,useSelector } from "react-redux";
 import classnames from "classnames";
 import { NavLink, useHistory } from "react-router-dom";
@@ -87,8 +87,8 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     dispatch(mute(post.customer_id));
     setRefresh(refresh + 1);
   }
-  const SHOW_LESS_TEXT = 'Show Less';
-  const SHOW_MORE_TEXT = 'Read More';
+  const SHOW_LESS_TEXT = 'Colapsar';
+  const SHOW_MORE_TEXT = 'Ver más';
   const [showMore, setShowMore] = useState(false);
   const toggleReadMore = ()=>{
     setShowMore(!showMore);
@@ -199,6 +199,15 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
     }
     return "";
   }
+  const headerInnerRef = useRef();
+  useEffect(()=>{
+    if(headerInnerRef && headerInnerRef.current && window.innerWidth < 450){
+      headerInnerRef.current.style.width=(window.innerWidth-100)+"px";
+      headerInnerRef.current.style.verticalAlign="text-top";
+      headerInnerRef.current.style.marginTop="-6px";
+      headerInnerRef.current.style.marginBottom="13px";
+    }
+  }, [headerInnerRef])
   return (
     <>
       <div className="post-header">
@@ -236,7 +245,7 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
               )}
             </DropDown>
             <ReportModal type={"post"} post={post} show={showReportModal} onClose={onReportModalClose}/>
-            <span style={{display:"inline-block",verticalAlign:"super"}}>
+            <span ref={headerInnerRef}>
               <span className="full-name">
                 <NavLink
                   to={"/"+post.customer.username}

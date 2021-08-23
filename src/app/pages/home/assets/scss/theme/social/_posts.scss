@@ -67,6 +67,10 @@
     .avatar{
       margin-right: 10px;        
     }
+    &>span{
+      display: inline-block;
+      vertical-align: super;
+    }
     .follower:last-of-type{
       .spot{
         display:none;
@@ -318,7 +322,7 @@
   }
   .social-post{
     .post-header {
-      span{
+      &>span{
         .full-name{
           .link-profile{
             white-space: nowrap;

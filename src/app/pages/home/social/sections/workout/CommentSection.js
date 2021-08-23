@@ -31,7 +31,7 @@ const WorkoutCommentSection = ({comment})=>{
     setShowEdit(true);
   }
   return <div className="workout">
-  {comment.workout.map((line, index)=>
+  {Array.isArray(comment.workout) && comment.workout.map((line, index)=>
     renderLine(line, index)
   )}
   {parseInt(currentUser.customer.id) === parseInt(comment.customer_id) && !showEdit && (

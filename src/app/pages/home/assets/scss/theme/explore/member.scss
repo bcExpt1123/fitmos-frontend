@@ -48,9 +48,14 @@
       border:0;
       border-radius: 3px;
       font-size: 14px;
-      background-color: #BDD631;
+      background-color: $primary-button-background-color;
       color:white;
       padding: 9px;
+	  &.btn-custom-secondary {
+		background-color: white;
+		color: rgba(51,51,51,0.5);
+		border: 1px solid rgba(51,51,51,0.2);
+	  }
     }
   }
 }

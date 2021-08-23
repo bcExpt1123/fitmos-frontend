@@ -1,8 +1,8 @@
 import React from "react";
-import { createMuiTheme } from "@material-ui/core";
+import { createTheme } from "@material-ui/core";
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/styles";
 
-const theme = createMuiTheme(
+const theme = createTheme(
   /**
    * @see https://material-ui.com/customization/themes/#theme-configuration-variables
    */

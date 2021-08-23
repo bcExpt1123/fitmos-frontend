@@ -65,7 +65,7 @@ export default function Posts({posts,last,dispatchAction, show, newsfeed, sugges
         </div>
       }
       <div>
-        {posts.length > 0&&
+        {posts.length > 0 &&
           <>{
             posts.map(post=>
               ['birthday','join'].includes(post.type)?
