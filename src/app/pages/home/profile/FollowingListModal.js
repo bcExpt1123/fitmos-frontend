@@ -55,22 +55,23 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
     >
       <Modal.Header closeButton>
         <Modal.Title className="text-center w-100">
+          Lista de&nbsp;
           {key === 'followings'?<>
-            Followings
+            Partners
           </>:<>
-          Followers&nbsp;&nbsp;
+            Seguidores&nbsp;&nbsp;
           </>}
-          &nbsp;  List
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Tabs defaultActiveKey={tabKey} id="list" onSelect={(k) => setKey(k)}>
-          <Tab eventKey="followings" title="Followings">
+          <Tab eventKey="followings" title="Partners">
             <div ref={followingsRef}>
               {followings.map((following)=><div className="follow" key={following.id}>
                   <NavLink
                     to={"/"+following.customer.username}
                     className={"link-profile"}
+                    onClick={onClose}
                   >
                     <CustomerInfo customer={following.customer} />
                   </NavLink>
@@ -83,7 +84,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                   {following.status === 'accepted'&&<>
                     {currentUser.type==="customer" && currentUser.customer.id === customer.id&&
                       <div>
-                        <button className="btn btn-custom-secondary unfollow" onClick={handleUnfollow(following.customer_id)} disabled={buttonDisabled}>Unfollow</button>
+                        <button className="btn btn-custom-secondary unfollow" onClick={handleUnfollow(following.customer_id)} disabled={buttonDisabled}>Remover</button>
                       </div>
                     }
                   </>
@@ -96,7 +97,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
               </div>}
             </div>
           </Tab>
-          <Tab eventKey="followers" title="Followers" ref={followersRef}>
+          <Tab eventKey="followers" title="Seguidores" ref={followersRef}>
             <div ref={followersRef}>
               {followers.map((follower)=><div className="follow" key={follower.id}>
                 <NavLink

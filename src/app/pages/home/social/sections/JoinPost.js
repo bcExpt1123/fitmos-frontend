@@ -54,7 +54,13 @@ export default function JoinPost({post}) {
       {() =>
         <div className="social-post join">
           <div className="post-header">
-            <h3>¡Saluda a tu nueva compañera!</h3>
+            <h3>¡Saluda a tu&nbsp; 
+              {post.customer.gender === 'Male' ? 
+                <>nuevo compañero!</>
+                :
+                <>nueva compañera!</>
+              }
+            </h3>
             <div className="post-time" >{convertTime(post.created_at)}</div>
           </div>
           <div className="post-body">

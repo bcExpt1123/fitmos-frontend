@@ -119,7 +119,7 @@ const ModalView = ({ isOpen, onClose }) => {
             {view==='comment'&&(
               <>
                 <Modal.Title className="text-center w-100"> 
-                  Commenta como te fue?
+                ¿Comenta cómo te fue?
                 </Modal.Title>
                 <button type="button" className="close" onClick={() => dispatch(convertContent())}>
                   <span aria-hidden="true">×</span><span className="sr-only">Close</span>

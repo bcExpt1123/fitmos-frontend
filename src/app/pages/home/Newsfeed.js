@@ -8,6 +8,7 @@ import { findNewsfeed, appendNewsfeedAfter, appendSuggestedPosts, convertOldNews
 import Posts from "./social/sections/Posts";
 import SharingPostPopup from "./social/sections/SharingPostPopup";
 import LikersModal from "./social/sections/LikersModal";
+import DownloadApp from "./components/Share/DownloadApp";
 import BirthdayCustomersModal from "./social/sections/BirthdayCustomersModal";
 import { toAbsoluteUrl } from "../../../_metronic/utils/utils";
 import "./assets/scss/theme/style.scss";
@@ -102,6 +103,7 @@ export default function Newsfeed() {
         <SharingPostPopup />
         <LikersModal />
         <BirthdayCustomersModal />
+        <DownloadApp />
       </ThreeColumn>
     </>
   );

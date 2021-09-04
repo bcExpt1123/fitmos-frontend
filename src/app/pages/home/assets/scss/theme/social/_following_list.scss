@@ -44,8 +44,9 @@
             button{
               padding:5px 15px;
               &.unfollow{
-                background-color:$primary-button-background-color;
-                color:white;
+                border-color: rgba(51,51,51,0.3);
+                background-color:white;
+                color:$basic-text-color;
               }
               &.accept{
                 margin-top: 510px;

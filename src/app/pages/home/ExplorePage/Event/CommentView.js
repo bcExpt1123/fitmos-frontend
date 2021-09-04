@@ -94,8 +94,8 @@ const CommentView = ({comment})=>{
                   </button>
                   <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                       <>
-                        <a className={"dropdown-item"} onClick={openEditComment}>Edit Comment</a>
-                        <a className={"dropdown-item"} onClick={handleDelete}>Delete Comment</a>
+                        <a className={"dropdown-item"} onClick={openEditComment}>Editar</a>
+                        <a className={"dropdown-item"} onClick={handleDelete}>Borrar</a>
                       </>
                   </div>
                 </div>  

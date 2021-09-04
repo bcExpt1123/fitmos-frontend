@@ -116,8 +116,8 @@ const CommentView = ({comment})=>{
                   </button>
                   <div className={classnames("dropdown-menu dropdown-menu-right" ,{show})}>
                       <>
-                        <a className={"dropdown-item"} onClick={()=>{openEditComment(); setShow(false);}}>Edit Comment</a>
-                        <a className={"dropdown-item"} onClick={()=>{handleDelete();setShow(false);}}>Delete Comment</a>
+                        <a className={"dropdown-item"} onClick={()=>{openEditComment(); setShow(false);}}>Editar</a>
+                        <a className={"dropdown-item"} onClick={()=>{handleDelete();setShow(false);}}>Borrar</a>
                         {currentUser.type==="customer" && comment.customer_id == currentUser.customer.id && <span className={"dropdown-item"} onClick={handleLike}><i className={classnames("fa-heart cursor-pointer",{like:comment.like,fas:comment.like,far:comment.like==false})}/></span>}
                       </>
                   </div>

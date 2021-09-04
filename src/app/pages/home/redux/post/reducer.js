@@ -36,6 +36,7 @@ const initialState = {
   oldNewsfeedTopVisible:false,
   post:false,
   editPost:false,
+  customerPostsFirstLoading:false,
   customerPosts:[],
   customerProfile:true,
   customerPostsLastId:-1,

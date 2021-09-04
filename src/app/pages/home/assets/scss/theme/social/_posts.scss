@@ -335,7 +335,7 @@
         }
         span {
           .open-map{
-            max-width: 70px;
+            max-width: none;
           }
           .follower-button{
             max-width: 70px;
@@ -351,16 +351,17 @@
 @media (max-width: 490px) {
   .social-post{
     .post-header {
+      .article-type{
+        float: none;
+        display: inline-block;
+      }
       span{
         .full-name{
           .link-profile{
-            max-width: 100px;
+            max-width: none;
           }
         }
         span {
-          .open-map{
-            max-width: 50px;
-          }
           .follower-button{
             max-width: 50px;
           }

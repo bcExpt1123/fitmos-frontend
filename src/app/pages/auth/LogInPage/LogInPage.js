@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { FormattedMessage } from "react-intl";
 import { withRouter } from "react-router";
 import MetaTags from "react-meta-tags";
-import { reactLocalStorage } from 'reactjs-localstorage';
-import { Modal } from "react-bootstrap";
 import Button from "../../home/components/Button";
 
 import LogInForm from "../../home/components/Auth/LogInForm";
@@ -22,9 +20,7 @@ import {
   logInAppleFailed as logInAppleFailedAction,
 } from "../../home/redux/logIn/actions";
 import "../../home/assets/scss/theme/login.scss";
-import { isMobile, isIOS } from "../../../../_metronic/utils/utils";
 const LogInPage = ({
-  intl,
   isLogInFormVisible,
   isLoggingIn,
   showLogInForm,
@@ -48,21 +44,6 @@ const LogInPage = ({
   }
   const appleHandleError = (error)=>{
     logInAppleFailed(error);
-  }
-  const [mobileApp, setMobileApp] = useState(()=>reactLocalStorage.get('mobile-app'));
-  const handleCloseForm = () => {
-    reactLocalStorage.set('mobile-app', 'no');
-    setMobileApp('no');
-  }
-  const handleRedirectApp = () => {
-    setMobileApp('no');    
-    if(isIOS()){
-      setTimeout(function () { window.location.replace("https://apps.apple.com/us/app/fitemos/id1549350889"); }, 25);
-      window.location.replace("http://onelink.to/m5fkyh");
-    }else{
-      setTimeout(function () { window.location.replace("https://play.google.com/store/apps/details?id=com.dexterous.fitemos"); }, 25);
-      window.location.replace("http://onelink.to/m5fkyh");
-    }
   }
   return (
     <>
@@ -150,29 +131,6 @@ const LogInPage = ({
               <FormattedMessage id="LogInPage.Link.ForgotPassword" />
             </NavLink>
           </footer>
-          {true && isMobile() && mobileApp !== 'no' && (
-            <Modal
-              size="md"
-              dialogClassName="logout-modal"
-              show={true}
-              animation={false}
-              centered
-            >
-              <Modal.Body>
-                <h3 style={{margin:'14px'}}>Descarga el app Fitemos y accede a todos los beneficios</h3>
-                <p>En el app de Fitemos podrás vivir la experiencia completa de entrenar y conectarte con tus compañeros. Descárgala ya</p>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button className="btn-primary" variant="logout-modal-button" onClick={handleCloseForm}>
-                  No 
-                </Button>
-                <Button className="btn-primary" variant="logout-modal-button" onClick={handleRedirectApp}>
-                  Si
-                </Button>
-              </Modal.Footer>          
-            </Modal>
-
-          )}
         </div>
       </article>
     </>

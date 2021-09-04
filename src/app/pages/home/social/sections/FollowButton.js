@@ -8,11 +8,11 @@ const FollowButton = ({customer, afterAction})=>{
   const dispatch = useDispatch();  
   const handleFollow = ()=>{
     dispatch(follow(customer.id));
-    afterAction();
+    if(afterAction)afterAction();
   }
   const handleUnfollow = ()=>{
     dispatch(unfollow(customer.id));
-    afterAction();
+    if(afterAction)afterAction();
   }
   return (
     (customer&&customer.id != currentUser.customer.id)&&(

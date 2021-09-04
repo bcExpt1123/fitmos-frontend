@@ -10,12 +10,14 @@ import SharingPostPopup from "./social/sections/SharingPostPopup";
 import RightBarProfile from "./social/sections/RightBarProfile";
 import LikersModal from "./social/sections/LikersModal";
 import { isMobile } from "../../../_metronic/utils/utils";
+import SplashScreen from "../../../app/partials/layout/SplashScreen";
 
 export default function Customer({id}) {
   const posts = useSelector(({post})=>post.customerPosts);
   const username = useSelector(({people})=>people.username);
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const last = useSelector(({post})=>post.customerPostsLast);
+  const loading = useSelector(({post})=>post.customerPostsFirstLoading);
   const dispatch = useDispatch();
   useEffect(()=>{
     dispatch(findCustomerPosts(id));
@@ -40,15 +42,25 @@ export default function Customer({id}) {
               <RightBarProfile />
             </div>
           )}
-          {posts.length>0?
-            <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
-            :
-            <div className="absolute center">
-              <div className="item">
-                <div className="second-text"> Sin publicaciones</div>
+          {
+            loading ? (
+              <div className="loading" style={{marginTop:"200px", marginBottom:"200px"}}>
+                <SplashScreen />
               </div>
-            </div>
-          }  
+            ) : (
+              <>
+                {posts.length>0?
+                  <Posts posts={posts} last={last} dispatchAction={dispatchAction}  show={currentUser.customer.id == id} newsfeed={false} topMonitor={"customerPosts"}/>
+                  :
+                  <div className="absolute center">
+                    <div className="item">
+                      <div className="second-text"> Sin publicaciones</div>
+                    </div>
+                  </div>
+                } 
+              </> 
+            )
+          }
           <SharingPostPopup />
           <LikersModal />
         </ThreeColumn>

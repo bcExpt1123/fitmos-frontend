@@ -1,12 +1,13 @@
 import React,{useState, useEffect, useRef} from "react";
 import MetaTags from "react-meta-tags";
-import DatePicker, { registerLocale } from "react-datepicker";
+import { registerLocale } from "react-datepicker";
 import { useHistory } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
 import es from "date-fns/locale/es";
 import ThreeColumn from "./layouts/Three";
 import { http } from "./services/api";
 import { toAbsoluteUrl, isMobile } from "../../../_metronic/utils/utils";
+import SplashScreen from "../../../app/partials/layout/SplashScreen";
 import "./assets/scss/theme/style.scss";
 import "./assets/scss/theme/mbr-additional.css";
 import "./assets/scss/dropdown/style.css";
@@ -28,7 +29,7 @@ export default function Leaderboard() {
   const [month, setMonth] = useState('all');
   const [gender, setGender] = useState('all');
   const [records, setRecords] = useState([]);
-  const [isLoading,setIsLoading] = useState();
+  const [isLoading,setIsLoading] = useState(true);
   const handleMonthChange=(event)=>{
     setMonth(event.target.value);
   } 
@@ -44,8 +45,8 @@ export default function Leaderboard() {
       });
       if(res.data){
         setRecords(res.data.data);
-        setIsLoading(true);
       }
+      setIsLoading(false);
     }
     fetchData();
   },[month,gender]);
@@ -107,32 +108,40 @@ export default function Leaderboard() {
             </div>
           </div>
           <div className="data">
-            {records.length === 0?(
-              <div style={{display:'flex',alignItems: 'center',justifyContent: 'center'}} ref={labelRef}>
-                <div style={{maxWidth: '50%',fontSize:'15px',fontWeight:'600'}}>No Records</div>
+            {isLoading ? (
+              <div className="loading" style={{marginTop:"200px", marginBottom:"200px"}}>
+                <SplashScreen />
               </div>
-            ):(
-              records.map(record=>(
-                <div key={record.id} className="item row cursor-pointer" onClick={onRedirectCustomerProfile(record.username)}>
-                  <div className="position">
-                    {record.pos}<sup><i className="fas fa-dot-circle"/></sup>
+            ) : (
+              <>
+                {records.length === 0?(
+                  <div style={{display:'flex',alignItems: 'center',justifyContent: 'center'}} ref={labelRef}>
+                    <div style={{maxWidth: '50%',fontSize:'15px',fontWeight:'600'}}>No Records</div>
                   </div>
-                  <div className="medal">  
-                    {record.workout_completeness === 100 &&(
-                      <img src={toAbsoluteUrl('/media/medal/first.png')} alt="first" className="medal"/>
-                    )}
-                    {record.workout_completeness<100 &&record.workout_completeness>=75&&(
-                      <img src={toAbsoluteUrl('/media/medal/second.png')} alt="second" className="medal"/>
-                    )}
-                  </div>
-                  <div className="avatar"><img src={record.avatar_url.small} alt={record.id} className="avatar"/></div>
-                  <div className="name">
-                    {record.name}
-                  </div>
-                  <div className="workout-number">{record.workout_complete_count}</div>
-                  <div className="workout-recent">{'+1'}</div>
-                </div>  
-              ))
+                ):(
+                  records.map(record=>(
+                    <div key={record.id} className="item row cursor-pointer" onClick={onRedirectCustomerProfile(record.username)}>
+                      <div className="position">
+                        {record.pos}<sup><i className="fas fa-dot-circle"/></sup>
+                      </div>
+                      <div className="medal">  
+                        {record.workout_completeness === 100 &&(
+                          <img src={toAbsoluteUrl('/media/medal/first.png')} alt="first" className="medal"/>
+                        )}
+                        {record.workout_completeness<100 &&record.workout_completeness>=75&&(
+                          <img src={toAbsoluteUrl('/media/medal/second.png')} alt="second" className="medal"/>
+                        )}
+                      </div>
+                      <div className="avatar"><img src={record.avatar_url.small} alt={record.id} className="avatar"/></div>
+                      <div className="name">
+                        {record.name}
+                      </div>
+                      <div className="workout-number">{record.workout_complete_count}</div>
+                      <div className="workout-recent">{'+1'}</div>
+                    </div>  
+                  ))
+                )}
+              </>
             )}
           </div>
         </div>

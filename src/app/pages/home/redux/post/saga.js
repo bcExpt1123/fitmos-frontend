@@ -171,11 +171,14 @@ const findCustomerPostsRequest = (customerId)=>
 
 function* onFindCustomerPosts({payload}){
   try {
+    yield put(setItemValue({name:'customerPostsFirstLoading',value:true}))
     const result = yield call(findCustomerPostsRequest,payload);
-    yield put (setItemValue({name:'customerProfile',value:result.customerProfile}))
+    yield put(setItemValue({name:'customerProfile',value:result.customerProfile}))
     yield put(setCustomerPosts(result.posts));
+    yield put(setItemValue({name:'customerPostsFirstLoading',value:false}))
   } catch (error) {
     console.log(error);
+    yield put(setItemValue({name:'customerPostsFirstLoading',value:false}))
     //yield put(validateVoucherFailed({ token }));
   }  
 }

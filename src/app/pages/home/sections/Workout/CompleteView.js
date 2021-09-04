@@ -1,6 +1,5 @@
-import React, {useEffect, useState} from "react";
-import classnames from "classnames";
-import {  useDispatch,useSelector } from "react-redux";
+import React from "react";
+import { useSelector } from "react-redux";
 
 const CompleteView = ({onClose})=>{
   const workouts = useSelector(({done})=>done.workouts);
@@ -9,11 +8,11 @@ const CompleteView = ({onClose})=>{
       return (
         <div className="image">
           <img src = {url} alt="workout instruction" />
-        </div>  
-      )                        
+        </div>
+      )
     }
   }
-  const dispatch = useDispatch();
+  if(workouts.current.read)onClose();
   return (
     <div className="block">
       {renderImage(workouts.current.blocks[0].image_path)}

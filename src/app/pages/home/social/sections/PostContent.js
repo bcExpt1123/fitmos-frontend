@@ -201,11 +201,18 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
   }
   const headerInnerRef = useRef();
   useEffect(()=>{
-    if(headerInnerRef && headerInnerRef.current && window.innerWidth < 450){
-      headerInnerRef.current.style.width=(window.innerWidth-100)+"px";
-      headerInnerRef.current.style.verticalAlign="text-top";
-      headerInnerRef.current.style.marginTop="-6px";
-      headerInnerRef.current.style.marginBottom="13px";
+    if(headerInnerRef && headerInnerRef.current ){
+      if(window.innerWidth < 450){
+        headerInnerRef.current.style.width=(window.innerWidth-100)+"px";
+        headerInnerRef.current.style.verticalAlign="text-top";
+        headerInnerRef.current.style.marginTop="-6px";
+        headerInnerRef.current.style.marginBottom="13px";  
+      }else{
+        if(headerInnerRef.current.offsetWidth<430){
+          const openMap = headerInnerRef.current.querySelector('.open-map');
+          if(openMap)openMap.style.maxWidth = (580 - headerInnerRef.current.offsetWidth) + 'px';
+        }
+      }
     }
   }, [headerInnerRef])
   return (
@@ -254,10 +261,12 @@ export default function PostContent({post, newsfeed,suggested,modalShow}) {
                   {post.customer.first_name} {post.customer.last_name}
                 </NavLink>
               </span>
-              {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) &&(
-                <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
-                  &nbsp;&nbsp;&nbsp;Agregar
-                </span>
+              {(currentUser.type==="customer" && post.customer_id != currentUser.customer.id&&post.customer.following == null && newsfeed) && (
+                ((post.tagFollowers==null || post.tagFollowers && post.tagFollowers.length===0) && post.location==null) && (
+                  <span className={"cursor-pointer"} style={{color:"#008EB2"}} onClick={handleFollow}>
+                    &nbsp;&nbsp;&nbsp;Agregar
+                  </span>
+                )
               )}        
               {!modalShow&&postHeader()}
             </span>

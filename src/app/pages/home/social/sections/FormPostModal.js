@@ -288,16 +288,16 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
               {currentUser.type==="customer" && <Avatar pictureUrls={currentUser.avatarUrls} size="xs" />}
               {currentUser.type==="admin" && customer && <Avatar pictureUrls={customer.avatarUrls} size="xs" />}
               <div className="with-location">
-                <span className="full-name">
-                  {currentUser.type==="customer" &&<strong>{currentUser.name}</strong>}
-                  {currentUser.type==="admin" && customer &&<strong>{customer.first_name} {customer.last_name}</strong>}
+                <span className="full-name font-weight-bold">
+                  {currentUser.type==="customer" &&<>{currentUser.name}</>}
+                  {currentUser.type==="admin" && customer &&<>{customer.first_name} {customer.last_name}</>}
                 </span>
                 {(post.type=="workout")?<>
                   &nbsp;comentó <span onClick={redirectWorkoutPage} className="font-weight-bold cursor-pointer">el workout del {post.workout_spanish_short_date}</span>
                 </>:<>
                   {(tagFollowers.length>0 || location)&&<>&nbsp;está</>}
-                  {location&&<>&nbsp;en <strong>{location}</strong></>}
-                  {tagFollowers.length>0&&<>&nbsp;with</>}
+                  {location&&<>&nbsp;en <span className="font-weight-bold">{location}</span></>}
+                  {tagFollowers.length>0&&<>&nbsp;con</>}
                   &nbsp;
                   {
                     tagFollowers.map((follower)=>(
