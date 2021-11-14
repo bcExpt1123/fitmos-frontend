@@ -7,7 +7,7 @@ import {
 } from "../done/actions";
 import { findUserDetails } from "../../redux/auth/actions";
 import { findFriends } from "../../redux/people/actions";
-import { findNewsfeed, refreshNewsfeed, syncPosts, refreshCustomerPosts, refreshSuggestedPosts, refreshOldNewsfeed } from "../../redux/post/actions";
+import { findNewsfeed, refreshNewsfeed, syncPosts, refreshCustomerPosts, refreshSuggestedPosts, refreshOldNewsfeed, setItemValue } from "../../redux/post/actions";
 import { searchNotifications, findFollows, follow } from "../../redux/notification/actions";
 import { http } from "../../services/api";
 
@@ -68,6 +68,12 @@ function* onConfirmAlternate(){
 //   await ConnectyCube.users.signup(params)
 //   return this.signIn(params)
 // }
+const fetchWorkoutPost = ()=>
+  http({
+    path: "posts/workout",
+    method: "POST"
+  }).then(response => response.data);
+
 function* onPulling({payload:{id}}){
   let login = true;
   while (login) {
@@ -85,8 +91,16 @@ function* onPulling({payload:{id}}){
       login = false;
       break;
     }
+    const date = new Date();
+    date.setHours(date.getHours() + 5);
+    const hours = date.toLocaleString("en-US", {hour: 'numeric', hour12: false, timeZone: currentUser.customer.timezone});
+    const day = date.toLocaleString("en-US", {day: '2-digit', timeZone: currentUser.customer.timezone});
+    const month = date.toLocaleString("en-US", {month: '2-digit', timeZone: currentUser.customer.timezone});
+    const year = date.toLocaleString("en-US", {year: 'numeric', timeZone: currentUser.customer.timezone});
+    // console.log(`${year}-${month}-${day}`, hours)
     try {
       const newsfeed = yield select(({post})=>post.newsfeed);
+      const workoutPost = newsfeed.find(post=>post.id === `${year}-${month}-${day}-w`);
       const newsfeedPostIds = newsfeed.map(item=>item.id);
       const newsfeedTopVisible = yield select(({post})=>post.newsfeedTopVisible);
       const customerPosts = yield select(({post})=>post.customerPosts);
@@ -98,6 +112,12 @@ function* onPulling({payload:{id}}){
       const oldNewsfeedIds = oldNewsfeed.map(item=>item.id);
       const oldNewsfeedTopVisible = yield select(({post})=>post.oldNewsfeedTopVisible);
       const mergedPosts = [...newsfeed, ...customerPosts,...suggestedPosts, ...oldNewsfeed];
+      if(!workoutPost){
+        if(hours === '24' || hours === 24){
+          const response = yield call(fetchWorkoutPost);
+          yield put(setItemValue({name:'newsfeed', value:[response, ...newsfeed]}));
+        }
+      }
       let ids;  
       if(mergedPosts.length == 0) ids = [{id:-1}];
       else{
@@ -111,7 +131,12 @@ function* onPulling({payload:{id}}){
       }
       /** newsfeed */
       let newsfeedId = -1;
-      if( newsfeedTopVisible && newsfeedPostIds.length>0)newsfeedId = newsfeedPostIds[0];
+      if( newsfeedTopVisible && newsfeedPostIds.length>0){
+        newsfeedId = newsfeedPostIds[0];
+        console.log(newsfeedPostIds, newsfeedId);
+        if(isNaN(parseInt(newsfeedId)) && newsfeedPostIds.length>1)newsfeedId = newsfeedPostIds[1];
+        else newsfeedId = -1;
+      }
       /** suggestedPosts */
       let suggestedPostsId = -1;
       if( suggestedPostsTopVisible && suggestedPostIds.length>0)suggestedPostsId = suggestedPostIds[0];

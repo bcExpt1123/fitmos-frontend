@@ -297,7 +297,7 @@ const Channel = ()=> {
               <div className={classnames("dropdown-menu dropdown-menu-right" ,{showmenu:show})}>
                 {selectedDialog.type==3&&<a className={"dropdown-item"} onClick={viewProfile}>Ver perfil</a>}
                 {selectedDialog.type==3&&<>
-                  {selectedDialog.owner.relation === 'muted'?<a className={"dropdown-item"} onClick={handleUnmute}>Quitar silenciado</a>
+                  {selectedDialog.owner && selectedDialog.owner.relation === 'muted'?<a className={"dropdown-item"} onClick={handleUnmute}>Quitar silenciado</a>
                   :
                   <a className={"dropdown-item"} onClick={handleMute}>Silenciar</a>}
                 </>}

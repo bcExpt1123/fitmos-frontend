@@ -7,7 +7,7 @@ import Avatar from "../../components/Avatar";
 import MentionTextarea from "./MentionTextarea";
 import DisplayMentionContent from "./DisplayMentionContent";
 import DropDown from "../../components/DropDown";
-import { convertTime, can } from "../../../../../lib/common";
+import { convertTime, can, onceRefresh } from "../../../../../lib/common";
 
 const CommentView = ({comment})=>{
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -77,7 +77,7 @@ const CommentView = ({comment})=>{
         <div className="content">
           {showEdit?
             <>
-              <form onSubmit={onEditFormSubmit}>
+              <form onSubmit={onceRefresh(onEditFormSubmit)}>
                 <fieldset disabled={currentUser.customer.muteStatus}>
                   <MentionTextarea content={commentEditContent} setContent={handleCommentEditChange} submit={true}  commentForm={onEditFormSubmit} focus={true}/>
                 </fieldset>  
@@ -98,7 +98,7 @@ const CommentView = ({comment})=>{
           <button className="reply-comment" onClick={openReplyComment(comment)}>Responder</button>      
         </div>
         {currentUser.type==="customer" && show&&(
-          <form onSubmit={onReplyFormSubmit}>
+          <form onSubmit={onceRefresh(onReplyFormSubmit)}>
             <fieldset disabled={currentUser.customer.muteStatus}>
               <MentionTextarea content={replyContent} setContent={handleCommentChange} submit={true} commentForm={onReplyFormSubmit} focus={true}/>
             </fieldset>

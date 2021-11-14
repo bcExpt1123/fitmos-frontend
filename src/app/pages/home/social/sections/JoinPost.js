@@ -4,7 +4,7 @@ import classnames from "classnames";
 import ShareDropDown from "./ShareDropDown";
 import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
-import { convertTime } from "../../../../../lib/common";
+import { convertTime, onceRefresh } from "../../../../../lib/common";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, setItemValue, readingPost} from "../../redux/post/actions";
 import BirthdayCustomer from "./customer/BirthdayCustomer";
@@ -101,10 +101,10 @@ export default function JoinPost({post}) {
                 }
               </React.Fragment>
             )}
-            {(post.nextCommentsCount>0) && 
+            {(post.nextCommentsCount>0) &&
               <div className="cursor-pointer append" onClick={handleNextComments}> Mostrar &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comentarios</>:<> comentario</>}</div>
             }
-            {currentUser.type==="customer" && <form onSubmit={onCommentFormSubmit}>
+            {currentUser.type==="customer" && <form onSubmit={onceRefresh(onCommentFormSubmit)}>
               <fieldset disabled={currentUser.customer.muteStatus}>
                 <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
               </fieldset>

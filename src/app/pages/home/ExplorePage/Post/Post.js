@@ -16,7 +16,8 @@ const PostPage = () => {
     strict:true
   });    
   useEffect(() => {
-    dispatch($changeItem(match.params.id));    
+    dispatch($changeItem(match.params.id));
+    window.scrollTo(0, 0);
   }, []);// eslint-disable-line react-hooks/exhaustive-deps
   const post = useSelector(({ event }) => event.item);
   const currentUser = useSelector(({ auth }) => auth.currentUser);

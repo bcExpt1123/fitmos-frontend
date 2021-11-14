@@ -47,15 +47,15 @@ const DownloadApp = () => {
           centered
         >
           <Modal.Body>
-            <h3 style={{margin:'14px 0'}}>Descarga el app Fitemos y accede a todos los beneficios</h3>
-            <p>En el app de Fitemos podrás vivir la experiencia completa de entrenar y conectarte con tus compañeros. Descárgala ya</p>
+            <h3 style={{margin:'14px 0'}}>Descarga la app Fitemos y accede a todos los beneficios</h3>
+            <p>En la app de Fitemos podrás vivir la experiencia completa de entrenar y conectarte con tus compañeros. Descárgala ya</p>
           </Modal.Body>
           <Modal.Footer>
             <Button className={classes.button} variant="logout-modal-button" onClick={handleCloseForm}>
               Ahora No 
             </Button>
             <Button className={classes.button} variant="logout-modal-button" onClick={handleRedirectApp}>
-              Combiar a la app
+              Cambiar a la app
             </Button>
           </Modal.Footer>          
         </Modal>

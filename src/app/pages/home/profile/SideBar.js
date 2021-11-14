@@ -9,7 +9,7 @@ const SideBar = () => {
   const currentUser = useSelector(({auth})=>auth.currentUser);
   const [customer, setCustomer] = useState(currentUser.customer);
   const match = matchPath(window.location.pathname, {
-    path:['/:username','/:username/pictures'],
+    path:['/:username','/:username/pictures','/:username/workouts'],
     exact:true,
     strict:true
   });  

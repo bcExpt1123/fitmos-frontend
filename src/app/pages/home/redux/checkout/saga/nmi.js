@@ -105,21 +105,26 @@ export function* onPayWithNmi({
   } catch (error) {
     logError(error, logErrorMeta);
     yield put(paymentFailed());
-
-    const errorsObj = get(error, "response.data.errors", { base: [] });
-    console.log(errorsObj)
-    const message = errorsObj;//mapApiErrors(errorsObj);
-    /*const formErrors = errorsObj.base.reduce(
-      (res, err) =>
-        errorMessages[err.code] && errorMessages[err.code].field
-          ? { ...res, [errorMessages[err.code].field]: "not valid" }
-          : res,
-      {}
-    );
-    if (Object.keys(formErrors).length) {
-      yield call(setErrors, { "nmi.state": "not valid" });
-    }*/
-    yield put(addAlertMessage({ type: "error", message }));
+    if(error.response){
+      if(error.response.status === 500){
+        yield put(addAlertMessage({ type: "error", message: 'Internal Server Error 500' }));
+      } else {
+        const errorsObj = get(error, "response.data.errors", { base: [] });
+        console.log(errorsObj)
+        const message = errorsObj;//mapApiErrors(errorsObj);
+        /*const formErrors = errorsObj.base.reduce(
+          (res, err) =>
+            errorMessages[err.code] && errorMessages[err.code].field
+              ? { ...res, [errorMessages[err.code].field]: "not valid" }
+              : res,
+          {}
+        );
+        if (Object.keys(formErrors).length) {
+          yield call(setErrors, { "nmi.state": "not valid" });
+        }*/
+        yield put(addAlertMessage({ type: "error", message }));
+      }
+    }
   }
 
 }

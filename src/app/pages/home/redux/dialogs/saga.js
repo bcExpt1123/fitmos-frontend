@@ -353,7 +353,7 @@ function* onCheckOwnerSelectedDialog(){
   try{
     if(selectedDialog){
       const customer = yield call(findCustomerRequest, selectedDialog.owner.id);
-      selectedDialog.owner.relation = customer.relation;
+      if(selectedDialog.owner)selectedDialog.owner.relation = customer.relation;
       yield put(setItemValue({name:'selectedDialog',value:selectedDialog}));
     }
   } catch (error){

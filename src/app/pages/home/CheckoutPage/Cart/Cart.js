@@ -181,7 +181,7 @@ const Cart = ({
               <h6 className="mt-2">
                 Plan {displayMenthName(frequency)} (Prueba Gratis)
               </h6>
-              <div class="discount-price">
+              <div className="discount-price">
                 <FormattedPrice
                   price={prices.initial}
                   currency={currency}
@@ -197,7 +197,7 @@ const Cart = ({
               <h6>
                 {frequency}&nbsp; {frequency>1?<>Meses</>:<>Mes</>}&nbsp;{currentUser.has_workout_subscription === false&&<>+ 1 Mes Gratis</>}
               </h6>
-              <div class="discount-price">
+              <div className="discount-price">
                 <FormattedPrice
                   price={prices.initial - bankFee*100}
                   currency={currency}
@@ -209,7 +209,7 @@ const Cart = ({
               <h6>
                 Manejo ACH
               </h6>
-              <div class="discount-price">
+              <div className="discount-price">
                 <FormattedPrice
                   price={bankFee*100}
                   currency={currency}
@@ -246,9 +246,9 @@ const Cart = ({
                   locale="en"
               />):(
                 <FormattedPrice
-                    price={pricing.initialPrices.total}
-                    currency={currency}
-                    locale="en"
+                  price={pricing.initialPrices.total}
+                  currency={currency}
+                  locale="en"
                 />
                 )}.
                 <br/>
@@ -264,9 +264,9 @@ const Cart = ({
               Prueba gratis por {serviceItem.free_duration} días. Podrá cancelar en cualquier momento sin compromiso.
               Al concluir el período de prueba se renovará por &nbsp; 
               <FormattedPrice
-                  price={pricing.recurringPrices.total}
-                  currency={currency}
-                  locale="en"
+                price={pricing.discountedPrices.total}
+                currency={currency}
+                locale="en"
               />.
             </p>      
           )}

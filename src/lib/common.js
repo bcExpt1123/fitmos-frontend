@@ -8,6 +8,16 @@ const once = func => {
     }
   };
 };
+const onceRefresh = func => {
+  let done = false;
+  return (...args) => {
+    if (!done) {
+      done = true;
+      func(...args);
+      setTimeout(()=>done = false, 100);
+    }
+  };
+};
 const getEmoji = emoji => {
   let emoj;
   switch (emoji) {
@@ -213,4 +223,4 @@ const getImageMeta = (url, callback)=>{
   });
   img.src = url;
 }
-export {once, colonsToUnicode, convertTime,convertTimeSeconds, can, lastDate, resizeImage, getImageMeta};
+export {once, onceRefresh, colonsToUnicode, convertTime,convertTimeSeconds, can, lastDate, resizeImage, getImageMeta};

@@ -31,9 +31,6 @@ const ProfileWorkouts = () => {
     if(match&&match.params){
       dispatch(findUsername(match.params.username));
     }
-    return ()=>{
-      
-    }      
   },[])
   const username = useSelector(({people})=>people.username);
   const { data, size, setSize, isValidating } = useSWRInfinite(

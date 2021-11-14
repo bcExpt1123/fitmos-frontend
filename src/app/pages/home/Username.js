@@ -15,7 +15,6 @@ import "./assets/scss/theme/signup.scss";
 const UsernamePage = ({match}) => {
   const dispatch = useDispatch();
   const username = useSelector(({people})=>people.username);
-  console.log(username)
   const history = useHistory();
   useEffect(()=>{
     dispatch(findUsername(match.params.username))
@@ -36,7 +35,7 @@ const UsernamePage = ({match}) => {
           </OneColumn>
         )}
         {username.type === 'customer'&&(
-          <Customer id={username.id}/>
+          <Customer id={username.id} upath={match.params.username}/>
         )}
       </>:
       <>

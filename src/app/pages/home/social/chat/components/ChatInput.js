@@ -65,13 +65,14 @@ export default function({sendMessageCallback}) {
   const [blocked, setBlocked] = useState(false)
   useEffect(()=>{
     if(selectedDialog.type===3 && currentUser.customer.blockedChatIds && currentUser.customer.blockedChatIds.length>-1){
-      if(currentUser.customer.blockedChatIds && currentUser.customer.blockedChatIds.includes(selectedDialog.users[0].chat_id)){
+      if(currentUser.customer.blockedChatIds && Array.isArray(selectedDialog.users) && selectedDialog.users.length>0 && currentUser.customer.blockedChatIds.includes(selectedDialog.users[0].chat_id)){
         console.log('blocked',selectedDialog.users[0].chat_id)
         setBlocked(true);
         if(textRef.current)textRef.current.disabled=true;
       }
       else {
-        console.log('unblocked',selectedDialog.users[0].chat_id)
+        if(Array.isArray(selectedDialog.users) && selectedDialog.users.length>0)console.log('unblocked',selectedDialog.users[0].chat_id)
+        else console.log('unblocked no selectedDialog.users')
         setBlocked(false);
         if(textRef.current)textRef.current.disabled=false;
       }

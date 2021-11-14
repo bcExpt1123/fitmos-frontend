@@ -1,4 +1,4 @@
-import { call, takeLeading, select,put, delay, takeEvery } from "redux-saga/effects";
+import { call, takeLeading, select,put, takeLatest, takeEvery } from "redux-saga/effects";
 import {
   findNewsfeed, 
   setNewsfeed,   
@@ -177,7 +177,7 @@ function* onFindCustomerPosts({payload}){
     yield put(setCustomerPosts(result.posts));
     yield put(setItemValue({name:'customerPostsFirstLoading',value:false}))
   } catch (error) {
-    console.log(error);
+    console.log(error, "onFindCustomerPosts");
     yield put(setItemValue({name:'customerPostsFirstLoading',value:false}))
     //yield put(validateVoucherFailed({ token }));
   }  
@@ -1347,7 +1347,7 @@ export default function* rootSaga() {
   yield takeLeading(refreshNewsfeed, onRefreshNewsfeed);
   yield takeLeading(createPost, onCreatePost);
   yield takeLeading(updatePost, onUpdatePost);
-  yield takeLeading(findCustomerPosts,onFindCustomerPosts);
+  yield takeLatest(findCustomerPosts,onFindCustomerPosts);
   yield takeLeading(appendCustomerPostsAfter,onAppendCustomerPostsAfter);
   yield takeLeading(refreshCustomerPosts, onRefreshCustomerPosts);
   yield takeLeading(findPost,onFindPost);

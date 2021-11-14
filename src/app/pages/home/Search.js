@@ -48,7 +48,7 @@ const Search = () => {
                 to={"/search-people?search="+searchValue}
                 className={""}
               >
-                View All
+                Ver todos
               </NavLink>    
             </div>
           } 
@@ -65,7 +65,7 @@ const Search = () => {
                 to={"/search-shops?search="+searchValue}
                 className={""}
               >
-                View All
+                Ver todos
               </NavLink>    
             </div>
           } 
@@ -82,7 +82,7 @@ const Search = () => {
                 to={"/search-posts?search="+searchValue}
                 className={""}
               >
-                View All
+                Ver todos
               </NavLink>    
             </div>
           } 

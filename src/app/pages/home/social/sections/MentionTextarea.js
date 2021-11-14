@@ -10,6 +10,7 @@ import data from "emoji-mart/data/google.json";
 import Avatar from "../../components/Avatar";
 import { isMobile } from '../../../../../_metronic/utils/utils';
 import { colonsToUnicode } from '../../services/emoji';
+import { onceRefresh } from "../../../../../lib/common";
 
 export default function MentionTextarea({content, setContent, submit,commentForm, focus}) {
   const [comment, setComment] = useState(content);
@@ -103,7 +104,7 @@ export default function MentionTextarea({content, setContent, submit,commentForm
             <MentionsInput
               value={comment}
               onChange={handleChange}
-              onKeyDown={handleEnterPress}
+              onKeyDown={onceRefresh(handleEnterPress)}
               inputRef={textRef}
               className="mentions"
               placeholder="Agrega un comentario..."

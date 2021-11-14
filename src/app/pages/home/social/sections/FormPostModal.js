@@ -127,7 +127,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
       case 1:
         setMediasHeight(mediasWidth);
         setMediaContainerHeight(mediasWidth+"px");
-        if(post.medias && post.medias[0].width){
+        if(Array.isArray(post.medias) && post.medias.length>0  && post.medias[0].width){
           if(parseFloat(post.medias[0].width)>parseFloat(post.medias[0].height)){
             const w = mediaContainerRef.current.clientWidth;
             setMediaContainerHeight(w/parseFloat(post.medias[0].width)*parseFloat(post.medias[0].height)+"px");
@@ -315,6 +315,7 @@ const FormPostModal = ({show,title,handleClose, publishPost, post, saving}) => {
               onChange={handleChange} 
               onBlur={handleBlur} 
               inputRef={textRef}
+              allowSpaceInQuery
               placeholder="Escribe algo..."
               className="creating-post-mention mt-1"
             >

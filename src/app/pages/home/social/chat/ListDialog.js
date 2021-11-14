@@ -3,6 +3,7 @@ import React, {useEffect, useState, useRef} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import { fetchDialogs, setItemValue } from "../../redux/dialogs/actions"; 
+import { findFriends } from "../../redux/people/actions";
 import ConnectyCubeWrapper from './components/ConnectyCubeWrapper';
 import {lastDate} from "../../../../../lib/common";
 import ContextMenu from './components/ContextMenu';
@@ -17,6 +18,7 @@ const ListDialog = ()=> {
   }
   const dispatch = useDispatch();
   const dialogs = useSelector(({dialog})=>dialog.dialogs);
+  const people = useSelector(({people})=>people.people);
   const [filteredDialgos, setFilteredDialogs] = useState([]);
   useEffect(()=>{
     dispatch(fetchDialogs());
@@ -35,6 +37,7 @@ const ListDialog = ()=> {
       }
     }
     document.addEventListener("contextmenu", handleContextMenu);
+    if(people.length>0)dispatch(findFriends());
     return ()=>{
       document.removeEventListener("contextmenu", handleContextMenu);
     }

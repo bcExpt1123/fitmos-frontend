@@ -13,7 +13,9 @@ import CommentView from "./CommentView";
 import MentionTextarea from "./MentionTextarea";
 import RenderModalMedia from "./RenderModalMedia";
 import ShareDropDown from "./ShareDropDown";
-import {findPost, createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
+import {findPost, createComment, appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
+import { onceRefresh } from "../../../../../lib/common";
+
 const PostModal = ({show, media, onClose }) => {
   const post = useSelector(({post})=>post.post);
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -194,7 +196,7 @@ const PostModal = ({show, media, onClose }) => {
                 </div>
               </div>
               {currentUser.type==="customer" && 
-                <form onSubmit={onCommentFormSubmit} className="comment-create" ref={mentionTextarea}>
+                <form onSubmit={onceRefresh(onCommentFormSubmit)} className="comment-create" ref={mentionTextarea}>
                   <fieldset disabled={currentUser.customer.muteStatus}>
                   <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
                   </fieldset>

@@ -12,7 +12,7 @@ import LikersModal from "./social/sections/LikersModal";
 import { isMobile } from "../../../_metronic/utils/utils";
 import SplashScreen from "../../../app/partials/layout/SplashScreen";
 
-export default function Customer({id}) {
+export default function Customer({id, upath}) {
   const posts = useSelector(({post})=>post.customerPosts);
   const username = useSelector(({people})=>people.username);
   const currentUser = useSelector(({auth})=>auth.currentUser);
@@ -43,7 +43,7 @@ export default function Customer({id}) {
             </div>
           )}
           {
-            loading ? (
+            (loading || upath!==username.username)  ? (
               <div className="loading" style={{marginTop:"200px", marginBottom:"200px"}}>
                 <SplashScreen />
               </div>

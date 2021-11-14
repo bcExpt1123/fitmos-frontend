@@ -137,7 +137,7 @@ export default function Leaderboard() {
                         {record.name}
                       </div>
                       <div className="workout-number">{record.workout_complete_count}</div>
-                      <div className="workout-recent">{'+1'}</div>
+                      <div className="workout-recent">{record.recent_workout<25 && '+1'}</div>
                     </div>  
                   ))
                 )}

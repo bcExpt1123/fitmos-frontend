@@ -77,7 +77,7 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                   </NavLink>
                   {following.status === 'pending'&&<>
                     <div>
-                      <span>Waiting</span>
+                      <span>espere</span>
                     </div>
                   </>
                   }                
@@ -107,12 +107,12 @@ const FollowingListModal = ({show, onClose,tabKey, customer}) => {
                   <CustomerInfo customer={follower.follower} />
                 </NavLink>
                 {follower.status === 'pending'&&<div>
-                  <button className="btn btn-custom-secondary accept" onClick={handleAccept(follower.id)} disabled={buttonDisabled}>Accept</button>
-                  <button className="btn btn-custom-secondary reject" onClick={handleReject(follower.id)} disabled={buttonDisabled}>Reject</button>
+                  <button className="btn btn-custom-secondary accept" onClick={handleAccept(follower.id)} disabled={buttonDisabled}>Aceptar</button>
+                  <button className="btn btn-custom-secondary reject" onClick={handleReject(follower.id)} disabled={buttonDisabled}>Rechazar</button>
                 </div>
                 }                
                 {follower.status === 'rejected'&&<>
-                  <div><span>Rejected</span></div>
+                  <div><span>Rechazado</span></div>
                 </>
                 }
               </div>

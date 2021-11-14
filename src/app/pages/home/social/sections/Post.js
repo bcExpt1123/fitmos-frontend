@@ -10,6 +10,7 @@ import ShareDropDown from "./ShareDropDown";
 import ViewableMonitor from '../../components/ViewableMonitor';
 import {createComment, appendComments, appendNextComments,appendNextReplies,hideReplies,  toggleLike, readingPost, setItemValue} from "../../redux/post/actions";
 import { CUSTOM_POST_TYPES, articlePath } from "../../../../../lib/social";
+import { onceRefresh } from "../../../../../lib/common";
 
 export default function Post({post, newsfeed, suggested, setShowPostModal, setMedia}) {
   const currentUser = useSelector(({ auth }) => auth.currentUser);
@@ -229,7 +230,7 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
               <div className="cursor-pointer append" onClick={handlePreviousComments}> Ver más&nbsp;{post.previousCommentsCount>1?<>comentarios</>:<>comentario</>}&nbsp;({post.previousCommentsCount})</div>
             }
             {post.comments.length>0&&post.comments.map(comment=>
-              <React.Fragment  key={comment.id}>
+              comment && (<React.Fragment  key={comment.id}>
                 <div className={classnames("comment-view")}>
                   <CommentView comment={comment}/>
                 </div>
@@ -245,15 +246,15 @@ export default function Post({post, newsfeed, suggested, setShowPostModal, setMe
                     )
                   }
                 </div>
-                {(comment.nextChildrenCount>0) && 
+                {(comment.nextChildrenCount>0) &&
                   <div className="cursor-pointer comment-append-replies append" onClick={handleNextReplies(comment)}> Ver&nbsp;{comment.nextChildrenCount}&nbsp;{comment.nextChildrenCount>1?<>comentarios</>:<>comentario</>}</div>
                 }
-              </React.Fragment>
+              </React.Fragment>)
             )}
             {(post.nextCommentsCount>0) && 
               <div className="cursor-pointer append" onClick={handleNextComments}> Mostrar &nbsp;{post.nextCommentsCount}&nbsp;{post.nextCommentsCount>1?<>comentarios</>:<> comentario</>}</div>
             }
-            {currentUser.type==="customer" && <form onSubmit={onCommentFormSubmit}>
+            {currentUser.type==="customer" && <form onSubmit={onceRefresh(onCommentFormSubmit)}>
               <fieldset disabled={currentUser.customer.muteStatus}>
                 <MentionTextarea content={commentContent} setContent={handleCommentChange} submit={true} commentForm={onCommentFormSubmit}/>
               </fieldset>
